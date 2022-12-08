@@ -1,0 +1,42 @@
+<template name="adp">
+    <div class="card shadow mb-3">
+        <div class="card-header py-3" style="background-color: rgb(248,249,252);">
+            <div align="left">
+                <p class="text-primary m-0 font-weight-bold">ADP </p>
+
+            </div>
+        </div>
+        <div class="card-body text-center">
+            <div class="d-xl-flex flex-column justify-content-xl-center" style="margin-bottom: 10px;">
+                <div class="d-sm-flex d-xl-flex flex-column justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="padding: 10px;">
+                    <div align="center" style="width: 100%;">
+                        <button class="btn btn-primary" type="button" id="openLink"><i class="fa fa-phone" style="margin-right: 8px;"></i>ADP Sign Up</button>
+                    </div>
+                </div>
+            </div>
+                <div style="margin-top: 10px;">
+                    <div class="form-row">
+                        <div class="col">
+                            <div align="left">
+                                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start"><label>Client ID</label>
+                                    <input class="form-control" id="VS1ADPCLIENTID" type="text" name="clientID">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div align="left">
+                                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start"><label>Client Secret</label>
+                                    <input class="form-control" id="VS1ADPCLIENTSECRET" type="text" name="clientSecret">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <button class="btn btn-success float-left" type="button" id="saveAdpSetting" name="" style="margin-right: 8px;"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary float-right btnBack" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button>
+                </div>
+        </div>
+    </div>
+</template>

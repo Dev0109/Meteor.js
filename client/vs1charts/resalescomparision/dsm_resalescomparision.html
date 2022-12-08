@@ -1,0 +1,32 @@
+<template name="dsmResalescomparision">
+    <style type="text/css">
+        .hideresalechat {
+            display: none;
+        }
+
+        .showresalechat {
+            display: block;
+        }
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id="dsmResalecomparision"
+        headerClass="employeesalesheader"
+        headerColor="primary"
+        headerTitle="Employee Sales Comparison"
+        hrefDetails=""
+        editModalID="editDashboardModal"
+    }}
+    <canvas id="dsmEmployeeSalesComparisonChart" name="dsmEmployeeSalesComparisonChart"></canvas>
+    {{/draggablePanel}}
+</template>

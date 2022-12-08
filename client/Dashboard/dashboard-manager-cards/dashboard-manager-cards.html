@@ -1,0 +1,157 @@
+<template name="dashboardManagerCards">
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="dashboard-sales-manager-new-leads-month"
+        highlightColor="primary"
+        tooltipTitle="This is new Lead/Customer source count."
+    }}
+        {{> kpiCardTitle
+            title="New Leads"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="new-leads-month"
+                name="new-leads-month"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="dashboard-sales-manager-new-deals-month"
+        highlightColor="primary"
+        tooltipTitle="This is new Quotes count."
+    }}
+        {{> kpiCardTitle
+            title="New Deals"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="new-deals-month"
+                name="new-deals-month"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=2
+        position=2
+        cardActive=true
+        cardKey="dashboard-sales-manager-closed-deals-month"
+        highlightColor="primary"
+        tooltipTitle="This is new Invoice count for month."
+    }}
+        {{> kpiCardTitle
+            title="Closed Deals"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="closed-deals-month"
+                name="closed-deals-month"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=3
+        position=3
+        cardActive=true
+        cardKey="dashboard-sales-manager-closed-deals-year"
+        highlightColor="primary"
+        tooltipTitle="This is new Invoices value for months."
+    }}
+        {{> kpiCardTitle
+            title="Closed Deals Total"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="closed-deals-year"
+                name="closed-deals-year"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=4
+        position=4
+        cardActive=true
+        cardKey="dashboard-sales-manager-sales-winrate"
+        highlightColor="primary"
+        tooltipTitle="This is converted quotes to invoice count to non-Converted quotes."
+    }}
+        {{> kpiCardTitle
+            title="Win Rate"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="sales-winrate"
+                name="sales-winrate"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=5
+        position=5
+        cardActive=true
+        cardKey="dashboard-sales-manager-avg-sales-cycle"
+        highlightColor="primary"
+        tooltipTitle="This is average between quote date and converted to invoice date."
+    }}
+        {{> kpiCardTitle
+            title="Avg. Sales Cycle"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="avg-sales-cycle"
+                name="avg-sales-cycle"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+</template>

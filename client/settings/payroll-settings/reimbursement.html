@@ -1,0 +1,68 @@
+<template name="reimbursementSettings">
+    <div class="modal fade" role="dialog" tabindex="1" id="reimbursementSettingsModal" style="z-index:99999;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Reimbursement List</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <table id="tblReimbursements" style="width:100%" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="th colReimbursementID hiddenColumn" >ID</th>
+                                        <th class="th colReimbursementName" >Reimbursement Name</th>
+                                        <th class="th colReimbursementAccount" >Account</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tbody>
+
+                                    </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="newReimbursementModal" tabindex="-1" role="dialog" aria-labelledby="newReimbursementLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newReimbursementLabel">Add New Reiumbursement</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="row" id="reimbursementRateForm">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtReimbursementName">Reimbursement Name</label>
+                                <input type="hidden" id="res_id">
+                                <input type="text" class="form-control" id="edtReimbursementName">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtReimbursementAccount">Account</label>
+                                <input type="search" class="form-control edtExpenseAccountDropDown" id="edtReimbursementAccount">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success newreiumbursement"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template> 

@@ -1,0 +1,281 @@
+<template name="vatreturnlist">
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <!-- <style>
+            .dataTables_filter {
+                display: none;
+            }
+        </style> -->
+        <div style="margin-top: -24px;">
+            <header style="padding: 16px;background-color: #ededed;">
+                <h1 class="headingMobile" style="margin: 16px; margin-bottom: 0px;">VAT Return List
+
+                    {{> helpbutton}}
+
+                    <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                    <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                    {{> helpadvisor}}
+                                    {{> helpgotoforum}}
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Help View Modal -->
+
+                    <style>
+                        @media screen and (max-width: 376px) {
+                            .btnOpenSettings {
+                                margin-right: 0px;
+                            }
+                        }
+                        @media screen and (max-width: 420px) {
+                            .headingMobile {
+                                margin-bottom: 40px;
+                            }
+                        }
+                    </style>
+
+
+                </h1>
+            </header>
+
+            <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                        <div class="modal-body">
+                            <div>
+                                {{#if tableheaderrecords}}
+                                <form class="d-xl-flex align-items-xl-center">
+                                    <div class="flex-grow-1">
+                                        <style>
+                                            .groove {
+                                                border-style: solid;
+                                                border-width: 1px;
+                                                width: 200px;
+                                                padding: 2px;
+                                                border-radius: .35rem;
+                                            }
+                                            .custom-control-label{
+                                                position: absolute;
+                                            }
+                                            .rngRange {
+                                                position: relative;
+                                                display: flex;
+                                                flex-direction: column;
+                                                width: 100%;
+                                                pointer-events: auto;
+                                                background-color: rgb(255, 255, 255);
+                                                background-clip: padding-box;
+                                                border: 1px solid rgb(133, 135, 150);
+                                                border-radius: .3rem;
+                                                border-style: solid;
+                                                border-width: 1px;
+                                                padding: 2px;
+                                                border-radius: .35rem;
+                                                color: rgb(128, 128, 128);
+                                                height:inherit!important;
+                                            }
+                                            @media only screen and (max-width: 480px) {
+                                                .modal.show .modal-dialog{
+                                                    float: inherit!important;
+                                                    left: inherit!important;
+                                                    top: auto!important;
+
+                                                }
+                                            }
+                                        </style>
+                                        {{#each item in tableheaderrecords}}
+                                        {{#if equals item.sTitle "id"}}
+                                        {{else}}
+
+                                        <div id="{{item.sIndex}}" class="columnSettings">
+                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
+                                                <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
+                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                            </div>
+                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: </label>
+                                                <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
+                                            </div>
+                                        </div>
+
+                                        {{#if equals item.sVisible true}}
+                                        <script>
+                                            $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
+                                        </script>
+                                        {{else}}
+                                        <script>
+                                            $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
+                                        </script>
+                                        {{/if}}
+
+                                        {{/if}}
+                                        {{/each}}
+                                    </div>
+                                </form>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                            <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; background-color: #ededed;">
+                <style>
+                    /*
+                    @media screen and (max-width: 420px) {
+                    #btnNewJournalEntry {
+                    width: 190px;
+                    }
+                    #exportbtn {
+                    width: 120px;
+                    }
+                    }
+                    */
+                </style>
+                <div class="col float-left flex-grow-1 mb-4">
+                    <button class="btn btn-primary btnRefresh "  style="margin :14px;"  type="button"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button id="btnNewVATReturn" name="btnNewVATReturn" class="btn btn-primary vs1ButtonMargin" type="button" ><i class="fa fa-book" style="padding-right: 5px;"></i>New VAT Return</button>
+                </div>
+
+                <div class="col">
+                    <!-- <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a> -->
+                    <button class="btn btn-primary printConfirm float-right " style="margin:14px;" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                    <button  class="btn btnNav btn-primary float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                    <button class="btn btn-primary export float-right vs1ButtonMargin" type="button" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                </div>
+
+            </div>
+
+            <div>
+                <div class="card-body p-3 rounded" style="margin: 0px 16px;">
+
+                    <div class="table-responsive">
+                        <style>
+                            th {
+                                background-color: #ededed;
+                            }
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                                padding: .75rem!important;
+                            }
+                            .hiddenColumn{
+                                display:none;
+                            }
+                            .showColumn {
+                                display:table-cell;
+                                padding:.75rem;
+                                vertical-align:top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+                            .text-deleted{
+                              background-color: #e74a3b !important; color:#fff;
+                            }
+                        </style>
+                        <table id="tblVATReturnList" name="tblVATReturnList" class="dataTable table table-hover table-striped table-bordered tblVATReturnList">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colVATNumber" rowspan="2" style="width:60px; text-align:center" id="header-1">VAT Number</th>
+                                    <th class="th colVATName" style="width:250px !important; text-align:center" rowspan="2" id="header-2">Description</th>
+                                    <th class="th colT1Option" colspan="3" style="text-align:center" id="header-3">OUTPUT TAX AND IMPORTED SERVICES</th>
+                                    <th class="th colT2Option" colspan="3" style="text-align:center" id="header-4">INPUT TAX</th>
+                                    <th class="th colT1Option" colspan="3" style="text-align:center" id="header-5">DIESEL REFUND IN TERMS OF THE CUSTOMS AND EXCISE ACT</th>
+                                    <!-- <th class="th colStatus hiddenColumn" style="width: 5% !important; text-align:center;" rowspan="3">Status</th> -->
+                                </tr>
+                                <tr class="dnd-moved">
+                                    <th style="width:80px; text-align:center" class="t1Period" id="header-6">Period</th>
+                                    <th style="width:100px; text-align:center" class="t1From" id="header-7">From</th>
+                                    <th style="width:100px; text-align:center" class="t1To" id="header-8">To</th>
+                                    <th style="width:80px; text-align:center" class="t2Period" id="header-9">Period</th>
+                                    <th style="width:100px; text-align:center" class="t2From" id="header-10">From</th>
+                                    <th style="width:100px; text-align:center" class="t2To" id="header-11">To</th>
+                                    <th style="width:80px; text-align:center" class="t3Period" id="header-12">Period</th>
+                                    <th style="width:100px; text-align:center" class="t3From" id="header-13">From</th>
+                                    <th style="width:100px; text-align:center" class="t3To" id="header-14">To</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if datatablerecords}}
+                                {{#each item in datatablerecords}}
+                                <tr class="dnd-moved" id="{{item.vatnumber}}" style="cursor: pointer;">
+                                    <td contenteditable="false" class="colVATNumber">{{item.vatnumber}}</td>
+                                    <td contenteditable="false" class="colVATName">{{item.description}}</td>
+                                    <td contenteditable="false" class="t1Period">{{item.tab1datemethod}}</td>
+                                    <td contenteditable="false" class="t1From">{{item.tab1startDate}}</td>
+                                    <td contenteditable="false" class="t1To">{{item.tab1endDate}}</td>
+                                    <td contenteditable="false" class="t2Period">{{item.tab2datemethod}}</td>
+                                    <td contenteditable="false" class="t2From">{{item.tab2startDate}}</td>
+                                    <td contenteditable="false" class="t2To">{{item.tab2endDate}}</td>
+                                    <td contenteditable="false" class="t3Period">{{item.tab3datemethod}}</td>
+                                    <td contenteditable="false" class="t3From">{{item.tab3startDate}}</td>
+                                    <td contenteditable="false" class="t3To">{{item.tab3endDate}}</td>
+                                    <!-- <td contenteditable="false" class="colStatus hiddenColumn">{{item.orderstatus}}</td> -->
+                                </tr>
+                                {{/each}}
+                                {{/if}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+
+                    <h4 class="title-header" >VAT Return</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/journalentrylist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/journalentrylist.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Start Currency Modal -->
+    {{> FxRateModal currencies=currencyList}}
+     <!-- End Currency Modal -->
+
+    <!-- End Help Video Modal -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

@@ -1,0 +1,1305 @@
+<template name="dashboardexe">
+    <style>
+        .portlet-placeholder {
+            border: 1px dotted black;
+            margin: 0 1em 1em 0;
+            height: 50px;
+            width: 50px;
+        }
+
+        .ui-sortable .card.hovered {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+            cursor: move;
+            transition-duration: 300ms;
+
+        }
+
+        .ui-widget.ui-widget-content {
+            border: 1px solid #e3e6f0;
+        }
+
+        .responsive-chart {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .canvasHeight100 {
+            height: 100% !important;
+        }
+
+        .canvasParentDiv {
+            display: inline-block;
+            width: 100%;
+            height: calc(100% - 44px);
+            position: relative;
+        }
+
+        .canvasParentDiv canvas {
+            height: 100% !important;
+            object-fit: contain;
+        }
+
+        .minHeight100 {
+            height: 100% !important;
+            position: relative;
+        }
+
+        .minHeight100 .canvasHeight100 {
+            position: relative;
+            min-height: 110px;
+            max-height: 100%;
+        }
+
+        .col-md-4 .minHeight100 .canvasParentDiv.canvasHeight100,
+        .col-md-6 .minHeight100 .canvasParentDiv.canvasHeight100,
+        .col-md-8 .minHeight100 .canvasParentDiv.canvasHeight100 {
+            height: 45vh !important;
+            float: left;
+            width: 100%;
+        }
+
+        .col-md-4 .minHeight100 .portlet.card,
+        .col-md-6 .minHeight100 .portlet.card,
+        .col-md-8 .minHeight100 .portlet.card {
+            height: 100% !important;
+        }
+
+        .col-md-4 .minHeight100 .canvasParentDiv,
+        .col-md-6 .minHeight100 .canvasParentDiv,
+        .col-md-8 .minHeight100 .canvasParentDiv {
+            height: calc(45vh - 52.8px) !important;
+            position: relative;
+            max-height: 100%;
+        }
+
+        .ui-resizable-handle {
+            opacity: 0;
+        }
+
+        /* .resizeAfterChart {
+            margin: .75rem !important;
+            padding: 0px !important;
+        }
+        .resizeAfterChart .card {
+            margin: 0px !important;
+        } */
+        .minHeight100 {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .sortable-chart-widget-js {
+            margin-bottom: 30px !important;
+        }
+
+        .minHeight100 .card.mb-4 {
+            margin: 0px !important;
+        }
+
+        .resizeAfterChart .card {
+            max-width: 100%;
+        }
+
+        .sortable-chart-widget-js .minHeight100 .card canvas,
+        .sortable-chart-widget-js .minHeight100 .card .chartjs-size-monitor,
+        .sortable-chart-widget-js .minHeight100 .card .canvasParentDiv,
+        .sortable-chart-widget-js .minHeight100 .card .card-body,
+        .sortable-chart-widget-js .minHeight100 .card .card-header,
+        .sortable-chart-widget-js .minHeight100 .card,
+        .sortable-chart-widget-js .minHeight100 {
+            float: left;
+            width: 100%;
+        }
+
+        /* .col-md-6 .minHeight100 .canvasHeight100 canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        } */
+        .on-editor-change-mode i {
+            pointer-events: none;
+        }
+
+        .btn-sm.dropdown-toggle.hideelement,
+        .btn-sm.dropdown-toggle.showelement {
+            background-color: #00a3d3 !important;
+        }
+
+        .dimmedChart .fa-eye {
+            color: #1cc88a;
+        }
+
+        .dimmedChart .fa-eye-slash {
+            color: #e74a3b;
+        }
+
+        @media (min-width: 1200px) {
+            .col-B {
+                flex: 0 0 33.33333%;
+                max-width: 33.33333%;
+            }
+        }
+
+        .hidecashchart {
+            display: none;
+        }
+
+        .showcashchart {
+            display: block;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+
+        .no-gutters.newHeightForLine {
+            position: relative;
+            height: calc(100% / 3 - 10px);
+            margin: 5px 0;
+            overflow: hidden;
+        }
+
+        .newHeightForLine {
+            max-height: 100% !important;
+            position: relative;
+        }
+
+        .panelHeader {
+            color: rgb(133, 135, 150);
+            font-weight: 900;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        .panelBody {
+            height: 420px;
+            padding: 0px;
+        }
+
+        .panelLeftDiv {
+            background-color: #f7c544 !important;
+        }
+
+        .panelLeftSpan1 {
+            text-align: right;
+            padding-right: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #f7c544; /*1cc88a*/
+        }
+
+        .panelLeftSpan2 {
+            display: flex;
+            justify-content: flex-end;
+            text-align: right;
+            padding-right: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .panelRightSpan1 {
+            text-align: left;
+            padding-left: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #00a3d3;
+        }
+
+        .panelRightSpan2 {
+            text-align: left;
+            padding-left: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .panelOverlapDiv {
+            width: 100%;
+            background-color: #eaecf4;
+        }
+
+        .panelVariance {
+            width: 100%;
+            height: 40px;
+            background-color: white;
+            line-height: 40px;
+        }
+
+        .panelFieldDiv {
+            cursor: pointer;
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-3">
+
+            </div>
+            <div class="col-12 col-md-6">
+                <header class="pt-2 pb-3 d-flex justify-content-center">
+                    <h2>For the Month of {{titleDE}}</h2>
+                </header>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="row no-gutters justify-content-end">
+                    <div class="form-group" style="margin: 8px; display: inline-flex;">
+                        <label style="margin-top: 0.5rem; margin-right: 5px;">Date At : </label>
+                        <div class="input-group date" style="width: 160px;">
+                            <input type="text" class="form-control balancedate" id="balancedate" name="balancedate" value="">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="charts row connectedChartSortable2 connectedSortable2" id="connectedSortable2" data-key="chart"
+            data-chartgroup="DashboardExe" data-tabgroup="1" style="min-width: 100%;">
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="0" data-default-class="col-md-8" id="monthylprofiteandlosscol" key="dashboard__monthyl_profit_and_loss">
+                {{> monthlyprofitandloss}}
+            </div>
+            <div class="sortable-chart-widget-js hideelement col-auto col-md-4" data-default-position="1" data-default-class="col-md-4" key="sales__sales_overview">
+                {{> quotedsalesorderinvoicedamounts}}
+            </div>
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="2" data-default-class="col-md-8" key="accounts__revenue_streams">
+                {{> accountrevenuestreams}}
+            </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="3" data-default-class="col-md-4" id="profiteandlosschartcol" key="dashboard__profit_and_loss">
+                {{> profitandlosschart}}
+            </div>
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="4" data-default-class="col-md-8" key="inventory__stock_on_hand_and_demand">
+                {{> invstockonhandanddemand}}
+            </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="5" data-default-class="col-md-4" key="contacts__top_10_customers">
+                {{> top10Customers}}
+            </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="6" data-default-class="col-md-4" key="contacts__top_10_supplies">
+                {{> top10Suppliers}}
+            </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="7" data-default-class="col-md-4" id="resalecomparisioncol" key="dashboard__employee_sales_comparison">
+                {{> resalescomparision}}
+            </div>
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="8" data-default-class="col-md-8" key="dashboard__expenses">
+                {{> expenseschart}}
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="9" data-default-class="col-md-6" id="monthlyearningscol" key="dashboard__monthly_earnings">
+                {{> monthlyearnings}}
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="10" data-default-class="col-md-6" id="quotedinvoicedamountscol" key="dashboard__quoted_amounts_/_invoiced_amounts">
+                {{> quotedinvoicedamounts}}
+            </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="11" data-default-class="col-md-4" key="contacts__active_employees">
+                {{> activeEmployees}}
+            </div>
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="12" data-default-class="col-md-8" key="payroll__employee_jobs_completed">
+                {{> employeecompletedjobs}}
+            </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="13" data-default-class="col-md-4" key="payroll__clocked_on_employees">
+                {{> clockedOnEmployees}}
+            </div>
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="14" data-default-class="col-md-8" key="purchases__monthly_expenses">
+                {{> monthllyexpenses}}
+            </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="15" data-default-class="col-md-4" key="purchases__expenses_breakdown">
+                {{> expensebreakdown}}
+            </div>
+            <div class="sortable-chart-widget-js hideelement col-auto col-md-8" data-default-position="16" data-default-class="col-md-8" key="employees__absentee_rate_over_last_12_months">
+                {{> absenteeRate }}
+            </div>
+            {{#if equals isaccountoverview true}}
+    
+            {{else}}
+            <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="26" position="26" data-default-class="col-md-12" chartgroup="Dashboard" card-active="true" key="dashboard__account_list">
+                {{> accountslistchart}}
+            </div>
+            {{/if}}
+            <!-- position 17 to 23 -->
+            {{> dashboardManagerCharts}}
+            <!-- position 24, 25 -->
+            {{> dashboardSalesCharts}}
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="31"
+                data-default-class="col-md-6" key="dashboardexe__cash">
+                <div class="minHeight100" id="cashchartparent">
+                    <div class="card overflow-hidden shadow mb-2 portlet" id="cashmove">
+                        <div class="card-header cashheader d-flex justify-content-between align-items-center">
+                            <span style="color: rgb(133,135,150);font-weight: 400;font-size: 10px;"></span>
+                            <h4 class="text-primary font-weight-bold" style="margin-left: 0%;">Cash&nbsp;</h4>
+                            <div class="dropdown no-arrow" style="display: inline-flex;">
+                                <a id="cashcharthide" class="on-editor-change-mode cashchartedit hideelement" role="presentation" href=""><i class="far fa-eye"></i></a>
+                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                                    <a id="cashdetail" class="dropdown-item" role="presentation" href="/execashreport">&nbsp;More Details</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a id="editchartcash" class="dropdown-item editchartsbtn2 pointer" role="presentation" data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit Chart</a>
+                                    <a id="" class="dropdown-item pointer resetchartbtn2" role="presentation">&nbsp;Reset Chart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body panelBody" id="cashbody">
+                            <div class="row no-gutters align-items-center m-1">
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth1}}</span>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span class="panelHeader">VS</span>
+                                </div>
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth2}}</span>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="panelHeader">%</span>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnCashReceived"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{cashReceivedPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashReceivedPerc1}}%; margin-left: -{{cashReceivedPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnCashReceived"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Cash Received</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnCashReceived2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{cashReceivedPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashReceivedPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnCashReceived2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divCashReceivedVariance">
+                                        <span class="spnCashReceivedVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnCashSpent"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSpentPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSpentPerc1}}%; margin-left: -{{cashSpentPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnCashSpent"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Cash Spent</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnCashSpent2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSpentPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSpentPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnCashSpent2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divCashSpentVariance">
+                                        <span class="spnCashSpentVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnCashSurplus"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSurplusPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSurplusPerc1}}%; margin-left: -{{cashSurplusPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnCashSurplus"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Cash Surplus</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnCashSurplus2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSurplusPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSurplusPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnCashSurplus2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divCashSurplusVariance">
+                                        <span class="spnCashSurplusVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnBankBalance"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{bankBalancePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bankBalancePerc1}}%; margin-left: -{{bankBalancePerc1}}%;">
+                                            <span class="panelLeftSpan2 spnBankBalance"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Closing Bank Balance</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="execashreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnBankBalance2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{bankBalancePerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bankBalancePerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnBankBalance2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divBankBalanceVariance">
+                                        <span class="spnBankBalanceVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                </div>
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="32"
+                data-default-class="col-md-6" key="dashboardexe__profitability">
+                <div class="minHeight100" id="profitabilitychartparent">
+                    <div class="card overflow-hidden shadow mb-2 portlet" id="profitabilitymove">
+                        <div class="card-header profitabilityheader d-flex justify-content-between align-items-center">
+                            <span style="color: rgb(133,135,150);font-weight: 400;font-size: 10px;"></span>
+                            <h4 class="text-primary font-weight-bold" style="margin-left: 0%;">Profitability&nbsp;</h4>
+                            <div class="dropdown no-arrow" style="display: inline-flex;">
+                                <a id="profitabilitycharthide" class="on-editor-change-mode profitabilitychartedit hideelement" role="presentation" href=""><i class="far fa-eye"></i></a>
+                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                                    <a id="profitabilitydetail" class="dropdown-item" role="presentation" href="/exeprofitabilityreport">&nbsp;More Details</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a id="editchartprofitability" class="dropdown-item editchartsbtn2 pointer" role="presentation" data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit Chart</a>
+                                    <a id="" class="dropdown-item pointer resetchartbtn2" role="presentation">&nbsp;Reset Chart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body panelBody" id="profitabilitybody">
+                            <div class="row no-gutters align-items-center m-1">
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth1}}</span>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span class="panelHeader">VS</span>
+                                </div>
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth2}}</span>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="panelHeader">%</span>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnTotalSales"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalSalesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalSalesPerc1}}%; margin-left: -{{totalSalesPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnTotalSales"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Income</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnTotalSales2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{totalSalesPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalSalesPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnTotalSales2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divTotalSalesVariance">
+                                        <span class="spnTotalSalesVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnGrossProfit"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitPerc1}}%; margin-left: -{{grossProfitPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnGrossProfit"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Gross Profit</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnGrossProfit2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnGrossProfit2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divGrossProfitVariance">
+                                        <span class="spnGrossProfitVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnTotalExpense"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalExpensePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalExpensePerc1}}%; margin-left: -{{totalExpensePerc1}}%;">
+                                            <span class="panelLeftSpan2 spnTotalExpense"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Expenses</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnTotalExpense2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{totalExpensePerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalExpensePerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnTotalExpense2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divTotalExpenseVariance">
+                                        <span class="spnTotalExpenseVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnTotalnetincome"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{nettProfitPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{nettProfitPerc1}}%; margin-left: -{{nettProfitPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnTotalnetincome"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Profit</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeprofitabilityreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnTotalnetincome2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{nettProfitPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{nettProfitPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnTotalnetincome2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divNettProfitVariance">
+                                        <span class="spnNettProfitVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                </div>
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="33"
+                data-default-class="col-md-6" key="dashboardexe__performance">
+                <div class="minHeight100" id="performancechartparent">
+                    <div class="card overflow-hidden shadow mb-2 portlet" id="performancemove">
+                        <div class="card-header performanceheader d-flex justify-content-between align-items-center">
+                            <span style="color: rgb(133,135,150);font-weight: 400;font-size: 10px;"></span>
+                            <h4 class="text-primary font-weight-bold" style="margin-left: 0%;">Performance&nbsp;</h4>
+                            <div class="dropdown no-arrow" style="display: inline-flex;">
+                                <a id="performancecharthide" class="on-editor-change-mode performancechartedit hideelement" role="presentation" href=""><i class="far fa-eye"></i></a>
+                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                                    <a id="performancedetail" class="dropdown-item" role="presentation" href="/exeperformancereport">&nbsp;More Details</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a id="editchartperformance" class="dropdown-item editchartsbtn2 pointer" role="presentation" data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit Chart</a>
+                                    <a id="" class="dropdown-item pointer resetchartbtn2" role="presentation">&nbsp;Reset Chart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body panelBody" id="performancebody">
+                            <div class="row no-gutters align-items-center m-1">
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth1}}</span>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span class="panelHeader">VS</span>
+                                </div>
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth2}}</span>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="panelHeader">%</span>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeperformancereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnGrossProfitMargin"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitMarginPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitMarginPerc1}}%; margin-left: -{{grossProfitMarginPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnGrossProfitMargin"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Gross Profit Margin</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeperformancereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnGrossProfitMargin2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitMarginPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitMarginPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnGrossProfitMargin2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divGrossProfitMarginVariance">
+                                        <span class="spnGrossProfitMarginVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeperformancereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnNetProfitMargin"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{netProfitMarginPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{netProfitMarginPerc1}}%; margin-left: -{{netProfitMarginPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnNetProfitMargin"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Net Profit Margin</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeperformancereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnNetProfitMargin2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{netProfitMarginPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{netProfitMarginPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnNetProfitMargin2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divNetProfitMarginVariance">
+                                        <span class="spnNetProfitMarginVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeperformancereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnReturnInvest"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{returnOnInvestmentPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{returnOnInvestmentPerc1}}%; margin-left: -{{returnOnInvestmentPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnReturnInvest"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Return on Investment (P.A)</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeperformancereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnReturnInvest2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{returnOnInvestmentPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{returnOnInvestmentPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnReturnInvest2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divReturnInvestVariance">
+                                        <span class="spnReturnInvestVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                </div>
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                </div>
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="34"
+                data-default-class="col-md-6" key="dashboardexe__balance_sheet">
+                <div class="minHeight100" id="balancesheetchartparent">
+                    <div class="card overflow-hidden shadow mb-2 portlet" id="balancesheetmove">
+                        <div class="card-header balancesheetheader d-flex justify-content-between align-items-center">
+                            <span style="color: rgb(133,135,150);font-weight: 400;font-size: 10px;"></span>
+                            <h4 class="text-primary font-weight-bold" style="margin-left: 0%;">Balance Sheet</h4>
+                            <div class="dropdown no-arrow" style="display: inline-flex;">
+                                <a id="balancesheetcharthide" class="on-editor-change-mode balancesheetchartedit hideelement" role="presentation" href=""><i class="far fa-eye"></i></a>
+                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                                    <a id="balancesheetdetail" class="dropdown-item" role="presentation" href="/exebalancesheetreport">&nbsp;More Details</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a id="editchartbalancesheet" class="dropdown-item editchartsbtn2 pointer" role="presentation" data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit Chart</a>
+                                    <a id="" class="dropdown-item pointer resetchartbtn2" role="presentation">&nbsp;Reset Chart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body panelBody" id="balancesheetbody">
+                        <div class="row no-gutters align-items-center m-1">
+                            <div class="col-4 p-2" style="text-align: center;">
+                                <span class="panelHeader">{{titleMonth1}}</span>
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                                <span class="panelHeader">VS</span>
+                            </div>
+                            <div class="col-4 p-2" style="text-align: center;">
+                                <span class="panelHeader">{{titleMonth2}}</span>
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                                <span class="panelHeader">%</span>
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                            <div class="col-4 p-2">
+                                <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exebalancesheetreport">
+                                    <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="panelLeftSpan1 spnTotalAgedReceivables"></span>
+                                    </div>
+                                    <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedReceivablesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedReceivablesPerc1}}%; margin-left: -{{totalAgedReceivablesPerc1}}%;">
+                                        <span class="panelLeftSpan2 spnTotalAgedReceivables"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                                <span>Debtors</span>
+                            </div>
+                            <div class="col-4 p-2">
+                                <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exebalancesheetreport">
+                                    <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="panelRightSpan1 spnTotalAgedReceivables2"></span>
+                                    </div>
+                                    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedReceivablesPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedReceivablesPerc2}}%; margin-left: -100%;">
+                                        <span class="panelRightSpan2 spnTotalAgedReceivables2"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                                <div class="panelVariance divTotalAgedReceivablesVariance">
+                                    <span class="spnTotalAgedReceivablesVariance" style="color: white;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                            <div class="col-4 p-2">
+                                <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exebalancesheetreport">
+                                    <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="panelLeftSpan1 spnTotalAgedPayables"></span>
+                                    </div>
+                                    <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedPayablesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedPayablesPerc1}}%; margin-left: -{{totalAgedPayablesPerc1}}%;">
+                                        <span class="panelLeftSpan2 spnTotalAgedPayables"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                                <span>Creditors</span>
+                            </div>
+                            <div class="col-4 p-2">
+                                <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exebalancesheetreport">
+                                    <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="panelRightSpan1 spnTotalAgedPayables2"></span>
+                                    </div>
+                                    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedPayablesPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedPayablesPerc2}}%; margin-left: -100%;">
+                                        <span class="panelRightSpan2 spnTotalAgedPayables2"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                                <div class="panelVariance divTotalAgedPayablesVariance">
+                                    <span class="spnTotalAgedPayablesVariance" style="color: white;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                            <div class="col-4 p-2">
+                                <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exebalancesheetreport">
+                                    <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="panelLeftSpan1 spnTotalNettAssets"></span>
+                                    </div>
+                                    <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalNettAssetsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalNettAssetsPerc1}}%; margin-left: -{{totalNettAssetsPerc1}}%;">
+                                        <span class="panelLeftSpan2 spnTotalNettAssets"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                                <span>Nett Assets</span>
+                            </div>
+                            <div class="col-4 p-2">
+                                <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exebalancesheetreport">
+                                    <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="panelRightSpan1 spnTotalNettAssets2"></span>
+                                    </div>
+                                    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{totalNettAssetsPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalNettAssetsPerc2}}%; margin-left: -100%;">
+                                        <span class="panelRightSpan2 spnTotalNettAssets2"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                                <div class="panelVariance divTotalNettAssetVariance">
+                                    <span class="spnTotalNettAssetVariance" style="color: white;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                            <div class="col-4 p-2">
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                            </div>
+                            <div class="col-4 p-2">
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                            <div class="col-4 p-2">
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                            </div>
+                            <div class="col-4 p-2">
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="35"
+                data-default-class="col-md-6" key="dashboardexe__income">
+                <div class="minHeight100" id="incomechartparent">
+                    <div class="card overflow-hidden shadow mb-2 portlet" id="incomemove">
+                        <div class="card-header incomeheader d-flex justify-content-between align-items-center">
+                            <span style="color: rgb(133,135,150);font-weight: 400;font-size: 10px;"></span>
+                            <h4 class="text-primary font-weight-bold" style="margin-left: 0%;">Income&nbsp;</h4>
+                            <div class="dropdown no-arrow" style="display: inline-flex;">
+                                <a id="incomecharthide" class="on-editor-change-mode incomechartedit hideelement" role="presentation" href=""><i class="far fa-eye"></i></a>
+                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                                    <a id="incomedetail" class="dropdown-item" role="presentation" href="/exeincomereport">&nbsp;More Details</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a id="editchartincome" class="dropdown-item editchartsbtn2 pointer" role="presentation" data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit Chart</a>
+                                    <a id="" class="dropdown-item pointer resetchartbtn2" role="presentation">&nbsp;Reset Chart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body panelBody" id="incomebody">
+                            <div class="row no-gutters align-items-center m-1">
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth1}}</span>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span class="panelHeader">VS</span>
+                                </div>
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth2}}</span>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="panelHeader">%</span>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeincomereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnTotalInvoiceCount"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceCountPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceCountPerc1}}%; margin-left: -{{totalInvoiceCountPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnTotalInvoiceCount"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Number of Invoices Issued</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeincomereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnTotalInvoiceCount2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceCountPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceCountPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnTotalInvoiceCount2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divTotalInvoiceCountVariance">
+                                        <span class="spnTotalInvoiceCountVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeincomereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnAverageInvoiceValue"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{averageInvoiceValuePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{averageInvoiceValuePerc1}}%; margin-left: -{{averageInvoiceValuePerc1}}%;">
+                                            <span class="panelLeftSpan2 spnAverageInvoiceValue"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Average Value of Invoices</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeincomereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnAverageInvoiceValue2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{averageInvoiceValuePerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{averageInvoiceValuePerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnAverageInvoiceValue2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divAverageInvoiceValueVariance">
+                                        <span class="spnAverageInvoiceValueVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exeincomereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnTotalInvoiceValue"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceValuePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceValuePerc1}}%; margin-left: -{{totalInvoiceValuePerc1}}%;">
+                                            <span class="panelLeftSpan2 spnTotalInvoiceValue"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Total Value of Invoices</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exeincomereport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnTotalInvoiceValue2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceValuePerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceValuePerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnTotalInvoiceValue2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divTotalInvoiceValueVariance">
+                                        <span class="spnTotalInvoiceValueVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                </div>
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                </div>
+                                <div class="col-4 p-2">
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="36"
+                data-default-class="col-md-6" key="dashboardexe__position">
+                <div class="minHeight100" id="positionchartparent">
+                    <div class="card overflow-hidden shadow mb-2 portlet" id="positionmove">
+                        <div class="card-header positionheader d-flex justify-content-between align-items-center">
+                            <span style="color: rgb(133,135,150);font-weight: 400;font-size: 10px;"></span>
+                            <h4 class="text-primary font-weight-bold" style="margin-left: 0%;">Position&nbsp;</h4>
+                            <div class="dropdown no-arrow" style="display: inline-flex;">
+                                <a id="positioncharthide" class="on-editor-change-mode positionchartedit hideelement" role="presentation" href=""><i class="far fa-eye"></i></a>
+                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                                    <a id="positiondetail" class="dropdown-item" role="presentation" href="/exepositionreport">&nbsp;More Details</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a id="editchartposition" class="dropdown-item editchartsbtn2 pointer" role="presentation" data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit Chart</a>
+                                    <a id="" class="dropdown-item pointer resetchartbtn2" role="presentation">&nbsp;Reset Chart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body panelBody" id="positionbody">
+                            <div class="row no-gutters align-items-center m-1">
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth1}}</span>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span class="panelHeader">VS</span>
+                                </div>
+                                <div class="col-4 p-2" style="text-align: center;">
+                                    <span class="panelHeader">{{titleMonth2}}</span>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="panelHeader">%</span>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnAverageDebtors"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{avgDebtorsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgDebtorsPerc1}}%; margin-left: -{{avgDebtorsPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnAverageDebtors"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Average Debtors Days</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnAverageDebtors2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{avgDebtorsPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgDebtorsPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnAverageDebtors2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divAverageDebtorsVariance">
+                                        <span class="spnAverageDebtorsVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnAverageCreditors"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{avgCreditorsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgCreditorsPerc1}}%; margin-left: -{{avgCreditorsPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnAverageCreditors"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Average Creditors Days</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnAverageCreditors2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{avgCreditorsPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgCreditorsPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnAverageCreditors2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divAverageCreditorsVariance">
+                                        <span class="spnAverageCreditorsVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnShortTermCash"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{shortTermCashPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{shortTermCashPerc1}}%; margin-left: -{{shortTermCashPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnShortTermCash"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Short Term Cash Forecast</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnShortTermCash2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{shortTermCashPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{shortTermCashPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnShortTermCash2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divShortTermCashVariance">
+                                        <span class="spnShortTermCashVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnCurrentAsset"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{currentAssetPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{currentAssetPerc1}}%; margin-left: -{{currentAssetPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnCurrentAsset"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Current Asset to Liabilities</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnCurrentAsset2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{currentAssetPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{currentAssetPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnCurrentAsset2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divCurrentAssetVariance">
+                                        <span class="spnCurrentAssetVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters align-items-center m-1 font-weight-bold" style="color: rgb(133,135,150);font-size: 16px;">
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px; justify-content: right;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelLeftSpan1 spnTermAsset"></span>
+                                        </div>
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{termAssetPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{termAssetPerc1}}%; margin-left: -{{termAssetPerc1}}%;">
+                                            <span class="panelLeftSpan2 spnTermAsset"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center;">
+                                    <span>Term Asset to Liabilities</span>
+                                </div>
+                                <div class="col-4 p-2">
+                                    <div class="progress progress-sm asd panelFieldDiv" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="" data-ppanel="exepositionreport">
+                                        <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="panelRightSpan1 spnTermAsset2"></span>
+                                        </div>
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{termAssetPerc2}}" aria-valuemin="0" aria-valuemax="100" style="width: {{termAssetPerc2}}%; margin-left: -100%;">
+                                            <span class="panelRightSpan2 spnTermAsset2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <div class="panelVariance divTermAssetVariance">
+                                        <span class="spnTermAssetVariance" style="color: white;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutters justify-content-center">
+        <button class="btn btn-success float-right hideelement" id="btnDone2" type="button" style="margin:0 8px 16px;">
+            <i class="fa fa-save" style="margin-right: 5px;"></i>Save Changes
+        </button>
+        <button class="btn btn-warning float-right hideelement" id="btnReset2" type="button" style="margin:0 8px 16px;">
+            <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Charts
+        </button>
+        <button class="btn btn-secondary float-right hideelement" id="btnCancel2" type="button"
+            style="margin:0 8px 16px;">
+            <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
+        </button>
+    </div>
+</template>

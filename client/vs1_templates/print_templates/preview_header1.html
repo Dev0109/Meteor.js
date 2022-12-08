@@ -1,0 +1,112 @@
+<template name="preview_header1">
+    <style>
+        .template-preview-header1 {
+            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+            font-family: Calibri, sans-serif !important;
+            width: 90%;
+            margin: 20px auto 0px;
+        }
+        .label-p {
+            font-family: Calibri, sans-serif !important;
+            margin-bottom: 0px;
+        }
+        /* .print-header {
+            padding-right: 5px;
+            text-align: right;
+        } */
+        .print-header-value {
+            font-family: Calibri, sans-serif !important;
+            color: red;
+        }
+        .o_abn_label {
+            font-family: Calibri, sans-serif !important;
+            padding-right: 30px;
+        }
+        .o_abn {
+            font-family: Calibri, sans-serif !important;
+            padding-right: 0px;
+        }
+        .pdfCustomerAddress {
+            font-family: Calibri, sans-serif !important;
+            font-size: 18px;
+            padding: 10px;
+            min-height: 160px;
+            width: 100%;
+            margin-bottom: 0px;
+            color: rgb(0 0 0);
+            line-height: 1.2rem;
+        }
+    </style>
+    <div class="template-preview-header1">
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="margin-bottom: 10px;">
+            <!-- <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding: 0px;">
+            </div> -->
+            <div class="col-12 col-md-12 col-sm-12" style="margin-top: 10px; padding: 0px; border: none !important; ">
+                <div class="d-flex d-sm-flex d-md-flex flex-row" style="margin-bottom: 0px; font-size: 36px; font-weight: bold;">
+                    <!-- <div class="col-9 col-md-9 col-sm-12">
+                        <p class="label-p print-header"></p>
+                    </div>
+                    <div class="col-3 col-md-3 col-sm-12">
+                        <p class="label-p" style="text-align: right; padding-right: 5px;">
+                            <span style="color: black;">No:</span>&nbsp;&nbsp;
+                            <span class="print-header-value"></span>
+                        </p>
+                    </div> -->
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <p class="label-p" style="text-align: right;">
+                            <span class="print-header"></span>&nbsp;&nbsp;
+                            <span>No:</span>&nbsp;&nbsp;&nbsp;
+                            <span class="print-header-value"></span>
+                        </p>
+                    </div>
+                </div>
+                <!-- <div class="d-flex d-sm-flex d-md-flex flex-row" style="margin-top: 0px; color: rgb(0 0 0); font-size: 18px; font-weight: bold;">
+                    <div class="col-9 col-md-9 col-sm-12">
+                        <p class="label-p o_abn_label"></p>
+                    </div>
+                    <div class="col-3 col-md-3 col-sm-12">
+                        <p class="label-p o_abn"></p>
+                    </div>
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <p class="label-p" style="text-align: right;">
+                            
+                        </p>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <div class="d-flex flex-row d-sm-flex d-md-flex">
+            <div class="col-6 col-md-6 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; justify-content: space-between;">
+                <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
+                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 50%; margin-bottom: 0px;">
+                </div>
+                <div style="width: 100%;">
+                    <p class="label-p" style="font-size: 18px; padding-left: 10px;">
+                        <span class="o_abn_label"></span>:&nbsp;
+                        <span class="o_abn"></span>
+                    </p>
+                    <p class="label-p" style="font-size: 18px; padding-left: 10px;">
+                        <span style="padding-right: 2px;">ERP Rep</span>:&nbsp;
+                        <span class="employeeName"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding: 0px 10px; border: none !important; display: flex; justify-content: right;">
+                <div style="width: 65%; border: 1px solid black;">
+                    <p class="pdfCustomerAddress"></p>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
+            <div class="col-4 col-md-4 col-sm-12" style="margin: 0px; padding: 0px;">
+                <p style="padding-left: 10px;">Cust Order No:&nbsp;<span class="po"></span></p>
+            </div>
+            <div class="col-4 col-md-4 col-sm-12" style="margin: 0px; padding: 0px;">
+                <p style="text-align: center;"><strong>Date:</strong>&nbsp;&nbsp;<span class="date"></span></p>
+            </div>
+            <div class="col-4 col-md-4 col-sm-12" style="margin: 0px; padding: 0px;">
+                <p style="padding-right: 10px; text-align: right;"><strong>Due Date:</strong>&nbsp;&nbsp;<span class="due"></span></p>
+            </div>
+        </div>
+    </div>
+</template>

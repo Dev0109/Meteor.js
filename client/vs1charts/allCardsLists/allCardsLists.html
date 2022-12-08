@@ -1,0 +1,64 @@
+<template name="allCardsLists">
+    <style>
+        .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+        .hideelement {
+            display: none !important;
+        }
+        .showelement {
+            display: block;
+        }
+        .hideShowDiv {
+            display: inline-block;
+            width: 100%;
+            text-align: right;
+            padding: 0 8px;
+            margin: 0;
+            position: absolute;
+            top: 5px;
+            left: 0;
+            z-index: 2;
+        }
+        a {
+            text-decoration: none !important;
+        }
+        .dimmedChart .text-dark *,
+        .dimmedChart .text-dark,
+        .dimmedChart .text-gray-300 {
+            color: #666666 !important;
+        }
+    </style>
+    <div class="container-New">
+        <div class="text-right actionButtonCardsTop hideelement">
+            <button class="btn btn-success editCardBtn" id="saveCards" type="button" style="margin:0 8px 16px;">
+                <i class="fas fa-save" style="margin-right: 5px;"></i>Save Cards
+            </button>
+            <button class="btn btn-warning resetcards" id="resetcards" type="button" style="margin:0 8px 16px;">
+                <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Cards
+            </button>
+            <button class="btn btn-secondary cancelCards" id="cancelCards" type="button" style="margin:0 8px 16px;">
+                <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
+            </button>
+        </div>
+        <div class="row connectedCardSortable" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
+            {{#if equals type "dashboardSales"}}
+                {{> dashboardSalesCards }}
+            {{else}}
+                {{#if equals type "dashboardSalesManager"}}
+                    {{> dashboardManagerCards }}
+                {{else}}
+                    {{> purchasesaleschart}}
+                    {{> bankingoverviewcards}}
+                    {{> paymentoverviewcards}}
+                    {{> crmoverviewcards }}
+                    {{> purchasesoverviewcards }}
+                    {{> seedtosalecards }}
+                    {{> shippingcards}}
+                    {{> paymentoverviewcardssupplier}}
+                    {{> paymentoverviewcardscustomer}}
+                {{/if}}
+            {{/if}}
+        </div>
+    </div>
+</template>

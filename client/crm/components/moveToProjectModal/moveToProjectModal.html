@@ -1,0 +1,32 @@
+<template name="moveToProjectModal">
+  <div class="modal fade" id="movetoprojectsmodal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="">Move to Project</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table id="tblMovetoProjectTable" name="tblMovetoProjectTable" style="width:100%"
+            class="dataTable table table-hover table-striped table-bordered tblMovetoProjectTable">
+            <thead>
+              <tr class="dnd-moved">
+                <th class="th colPrjectCheck" style="width:30px;"></th>
+                <th class="th colProjectName" style="width:auto;">Project Name</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyMovetoProjectTable"></tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btnMovetoproject" data-dismiss="modal" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"
+              style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

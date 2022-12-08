@@ -1,0 +1,406 @@
+<template name="subTaxesSettings">
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <h3 class="text-dark mb-4">Tax Rate Settings
+            <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+
+            <!-- Start Help View Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=22" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                            <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Help View Modal -->
+        </h3>
+        <div class="row mb-3">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 font-weight-bold">Sub Taxes</p>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="card-body p-3 rounded">
+
+                                    <div class="row no-gutters">
+                                        <div class="col">
+                                            <div class="row d-xl-flex flex-row justify-content-xl-center">
+
+                                                <div class="col d-xl-flex flex-grow-1 align-items-xl-start" style="padding: 0px !important;">
+                                                    <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav " type="button" style="margin :14px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+
+
+
+                                                    <button class="btn btn-primary btnAddSubTax float-left" role="button" data-toggle="modal" href="#addSubTaxModal" style="margin-top: 16px; margin:14px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Sub Tax<br></button>
+
+                                                    <button class="btn btn-primary btnTaxRates float-left" type="button" style="margin: 14px;"><i class="fa fa-list" style="margin-right: 8px;"></i>Tax Rates</button>
+
+                                                    <div class="modal fade" role="dialog" tabindex="-1" id="addSubTaxModal">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4><div id="add-tax-title" name="add-tax-title" style="float: left;">Add New Sub Tax</div></h4>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" class="form-control" id="edtTaxID" name="edtTaxID" style="display:none;">
+                                                                    <div class="row no-gutters">
+                                                                        <div class="col d-xl-flex align-items-xl-end">
+                                                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Code</label>
+                                                                                <input type="text" class="form-control" id="edtTaxCode" name="edtTaxCode">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row no-gutters">
+                                                                        <div class="col d-xl-flex align-items-xl-end">
+                                                                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                                                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
+                                                                                <input type="text" class="form-control" id="edtTaxDesc" name="edtTaxDesc">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row no-gutters">
+                                                                        <div class="col d-xl-flex align-items-xl-end">
+                                                                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                                                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Category</label>
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                            <input
+                                                                                                class="custom-control-input chkBoxCity pointer"
+                                                                                                type="radio" name="optTaxCategory" id="opt-city"
+                                                                                                value="T" checked>
+                                                                                            <label
+                                                                                                class="custom-control-label chkBox pointer"
+                                                                                                for="opt-city">City</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                            <input
+                                                                                                class="custom-control-input chkBoxState pointer"
+                                                                                                type="radio" name="optTaxCategory" id="opt-state"
+                                                                                                value="S">
+                                                                                            <label
+                                                                                                class="custom-control-label chkBox pointer"
+                                                                                                for="opt-state">State</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                            <input
+                                                                                                class="custom-control-input chkBoxCountry pointer"
+                                                                                                type="radio" name="optTaxCategory" id="opt-country"
+                                                                                                value="C">
+                                                                                            <label
+                                                                                                class="custom-control-label chkBox pointer"
+                                                                                                for="opt-country">Country</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                            <input
+                                                                                                class="custom-control-input chkBoxOther pointer"
+                                                                                                type="radio" name="optTaxCategory" id="opt-other"
+                                                                                                value="O">
+                                                                                            <label
+                                                                                                class="custom-control-label chkBox pointer"
+                                                                                                for="opt-other">Other</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-success btnSaveSubTax" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start" style="padding: 0px !important;">
+                                                    <button id="exportbtn" class="btn btn-primary float-right btnNav vs1ButtonMargin" type="button" ><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                                                    <button class="btn btn-primary float-right vs1ButtonMargin" type="button" data-toggle="modal" href="#importInveontoryOverviewModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+
+
+                                                    <div class="modal fade" role="dialog" tabindex="-1" id="importInveontoryOverviewModal">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                                <div class="modal-body">
+                                                                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                                                        <p style="margin-bottom: 0px;font-weight: bold;">1. Download the &lt;&lt;form&gt;&gt; template</p>
+                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud to import your form's details.</p>
+                                                                        <div class="col flex-grow-1">
+                                                                            <button class="btn btn-primary templateDownload" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
+                                                                            <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
+                                                                        </div>
+                                                                        <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
+                                                                            <a href="#" download><i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip="" title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'." style="margin: 12px;"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                                        <p style="margin-bottom: 0px;font-weight: bold;">2. Copy your items into the template</p>
+                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your desired details.</p>
+                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 16px;">Important: Avoid changing the column headings in the template file.</p>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                                        <p style="margin-bottom: 0px;font-weight: bold;">3. Import the updated template file</p>
+                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your updated template and you're ready to go.</p>
+
+                                                                        <div class="divTable" id="file-display">
+                                                                        </div>
+                                                                        <input type="file" id="attachment-upload" style="display:none" accept=".csv,.txt,.xlsx">
+                                                                        <style>
+                                                                            #row1{
+                                                                                display:flex;
+                                                                                flex-direction:row;
+                                                                                justify-content: space-around;
+                                                                            }
+
+                                                                            #column1{
+                                                                                display:flex;
+                                                                            }
+
+
+                                                                            #column2{
+                                                                                display:flex;
+                                                                                flex-direction:column;
+                                                                                margin: 16px;
+                                                                                padding: .375rem .75rem;
+                                                                            }
+                                                                        </style>
+                                                                        <div id="row1">
+                                                                            <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
+                                                                            <div class="file-name" id="column2"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer"><button class="btn btn-primary btnImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;" ></i>Import</button>
+                                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-primary printConfirm float-right btnNav vs1ButtonMargin" type="button" ><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                                                    <a class="btn btnOpenSettings float-right " role="button" data-toggle="modal" href="#myModal2" style="margin :14px" ><i class="icon ion-android-more-horizontal"></i></a>
+
+                                                </div>
+
+                                            </div>
+<!--
+                                            <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 12px 0px; margin-right: 24px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button> -->
+
+
+                                        </div>
+                                    </div>
+                                    <!-- Start {{> optionNavSalesOverview}} -->
+                                    <div class="d-xl-flex justify-content-xl-end">
+                                        <div>
+                                            <!-- <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a> -->
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                                                <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                        <div class="modal-body">
+                                                            <div>
+                                                                {{#if tableheaderrecords}}
+                                                                <form class="d-xl-flex align-items-xl-center">
+                                                                    <div class="flex-grow-1">
+                                                                        <style>
+                                                                            .groove {
+                                                                                border-style: solid;
+                                                                                border-width: 1px;
+                                                                                width: 200px;
+                                                                                padding: 2px;
+                                                                                border-radius: .35rem;
+                                                                            }
+                                                                            .custom-control-label{
+                                                                                position: absolute;
+                                                                            }
+                                                                            .rngRange {
+                                                                                position: relative;
+                                                                                display: flex;
+                                                                                flex-direction: column;
+                                                                                width: 100%;
+                                                                                pointer-events: auto;
+                                                                                background-color: rgb(255, 255, 255);
+                                                                                background-clip: padding-box;
+                                                                                border: 1px solid rgb(133, 135, 150);
+                                                                                border-radius: .3rem;
+                                                                                border-style: solid;
+                                                                                border-width: 1px;
+                                                                                padding: 2px;
+                                                                                border-radius: .35rem;
+                                                                                color: rgb(128, 128, 128);
+                                                                                height:inherit!important;
+                                                                            }
+                                                                            @media only screen and (max-width: 480px) {
+                                                                                .modal.show .modal-dialog{
+                                                                                    float: inherit!important;
+                                                                                    left: inherit!important;
+                                                                                    top: auto!important;
+
+                                                                                }
+                                                                            }
+                                                                        </style>
+                                                                        {{#each item in tableheaderrecords}}
+                                                                        {{#if equals item.sTitle ""}}
+                                                                        {{else}}
+
+                                                                        <div id="{{item.sIndex}}" class="columnSettings">
+                                                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                                <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
+                                                                                <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
+                                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                                                            </div>
+                                                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: </label>
+                                                                                <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {{#if equals item.sVisible true}}
+                                                                        <script>
+                                                                            $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
+                                                                        </script>
+                                                                        {{else}}
+                                                                        <script>
+                                                                            $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
+                                                                        </script>
+                                                                        {{/if}}
+
+                                                                        {{/if}}
+                                                                        {{/each}}
+                                                                    </div>
+                                                                </form>
+                                                                {{/if}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-success saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                            <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End -->
+                                    <div class="table-responsive">
+                                        <style>
+
+                                            .hiddenColumn{
+                                                display:none;
+                                            }
+                                            .showColumn {
+                                                display:table-cell;
+                                                padding:.75rem;
+                                                vertical-align:top;
+                                            }
+                                        </style>
+
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID"  readonly>
+                                                    <div class="modal-header">
+                                                        <h4>Delete</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Please click "Delete" to delete the choosen Sub Tax</p>
+
+                                                        <button class="btn btn-danger float-right btnDeleteSubTax" type="button">
+                                                            <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <table id="subTaxList" style="width:100%" class="dataTable table table-hover table-striped table-bordered subTaxList">
+                                            <thead>
+                                                <tr class="dnd-moved">
+                                                    <th class="th colCode" style="width: 100px">Code</th>
+                                                    <th class="th colDescription">Description</th>
+                                                    <th class="th colCategory" style="width: 150px">Category</th>
+                                                    <th class="th colDelete" style="width: 23px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#if datatablerecords}}
+                                                {{#each item in datatablerecords}}
+                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                    <td contenteditable="false" class="colCode clickable">{{item.codename}}</td>
+                                                    <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
+                                                    <td contenteditable="false" class="colCategory clickable">{{item.category}}</td>
+                                                    <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
+                                                </tr>
+                                                {{/each}}
+                                                {{/if}}
+
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row no-gutters">
+                                    <div class="col">
+                                        <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+
+                    <h4 class="title-header" >Tax Rate</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/taxrate.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Help Video Modal -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

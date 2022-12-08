@@ -1,0 +1,35 @@
+<template name="newLabelModal">
+  <div class="modal fade" id="newLabelModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="">Create New Label</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label class="">Label Name</label>
+                <input class="form-control" type="text" id="newLabelName" name="" autocomplete="off">
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label class="">Label Color</label>
+                <input type="color" class="form-control" id="newLabelColor" name="" autocomplete="off">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btnAddNewLabel vs1ButtonMargin" style="margin : 12px" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" style="margin : 12px; margin-right:0px;" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,104 @@
+<template name="vs1_global_search_modal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="searchGuideModal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Search Guide</h4>
+                    <button type="button" class="close btnClose" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>Just swap the <b style="color: #00a3d3;">123</b> with the relevant ID</p>
+                    <div class="row">
+                        <style>
+                            .shorthandSearchli {
+                                border-bottom: 1px solid #858796;
+                                margin-bottom: 4px;
+                            }
+
+                            .shorthandCode {
+                                color: #00a3d3;
+                                /*                                cursor: pointer;*/
+                            }
+                        </style>
+                        <div class="col-6" style="padding-right: 0px;">
+                            <ul class="" style="list-style-type: none; padding-left: 0px;">
+                                <li class="shorthandSearchli">Account</li>
+                                <li class="shorthandSearchli">Appointment</li>
+                                <li class="shorthandSearchli">Bill</li>
+                                <li class="shorthandSearchli">Check </li>
+                                <li class="shorthandSearchli">Credit</li>
+                                <li class="shorthandSearchli">CRM</li>
+                                <li class="shorthandSearchli">Customer</li>
+                                <li class="shorthandSearchli">Deposit</li>
+                                <li class="shorthandSearchli">Employee</li>
+                                <li class="shorthandSearchli">Fixed Asset</li>
+                                <li class="shorthandSearchli">Invoice</li>
+                                <li class="shorthandSearchli">Journal</li>
+                                <li class="shorthandSearchli">Lead</li>
+                                <li class="shorthandSearchli">Payment</li>
+                                <li class="shorthandSearchli">Product</li>
+                                <li class="shorthandSearchli">Purchase Order</li>
+                                <li class="shorthandSearchli">Quote </li>
+                                <li class="shorthandSearchli">Receipt Claim</li>
+                                <li class="shorthandSearchli">Refund</li>
+                                <li class="shorthandSearchli">Sales Order</li>
+                                <li class="shorthandSearchli">Shipping</li>
+                                <li class="shorthandSearchli">Stock Adjustment</li>
+                                <li class="shorthandSearchli">Stock Transfer</li>
+                                <li class="shorthandSearchli">Supplier</li>
+                                <li class="shorthandSearchli">Task</li>
+                                <li class="shorthandSearchli">Time Sheet</li>
+                                <li class="shorthandSearchli">Work order</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6" style="padding-left: 0px;">
+                            <ul class="" style="list-style-type: none; padding-left: 0px;">
+                                <li class="shorthandSearchli shorthandCode">ACC-123</li>
+                                <li class="shorthandSearchli shorthandCode">APP-123</li>
+                                <li class="shorthandSearchli shorthandCode">BI-123</li>
+                                <li class="shorthandSearchli shorthandCode">CH-123</li>
+                                <li class="shorthandSearchli shorthandCode">CR-123</li>
+                                <li class="shorthandSearchli shorthandCode">CRM-123</li>
+                                <li class="shorthandSearchli shorthandCode">CUS-123</li>
+                                <li class="shorthandSearchli shorthandCode">DEP-123</li>
+                                <li class="shorthandSearchli shorthandCode">EMP-123</li>
+                                <li class="shorthandSearchli shorthandCode">FA-123</li>
+                                <li class="shorthandSearchli shorthandCode">IN-123</li>
+                                <li class="shorthandSearchli shorthandCode">JO-123</li>
+                                <li class="shorthandSearchli shorthandCode">LED-123</li>
+                                <li class="shorthandSearchli shorthandCode">PA-123</li>
+                                <li class="shorthandSearchli shorthandCode">PRO-123</li>
+                                <li class="shorthandSearchli shorthandCode">PO-123</li>
+                                <li class="shorthandSearchli shorthandCode">QU-123</li>
+                                <li class="shorthandSearchli shorthandCode">RC-123</li>
+                                <li class="shorthandSearchli shorthandCode">RE-123</li>
+                                <li class="shorthandSearchli shorthandCode">SO-123</li>
+                                <li class="shorthandSearchli shorthandCode">SH-123</li>
+                                <li class="shorthandSearchli shorthandCode">SA-123</li>
+                                <li class="shorthandSearchli shorthandCode">ST-123</li>
+                                <li class="shorthandSearchli shorthandCode">SUP-123</li>
+                                <li class="shorthandSearchli shorthandCode">TSK-123</li>
+                                <li class="shorthandSearchli shorthandCode">TS-123</li>
+                                <li class="shorthandSearchli shorthandCode">WO-123</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- <p>In order to use these codes, simply type their shorthand followed by a dash and the relevant ID of the associated item.</p>
+                    <p>For example, to quickly search for a specific Product with an ID of 00123, you would simply type in "PRO-00123".</p> -->
+                </div>
+                <div class="modal-footer">
+                    <!-- <div id="close_helpbutton"><a href="#" id="close_help">Don't open by default<img src="icons/closehelp.PNG" class=""></a></div> -->
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input chkOpenByDefault" id="chkOpenByDefault">
+                        <label style="width: 275px;" class="custom-control-label" for="chkOpenByDefault">Don't open by
+                            default</label>
+                    </div>
+                    <button class="btn btn-secondary btnClose" id="btnCloseSearchGuide" type="button"
+                        style="margin: -1rem 0rem -1rem auto;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,667 @@
+<template name="payrollleave">
+    
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <h3 class="text-dark mb-4">Leave
+        <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+        {{> helpbutton}}
+        <!-- Start Help View Modal -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=22" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+        </div>
+        
+        <!-- End Help View Modal -->
+        </h3>
+
+        <div class="row d-xl-flex flex-row justify-content-xl-center">
+
+            <div class="col float-left flex-grow-1 mb-4">
+                <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                <button id="toReviewBtn" class="btn btn-primary toReview" type="button" style="margin: 6px;">To review</button>
+                <button id="upcomingBtn" name="upcomingBtn" class="btn btn-primary" type="button" style="margin: 6px;">Upcoming</button>
+                <button id="historyBtn" name="historyBtn" class="btn btn-primary" type="button" style="margin: 6px;">History</button>
+            </div>
+
+            <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                <button class="btn btn-primary exportbtnExcel" type="button" style="margin: 12px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+            </div>
+
+        </div>
+
+        <div class="card-body p-3 rounded">
+            <div class="table-responsive">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
+
+                    .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                        padding: .75rem!important;
+                    }
+                    .hiddenColumn{
+                        display:none;
+                    }
+                    .showColumn {
+                        display:table-cell;
+                        padding:.75rem;
+                        vertical-align:top;
+                    }
+
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
+                    .dropdown-toggle:after {
+                        display: none !important;
+                    }
+                </style>
+                
+                <div class="row no-gutters d-xl-flex align-items-xl-end">
+                    <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                    </div>
+                    <div
+                        class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
+                            <style>
+                                .btn-daterange::after {
+                                    display: none;
+                                }
+                            </style>
+                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown"
+                                aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                                {{> daterangedropdownoption}}
+                        </div>
+                        <div class="form-group dateSelectMobile"
+                            style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group dateSelectMobile"
+                            style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateTo" name="dateTo">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="tblPayleaveToReview" name="tblPayleaveToReview" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayleaveToReview">
+                    <thead>
+                        <tr class="dnd-moved">
+                            <th class="th colName">Name</th>
+                            <th class="th colType">Type</th>
+                            <th class="th colDate">Date</th>
+                            <th class="th colDescription">Description</th>
+                            <th class="th colStatus">Status</th>
+                            <th style="width: 152px" class="th colAction">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if leaveRequestFiltered}}
+                            {{#each leave in leaveRequestFiltered}}
+                                <tr leave-id="{{leave.ID}}">
+                                    <td class="clickable">{{ leave.Employee.EmployeeName }}</td>
+                                    <td class="clickable">{{ leave.LeaveMethod }}</td>
+                                    <td class="clickable">{{ formatDate leave.EndDate }}</td>
+                                    <td class="clickable">{{ leave.Description }}</td>
+                                    <td class="clickable">{{ leave.Status }}</td>
+                                    <td>
+                                        {{#if leave.isApproved}}
+                                        {{else}}
+                                            <button class="btn btn-success approveLeave" type="button" leave-id="{{leave.ID}}">Approve</button>
+                                        {{/if}}
+
+                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off" ><i class="fas fa-ellipsis-v"></i></button>
+                                        <div class="dropdown-menu daterange" role="menu">
+                                            <a class="dropdown-item editLeave" role="presentation" data-toggle="modal" data-target="#newLeaveRequestModal" leave-id="{{leave.ID}}">Edit</a>
+                                            <a class="dropdown-item rejectLeave" role="presentation" leave-id="{{leave.ID}}">Reject</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/each}}
+
+                        {{/if}}
+                       
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- <div class="row justify-content-center">
+            <div class="col-12 col-md-10">
+                <div class="card shadow mb-3">
+                    <div class="card-header" style="padding: 0px !important;background-color: rgba(0,0,0,0); border-top: 0px; border-left: 0px; border-right: 0px;">
+                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist" style="border-bottom: 0px;">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="org-tab" data-toggle="tab" href="#current" role="tab" aria-controls="home" aria-selected="true">Current</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="cal-tab" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-selected="false">History</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <style>
+                        .leaveSearchDiv {
+                            display: inline-flex;
+                            width: 100%;
+                        }
+                        .searchBar {
+                            width: 100%;
+                        }
+                        .leaveSearchDiv .btn-group {
+                            margin-left: 15px;
+                        }
+                        .leaveSearchDiv .btn-group .dropdown-toggle::after {
+                            display: none;
+                        }
+                        .payrollList {
+                            display: inline-block;
+                            width: 100%;
+                        }
+                        .payrollList h3 {
+                            display: inline-block;
+                            width: 100%;
+                            font-size: 20px;
+                            font-weight: 700;
+                            color: #5a5c69 !important;
+                            margin-top: 15px;
+                            margin-bottom: 8px;
+                        }
+                        .singleList {
+                            display: inline-flex;
+                            width: 100%;
+                            border: 1px solid rgba(0,0,0,0.2);
+                            padding: 15px;
+                            justify-content: space-between;
+                        }
+                        .singleList:hover {
+                            background: #f1f1f1;
+                        }
+                        .singleList + .singleList {
+                            margin-top: -1px;
+                        }
+                        .previewIcon {
+                            width: 40px;
+                            font-size: 14px;
+                            height: 35px;
+                            background: #fdc180;
+                            display: inline-flex;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 25px;
+                            color: #202020;
+                            margin-right: 15px;
+                        }
+                        .payrolContent {
+                            width: 100%;
+                            color: #5a5c69 !important;
+                            text-decoration: none !important;
+                        }
+                        .payrolContent p {
+                            margin: 0;
+                        }
+                        .payrolContent p strong {
+                            margin-right: 5px;
+                            display: inline-block;
+                        }
+                        .payrollAction {
+                            display: inline-block;
+                            width: 160px;
+                        }
+                        .payrollAction .dropdown-toggle::after {
+                            display: none !important;
+                        }
+                        .width30 {
+                            width: 30px;
+                        }
+                        .rejected {
+                            display: inline-block;
+                            padding: 2px 5px;
+                            background-color: #f3b7be;
+                            box-shadow: inset 0 0 0 1px #ee99a3;
+                            color: #4d1219;
+                            font-size: 14px;
+                            border-radius: 5px;
+                        }
+                        .dotIcon {
+                            font-size: 12px;
+                        }
+                        .leftRightContent {
+                            display: inline-flex;
+                            width: 100%;
+                            justify-content: space-between;
+                        }
+                        .leftRightContent label {
+                            width: 50%;
+                            margin: 0px;
+                        }
+                        .leftRightContent label span + span {
+                            border-top: 1px solid rgba(0,0,0,0.2);
+                            margin-top: 5px;
+                            padding-top: 5px;
+                        }
+
+                        .leftRightContent label + label span {
+                            text-align: right;
+                        }
+                        .leftRightContent label span {
+                            display: inline-block;
+                            width: 100%;
+                            text-align: left;
+                        }
+                        .leftRightContent label span input {
+                            width: 100%;
+                            max-width: 150px;
+                            display: inline-block;
+                        }
+                        .btn.btn-danger:hover,
+                        .btn.btn-danger:focus {
+                            background-color: #e02d1b !important;
+                            border-color: #d52a1a !important;
+                        }
+
+                    </style>
+                    <div class="card-body">
+                        <div class="card-body p-3 rounded">
+                            <div class="tab-content" id="myTabContent">
+
+                                <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="current-tab">
+                                    <div class="leaveSearchDiv">
+                                        <div class="searchBar">
+                                            <input class="form-control" type="text" placeholder="Search">
+                                        </div>
+                                        <div class="btn-group">
+                                            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-filter"></i> Status
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item dropdownChild" href="#">Status</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Newest first</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Employee surname(A-Z)</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="btn-group">
+                                            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-filter"></i> All
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item dropdownChild" href="#">All</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Type</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Date</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Status</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="payrollList">
+                                        <h3>To review</h3>
+                                        <div class="singleList">
+                                            <div class="previewIcon">
+                                                <span>OG</span>
+                                            </div>
+                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
+                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                            </a>
+                                            <div class="payrollAction">
+                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
+                                                    Approve
+                                                </a>
+                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                <div class="dropdown-menu daterange" role="menu">
+                                                    <a class="dropdown-item" role="presentation">Edit</a>
+                                                    <a class="dropdown-item" role="presentation">Reject</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="singleList">
+                                            <div class="previewIcon">
+                                                <span>OG</span>
+                                            </div>
+                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
+                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                            </a>
+                                            <div class="payrollAction">
+                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
+                                                    Approve
+                                                </a>
+                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                <div class="dropdown-menu daterange" role="menu">
+                                                    <a class="dropdown-item" role="presentation">Edit</a>
+                                                    <a class="dropdown-item" role="presentation">Reject</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <h3>Upcoming</h3>
+                                        <div class="singleList">
+                                            <div class="previewIcon">
+                                                <span>OG</span>
+                                            </div>
+                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
+                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                            </a>
+                                            <div class="payrollAction">
+                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
+                                                    Approve
+                                                </a>
+                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                <div class="dropdown-menu daterange" role="menu">
+                                                    <a class="dropdown-item" role="presentation">Edit</a>
+                                                    <a class="dropdown-item" role="presentation">Reject</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="singleList">
+                                            <div class="previewIcon">
+                                                <span>OG</span>
+                                            </div>
+                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
+                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                            </a>
+                                            <div class="payrollAction">
+                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
+                                                    Approve
+                                                </a>
+                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                <div class="dropdown-menu daterange" role="menu">
+                                                    <a class="dropdown-item" role="presentation">Edit</a>
+                                                    <a class="dropdown-item" role="presentation">Reject</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="singleList">
+                                            <div class="previewIcon">
+                                                <span>OG</span>
+                                            </div>
+                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
+                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                            </a>
+                                            <div class="payrollAction">
+                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
+                                                    Approve
+                                                </a>
+                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                <div class="dropdown-menu daterange" role="menu">
+                                                    <a class="dropdown-item" role="presentation">Edit</a>
+                                                    <a class="dropdown-item" role="presentation">Reject</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                                    <div class="leaveSearchDiv">
+                                        <div class="searchBar">
+                                            <input class="form-control" type="text" placeholder="Search">
+                                        </div>
+                                        <div class="btn-group">
+                                            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-filter"></i> Status
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item dropdownChild" href="#">Status</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Newest first</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Employee surname(A-Z)</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="btn-group">
+                                            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-filter"></i> All
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item dropdownChild" href="#">All</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Type</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Date</a></li>
+                                                <li><a class="dropdown-item dropdownChild" href="#">Status</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="payrollList mt-3">
+                                        <div class="singleList">
+                                            <div class="previewIcon">
+                                                <span>OG</span>
+                                            </div>
+                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                <p><strong>Oliver Gray</strong> Annual Leave <span class="rejected">Rejected</span></p>
+                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                            </a>
+                                            <div class="payrollAction width30">
+                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                <div class="dropdown-menu daterange" role="menu">
+                                                    <a class="dropdown-item" role="presentation">View</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                <button class="btn btn-success float-right btnSaveDefaultTax" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        
+
+        <!-- edit leave request modal -->
+        
+        <div class="modal fade" id="newLeaveRequestModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <style>
+                            .modal-title.hide {
+                                display: none;
+                            }
+                        </style>
+                        <h5 class="modal-title new-leave-title" id="newLeaveRequestLabel">New Leave Request</h5>
+                        <h5 class="modal-title edit-leave-title hide" id="newLeaveRequestLabel">Edit Leave Request</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="row" id="leaveRequestForm">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Type of Request</label>
+                                    <input type="hidden" id="edtLeaveRequestID" value="0">
+                                    <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
+                                    <!-- <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
+                                    </select>  -->
+                                    <input type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;" />
+                                    
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" class="form-control" id="edtLeaveDescription" name="edtLeaveDescription">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <div class="input-group date" style="cursor: pointer;">
+                                        <input type="text" class="form-control formClassDate edtLeaveStartDate" id="edtLeaveStartDate" name="edtLeaveStartDate" value="">
+                                        <div class="input-group-addon" style="">
+                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <div class="input-group date" style="cursor: pointer;">
+                                        <input type="text" class="form-control formClassDate edtLeaveEndDate" id="edtLeaveEndDate" name="edtLeaveEndDate" value="">
+                                        <div class="input-group-addon" style="">
+                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Pay Period</label>
+                                    <input type="search" class="form-control"  style="cursor: pointer;" id="edtLeavePayPeriod" name="edtLeavePayPeriod" placeholder="How often will you pay your employees?">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Hours</label>
+                                    <input type="text" class="form-control" id="edtLeaveHours" name="edtLeaveHours">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer" style="justify-content: space-between;">
+                        <div class="col-4 pl-0">
+                            <div class="dropdown float-left">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <input type="search" class="form-control"  style="cursor: pointer;" id="edtLeavePayStatus" name="edtLeavePayStatus" />
+                                </div>
+                                <!-- <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Status
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item pointer noneModal" data-toggle="modal" >Awaiting</a>
+                                    <a class="dropdown-item pointer workplaceGivingModal" data-toggle="modal" >Approved</a>
+                                    <a class="dropdown-item pointer unionAssociationFeesModal" data-toggle="modal" >Denied</a>
+                                </div> -->
+                            </div>
+                        </div>
+                        <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
+                        <button type="button " id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                        <button type="button" class="btn btn-secondary mt-3 close-modal" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- edit leave request modal -->
+        
+        <!-- <div class="modal fade" id="payrollModalEdit" tabindex="-1" role="dialog" aria-labelledby="payrollModalEditLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable ui-draggable" role="document">
+                <div class="modal-content" style="max-width: 580px;">
+                  <div class="modal-header supportHelpModal ui-draggable-handle">
+                      <h4>Edit leave request</h4>
+                  </div>
+                  <div class="modal-body supportHelpModal">
+                    <div class="form-group">
+                        <label>Employee</label>
+                        <input type="text" autocomplete="off" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Leave type</label>
+                        <input type="text" autocomplete="off" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" autocomplete="off" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin: 4px;">
+                        <label>Start date</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" name="edtFirstPayDate" id="edtFirstPayDate" autocomplete="off"><img class="ui-datepicker-trigger" src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin: 4px;">
+                        <label>End date</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" name="edtFirstPayDate" id="edtFirstPayDate" autocomplete="off"><img class="ui-datepicker-trigger" src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                        </div>
+                    </div>
+                    <div class="form-group leftRightContent" style="margin: 4px;">
+                        <label>
+                            <span>Current Leave Balance</span>
+                            <span>Annual Leave</span>
+                        </label>
+                        <label>
+                            <span>Hours</span>
+                            <span>11.6602</span>
+                        </label>
+                    </div>
+                    <div class="form-group leftRightContent" style="margin: 4px;">
+                        <label>
+                            <span>Pay Period</span>
+                            <span>Fortnight ending 25 Nov 2022 </span>
+                        </label>
+                        <label>
+                            <span>Hours</span>
+                            <span><input type="text" autocomplete="off" class="form-control"></span>
+                        </label>
+                    </div>
+                  </div>
+                    <div class="modal-footer justify-content-between ui-draggable-handle">
+                        
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-danger">Reject</button>
+                            <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                              <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" role="menu">
+                                <a class="dropdown-item" role="presentation">Reject With a note</a>
+                            </div>
+                        </div>
+                        <div class="btn-group-new">
+                            <button class="btn btn-secondary" data-dismiss="modal" type="button" autocomplete="off"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                            <button class="btn btn-primary" type="button">Approve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <!-- End Modal Product -->
+    
+    {{> assignLeaveTypePop leaveTypes=leaveTypes}}
+    
+    <script>
+        modalDraggable();
+    </script>
+</template>

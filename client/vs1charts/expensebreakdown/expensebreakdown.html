@@ -1,0 +1,51 @@
+<template name="expensebreakdown">
+    <style type="text/css">
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+        .sortableExpenseBreakdown {
+            width: 100%;
+            min-width: 275px;
+            max-width: calc(25% - 0.5rem);
+        }
+
+        .sortableExpenseBreakdown .expense-widget {
+            width: -webkit-fill-available;
+
+        }
+
+
+        @media screen and (max-width: 1306px) {
+            .sortableExpenseBreakdown {
+                width: 100%;
+                max-width: 512px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .sortableExpenseBreakdown {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Expenses Breakdown"
+        hrefDetails="/agedpayables"
+        editModalID="editDashboardModal"
+    }}
+    <canvas id="expensebreakdownchart" name="expensebreakdownchart"></canvas>
+    {{/draggablePanel}}
+</template>

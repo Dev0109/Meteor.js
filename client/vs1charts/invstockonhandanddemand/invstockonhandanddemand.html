@@ -1,0 +1,35 @@
+<template name="invstockonhandanddemand">
+    <style type="text/css">
+           .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+        .card.hovered {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+            cursor: move;
+            transition-duration: 300ms;
+
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id="invstockonhandanddemand"
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Stock On Hand and Demand"
+        hrefDetails=""
+        editModalID=""
+    }}
+        <canvas id="chart"></canvas>
+    {{/draggablePanel}}
+</template>

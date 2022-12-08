@@ -1,0 +1,32 @@
+<template name="monthlyprofitandloss">
+    <style type="text/css">
+        .hidechat {
+            display: none;
+        }
+
+        .showchat {
+            display: block;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        id="minHeight100"
+        headerClass="monthlycardheader"
+        headerColor="primary"
+        headerTitle="Monthly Profit and Loss"
+        hrefDetails="/newprofitandloss"
+        editModalID="editDashboardModal"
+    }}
+    <canvas id="monthlyprofitandlosschart" name="monthlyprofitandlosschart"></canvas>
+    {{/draggablePanel}}
+</template>

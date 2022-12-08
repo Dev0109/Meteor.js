@@ -1,0 +1,25 @@
+<template name="absenteeRate">
+    <style type="text/css">
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Absentee Rate Over The Last 12 Months"
+        hrefDetails=""
+        editModalID=""
+    }}
+    <canvas id="myChartCustomer" name="myChartCustomer"></canvas>
+    {{/draggablePanel}}
+</template>

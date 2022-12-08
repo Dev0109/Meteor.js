@@ -1,0 +1,62 @@
+<template name="dashboardmy">
+    <style>
+        .custom-sales-card > .card-body{
+            padding: 1rem 0.4rem;
+        }
+        .small-heading {
+            font-size: 0.8rem;
+        }
+        .my-tasks {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            background-color: #ededed;
+            border-radius: 14px;
+            max-height: 350px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .highcharts-credits {
+            display: none !important;
+        }
+
+        #calendar {
+            height: 450px;
+        }
+    </style>
+    <div class="container-fluid">
+        {{#if includeDashboard}}
+            <div class="row mb-2">
+                <div class="col-12 col-md-12">
+                    <header class="pt-1 pb-1 d-flex justify-content-center">
+                        <h2>My Performance Dashboard</h2>
+                    </header>
+                    <hr>
+                </div>
+            </div>
+            <div class="row pt-3 pb-3">
+                <div class="col-md-8">
+                    {{> allCardsLists tabGroupID="11" chartGroup="dashboardSales" type="dashboardSales"}}
+                </div>
+                <div class="col-md-4">
+                    <div class="my-tasks">
+                        {{> myTasksWidget}}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row pt-3 pb-3">
+                <div class="col-md-8">
+                    {{> allChartLists  tabGroupID="11" chartGroup="DSCharts" }}
+                </div>
+                <div class="col-md-4">
+                    {{> appointmentsWidget}}
+                </div>
+            </div>
+            <hr>
+            <div class="pt-3 pb-3" style="overflow: hidden;">
+                {{> leadlist}}
+            </div>
+        {{/if}}
+    </div>
+</template>

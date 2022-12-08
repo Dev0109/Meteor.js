@@ -1,0 +1,88 @@
+<template name="lotnumberpop">
+
+    <style>
+        #tblLotlist td {
+            padding: 4px 10px !important;
+            border-top: none;
+        }
+        .lotNumber input, .lotExpiryDate input {
+            padding: 0!important;
+            border: none;
+        }
+        .lotNumber input {
+            width: 120px;
+        }
+        #ui-datepicker-div {
+            z-index: 10000!important;
+        }
+        .btnAutoFill, .btnSNSave {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btnAutoFill .spinner-border,
+        .btnSNSave .spinner-border {
+            width: 20px;
+            height: 20px;
+            border-width: 0.2rem;
+            color: #fff!important
+        }
+    </style>
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="lotform" name="lotform">
+                <div class="modal-header">
+                    <h4><div name="newShipViaMethodName" id="newShipViaMethodName">Lot Numbers</div></h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 8px 24px;">
+                    <div class="row">
+                        <div class="col-12 tblLNlist">
+                            <table id="tblLotlist" class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="2"></td>
+                                        <td colspan="3" class="text-center">Allocate Lot Numbers</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start">#</td>
+                                        <td class="text-start">Lot Number</td>
+                                        <td class="text-start">Expiry Date</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td class="lotNo">*</td>
+                                        <td contenteditable="true" class="lineLotnumbers" id="first-lot-number"></td>
+                                        <td class="lotExpiryDate" id="first-lot-expiry-date">
+                                            <div class="form-group m-0">
+                                                <div class="input-group date" style="cursor: pointer;">
+                                                    <input type="text" class="form-control" style="height: 25px;">
+                                                    <div class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex w-100 justify-content-between" style="gap: 0.5rem;">
+                        <button class="btn btn-success w-100 btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i><div class="spinner-border d-none" role="status"></div>&nbsp;Save</button>
+                        <button class="btn btn-success w-100 btnSelect" type="button">Select</button>
+                        <button class="btn btn-success w-100 btnAutoFill" type="button"><div class="spinner-border d-none" role="status"></div>&nbsp;Auto Fill</button>
+                    </div>
+                    <div class="d-flex w-100 justify-content-between" style="gap: 0.5rem;">
+                        <button class="btn btn-primary w-100 btnPrint" type="button"><i class="fa fa-print" style="padding-right: 3px;"></i>Print</button>
+                        <button class="btn btn-danger w-100 btnDelete" type="button"><i class="fas fa-trash-alt" style="margin-right: 3px;"></i>Delete</button>
+                        <button class="btn btn-secondary w-100" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</template>

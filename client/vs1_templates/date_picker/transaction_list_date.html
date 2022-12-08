@@ -1,0 +1,12 @@
+<template name="transaction_list_date">
+    <div class="dropdown" style="margin: 8px; margin-top: 0px;">
+        <style>
+            .btn-daterange::after {
+                display: none;
+            }
+        </style>
+        <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+        {{> daterangedropdownoption}}
+    </div>
+  {{> daterangefromto_trans}}
+</template>

@@ -1,0 +1,443 @@
+<template name="frmappointmentpop">
+    <style>
+        .modal {
+            overflow-y: auto;
+        }
+    </style>
+    
+    <form id="frmAppointment">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable modalCreateOuter" role="document">
+            <div class="modal-content modalCreateAppointments" id="modalCreateAppointments">
+                <div class="modal-header">
+                    <h4 style="margin-bottom: 0px;">Product/Service for Appointment</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 0px;">
+                    <div class="row m-2">
+                        <div class="col-md-6 colCustJobName" id="colCustJobName">
+                            <div class="form-group flex-grow-1 my-2"><label>Customer / Job</label>
+                                <select type="search" class="form-control" id="customer" name="customer" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-2 colMobno" id="colMobno">
+                            <div class="form-group flex-grow-1 my-2"><label>Mobile
+                                    No.</label><textarea id="mobile" name="mobile" class="form-control" style="height:38px;"></textarea><span>+</span></div>
+                        </div>
+                        <style>
+                            #colMobno .form-group {
+                                position: relative;
+                            }
+
+                            #colMobno .form-group input, #colMobno .form-group textarea {
+                                padding-left: 20px;
+                            }
+
+                            #colMobno .form-group span {
+                                position: absolute;
+                                bottom: 6px;
+                                left: 10px;
+                                font-size: 17px;
+                            }
+                        </style>
+                        <div class="col-md-2 colPhoneno" id="colPhoneno">
+                            <div class="form-group flex-grow-1 my-2"><label>Phone
+                                    No.</label><textarea id="phone" name="phone" class="form-control" style="height:38px;"></textarea></div>
+                        </div>
+                        <div class="col-md-2 colAppID" id="colAppID">
+                            <div class="form-group flex-grow-1 my-2"><label>App
+                                    ID</label><input type="text" id="appID" name="appID" class="form-control" readonly>
+                                <input type="hidden" id="updateID" name="updateID" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4 colStreetAddress" id="colStreetAddress">
+                            <div class="form-group flex-grow-1 my-2"><label>Street
+                                    Address</label><input type="text" id="address" name="address" class="form-control"></div>
+                        </div>
+                        <div class="col-md-2 colCityTown" id="colCityTown">
+                            <div class="form-group flex-grow-1 my-2">
+                                <label>Suburb</label><input type="text" id="suburb" name="suburb" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-2 colState" id="colState">
+                            <div class="form-group flex-grow-1 my-2">
+                                <label>State</label><input type="text" id="state" name="state" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-2 colCountry" id="colCountry">
+                            <div class="form-group flex-grow-1 my-2">
+                                <label>Country</label><input type="text" id="country" name="country" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-2 colZip" id="colZip">
+                            <div class="form-group flex-grow-1 my-2"><label>Zip
+                                    Code</label><input type="text" id="zip" name="zip" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12 p-0">
+                            <hr class="m-2">
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" id="googleLink" class="googleLink my-2">Google Maps Link</a>
+                        </div>
+                        <div class="col-md-2 custom-control custom-control-inline custom-switch chkSMSCustomer-container mx-1 pl-2">
+                            <div class="form-group w-100">
+                                <input class="custom-control-input chkSMSCustomer" type="checkbox" id="chkSMSCustomer" style="font-size: 22px;" checked><label class="custom-control-label" for="chkSMSCustomer">SMS Customer</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 custom-control custom-control-inline custom-switch chkSMSUser-container mx-1 pl-2">
+                            <div class="form-group w-100">
+                                <input class="custom-control-input chkSMSUser" type="checkbox" id="chkSMSUser" style="font-size: 22px;" checked><label class="custom-control-label" for="chkSMSUser">SMS User</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 custom-control custom-control-inline custom-switch customerEmail-container mx-1 pl-2">
+                            <div class="form-group w-100">
+                                <input class="custom-control-input customerEmail" type="checkbox" id="customerEmail" style="font-size: 22px;" checked><label class="custom-control-label" for="customerEmail">Email Customer</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 custom-control custom-control-inline custom-switch userEmail-container mx-1 pl-2">
+                            <div class="form-group w-100">
+                                <input class="custom-control-input userEmail" type="checkbox" id="userEmail" style="font-size: 22px;" checked><label class="custom-control-label" for="userEmail">Email User</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 p-0">
+                            <hr class="m-2">
+                        </div>
+                        <div class="col-md-6 colEmpName" id="colEmpName">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Employee
+                                    Name</label><input id="employee_name" name="employee_name" type="text" class="form-control employee_name" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-3 colStartDate" id="colStartDate">
+                            <div class="form-group" style="margin: 8px 0px;">
+                                <label>Start Date</label>
+                                <div class="input-group date" style="cursor: pointer;">
+                                    <input type="text" class="form-control formClassDate statementDate" id="dtSODate" name="dtSODate">
+                                    <div class="input-group-addon" style="">
+                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 colEndDate" id="colEndDate">
+                            <div class="form-group" style="margin: 8px 0px;">
+                                <label>End Date</label>
+                                <div class="input-group date" style="cursor: pointer;">
+                                    <input type="text" class="form-control formClassDate statementDate" id="dtSODate2" name="dtSODate2">
+                                    <div class="input-group-addon" style="">
+                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 colNotesParent" id="colNotesParent">
+                            <div class="row" style="padding: 0px 8px;">
+                                {{#if equals addNotes true}}
+                                    <div class="col-12 colNotes" id="colNotes" style="padding-left: 2px; padding-right: 0px;">
+                                        <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                            <label>Notes</label>
+                                            <textarea class="border rounded form-control txtNotes" rows="5" id="txtNotes" name="txtNotes" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="col-md-8" id="colBookedTimeParent">
+                            <div class="row" style="padding: 0px 8px;">
+                                <div class="col-md-3 colBookedTime" id="colBookedTime">
+                                    <h5 class="float-right bookedTimeHeader" id="bookedTimeHeader" style="margin: 8px 0px; margin-top: 2.5em;">
+                                        Booked Time</h5>
+                                </div>
+                                <div class="col-md-3 colBookedStartTime" id="colBookedStartTime" style="padding-left: .5rem;">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Start
+                                            Time</label><input class="form-control" id="startTime" name="startTime" type="time">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 colBookedEndTime" id="colBookedEndTime">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End
+                                            Time</label><input class="form-control" id="endTime" name="endTime" type="time"></div>
+                                </div>
+                                <div class="col-md-2 colBookedHours" id="colBookedHours" style="padding-right: .3rem;">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Hours</label><input type="text" id="txtBookedHoursSpent" name="txtBookedHoursSpent" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 flex justify-content-center align-items-center" id="smsConfirmedFlag" style="padding-right: .3rem; padding-top: 40px;">
+                                    <i class="fas fa-minus-circle text-info d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>
+                                    <i class="fa fa-check-circle text-success d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                    <i class="fa fa-close text-danger d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>
+                                    <i class="fa fa-question text-warning d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>
+                                </div>
+                            </div>
+                            <div class="row" style="padding: 0px 8px;">
+                                <div class="col-md-3 colActualTime" id="colActualTime">
+                                    <h5 class="float-right timeHeader" id="timeHeader" style="margin: 8px 0px; margin-top: 2.5em;">
+                                        Actual Time</h5>
+                                </div>
+                                <div class="col-md-3 colActualStartTime" id="colActualStartTime" style="padding-left: .5rem;">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Start
+                                            Time</label><input class="form-control" type="time" id="tActualStartTime" name="tActualStartTime">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 colActualEndTime" id="colActualEndTime">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End
+                                            Time</label><input class="form-control" type="time" id="tActualEndTime" name="tActualEndTime">
+
+                                        <span class="btn btn-warning paused" style="margin: 8px 0px; width: 100%; margin-top: -56px; background-color: rgba(246, 194, 62, 0.4); cursor: default;">Paused</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 colActualHours" id="colActualHours" style="padding-right: .3rem;">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Hours</label><input type="text" id="txtActualHoursSpent" name="txtActualHoursSpent" class="form-control" readonly>
+                                        <input id="aStartDate" name="aStartDate" type="hidden" class="form-control employee_name">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-1 colAppointmentList" id="colAppointmentList" style="padding-right: .3rem;">
+                                    <label></label>
+                                    <button class="btn btn-success btnAppointmentList" type="button" style="margin: 15px 0px; width: 48px;" id="btnAppointmentList"><i class="far fa-clock"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 p-0">
+                            <hr class="m-2">
+                        </div>
+
+
+                        <div class="col-xl-4 col-12 colProductService2" id="colProductService2">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
+                                    Service for Appointment</label>
+
+                                <select type="search" id="product-list" name="product-list" class="form-control product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                    <!-- {{#if datatablerecords}}
+                                        {{#each item in datatablerecords}}
+                                            <option value="{{item.id}}">{{item.productname}}</option>
+                                        {{/each}}
+                                    {{/if}} -->
+                                </select>
+                            </div>
+                        </div>
+
+                        {{#if equals addAttachment true}}
+                            <div class="col-xl-2 col-12 colProductService1" id="colProductService1" style="padding-top: 2em;">
+                                <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" autocomplete="off"> <span id="attachmentCount"></span> <i
+                                        class="fa fa-paperclip"></i></button>
+
+                                <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera" autocomplete="off"><i class="fa fa-camera"
+                                        aria-hidden="true"></i></button>
+                            </div>
+                        {{/if}}
+                        <div class="col-xl-2 col-4 colStart" id="colStart" style="padding-top: 2em;">
+                            <button class="btn btn-success" type="button" style="margin: 8px 0px; width: 100%;" id="btnStartAppointment">Start</button>
+                        </div>
+                        <!-- {{#if equals accessOnHold false}} -->
+                        <div class="col-xl-2 col-4 colOnHold" id="colOnHold" style="padding-top: 2em;">
+                            <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold">On Hold </button>
+                        </div>
+                        <!-- {{else}}
+                            <div class="col-xl-2 col-4 colOnHold" id="colOnHold" style="padding-top: 2em;">
+                                <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold"><span>On Hold</span></button>
+                            </div>
+                        {{/if}} -->
+                        <div class="col-xl-2 col-4 colStop" id="colStop" style="padding-top: 2em;">
+                            <button class="btn btn-danger" type="button" style="margin: 8px 0px; width: 100%;" id="btnStopAppointment">Stop</button>
+                        </div>
+                        <div class="col-md-12 p-0">
+                            <hr class="m-2">
+                        </div>
+
+                        <div class="row">
+                            <button class="btn btn-primary addExtraProduct" type="button" style="margin-bottom: 36px; margin-left: 16px;">Extra Product / Service Fees</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    {{#if equals accessStartStopOnly true}}
+                        <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoiceDisable" name="btnCreateInvoiceDisable"><span>Create Invoice</span></button>
+                        <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptionsDisable" name="btnCopyOptionsDisable" disabled><span>Copy Appointment</span></button>
+                    {{else}}
+                        <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoice" name="btnCreateInvoice">Create Invoice</button>
+                        <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptions" name="btnCopyOptions">Copy Appointment</button>
+                    {{/if}}
+                    <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    {{#if equals accessStartStopOnly true}}
+                        <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
+                        <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->                            
+                    {{else}}
+                        <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
+                        <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button> -->
+                    {{/if}}
+
+                    <!-- Start Appointment Modal to choose Start Appointment SMS Message -->
+                    <div class="modal fade" role="dialog" id="startAppointmentModal">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="mb-0">Start Appointment SMS Message</h4><button type="button" class="close" id="btnCloseStartAppointmentModal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
+                                    <div class="row m-0">
+                                        <div class="col p-3">
+                                            <label>You are able to edit Start Appointment SMS message here</label>
+                                            <textarea class="border rounded form-control" rows="5" id="startAppointmentSMSMessage" name="startAppointmentSMSMessage"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+
+                                        <button class="btn btn-primary btnStartAppointmentConfirm" id="btnStartAppointmentConfirm" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                        <button class="btn btn-warning btnStartIgnoreSMS" id="btnStartIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+                                        <button class="btn btn-secondary" id="btnCloseStartAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stop Appointment Modal to choose Stop Appointment SMS Message -->
+                    <div class="modal fade" role="dialog" id="stopAppointmentModal">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="mb-0">Stop Appointment SMS Message</h4><button type="button" class="close" id="btnCloseStopAppointmentModal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
+                                    <div class="row m-0">
+                                        <div class="col p-3">
+                                            <label>You are able to edit Stop Appointment SMS message here</label>
+                                            <textarea class="border rounded form-control" rows="5" id="stopAppointmentSMSMessage" name="stopAppointmentSMSMessage"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+
+                                        <button class="btn btn-primary btnEndActualTime" id="btnEndActualTime" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                        <button class="btn btn-warning btnStopIgnoreSMS" id="btnStopIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+                                        <button class="btn btn-secondary" id="btnCloseStopAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Appointment Modal to choose Save Appointment SMS Message -->
+                    <div class="modal fade" role="dialog" id="saveAppointmentModal">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="mb-0">Save Appointment SMS Message</h4><button type="button" class="close" id="btnCloseSaveAppointmentModal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
+                                    <div class="row m-0">
+                                        <div class="col p-3">
+                                            <label>You are able to edit Save Appointment SMS message here</label>
+                                            <textarea class="border rounded form-control" rows="5" id="saveAppointmentSMSMessage" name="saveAppointmentSMSMessage"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+
+                                        <button class="btn btn-primary btnSaveAppointmentSubmit" id="btnSaveAppointmentSubmit" type="submit"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                        <button class="btn btn-warning btnSaveIgnoreSMS" id="btnSaveIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+                                        <button class="btn btn-secondary" id="btnCloseSaveAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Attachemt -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Upload Attachments</h4><button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="padding: 0px;">
+                                    <div class="divTable" id="file-display">
+                                        <!-- <div class="uploaded-element-header">
+                <span class="uploaded-on uploaded-header">Upload a file</span>
+                </div> -->
+                                        <div class="col inboxcol1">
+                                            <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
+                                        </div>
+                                        <div class="col inboxcol2" style="text-align: center;">
+                                            <div>Upload files or add files from the file library.</div>
+
+                                            <div>Capture copies of receipt's or take photo's of completed jobs.</div>
+
+                                            <p style="color: #ababab;">Only users with access to your company can view these files</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="file" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
+                                    <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
+
+                                    <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
+
+                                    <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
+                                    .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
+                                    .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
+                                    image/gif,image/png,image/bmp,image/tiff,application/pdf,
+                                    application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                    application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                                    application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                                    application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822,
+                                    application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet,
+                                    application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey,
+                                    application/vnd.apple.keynote,application/x-iwork-pages-sffpages,
+                                    application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
+                                    application/vnd.apple.numbers,application/zip,application/rar,
+                                    application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
+
+                                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
+                                    <button class="btn btn-success btnAddAttachmentSave" type="button" style="margin-right: 5px;" autocomplete="off">
+                                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                                    </button>
+                                    <!-- <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button> -->
+                                    <button class="btn btn-secondary closeModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END Attachments -->
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+                        {{> addcustomerpop}}
+                    </div>
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+                        {{> payrollproductlistpop}}
+                    </div>
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal1">
+                        {{> productlistpopwithcheckboxes}}
+                    </div>
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal2">
+                        {{> productlistpop}}
+                    </div>
+
+                    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+                        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+                            <div class="modal-content customerListContent">
+                                <div class="modal-header">
+                                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+                                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
+                                    {{> customerlistpop}}
+                
+                                </div>
+                                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary checkclose" data-dismiss="modal" type="button" style="margin: 14px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>

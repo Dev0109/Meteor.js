@@ -1,0 +1,35 @@
+<template name="activeEmployees">
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=50
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Active Employees"
+        hrefDetails=""
+        editModalID="editDashboardModal"
+    }}
+    <div class="row no-gutters align-items-center" style="margin-bottom: 20px;margin-top: 20px;">
+        {{#if loggeduserdata}}
+        {{#each itemloggeduser in loggeduserdata}}
+        <div class="col-6">
+            <div
+                class="text-dark d-xl-flex flex-column justify-content-xl-center font-weight-bold h5 mb-0 mr-3">
+                <!-- <a href="/employeescard?id={{itemloggeduser.id}}"> -->
+                <a href="javascript:void();">
+                    <p style="text-overflow: ellipsis; overflow: hidden; width: 100%; white-space: nowrap;">
+                        <img src="{{ itemloggeduser.avatar }}"
+                            style="width: 45px;margin-right: 10px; margin-bottom: 10px; ">{{itemloggeduser.employeeName}}
+                    </p>
+                </a>
+            </div>
+        </div>
+        {{/each}}
+        {{/if}}
+
+    </div>
+    {{/draggablePanel}}
+
+</template>

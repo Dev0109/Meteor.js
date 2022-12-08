@@ -1,0 +1,236 @@
+<template name="uomSettings">
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <h3 class="text-dark mb-4">UOM Settings
+            <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+        </h3>
+        <div class="row justify-content-center mb-3">
+            <div class="col-12 col-md-12">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 font-weight-bold">UOM Settings</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col d-xl-flex flex-grow-1 align-items-xl-start" style="padding: 0px !important;">
+                                <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav " type="button" style="min-width: 117.016px;margin :14px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+
+                                <button class="btn btn-primary btnAddUOM" type="button" data-toggle="modal" data-target="#newUomModal" style="margin: 12px;"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New UOM</button>
+                            </div>
+
+                            <div class="col d-xl-flex justify-content-xl-end align-items-xl-start" style="padding: 0px !important;">
+                                {{> export_import_print_display_button tablename="tblUOMList"}}
+                            </div>
+                        </div>
+                        {{> non_transactional_list tablename="tblUOMList"}}
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
+                <div class="modal-header">
+                    <h4>Delete</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Please click "Delete" to deactivate this UOM</p>
+
+                    <button class="btn btn-danger float-right btnDeletePaymentMethod" type="button">
+                        <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- End delete modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=71" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                </div>
+                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">Units of Measure</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/comingsoon.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New UOM Settings Modal -->
+    <div class="modal fade" id="newUomModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document" style="max-height: 100%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style=""><div id="add-uom-title" name="add-uom-title" style="float: left;">Add New UOM</div>
+                      <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+
+                      <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+                          <div class="modal-dialog modal-sm" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header" style="padding-bottom: 8px;">
+                                      <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                      <div class="modal-body">
+                                          <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
+                                          <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                          <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                                          <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                      </div>
+                                  <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                              </div>
+                          </div>
+                    </div>
+                      <!-- End Help View Modal -->
+                    </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Unit Name</label>
+                                <input class="form-control" type="text" id="edtUnitName" name="edtUnitName" autocomplete="off">
+                                <input type="hidden" class="form-control" id="edtUOMID" name="edtUOMID" style="display:none;">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Unit Multiplier</label>
+                                <input class="form-control" type="text" id="edtUnitMultiplier" name="edtUnitMultiplier" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12">
+                            <div class="form-group">
+                                <label style="width: 100%;">Link To<i class="fas fa-question-circle float-right text-primary" style="margin-top: 4px;" data-toggle="tooltip" data-placement="bottom" title="If left blank, the unit can be used with all products"></i></label>
+                                <!-- <label style="width: 100%;">Link To<i class="fas fa-question-circle float-right text-primary" style="margin-top: 4px; cursor: help;" data-toggle="tooltip" data-placement="bottom" title="If left blank, the unit can be used with all products"></i></label> -->
+                                <input type="search" autocomplete="off" class="form-control es-input" id="sltProduct" name="sltProduct" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12">
+                            <div class="form-group">
+                                <label>Unit Description</label>
+                                <textarea class="form-control" rows="3" id="txaUnitDescription" name="txaUnitDescription"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group" style="margin: 4px 8px;">
+                                <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px;">
+                                    {{#if equals includeSalesDefault true}}
+                                    <input class="custom-control-input chkBox swtSalesDefault" type="checkbox" id="swtSalesDefault" name="group1[]" checked>
+                                    {{else}}
+                                    <input class="custom-control-input chkBox swtSalesDefault" type="checkbox" id="swtSalesDefault" name="group1[]">
+                                    {{/if}}
+                                    <label class="custom-control-label chkBox" for="swtSalesDefault">Sales Default</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group" style="margin: 4px 8px;">
+                                <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px;">
+                                    {{#if equals includePurchaseDefault true}}
+                                    <input class="custom-control-input chkBox swtPurchaseDefault" type="checkbox" id="swtPurchaseDefault" name="group1[]" checked>
+                                    {{else}}
+                                    <input class="custom-control-input chkBox swtPurchaseDefault" type="checkbox" id="swtPurchaseDefault" name="group1[]">
+                                    {{/if}}
+                                    <label class="custom-control-label chkBox" for="swtPurchaseDefault">Purchase Default</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <hr />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Weight</label>
+                                <input class="form-control" type="text" id="edtUnitWeight" name="edtUnitWeight" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>No of Boxes</label>
+                                <input class="form-control" type="text" id="edtNoOfBoxes" name="edtNoOfBoxes" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <hr />
+                        </div>
+                        <div class="col-12 ">
+                            <header>
+                                <h4>Dimensions in mm</h4>
+                            </header>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Height</label>
+                                <input class="form-control" type="text" id="edtHeight" name="edtHeight" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Width</label>
+                                <input class="form-control" type="text" id="edtWidth" name="edtWidth" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Length</label>
+                                <input class="form-control" type="text" id="edtLength" name="edtLength" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group">
+                                <label style="width: 100%;">Volume</label>
+                                <input type="text" class="form-control" id="edtVolume" name="edtVolume" aria-describedby="basic-addon2" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">mm<sup>3</sup></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btnSaveUOM" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-danger btnDeleteUOM vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End UOM Settings Modal -->
+    <!-- Import Modal -->
+    {{> import_template}}
+    <script>
+        modalDraggable();
+    </script>
+</template>

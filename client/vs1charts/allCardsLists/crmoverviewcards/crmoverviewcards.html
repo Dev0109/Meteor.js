@@ -1,0 +1,86 @@
+<template name="crmoverviewcards">
+    <div class="col-md-6 col-xl-3 mb-4 openaccountreceivable hideelement card-visibility menu_all_task" card-id="0" chartgroup="CRMOverview" data-default-position="0" position="0" card-active="true" card-key="all-crm-tasks" id={{itembank.name}}>
+        <div class="card shadow customCardMainDiv border-left-success py-2">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <a class="col mr-2">
+                        <div class="text-uppercase text-success font-weight-bold text-xs mb-1">
+                            <span style="font-size: 14px;">All Tasks</span>
+                        </div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3 ">
+                            <span class="crm_all_count" id="crm_all_count" name="" style="font-size: 28px;color: rgb(221,223,235)">0</span>
+                        </div>
+                        <!-- <div class="text-dark font-weight-bold h5 mb-0"><span style="font-size: 16px;color: rgb(221,223,235);">Bank Balance</span></div> -->
+                    </a>
+                    <div class="col-auto"><i class="fas fa-inbox fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 openaccountreceivable hideelement card-visibility menu_today" card-id="0" chartgroup="CRMOverview" data-default-position="1" position="1" card-active="true" card-key="today-crm-tasks" id={{itembank.name}}>
+        <div class="card shadow customCardMainDiv border-left-danger py-2">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <a class="col mr-2">
+                        <div class="text-uppercase text-danger font-weight-bold text-xs mb-1">
+                            <span style="font-size: 14px;">Today</span>
+                        </div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3 ">
+                            <span class="crm_today_count" id="crm_today_count" name="" style="font-size: 28px;color: rgb(221,223,235)">0</span>
+                        </div>
+                        <!-- <div class="text-dark font-weight-bold h5 mb-0"><span style="font-size: 16px;color: rgb(221,223,235);">Bank Balance</span></div> -->
+                    </a>
+                    <div class="col-auto"><i class="fas fa-calendar-day fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 openaccountreceivable hideelement card-visibility menu_upcoming" card-id="0" chartgroup="CRMOverview" data-default-position="2" position="2" card-active="true" card-key="upcoming-crm-tasks" id={{itembank.name}}>
+        <div class="card shadow customCardMainDiv border-left-warning py-2">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <a class="col mr-2">
+                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Upcoming</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3 ">
+                            <span class="crm_upcoming_count" id="crm_upcoming_count" name="" style="font-size: 28px;color: rgb(221,223,235)">0</span>
+                        </div>
+                        <!-- <div class="text-dark font-weight-bold h5 mb-0"><span style="font-size: 16px;color: rgb(221,223,235);">Bank Balance</span></div> -->
+                    </a>
+                    <div class="col-auto"><i class="fas fa-calendar-alt fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 openaccountreceivable hideelement card-visibility menu_project" card-id="0" chartgroup="CRMOverview" data-default-position="3" position="3" card-active="true" card-key="crm-projects" id={{itembank.name}}>
+        <div class="card shadow customCardMainDiv border-left-primary py-2">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <a class="col mr-2">
+                        <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Projects</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3 ">
+                            <span class="crm_project_count" id="crm_project_count" name="" style="font-size: 28px;color: rgb(221,223,235)">0</span>
+                        </div>
+                        <!-- <div class="text-dark font-weight-bold h5 mb-0"><span style="font-size: 16px;color: rgb(221,223,235);">Bank Balance</span></div> -->
+                    </a>
+                    <div class="col-auto"><i class="fas fa-project-diagram fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

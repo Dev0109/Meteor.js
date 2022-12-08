@@ -1,0 +1,33 @@
+<template name="expenseschart">
+  <style type="text/css">
+    .hideexpensechat {
+      display: none;
+    }
+
+    .showexpensechat {
+      display: block;
+    }
+
+    .hideelement {
+      display: none !important;
+    }
+
+    .showelement {
+      display: block;
+    }
+  </style>
+  {{# draggablePanel
+    xs=xs sm=sm md=md lg=lg xl=xl
+    defaultPosition=defaultPosition
+    key=key
+    hLenght=100
+    id="expensechart"
+    headerClass="expensesheader"
+    headerColor="primary"
+    headerTitle="Expenses"
+    hrefDetails="/agedpayables"
+    editModalID="editDashboardModal"
+  }}
+  <canvas id="myExpensesChart" name="myExpensesChart"></canvas>
+  {{/draggablePanel}}
+</template>

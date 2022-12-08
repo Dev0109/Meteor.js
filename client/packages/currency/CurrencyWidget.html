@@ -1,0 +1,150 @@
+<template name="CurrencyWidget">
+    {{#if isCurrencyEnable}}
+  
+    {{#if onlyCurrencyField}}
+    <style>
+        .currency-module {
+            display: flex;
+            /* display:none!important;*/
+            flex-direction: row;
+            flex-wrap: wrap;
+            /* border: 1px solid rgb(215, 215, 215); */
+            /* padding: 0.75rem; */
+            /* border-radius: 0.5rem; */
+            /* max-width: 200px; */
+
+            display: flex;
+            flex-wrap: wrap;
+            /* margin-right: -.75rem;
+            margin-left: -.75rem; */
+            margin: 4px;
+
+        }
+
+        .currency-module>div {
+            width: 100%;
+
+        }
+    </style>
+            <div class="CurrencyWidget currency-module currency-js"  type="{{rate}}">
+                {{> currencydropdown}}
+            </div>
+     
+
+    {{else}}
+
+        <style>
+            .currency-module {
+                display: flex;
+                /* display:none!important;*/
+                flex-direction: row;
+                flex-wrap: wrap;
+                /* border: 1px solid rgb(215, 215, 215); */
+                /* padding: 0.75rem; */
+                /* border-radius: 0.5rem; */
+                /* max-width: 200px; */
+
+                display: flex;
+                flex-wrap: wrap;
+                margin-right: -.75rem;
+                margin-left: -.75rem;
+
+            }
+
+            .currency-module>div {
+                width: 100%;
+
+            }
+        </style>
+
+
+        {{#if row}}
+            <style>
+                .currency-module {
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-right: -.75rem;
+                    margin-left: -.75rem;
+                }
+
+                .currency-module>div {
+                    width: 100%;
+
+                }
+            </style>
+            <div class="CurrencyWidget currency-module currency-js"  type="{{rate}}">
+
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6 " type="{{rate}}">
+                    {{> currencydropdown}}
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6 " type="{{rate}}">
+                    {{> CurrencyRate }}
+                </div>
+            </div>
+
+
+        {{else}}
+
+
+        {{#if trans}}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2" type="{{rate}}">
+                <div class="form-group">
+                {{> currencydropdown}}
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2" type="{{rate}}">
+                <div class="form-group">
+                {{> CurrencyRate }}
+                </div>
+            </div>
+        {{else}}
+            <style>
+                .currency-module {
+                    display: flex;
+                    /* display:none!important;*/
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    /* border: 1px solid rgb(215, 215, 215); */
+                    /* padding: 0.75rem; */
+                    /* border-radius: 0.5rem; */
+                    /* max-width: 200px; */
+
+                }
+
+                .currency-module>div {
+                    width: 100%;
+
+                }
+            </style>
+            <div class="CurrencyWidget currency-module currency-js" type="{{rate}}">
+                <div>
+                    {{> currencydropdown}}
+                </div>
+                <div>
+                    {{> CurrencyRate }}
+                </div>
+            </div>
+        {{/if}}
+        {{/if}}
+
+
+    {{/if}}
+
+
+
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
+        {{> currencypop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
+        {{> newcurrencypop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="countryModal">
+        {{> CountryModal}}
+    </div>
+    {{/if}}
+</template>

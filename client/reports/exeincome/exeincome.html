@@ -1,0 +1,138 @@
+<template name="exeincomereport">
+    {{# vs1_report_template tabledisplayname="Income Report" tablename="tblIncomeExecutive" dateAsAt=dateAsAt}}
+        <div class="table-responsive">
+            <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-secondary customDoubleTableHeading">
+                        <th></th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth1" style="font-weight: 800;"></th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth2" style="font-weight: 800;"></th>
+                        <th class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Variance(%)</th>
+                    </tr>
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid customDoubleTableHeading">
+
+                            {{#if currencyList}}
+                                <th class="text-left"></th>
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+                            <th></th>
+                        </tr>
+                    {{/if}}
+                </thead>
+                <tbody>
+                    <tr class="balacesheettable">
+                        <td class="text-nowrap text-left" style="font-weight: 800;" >
+                            Number of Invoices Issued
+                        </td>
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{totalInvoiceCount1}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalInvoiceCount1}}
+                            </td>
+                        {{/if}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{totalInvoiceCount2}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalInvoiceCount2}}
+                            </td>
+                        {{/if}}
+                        <td class="text-nowrap text-right spnTotalInvoiceCountVariance" style="font-weight: 800;" >
+                        </td>
+                    </tr>
+                    <tr class="balacesheettable">
+                        <td class="text-nowrap text-left" style="font-weight: 800;" >
+                            Average Value of Invoices
+                        </td>
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount averageInvoiceValue1 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{averageInvoiceValue1}}
+                            </td>
+                        {{/if}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount averageInvoiceValue2 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{averageInvoiceValue2}}
+                            </td>
+                        {{/if}}
+                        <td class="text-nowrap text-right spnAverageInvoiceValueVariance" style="font-weight: 800;" >
+                        </td>
+                    </tr>
+                    <tr class="balacesheettable">
+                        <td class="text-nowrap text-left" style="font-weight: 800;" >
+                            Total Value of Invoices
+                        </td>
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount totalInvoiceValue1 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalInvoiceValue1}}
+                            </td>
+                        {{/if}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount totalInvoiceValue2 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalInvoiceValue2}}
+                            </td>
+                        {{/if}}
+                        <td class="text-nowrap text-right spnTotalInvoiceValueVariance" style="font-weight: 800;" >
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    {{/vs1_report_template}}
+</template>

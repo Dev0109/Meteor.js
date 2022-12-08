@@ -1,0 +1,138 @@
+<template name="customersummaryreport">
+    {{# vs1_report_template tabledisplayname="Customer Summary Report" tablename="customersummaryreport"  dateAsAt=dateAsAt}}
+        <div class="table-responsive">
+            <table class="table table-sm" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-active customDoubleTableHeading">
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th style="min-width: 200px;">Address</th>
+                        <th>City</th>
+                        <th>ZIP</th>
+                        <th>State</th>
+                        <!-- <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Ex)</th> -->
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Margin</th>
+                    </tr>
+
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <!-- <th class="text-right" active="{{ c.active }}">{{ c.code }}</th> -->
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+                        
+                        
+                        
+                        </tr>
+                    {{/if}}
+                </thead>
+                <tbody>
+                    {{#if records}}
+                        {{#each arrayify records}}
+                            <tr>
+                                <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Name }}</a></td>
+                                <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Phone }}</a></td>
+                                <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Address }}</a></td>
+                                <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Address_2 }}</a></td>
+                                <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Postcode }}</a></td>
+                                <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.State }}</a></td>
+                                <!-- <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
+                                <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
+                                <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td> -->
+
+                                {{#if isOnlyDefaultActive }}
+                                    {{#if currencyList}}
+                                        {{#each c in currencyList }}
+                                            {{# if c.active}}
+                                                <!-- <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Ex c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Ex c}}</a></td> -->
+                                            {{/if}}
+                                        {{/each}}
+                                        {{#each c in currencyList }}
+                                            {{# if c.active}}
+                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Inc c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Inc c}}</a></td>
+                                            {{/if}}
+                                        {{/each}}
+                                        {{#each c in currencyList }}
+                                            {{# if c.active}}
+                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Gross_Profit c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Gross_Profit c}}</a></td>
+                                            {{/if}}
+                                        {{/each}}
+                                        {{#each c in currencyList }}
+                                            {{# if c.active}}
+                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Margin c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Margin c}}</a></td>
+                                            {{/if}}
+                                        {{/each}}
+                                    {{/if}}
+                                {{else}}
+                                    <!-- <td class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Total_Amount_Ex }}</a></td> -->
+                                    <td class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Total_Amount_Inc }}</a></td>
+                                    <td class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Gross_Profit }}</a></td>
+                                    <td class="text-right"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Margin }}</a></td>
+
+                                {{/if}}
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                        </tr>
+                    {{/if}}
+                                
+                    <!-- {{#if records}}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
+                        </tr>
+                    {{/if}} -->
+                </tbody>
+            </table>
+        </div>
+    {{/vs1_report_template}}
+</template>
+
+

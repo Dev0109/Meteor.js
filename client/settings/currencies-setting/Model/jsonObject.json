@@ -1,0 +1,31 @@
+{
+    "MonthlyEveryDay": "1",
+    "MonthlyOfMonths": [
+        "may",
+        "july"
+    ],
+    "MonthlyStartDate": "2022-09-12",
+    "MonthlyStartTime": "08:00:00",
+    "WeeklyEvery": "4",
+    "WeeklySelectDays": "friday",
+    "WeeklyStartDate": "2022-09-12",
+    "WeeklyStartTime": "08:00:00",
+    "DailyEvery": 1,
+    "DailyEveryDay": true,
+    "DailyStartDate": "2022-09-12",
+    "DailyStartTime": "08:00:00",
+    "DailyWeekDays": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+    ],
+    "OneTimeStartDate": "2022-09-12",
+    "OneTimeStartTime": "08:00:00",
+    "OnEventLogOut": true,
+    "OnEventLogIn": false,
+    "EmployeeId": 38
+}

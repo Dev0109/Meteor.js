@@ -1,0 +1,1841 @@
+<template name="accountant_individual">
+    <style>
+        .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+
+        .card.hovered {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+            cursor: move;
+            transition-duration: 300ms;
+
+        }
+
+        .isNotBankAccount {
+            display: none !important;
+        }
+
+        .isNotCreditAccount {
+            display: none !important;
+        }
+    </style>
+    {{> accountant_header}}
+    <div id="editReportsAccountant" style="display: block; padding: 30px 100px 0 40px">
+        <div class="card-body">
+            <div>
+                <div style="padding-top:20px">
+                    <div id="page-1" style="display:block">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <a
+                                            class="btn btnNav btn-primary float-right"
+                                            role="button"
+                                            data-toggle="modal"
+                                            id="editTitle"
+                                            href="#editReportModal"
+                                            style="margin: 8px;"
+                                        >
+                                            <i class="fa fa-edit" style="margin-right: 5px;"></i>
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:250px">
+                                    <div class="col" id="page-1-content">
+                                        <h1 style="text-align:center">
+                                            <b>Trust - Non-Trading - Co as Trustee (Single Dir)</b>
+                                        </h1>
+                                        <h5 style="margin-top:20px; text-align:center">{{companyname}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-2" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" id="page_edit_2">
+                                    <div class="col">
+                                        <a
+                                            class="btn btnNav btn-primary float-right"
+                                            role="button"
+                                            data-toggle="modal"
+                                            id="editOrder"
+                                            href="#editReportModal"
+                                            style="margin: 8px;"
+                                        >
+                                            <i class="fa fa-edit" style="margin-right: 5px;"></i>
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:50px">
+                                    <div class="col" id="page-2-content">
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">3</span>Compilation Report
+                                        </div>
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">4</span>Trustee Declaration
+                                        </div>
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">5</span>Income Statement
+                                        </div>
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">6</span>Trust Income Distribution
+                                        </div>
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">7</span>Balance Sheet
+                                        </div>
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">8</span>Beneficiary Accounts
+                                        </div>
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">9</span>Notes to the Financial Statements
+                                        </div>
+                                        <div style="border:0; padding:8px">
+                                            <span style="width:30px; float:left">12</span>Depreciation Schedule
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 2 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-3" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" id="page_edit_3">
+                                    <div class="col">
+                                        <a
+                                            class="btn btnNav btn-primary float-right"
+                                            role="button"
+                                            data-toggle="modal"
+                                            id="editSummary"
+                                            href="#editReportModal"
+                                            style="margin: 8px;"
+                                        >
+                                            <i class="fa fa-edit" style="margin-right: 5px;"></i>
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Compilation Report</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>For the year ended {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" id="page-3-content">
+                                        <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
+                                        <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1.</span>
+                                        <span style="float:left; padding-bottom:10px">
+                                            <b>The Responsibility of the Director</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">The director of Trustee 1 is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
+                                        <span style="float:left; padding-bottom:10px">
+                                            <b>Our Responsibility</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">On the basis of information provided by the director we have compiled the accompanying special purpose financial statements in accordance with the basis of accounting as described in Note 1 to the financial statements and APES 315 Compilation of Financial Information.</span>
+                                        <span style="float:left; padding-bottom:12px">We have applied our expertise in accounting and financial reporting to compile these financial statements in accordance with the basis of accounting described in Note 1 to the financial statements. We have complied with the relevant ethical requirements of APES 110 Code of Ethics for Professional Accountants.</span>
+                                        <span style="float:left; padding-bottom:12px">Since a compilation engagement is not an assurance engagement, we are not required to verify the reliability, accuracy or completeness of the information provided to us by management to compile these financial statements. Accordingly, we do not express an audit opinion or a review conclusion on these financial statements</span>
+                                        <span style="float:left; padding-bottom:12px">The special purpose financial statements were compiled exclusively for the benefit of the director who is responsible for the reliability, accuracy and completeness of the information used to compile them. We do not accept responsibility for the contents of the special purpose financial statements.</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:40px; width:250px">
+                                    <div class="col" id="reportsAccountantHeader">
+                                        <!-- <div style="border-top:1px solid #858796; width:172px; margin-bottom:12px"></div>
+                                        <span style="float:left; padding-bottom:8px">Ashley Summerville, CPA</span>
+                                        <span style="float:left; padding-bottom:8px"><b>OnPoint Advisory</b></span>
+                                        <span style="float:left; padding-bottom:20px">PO Box 5190<br/>Q SUPER CENTRE QLD 4218</span>
+                                        <span style="float:left;">Dated: {{fiscalYearEnding}}</span> --></div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 3 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-4" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" id="page_edit_4">
+                                    <div class="col">
+                                        <a
+                                            class="btn btnNav btn-primary float-right"
+                                            role="button"
+                                            data-toggle="modal"
+                                            id="editDeclaration"
+                                            href="#editReportModal"
+                                            style="margin: 8px;"
+                                        >
+                                            <i class="fa fa-edit" style="margin-right: 5px;"></i>
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Trustee Declaration</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>For the year ended {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" id="page-4-content">
+                                        <span style="float:left; padding-bottom:12px">The director of Trustee 1 declares that {{companyname}} is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 of the financial statements.</span>
+                                        <span style="float:left; padding-bottom:12px">In accordance with a resolution of the Board of Directors, the director of Trustee 1 declares that:</span>
+                                        <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes present fairly {{companyname}}'s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 of the financial statements.</span>
+                                        <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors' opinion there are reasonable grounds to believe that {{companyname}} will be able to pay its debts as and when they become due and payable.</span>
+                                        <div style="float:left; margin-top:40px;">
+                                            <span style="float:left; padding-bottom:10px">Director:</span>
+                                            <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
+                                        </div>
+                                        <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Director 1</span>
+                                        <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 4 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-5" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Income Statement</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>For the year ended {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style="width: 100%; padding:0">
+                                                <div style="width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>NOTES</b>
+                                                </div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>Total</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px; float:left; width:100%">
+                                            {{#if profitList}}
+                                                {{#each item in profitList}}
+                                                    {{#if equals item.accounttype ""}}
+                                            <div class="row" style="margin-left:10px">
+                                                <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px">{{item.accountname}}</div>
+                                                    <div style="float:left; padding-top:4px; width:100px"></div>
+                                                    <div style="float:left; padding-top:4px; width:100px">{{item.totalamountex}}</div>
+                                                </div>
+                                            </div>
+                                            {{else if containsequals item.accounttype "Total"}}
+                                            <div class="row" style="margin-left:10px;">
+                                                <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                                        <b>{{item.accounttype}}</b>
+                                                    </div>
+                                                    <div style="float:left; padding-top:4px; width:100px"></div>
+                                                    <div style="float:left; padding-top:4px; width:100px">
+                                                        <b>{{item.totalamountex}}</b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{else}}
+                                            <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
+                                                <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                                    <b>{{item.accounttype}}</b>
+                                                </div>
+                                                {{#unless equals item.totalamountex ""}}
+                                                <div style="float:left; padding-top:4px; width:100px"></div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>{{item.totalamountex}}</b>
+                                                </div>
+                                                {{/unless}}
+                                            </div>
+                                            {{/if}}
+                                                {{/each}}
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 5 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-6" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Trust Income Distribution</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>For the year ended {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style="width: 100%; padding:0">
+                                                <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>{{currentYear}}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px; float:left; width:100%">
+                                            <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
+                                                <b>Trust Income Distribution</b>
+                                            </div>
+                                            {{#each pan in accountPanList1}}
+                                            <div class="row" style="font-size:13px">
+                                                <div class="col" style="margin-bottom:20px">
+                                                    <div style="margin-top:10px; float:left; width:100%">
+                                                        <div style="border-bottom: 1px solid #858796;">
+                                                            <a
+                                                                role="button"
+                                                                data-toggle="modal"
+                                                                href="#accountList_{{pan.no}}"
+                                                                class="btn btn-primary"
+                                                                style="width: 24px; height: 24px; text-align: center; padding: 0;"
+                                                            >
+                                                                <i class="icon ion-plus"></i>
+                                                            </a>
+                                                            &nbsp;
+                                                            <b>{{pan.name}}</b>
+                                                        </div>
+                                                        <div id="reportAccPan{{pan.no}}" class="row" style="margin-left:32px"></div>
+                                                        <div style="margin-left:32px;">
+                                                            <div style="width:calc(100% - 100px); float:left; padding-top:4px">
+                                                                <b>Total {{pan.name}}</b>
+                                                            </div>
+                                                            <div style="float:left; padding-top:4px; width:100px" id="total{{pan.no}}_balance">
+                                                                <b>$0</b>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="modal fade"
+                                                role="dialog"
+                                                tabindex="-1"
+                                                id="accountList_{{pan.no}}"
+                                            >
+                                                <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Account List</h5>
+                                                            <button
+                                                                type="button"
+                                                                class="close"
+                                                                data-dismiss="modal"
+                                                                aria-label="Close"
+                                                            >
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            <!-- <button id="sel-{{pan.no}}" name="sel-{{pan.no}}" class="btn btn-primary float-right btnselAccountant" type="button" style="width: 80px; text-align: center; padding: 6px; margin-left:50px;" autocomplete="off">
+                                                                    Select
+                                                                </button>&nbsp; -->
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table id="tblAccountOverview" style="width:100%" class="dataTable table table-striped table-bordered tblAccountOverview">
+                                                                <thead>
+                                                                    <tr class="dnd-moved">
+                                                                        <th class="th colAccountId" style="width:30px"></th>
+                                                                        <th class="th colAccountName" style="width:200px">Account Name</th>
+                                                                        <th class="th colDescription" style="width:320px">Description</th>
+                                                                        <th class="th colAccountNo">Account No</th>
+                                                                        <th class="th colType">Type</th>
+                                                                        <th class="th colBalance" style="width:80px;">Balance</th>
+                                                                        <th class="th colTaxCode" style="width:80px;">Tax Code</th>
+                                                                        <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
+                                                                        <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
+                                                                        <th class="th colBSB">BSB</th>
+                                                                        <th class="th colBankAccountNo" style="width:120px;">Bank Acc No</th>
+                                                                        <th class="th colCardNumber hiddenColumn" style="width:120px;">Card Number</th>
+                                                                        <th class="th colExpiryDate hiddenColumn" style="width:60px;">Expiry Date</th>
+                                                                        <th class="th colCVC hiddenColumn" style="width:60px;">CVC</th>
+                                                                        <th class="th colExtra hiddenColumn">Swift Code</th>
+                                                                        <th class="th colAPCANumber hiddenColumn">Routing Number</th>
+                                                                        <th class="th colUseReceiptClaim hiddenColumn">Use Receipt Claim</th>
+                                                                        <th class="th colExpenseCategpry hiddenColumn">Category</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {{#if datatablerecords}}
+                                                                            {{#each item in datatablerecords}}
+                                                                    <tr class="dnd-moved" style="cursor: pointer;">
+                                                                        <td contenteditable="false" class="colAccountId">
+                                                                            <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto;">
+                                                                                <input
+                                                                                    class="custom-control-input chkBox notevent pointer"
+                                                                                    type="checkbox"
+                                                                                    id="f-{{pan.no}}-{{item.id}}"
+                                                                                    name="f-{{pan.no}}-{{item.id}}"
+                                                                                    value="{{item.id}}"
+                                                                                >
+                                                                                <label class="custom-control-label" for="f-{{pan.no}}-{{item.id}}"></label>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
+                                                                        <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                                                        <td contenteditable="false" class="colAccountNo">{{item.accountnumber}}</td>
+                                                                        <td contenteditable="false" class="colType" accounttype="{{item.accounttypeshort}}">
+                                                                            {{item.accounttypename}}
+                                                                        </td>
+                                                                        <td contenteditable="false" class="colBalance" style="text-align: right!important;">
+                                                                            {{item.balance}}
+                                                                        </td>
+                                                                        <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
+                                                                        <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
+                                                                        <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
+                                                                        <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
+                                                                        <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
+                                                                        <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
+                                                                        <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
+                                                                        <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>
+                                                                        <td contenteditable="false" class="colExtra hiddenColumn">{{item.swiftcode}}</td>
+                                                                        <td contenteditable="false" class="colAPCANumber hiddenColumn" checkheader="{{item.isheader}}">{{item.apcanumber}}</td>
+                                                                        <td contenteditable="false" class="colUseReceiptClaim hiddenColumn" checkheader="{{item.useReceiptClaim}}">{{item.useReceiptClaim}}</td>
+                                                                        <td contenteditable="false" class="colExpenseCategpry hiddenColumn" category="{{item.expenseCategory}}">{{item.expenseCategory}}</td>
+                                                                    </tr>
+                                                                    {{/each}}
+                                                                        {{/if}}
+                                                                </tbody>
+                                                            </table>
+                                                            <input type="hidden" id="selItems" value="">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button
+                                                                id="sel-{{pan.no}}"
+                                                                name="sel-{{pan.no}}"
+                                                                class="btn btn-primary btnselAccountant"
+                                                                type="button"
+                                                            >
+                                                                <i class="fa fa-save" style="margin-right: 5px;"></i>Save
+                                                            </button>
+                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                                                                <i class="fa fa-remove" style="margin-right: 5px;"></i>Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 6 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-7" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Balance Sheet</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>As at {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style="width: 100%; padding:0">
+                                                <div style="width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>NOTES</b>
+                                                </div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>Total</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px; float:left; width:100%">
+                                            {{#if balancesheetList}}
+                                            {{#each item in balancesheetList}}
+                                                {{#if item.dataArrHeader}}
+                                            <div style="border-bottom: 1px solid #858796; font-size:15px">
+                                                <b>{{item.dispName}}</b>
+                                            </div>
+                                            {{/if}}
+                                                {{#if item.dataArrAsset}}
+                                            <div style="border-bottom: 1px solid #858796; margin-left: 10px; padding-top:4px">
+                                                <b>{{item.dispName}}</b>
+                                            </div>
+                                            {{/if}}
+                                                {{#if item.dataArr2}}
+                                            <div class="row" style="margin-left:20px">
+                                                <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px">{{item.dispName}}</div>
+                                                    <div style="float:left; padding-top:4px; width:100px"></div>
+                                                    <div style="float:left; padding-top:4px; width:100px">{{item.value}}</div>
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                                {{#if item.dataArrTotal}}
+                                            <div class="row" style="margin-left:20px">
+                                                <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                                        <b>{{item.dispName}}</b>
+                                                    </div>
+                                                    <div style="float:left; padding-top:4px; width:100px"></div>
+                                                    <div style="float:left; padding-top:4px; width:100px">
+                                                        <b>{{item.value}}</b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                                {{#if item.dataArrTotal1}}
+                                            <div class="row" style="margin-left:10px">
+                                                <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                                        <b>{{item.dispName}}</b>
+                                                    </div>
+                                                    <div style="float:left; padding-top:4px; width:100px"></div>
+                                                    <div style="float:left; padding-top:4px; width:100px">
+                                                        <b>{{item.value}}</b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                            {{/each}}
+                                        {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 7 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-8" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Beneficiary Accounts</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>For the year ended {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style="width: 100%; padding:0">
+                                                <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>{{currentYear}}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px; float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style="float:left; width:calc(100% - 100px); font-size:15px">
+                                                <b>Beneficiary Accounts</b>
+                                            </div>
+                                            <div style="float:left; padding-top:4px; width:100px" id="beneficiaryPercent">
+                                                <b>0%</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 8 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-9" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <a
+                                            class="btn btnNav btn-primary float-right"
+                                            role="button"
+                                            data-toggle="modal"
+                                            id="editDescription-1"
+                                            href="#editReportModal"
+                                            style="margin: 8px;"
+                                        >
+                                            <i class="fa fa-edit" style="margin-right: 5px;"></i>Edit
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Notes to the Financial Statements</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>For the year ended {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px" id="page-9-content">
+                                        <label>
+                                            <b>1. Statement of Significant Accounting Policies</b>
+                                        </label>
+                                        <span style="float:left; padding-bottom:12px">The directors of the trustee company have prepared the financial statements of the trust on the basis that the trust is a non-reporting entity because there are no users dependent on general purpose financial statements. The financial statements are therefore special purpose financial statements that have been prepared in order to meet the requirements of the trust deed, the information needs of stakeholders and for the basis of preparation of the income tax return. The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the directors have determined are appropriate to meet the purposes of preparation. Such accounting policies are consistent with the previous period unless stated otherwise. The financial statements have been prepared on an accruals basis and are based on historical costs unless otherwise stated in the notes. The financial statements were authorised for issue on {{fiscalYearEnding}} by the directors of the trustee company.</span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Income Tax</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            The income tax expense for the year comprises current income tax expense. The trust does not apply deferred tax.
+                                            Current income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable
+                                            income tax rates enacted, or substantially enacted, as at the end of the reporting period. Current tax liabilities are therefore
+                                            measured at the amounts expected to be paid to / recovered from the relevant taxation authority
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Inventories</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Inventories are carried at the lower of cost or net realisable value. Cost is based on the first-in, first out method and includes
+                                            expenditure incurred in acquiring the inventories and bringing them to the existing condition and location.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Property, Plant and Equipment</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated depreciation and impairment losses. Plant and equipment that has been contributed at no cost, or for nominal cost, is valued and recognised at the fair value of the asset at the date it is acquired. 
+                                            The plant and equipment is reviewed annually by directors to ensure that the carrying amount is not in excess of the recoverable amount from these assets. 
+                                            The recoverable amount is assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent disposal. 
+                                            The expected net cash flows have been discounted to their present values in estimating recoverable amounts. 
+                                            Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent external valuers, less subsequent depreciation for buildings. 
+                                            Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus. 
+                                            Decreases against previous increases of the same asset are charged against fair value reserves in equity. 
+                                            All other decreases are charged to profit or loss. 
+                                            Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net amount is restated to the revalued amount of the asset.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Intangibles</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Goodwill is recognised as the excess of the purchase price for a business acquired over the fair value of the net assets at the date
+                                            of acquisition. Goodwill is assessed for impairment annually and is carried at cost less accumulated impairment losses
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Trade and Other Receivables</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Trade receivables and other receivables, including distributions receivable, are recognised at the nominal transaction value
+                                            without taking into account the time value of money. If required a provision for doubtful debt has been created.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Financial Assets</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Investments held are originally recognised at cost, which includes transaction costs. They are subsequently measured at fair
+                                            value which is equivalent to their market bid price at the end of the reporting period. Movements in fair value are recognised
+                                            through an equity reserve.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        These notes should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 9 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-10" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <a
+                                            class="btn btnNav btn-primary float-right"
+                                            role="button"
+                                            data-toggle="modal"
+                                            id="editDescription-2"
+                                            href="#editReportModal"
+                                            style="margin: 8px;"
+                                        >
+                                            <i class="fa fa-edit" style="margin-right: 5px;"></i>Edit
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom:40px">
+                                    <div class="col">
+                                        <span style="border-bottom: 1px solid #858796; float:left;">Notes to the Financial Statements</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px" id="page-10-content">
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Trade and Other Payables</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px; letter-spacing: -0.2px">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Employee Benefits</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Provision is made for the liability for employee entitlements arising from services rendered by employees to balance date.
+                                            Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Provisions</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
+                                            probable that there will be an outflow of economic benefits and that outflow can be reliably measured. Provisions are measured
+                                            using the best estimate available of the amounts required to settle the obligation at the end of the reporting period.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Cash and Cash Equivalents</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px">
+                                            Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
+                                            with original maturities of three months or less, and bank overdrafts.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px; clear:both">
+                                            <b>Revenue Recognition</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px; clear:both">Revenue from the sale of goods is recognised upon the delivery of goods to customers.
+                                            <br>
+                                            Revenue from the rendering of services is recognised upon the delivery of the services to customers.
+                                            <br>
+                                            Revenue from commissions is recognised upon delivery of services to customers.
+                                            <br>
+                                            Revenue from interest is recognised using the effective interest rate method.
+                                            <br>
+                                            Revenue from dividends is recognised when the entity has a right to receive the dividend.
+                                            <br>
+                                            All revenue is stated net of the amount of goods and services tax (GST).
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px; clear:both">
+                                            <b>Goods and Services Tax</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px; clear:both">
+                                            Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian
+                                            Taxation Office (ATO).
+                                            Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable
+                                            from, or payable to, the ATO is included with other receivables or payables in the balance sheet.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Leases</b>
+                                        </span>
+                                        <span style="float:left; padding-bottom:12px;">
+                                            Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset are transferred to the entity, but the legal ownership is not transferred to the entity. 
+                                            Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair value of the leased asset, or the minimum lease payments measured at present value including any residual values. 
+                                            Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term. 
+                                            Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease. 
+                                            Lease incentives are deferred and amortised over the period of the lease. 
+                                            Profits and losses on sale and leaseback transactions are recognised in the reporting period in which they occur.
+                                        </span>
+                                        <span style="float:left; padding-bottom:8px">
+                                            <b>Grants</b>
+                                        </span>
+                                        <span style="float:left; font-size:14px; padding-bottom:12px">
+                                            Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will
+                                            receive the economic benefits of the grant and the amount can be reliably measured.
+                                            If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of
+                                            the revenue will be deferred until those conditions are satisfied.
+                                            Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a
+                                            reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been
+                                            completed, otherwise the income is recognised on receipt.
+                                            {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or
+                                            zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent
+                                            amount of income recognised in the income statement.
+                                            Donations and bequests are recognised as revenue when received.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        These notes should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 10 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-11" style="display:none;">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                {{#each pan in accountPanList}}
+                                <div class="row" style="font-size:13px">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style="width: 100%; padding:0">
+                                                <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>{{currentYear}}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px; float:left; width:100%">
+                                            <div style="border-bottom: 1px solid #858796;">
+                                                <a
+                                                    role="button"
+                                                    data-toggle="modal"
+                                                    href="#accountList_{{pan.no}}"
+                                                    class="btn btn-primary"
+                                                    style="width: 24px; height: 24px; text-align: center; padding: 0;"
+                                                >
+                                                    <i class="icon ion-plus"></i>
+                                                </a>
+                                                &nbsp;
+                                                <b>{{pan.no}} {{pan.name}}</b>
+                                            </div>
+                                            <div id="reportAccPan{{pan.no}}" class="row" style="margin-left:32px"></div>
+                                            <div style="margin-left:32px;">
+                                                <div style="width:calc(100% - 100px); float:left; padding-top:4px">
+                                                    <b>Total {{pan.name}}</b>
+                                                </div>
+                                                <div style="float:left; padding-top:4px; width:100px" id="total{{pan.no}}_balance">
+                                                    <b>$0</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="modal fade"
+                                    role="dialog"
+                                    tabindex="-1"
+                                    id="accountList_{{pan.no}}"
+                                >
+                                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Account List</h5>
+                                                <button
+                                                    type="button"
+                                                    class="close"
+                                                    data-dismiss="modal"
+                                                    aria-label="Close"
+                                                >
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <!-- <button id="sel-{{pan.no}}" name="sel-{{pan.no}}" class="btn btn-primary float-right btnselAccountant" type="button" style="width: 80px; text-align: center; padding: 6px; margin-left:50px;" autocomplete="off">
+                                                    Select
+                                                </button>&nbsp; -->
+                                            </div>
+                                            <div class="modal-body">
+                                                <table id="tblAccountOverview" style="width:100%" class="dataTable table table-striped table-bordered tblAccountOverview">
+                                                    <thead>
+                                                        <tr class="dnd-moved">
+                                                            <th class="th colAccountId" style="width:30px"></th>
+                                                            <th class="th colAccountName" style="width:200px">Account Name</th>
+                                                            <th class="th colDescription" style="width:320px">Description</th>
+                                                            <th class="th colAccountNo">Account No</th>
+                                                            <th class="th colType">Type</th>
+                                                            <th class="th colBalance" style="width:80px;">Balance</th>
+                                                            <th class="th colTaxCode" style="width:80px;">Tax Code</th>
+                                                            <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
+                                                            <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
+                                                            <th class="th colBSB">BSB</th>
+                                                            <th class="th colBankAccountNo" style="width:120px;">Bank Acc No</th>
+                                                            <th class="th colCardNumber hiddenColumn" style="width:120px;">Card Number</th>
+                                                            <th class="th colExpiryDate hiddenColumn" style="width:60px;">Expiry Date</th>
+                                                            <th class="th colCVC hiddenColumn" style="width:60px;">CVC</th>
+                                                            <th class="th colExtra hiddenColumn">Swift Code</th>
+                                                            <th class="th colAPCANumber hiddenColumn">Routing Number</th>
+                                                            <th class="th colUseReceiptClaim hiddenColumn">Use Receipt Claim</th>
+                                                            <th class="th colExpenseCategpry hiddenColumn">Category</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{#if datatablerecords}}
+                                                            {{#each item in datatablerecords}}
+                                                        <tr class="dnd-moved" style="cursor: pointer;">
+                                                            <td contenteditable="false" class="colAccountId">
+                                                                <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto">
+                                                                    <input
+                                                                        class="custom-control-input chkBox notevent pointer"
+                                                                        type="checkbox"
+                                                                        id="f-{{pan.no}}-{{item.id}}"
+                                                                        name="f-{{pan.no}}-{{item.id}}"
+                                                                        value="{{item.id}}"
+                                                                    >
+                                                                    <label class="custom-control-label" for="f-{{pan.no}}-{{item.id}}"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
+                                                            <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                                            <td contenteditable="false" class="colAccountNo">{{item.accountnumber}}</td>
+                                                            <td contenteditable="false" class="colType" accounttype="{{item.accounttypeshort}}">
+                                                                {{item.accounttypename}}
+                                                            </td>
+                                                            <td contenteditable="false" class="colBalance" style="text-align: right!important;">
+                                                                {{item.balance}}
+                                                            </td>
+                                                            <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
+                                                            <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
+                                                            <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
+                                                            <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
+                                                            <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
+                                                            <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
+                                                            <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
+                                                            <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>
+                                                            <td contenteditable="false" class="colExtra hiddenColumn">{{item.swiftcode}}</td>
+                                                            <td contenteditable="false" class="colAPCANumber hiddenColumn" checkheader="{{item.isheader}}">{{item.apcanumber}}</td>
+                                                            <td contenteditable="false" class="colUseReceiptClaim hiddenColumn" checkheader="{{item.useReceiptClaim}}">{{item.useReceiptClaim}}</td>
+                                                            <td contenteditable="false" class="colExpenseCategpry hiddenColumn" category="{{item.expenseCategory}}">{{item.expenseCategory}}</td>
+                                                        </tr>
+                                                        {{/each}}
+                                                        {{/if}}
+                                                    </tbody>
+                                                </table>
+                                                <input type="hidden" id="selItems" value="">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button
+                                                    id="sel-{{pan.no}}"
+                                                    name="sel-{{pan.no}}"
+                                                    class="btn btn-primary btnselAccountant"
+                                                    type="button"
+                                                >
+                                                    <i class="fa fa-save" style="margin-right: 5px;"></i>Save
+                                                </button>
+                                                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                                                    <i class="fa fa-remove" style="margin-right: 5px;"></i>Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        These notes should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 11 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-12" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3>
+                                            <b>Depreciation Schedule</b>
+                                        </h3>
+                                        <h6>
+                                            <b>{{companyname}}</b>
+                                        </h6>
+                                        <h6>
+                                            <b>For the year ended {{fiscalYearEnding}}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style="width: 100%; padding:0">
+                                                <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                                <div style="float:left; padding-top:4px; width:100px">
+                                                    <b>{{currentYear}}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px; float:left; width:100%">
+                                            <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
+                                                <a
+                                                    role="button"
+                                                    data-toggle="modal"
+                                                    href="#accountList_15"
+                                                    class="btn btn-primary"
+                                                    style="width: 24px; height: 24px; text-align: center; padding: 0;"
+                                                >
+                                                    <i class="icon ion-plus"></i>
+                                                </a>
+                                                &nbsp;
+                                                <b>Depreciation Schedule</b>
+                                                <div id="reportAccPan15" class="row" style="margin-left:32px"></div>
+                                                <div style="margin-left:32px;">
+                                                    <div style="width:calc(100% - 100px); float:left; padding-top:4px">
+                                                        <b>Total Depreciation Schedule</b>
+                                                    </div>
+                                                    <div style="float:left; padding-top:4px; width:100px" id="total15_balance">
+                                                        <b>$0</b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="modal fade"
+                                            role="dialog"
+                                            tabindex="-1"
+                                            id="accountList_15"
+                                        >
+                                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Account List</h5>
+                                                        <button
+                                                            type="button"
+                                                            class="close"
+                                                            data-dismiss="modal"
+                                                            aria-label="Close"
+                                                        >
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <!-- <button id="sel-{{pan.no}}" name="sel-{{pan.no}}" class="btn btn-primary float-right btnselAccountant" type="button" style="width: 80px; text-align: center; padding: 6px; margin-left:50px;" autocomplete="off">
+                                                            Select
+                                                        </button>&nbsp; -->
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table id="tblAccountOverview" style="width:100%" class="dataTable table table-striped table-bordered tblAccountOverview">
+                                                            <thead>
+                                                                <tr class="dnd-moved">
+                                                                    <th class="th colAccountId" style="width:30px"></th>
+                                                                    <th class="th colAccountName" style="width:200px">Account Name</th>
+                                                                    <th class="th colDescription" style="width:320px">Description</th>
+                                                                    <th class="th colAccountNo">Account No</th>
+                                                                    <th class="th colType">Type</th>
+                                                                    <th class="th colBalance" style="width:80px;">Balance</th>
+                                                                    <th class="th colTaxCode" style="width:80px;">Tax Code</th>
+                                                                    <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
+                                                                    <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
+                                                                    <th class="th colBSB">BSB</th>
+                                                                    <th class="th colBankAccountNo" style="width:120px;">Bank Acc No</th>
+                                                                    <th class="th colCardNumber hiddenColumn" style="width:120px;">Card Number</th>
+                                                                    <th class="th colExpiryDate hiddenColumn" style="width:60px;">Expiry Date</th>
+                                                                    <th class="th colCVC hiddenColumn" style="width:60px;">CVC</th>
+                                                                    <th class="th colExtra hiddenColumn">Swift Code</th>
+                                                                    <th class="th colAPCANumber hiddenColumn">Routing Number</th>
+                                                                    <th class="th colUseReceiptClaim hiddenColumn">Use Receipt Claim</th>
+                                                                    <th class="th colExpenseCategpry hiddenColumn">Category</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {{#if datatablerecords}}
+                                                                    {{#each item in datatablerecords}}
+                                                                <tr class="dnd-moved" style="cursor: pointer;">
+                                                                    <td contenteditable="false" class="colAccountId">
+                                                                        <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto">
+                                                                            <input
+                                                                                class="custom-control-input chkBox notevent pointer"
+                                                                                type="checkbox"
+                                                                                id="f-15-{{item.id}}"
+                                                                                name="f-15-{{item.id}}"
+                                                                                value="{{item.id}}"
+                                                                            >
+                                                                            <label class="custom-control-label" for="f-15-{{item.id}}"></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
+                                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                                                    <td contenteditable="false" class="colAccountNo">{{item.accountnumber}}</td>
+                                                                    <td contenteditable="false" class="colType" accounttype="{{item.accounttypeshort}}">
+                                                                        {{item.accounttypename}}
+                                                                    </td>
+                                                                    <td contenteditable="false" class="colBalance" style="text-align: right!important;">
+                                                                        {{item.balance}}
+                                                                    </td>
+                                                                    <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
+                                                                    <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
+                                                                    <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
+                                                                    <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
+                                                                    <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
+                                                                    <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
+                                                                    <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
+                                                                    <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>
+                                                                    <td contenteditable="false" class="colExtra hiddenColumn">{{item.swiftcode}}</td>
+                                                                    <td contenteditable="false" class="colAPCANumber hiddenColumn" checkheader="{{item.isheader}}">{{item.apcanumber}}</td>
+                                                                    <td contenteditable="false" class="colUseReceiptClaim hiddenColumn" checkheader="{{item.useReceiptClaim}}">{{item.useReceiptClaim}}</td>
+                                                                    <td contenteditable="false" class="colExpenseCategpry hiddenColumn" category="{{item.expenseCategory}}">{{item.expenseCategory}}</td>
+                                                                </tr>
+                                                                {{/each}}
+                                                                {{/if}}
+                                                            </tbody>
+                                                        </table>
+                                                        <input type="hidden" id="selItems" value="">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button
+                                                            id="sel-15"
+                                                            name="sel-15"
+                                                            class="btn btn-primary btnselAccountant"
+                                                            type="button"
+                                                        >
+                                                            <i class="fa fa-save" style="margin-right: 5px;"></i>Save
+                                                        </button>
+                                                        <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                                                            <i class="fa fa-remove" style="margin-right: 5px;"></i>Close
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
+                                        <span style="float:right">page 12 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                @media print {
+                    .pagebreak { page-break-before: always; } /* page-break-after works, as well */
+                }
+            </style>
+            <div id="printReport" class="printReport" style="display:none; font-size:14px">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:300px;">
+                        <div class="col" id="page-1-content-prt">
+                            <h1 style="text-align:center">
+                                <b>Trust - Non-Trading - Co as Trustee (Single Dir)</b>
+                            </h1>
+                            <h5 style="margin-top:20px; text-align:center">{{companyname}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:50px">
+                        <div class="col" id="page-2-content-prt">
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">3</span>Compilation Report
+                            </div>
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">4</span>Trustee Declaration
+                            </div>
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">5</span>Income Statement
+                            </div>
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">6</span>Trust Income Distribution
+                            </div>
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">7</span>Balance Sheet
+                            </div>
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">8</span>Beneficiary Accounts
+                            </div>
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">9</span>Notes to the Financial Statements
+                            </div>
+                            <div style="border:0; padding:8px">
+                                <span style="width:30px; float:left">12</span>Depreciation Schedule
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Compilation Report</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>For the year ended {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" id="page-3-content-prt">
+                            <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
+                            <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1.</span>
+                            <span style="float:left; padding-bottom:10px">
+                                <b>The Responsibility of the Director</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">The director of Trustee 1 is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
+                            <span style="float:left; padding-bottom:10px">
+                                <b>Our Responsibility</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">On the basis of information provided by the director we have compiled the accompanying special purpose financial statements in accordance with the basis of accounting as described in Note 1 to the financial statements and APES 315 Compilation of Financial Information.</span>
+                            <span style="float:left; padding-bottom:12px">We have applied our expertise in accounting and financial reporting to compile these financial statements in accordance with the basis of accounting described in Note 1 to the financial statements. We have complied with the relevant ethical requirements of APES 110 Code of Ethics for Professional Accountants.</span>
+                            <span style="float:left; padding-bottom:12px">Since a compilation engagement is not an assurance engagement, we are not required to verify the reliability, accuracy or completeness of the information provided to us by management to compile these financial statements. Accordingly, we do not express an audit opinion or a review conclusion on these financial statements</span>
+                            <span style="float:left; padding-bottom:12px">The special purpose financial statements were compiled exclusively for the benefit of the director who is responsible for the reliability, accuracy and completeness of the information used to compile them. We do not accept responsibility for the contents of the special purpose financial statements.</span>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:40px; width:250px">
+                        <div class="col" id="reportsAccountantHeaderPrt">
+                            <!-- <div style="border-top:1px solid #858796; width:172px; margin-bottom:12px"></div>
+                            <span style="float:left; padding-bottom:8px">Ashley Summerville, CPA</span>
+                            <span style="float:left; padding-bottom:8px"><b>OnPoint Advisory</b></span>
+                            <span style="float:left; padding-bottom:20px">PO Box 5190<br/>Q SUPER CENTRE QLD 4218</span>
+                            <span style="float:left;">Dated: {{fiscalYearEnding}}</span> --></div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Trustee Declaration</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>For the year ended {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" id="page-4-content-prt">
+                            <span style="float:left; padding-bottom:12px">The director of Trustee 1 declares that {{companyname}} is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 of the financial statements.</span>
+                            <span style="float:left; padding-bottom:12px">In accordance with a resolution of the Board of Directors, the director of Trustee 1 declares that:</span>
+                            <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes present fairly {{companyname}}'s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 of the financial statements.</span>
+                            <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors' opinion there are reasonable grounds to believe that {{companyname}} will be able to pay its debts as and when they become due and payable.</span>
+                            <div style="float:left; margin-top:40px;">
+                                <span style="float:left; padding-bottom:10px">Director:</span>
+                                <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
+                            </div>
+                            <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Director 1</span>
+                            <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Income Statement</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>For the year ended {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px">
+                            <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                <div style="width: 100%; padding:0">
+                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>NOTES</b>
+                                    </div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>Total</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px; float:left; width:100%">
+                                {{#if profitList}}
+                                    {{#each item in profitList}}
+                                        {{#if equals item.accounttype ""}}
+                                <div class="row" style="margin-left:10px; clear: both;">
+                                    <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                        <div style="width:calc(100% - 200px); float:left; padding-top:4px">{{item.accountname}}</div>
+                                        <div style="float:left; padding-top:4px; width:100px"></div>
+                                        <div style="float:left; padding-top:4px; width:100px">{{item.totalamountex}}</div>
+                                    </div>
+                                </div>
+                                {{else if containsequals item.accounttype "Total"}}
+                                <div class="row" style="margin-left:10px; clear: both;">
+                                    <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                        <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                            <b>{{item.accounttype}}</b>
+                                        </div>
+                                        <div style="float:left; padding-top:4px; width:100px"></div>
+                                        <div style="float:left; padding-top:4px; width:100px">
+                                            <b>{{item.totalamountex}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{else}}
+                                <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
+                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                        <b>{{item.accounttype}}</b>
+                                    </div>
+                                    {{#unless equals item.totalamountex ""}}
+                                    <div style="float:left; padding-top:4px; width:100px"></div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>{{item.totalamountex}}</b>
+                                    </div>
+                                    {{/unless}}
+                                </div>
+                                {{/if}}
+                                    {{/each}}
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Trust Income Distribution</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>For the year ended {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px">
+                            <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                <div style="width: 100%; padding:0">
+                                    <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>{{currentYear}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px; float:left; width:100%">
+                                <div style="width:100%; border-bottom: 1px solid #858796; font-size:15px">
+                                    <b>Trust Income Distribution</b>
+                                </div>
+                                {{#each pan in accountPanList1}}
+                                <div class="row" style="font-size:13px">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="margin-left:10px; margin-top:10px; float:left; width:100%">
+                                            <div style="border-bottom: 1px solid #858796;">
+                                                <b>{{pan.name}}</b>
+                                            </div>
+                                            <div id="reportAccPanPrt{{pan.no}}" class="row" style="margin-left:32px"></div>
+                                            <div style="margin-left:32px;">
+                                                <div style="width:calc(100% - 100px); float:left; padding-top:4px">
+                                                    <b>Total {{pan.name}}</b>
+                                                </div>
+                                                <div style="float:left; padding-top:4px; width:100px" id="total{{pan.no}}_prt_balance">
+                                                    <b>$0</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Balance Sheet</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>As at {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px">
+                            <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                <div style="width: 100%; padding:0">
+                                    <div style="width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>NOTES</b>
+                                    </div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>Total</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px; float:left; width:100%">
+                                {{#if balancesheetList}}
+                                {{#each item in balancesheetList}}
+                                    {{#if item.dataArrHeader}}
+                                <div style="border-bottom: 1px solid #858796; font-size:15px">
+                                    <b>{{item.dispName}}</b>
+                                </div>
+                                {{/if}}
+                                    {{#if item.dataArrAsset}}
+                                <div style="border-bottom: 1px solid #858796; margin-left: 10px; padding-top:4px">
+                                    <b>{{item.dispName}}</b>
+                                </div>
+                                {{/if}}
+                                    {{#if item.dataArr2}}
+                                <div class="row" style="margin-left:20px">
+                                    <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                        <div style="width:calc(100% - 200px); float:left; padding-top:4px">{{item.dispName}}</div>
+                                        <div style="float:left; padding-top:4px; width:100px"></div>
+                                        <div style="float:left; padding-top:4px; width:100px">{{item.value}}</div>
+                                    </div>
+                                </div>
+                                {{/if}}
+                                    {{#if item.dataArrTotal}}
+                                <div class="row" style="margin-left:20px">
+                                    <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                        <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                            <b>{{item.dispName}}</b>
+                                        </div>
+                                        <div style="float:left; padding-top:4px; width:100px"></div>
+                                        <div style="float:left; padding-top:4px; width:100px">
+                                            <b>{{item.value}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/if}}
+                                    {{#if item.dataArrTotal1}}
+                                <div class="row" style="margin-left:10px">
+                                    <div style="width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0">
+                                        <div style="width:calc(100% - 200px); float:left; padding-top:4px">
+                                            <b>{{item.dispName}}</b>
+                                        </div>
+                                        <div style="float:left; padding-top:4px; width:100px"></div>
+                                        <div style="float:left; padding-top:4px; width:100px">
+                                            <b>{{item.value}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/if}}
+                                {{/each}}
+                            {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Beneficiary Accounts</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>For the year ended {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px">
+                            <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                <div style="width: 100%; padding:0">
+                                    <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>{{currentYear}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px; float:left; width:100%; border-bottom: 1px solid #858796;">
+                                <div style="float:left; width:calc(100% - 100px); font-size:15px">
+                                    <b>Beneficiary Accounts</b>
+                                </div>
+                                <div style="float:left; padding-top:4px; width:100px" id="beneficiaryPercentPrt">
+                                    <b>0%</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Notes to the Financial Statements</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>For the year ended {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px" id="page-9-content-prt">
+                            <label>
+                                <b>1. Statement of Significant Accounting Policies</b>
+                            </label>
+                            <span style="float:left; padding-bottom:12px">The directors of the trustee company have prepared the financial statements of the trust on the basis that the trust is a non-reporting entity because there are no users dependent on general purpose financial statements. The financial statements are therefore special purpose financial statements that have been prepared in order to meet the requirements of the trust deed, the information needs of stakeholders and for the basis of preparation of the income tax return. The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the directors have determined are appropriate to meet the purposes of preparation. Such accounting policies are consistent with the previous period unless stated otherwise. The financial statements have been prepared on an accruals basis and are based on historical costs unless otherwise stated in the notes. The financial statements were authorised for issue on {{fiscalYearEnding}} by the directors of the trustee company.</span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Income Tax</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                The income tax expense for the year comprises current income tax expense. The trust does not apply deferred tax.
+                                Current income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable
+                                income tax rates enacted, or substantially enacted, as at the end of the reporting period. Current tax liabilities are therefore
+                                measured at the amounts expected to be paid to / recovered from the relevant taxation authority
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Inventories</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Inventories are carried at the lower of cost or net realisable value. Cost is based on the first-in, first out method and includes
+                                expenditure incurred in acquiring the inventories and bringing them to the existing condition and location.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Property, Plant and Equipment</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated depreciation and impairment losses. Plant and equipment that has been contributed at no cost, or for nominal cost, is valued and recognised at the fair value of the asset at the date it is acquired. 
+                                The plant and equipment is reviewed annually by directors to ensure that the carrying amount is not in excess of the recoverable amount from these assets. 
+                                The recoverable amount is assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent disposal. 
+                                The expected net cash flows have been discounted to their present values in estimating recoverable amounts. 
+                                Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent external valuers, less subsequent depreciation for buildings. 
+                                Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus. 
+                                Decreases against previous increases of the same asset are charged against fair value reserves in equity. 
+                                All other decreases are charged to profit or loss. 
+                                Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net amount is restated to the revalued amount of the asset.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Intangibles</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Goodwill is recognised as the excess of the purchase price for a business acquired over the fair value of the net assets at the date
+                                of acquisition. Goodwill is assessed for impairment annually and is carried at cost less accumulated impairment losses
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Trade and Other Receivables</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Trade receivables and other receivables, including distributions receivable, are recognised at the nominal transaction value
+                                without taking into account the time value of money. If required a provision for doubtful debt has been created.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Financial Assets</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Investments held are originally recognised at cost, which includes transaction costs. They are subsequently measured at fair
+                                value which is equivalent to their market bid price at the end of the reporting period. Movements in fair value are recognised
+                                through an equity reserve.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Trade and Other Payables</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px; letter-spacing: -0.2px">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Employee Benefits</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Provision is made for the liability for employee entitlements arising from services rendered by employees to balance date.
+                                Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Provisions</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
+                                probable that there will be an outflow of economic benefits and that outflow can be reliably measured. Provisions are measured
+                                using the best estimate available of the amounts required to settle the obligation at the end of the reporting period.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Cash and Cash Equivalents</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px">
+                                Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
+                                with original maturities of three months or less, and bank overdrafts.
+                            </span>
+                            <span style="float:left; padding-bottom:8px; clear: both;">
+                                <b>Revenue Recognition</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px; clear: both;">Revenue from the sale of goods is recognised upon the delivery of goods to customers.
+                                <br>
+                                Revenue from the rendering of services is recognised upon the delivery of the services to customers.
+                                <br>
+                                Revenue from commissions is recognised upon delivery of services to customers.
+                                <br>
+                                Revenue from interest is recognised using the effective interest rate method.
+                                <br>
+                                Revenue from dividends is recognised when the entity has a right to receive the dividend.
+                                <br>
+                                All revenue is stated net of the amount of goods and services tax (GST).
+                            </span>
+                            <span style="float:left; padding-bottom:8px; clear: both;">
+                                <b>Goods and Services Tax</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px; clear: both;">
+                                Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian
+                                Taxation Office (ATO).
+                                Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable
+                                from, or payable to, the ATO is included with other receivables or payables in the balance sheet.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Leases</b>
+                            </span>
+                            <span style="float:left; padding-bottom:12px;">
+                                Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset are transferred to the entity, but the legal ownership is not transferred to the entity. 
+                                Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair value of the leased asset, or the minimum lease payments measured at present value including any residual values. 
+                                Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term. 
+                                Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease. 
+                                Lease incentives are deferred and amortised over the period of the lease. 
+                                Profits and losses on sale and leaseback transactions are recognised in the reporting period in which they occur.
+                            </span>
+                            <span style="float:left; padding-bottom:8px">
+                                <b>Grants</b>
+                            </span>
+                            <span style="float:left; font-size:14px; padding-bottom:12px">
+                                Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will
+                                receive the economic benefits of the grant and the amount can be reliably measured.
+                                If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of
+                                the revenue will be deferred until those conditions are satisfied.
+                                Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a
+                                reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been
+                                completed, otherwise the income is recognised on receipt.
+                                {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or
+                                zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent
+                                amount of income recognised in the income statement.
+                                Donations and bequests are recognised as revenue when received.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px"></div>
+                    </div>
+                    {{#each pan in accountPanList}}
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px">
+                            <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                <div style="width: 100%; padding:0">
+                                    <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>{{currentYear}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px; float:left; width:100%">
+                                <div style="border-bottom: 1px solid #858796;">
+                                    <b>{{pan.no}} {{pan.name}}</b>
+                                </div>
+                                <div id="reportAccPanPrt{{pan.no}}" class="row" style="margin-left:32px"></div>
+                                <div style="margin-left:32px;">
+                                    <div style="width:calc(100% - 100px); float:left; padding-top:4px">
+                                        <b>Total {{pan.name}}</b>
+                                    </div>
+                                    <div style="float:left; padding-top:4px; width:100px" id="total{{pan.no}}_prt_balance">
+                                        <b>$0</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col">
+                            <h3>
+                                <b>Depreciation Schedule</b>
+                            </h3>
+                            <h6>
+                                <b>{{companyname}}</b>
+                            </h6>
+                            <h6>
+                                <b>For the year ended {{fiscalYearEnding}}</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="margin-bottom:20px">
+                            <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                <div style="width: 100%; padding:0">
+                                    <div style="width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right"></div>
+                                    <div style="float:left; padding-top:4px; width:100px">
+                                        <b>{{currentYear}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px; float:left; width:100%">
+                                <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
+                                    <b>Depreciation Schedule</b>
+                                    <div id="reportAccPanPrt15" class="row" style="margin-left:32px"></div>
+                                    <div style="margin-left:32px;">
+                                        <div style="width:calc(100% - 100px); float:left; padding-top:4px">
+                                            <b>Total Depreciation Schedule</b>
+                                        </div>
+                                        <div style="float:left; padding-top:4px; width:100px" id="total15_prt_balance">
+                                            <b>$0</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:block; border:1px solid #fff">
+                    <div class="row" style="margin-top:20px; margin-bottom:15px">
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+            {{> poweredby}}
+        </div>
+    </div>
+    <script>
+        let pageNum = 1;
+        function go_page(action){
+            if(action == "prev"){
+                if(pageNum > 1){
+                    for(var i=1; i<=12; i++){
+                        $("#pageNum-"+pageNum).removeClass("active"); 
+                        $("#page-"+pageNum).css("display", "none"); 
+                    }
+                    $("#pageNum-"+(pageNum-1)).addClass("active");
+                    $("#page-"+(pageNum-1)).css("display", "block");
+                    $("#nextPage").removeClass("disabled");
+    
+                    pageNum = pageNum - 1;
+    
+                    if(pageNum == 1){
+                        $("#prevPage").addClass("disabled");
+                    }
+                }
+            }
+            else if(action == "next"){
+                if(pageNum < 12){
+                    for(var i=1; i<=12; i++){
+                        $("#pageNum-"+pageNum).removeClass("active"); 
+                        $("#page-"+pageNum).css("display", "none"); 
+                    }
+                    $("#pageNum-"+(pageNum+1)).addClass("active");
+                    $("#page-"+(pageNum+1)).css("display", "block");
+                    $("#prevPage").removeClass("disabled");
+    
+                    pageNum = pageNum + 1;
+    
+                    if(pageNum == 12){
+                        $("#nextPage").addClass("disabled");
+                    }
+                }
+            }
+            else{
+                for(var i=1; i<=12; i++){
+                    $("#pageNum-"+i).removeClass("active"); 
+                    $("#page-"+i).css("display", "none"); 
+                }
+                $("#pageNum-"+action).addClass("active");
+                $("#page-"+action).css("display", "block");
+
+                pageNum = action;
+
+                if(action == 1){
+                    $("#prevPage").addClass("disabled");
+                }
+                else{
+                    $("#prevPage").removeClass("disabled");
+                }
+
+                if(action == 12){
+                    $("#nextPage").addClass("disabled");
+                }
+                else{
+                    $("#nextPage").removeClass("disabled");
+                }
+            }
+        }
+    </script>
+</template>

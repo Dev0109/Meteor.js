@@ -1,0 +1,476 @@
+<template name="fixedassetcard">
+  <style scoped>
+    .nav-tabs .nav-link.active {
+      color: rgb(0, 163, 211) !important;
+      background-color: #EDEDED !important;
+      border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
+    }
+
+    .nav-tabs .nav-link {
+      background-color: #fff !important;
+      border-color: #00a3d3 !important;
+      cursor: pointer;
+    }
+  </style>
+  <div class="container-fluid purchasesmodule" style="padding-right: 0px;padding-left: 0px;background-color: #ededed;">
+    <div class="fullScreenSpin" style="display:none;">
+      <div class="spinner"></div>
+    </div>
+
+    <form>
+      <header
+        style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+        <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">Fixed Asset
+
+          {{> helpbutton}}
+
+          <!-- Start Help View Modal -->
+          <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+            <div class="modal-dialog modal-sm" role="document">
+              <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                  <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                      aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                  <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                      class="btn btn-primary helpModal">View Help Video</a></p>
+                  <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank"
+                      class="btn btn-primary">Download Help File</a></p>
+                  {{> helpadvisor}}
+                  {{> helpgotoforum}}
+                </div>
+                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                    type="button">Close</button></div>
+              </div>
+            </div>
+          </div>
+          <!-- End Help View Modal -->
+
+          <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
+              class="icon ion-android-more-horizontal"></i></a>
+        </h1>
+      </header>
+
+      <div class="row" style="background-color: #ededed;">
+        <div class="col-12 col-xl-10">
+          <div class="row" style="margin: 8px 16px 0px 16px;">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Asset Code</label>
+                <input class="form-control" type="text" id="edtAssetCode" name="edtAssetCode" customerid=" ">
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Asset Name</label>
+                <input class="form-control" type="text" id="edtAssetName" name="edtAssetName" customerid=" ">
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Asset Description</label>
+                <input class="form-control" type="text" id="edtAssetDescription" name="edtAssetDescription"
+                  customerid=" ">
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group">
+                <label>Asset Type</label>
+                <select type="search" class="form-control" id="edtAssetType" name="edtAssetType" suppid=" "
+                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin: 8px 16px 0px 16px;">
+            <ul class="nav nav-tabs nav-justified">
+              <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab"
+                  data-target="#tab-asset-info">Asset Info</a></li>
+              <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"
+                  data-target="#tab-deprec">Depreciation</a>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane active border rounded-0 tab-asset-info" role="tabpanel" id="tab-asset-info"
+                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
+
+                <div class="row" style="margin: 4px 12px;">
+                  
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Brand</label>
+                      <input type="text" class="form-control" id="edtBrand" name="edtBrand">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Model </label>
+                      <input type="text" class="form-control" id="edtModel" name="edtModel">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Numer</label>
+                      <input type="text" class="form-control" id="edtNumber" name="edtNumber">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Registration No</label>
+                      <input type="text" class="form-control" id="edtRegistrationNo" name="edtRegistrationNo">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Type</label>
+                      <input type="text" class="form-control" id="edtType" name="edtType">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Capacity Weight</label>
+                      <input type="text" class="form-control" id="edtCapacityWeight" name="edtCapacityWeight">
+                      </div>
+                  </div> 
+                  
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Capacity Volume</label>
+                      <input type="text" class="form-control" id="edtCapacityVolume" name="edtCapacityVolume">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Date of Purchase</label>
+                      <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Cost</label>
+                      <input type="text" class="form-control" id="edtNumber" name="edtNumber">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Supplier</label>
+                      <input type="text" class="form-control" id="edtRegistrationNo" name="edtRegistrationNo">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Registration Renewal Date</label>
+                      <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" id="edtDateRegisterRenewal" name="edtDateRegisterRenewal">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;">
+                      <label>Insurance Info</label>
+                      <input type="text" class="form-control" id="edtCapacityWeight" name="edtCapacityWeight">
+                      </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Renewal Date</label>
+                      <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" id="edtDateRenewal" name="edtDateRenewal">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+
+                <!-- <div class="row" style="margin: 4px 12px;">
+                  <div class="col-12" style="padding: 0;">
+                    <h4 style="margin: 4px;">Purchase Info</h4>
+                  </div>
+                </div>
+                <div class="row" style="margin: 4px 12px;">
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Date of Purchase</label>
+                      <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Depreciation Start Date</label>
+                      <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" id="edtDescriptionStartDate"
+                          name="edtDescriptionStartDate">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Purchase Price</label><input type="text"
+                        class="form-control" id="edtPurchasePrice" name="edtPurchasePrice"></div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Bought From</label><input type="text"
+                        class="form-control" id="edtBoughtFrom" name="edtBoughtFrom"></div>
+                  </div>
+                </div> -->
+
+                <!-- <div class="row" style="margin: 4px 12px;">
+                  <div class="col-12" style="padding: 0;">
+                    <h4 style="margin: 4px;">Asset Info</h4>
+                  </div>
+                </div>
+                <div class="row" style="margin: 12px;">
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Room/Location</label><input type="text"
+                        class="form-control" id="edtRoomLocation" name="edtRoomLocation"></div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Department</label><input type="text"
+                        class="form-control" id="edtDepartment" name="edtDepartment"></div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Last Time Date</label>
+                      <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" id="edtLastTimeDate" name="edtLastTimeDate">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3" style="padding: 0;">
+                    <div class="form-group" style="margin: 4px;"><label>Next Time Date</label>
+                      <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" id="edtNextTimeDate" name="edtNextTimeDate">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+                <!-- <div class="row" style="margin: 12px;">
+                  <div class="col-6" style="padding: 0;">
+                    <div class="table-responsive">
+                      <table id="tblFixedAssetDepartment" name="tblFixedAssetDepartment"
+                        class="dataTable table table-hover table-striped table-bordered tblFixedAssetDepartment">
+                        <thead>
+                          <tr class="dasnd-moved">
+                            <th class="th">Department</th>
+                            <th class="th">Cost %</th>
+                            <th class="th">Depreciation %</th>
+                            <th class="th">Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="dnd-moved" style="cursor: pointer;">
+                            <td contenteditable="false">Default</td>
+                            <td contenteditable="false">100%</td>
+                            <td contenteditable="false">100%</td>
+                            <td contenteditable="false"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+
+              <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec"
+                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                  <div class="row" style="margin: 4px 12px;">
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Depreciation Type</label>
+                        <select type="search" class="form-control" id="edtDepreciationType" name="edtDepreciationType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          <option>No Depreciation</option>
+                          <option>Straight Line Depreciation</option>
+                          <option>Decling Balance</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-9" style="padding: 0;">
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin: 4px 12px;">
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label> Cost Asset Account</label>
+                        <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label> Bank Account</label>
+                        <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label> Depreciation Asset Account</label>
+                        <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label> Depreciation Expense Account</label>
+                        <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin: 4px 12px;">
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Salvage Value</label>
+                        <input type="text" class="form-control" id="edtSalvageValue" name="edtSalvageValue">
+                      </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;"> 
+                        <label>&nbsp;</label>
+                        <select type="search" class="form-control" id="edtSalvageValueType" name="edtSalvageValueType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;">
+                          <option>Amount</option>
+                          <option>Percent</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Asset Life (Years)</label>
+                        <input type="text" class="form-control" id="edtAssetLife" name="edtAssetLife">
+                      </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Business Use (%)</label>
+                        <input type="text" class="form-control" id="edtBusinessUse" name="edtBusinessUse">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin: 4px 12px;">
+                    <div class="col-3" style="padding: 0;">
+                      <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
+                        <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
+                        <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Enter Amount</label> 
+                      </div>
+                    </div>
+                    <div class="col-9" style="padding: 0;">
+                    </div>
+
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Accumulated Depreciation</label>
+                        <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation">
+                      </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>For Year Ending</label>
+                        <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin: 4px 12px;">
+                    <div class="col-12">
+                      <div class="table-responsive">
+                        <table id="tblFixedAssetDepraciation" name="tblFixedAssetDepraciation"
+                          class="dataTable table table-hover table-striped table-bordered tblFixedAssetDepraciation">
+                          <thead>
+                            <tr class="dasnd-moved">
+                              <th class="th">Year</th>
+                              <th class="th">Depreciation</th>
+                              <th class="th">Acc Depreciation</th>
+                              <th class="th">Book Value</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="dnd-moved" style="cursor: pointer;">
+                              <td>2009</td>
+                              <td>$2,000.00</td>
+                              <td>$2,000.00</td>
+                              <td>$2,000.00</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    
+                    <div class="col-12">
+                      <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px 0; width: 100px; float: right;">
+                        Calculate
+                      </button>
+                    </div>
+                  </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-2">
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 24px;">
+        <div class="col-12 col-md-11">
+          <div class="row justify-content-center desktopButtons">
+            <button class="btn btn-success btnSave btnFooter" type="button"
+              style="margin: 14px;margin-top: 0px;width: 100px;">
+              <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+            </button>
+
+            <button class="btn btn-secondary btnBack btnFooter" type="button"
+              style="margin: 14px;margin-top: 0px;width: 100px;">
+              <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Fixed Asset Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+          {{> fixedassettypelistpop}}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeModal">
+    {{ >fixedassettypepopup}}
+  </div>
+</template>

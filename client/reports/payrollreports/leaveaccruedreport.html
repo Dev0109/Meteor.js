@@ -1,0 +1,100 @@
+<template name="leaveaccruedreport">
+    {{# vs1_report_template tabledisplayname="Payroll Leave Accrued" tablename="PayrollLeaveAccrued" dateAsAt=dateAsAt}} 
+        <div class="table-responsive">
+            <table class="table table-sm" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-active customDoubleTableHeading">
+                        <th>Employee</th>
+                        <th>Accrued Date</th>
+                        <th>Leave Type</th>
+                        <th>Pay No</th>
+                        <th>Accrued Type</th>
+                        <th style="width: 90px;">Hours</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Value</th>
+                    </tr>
+
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+                        
+                        </tr>
+                    {{/if}}
+                </thead>
+                <tbody>
+                    {{#if records}}
+                        {{#each value in records}}
+                            <tr>
+                                <td style="font-weight: 800;" colspan="7">{{ value.EmployeeName }}</td>
+                            </tr>
+                            {{#each item in value.records}}
+                            <tr>
+                                <td></td>
+                                <td><a href="{{redirectionType item}}">{{ formatDate item.fields.Date }}</a></td>
+                                <td><a href="{{redirectionType item}}">{{ item.fields.LeaveType }}</a></td>
+                                <td><a href="{{redirectionType item}}">{{ item.fields.PayID }}</a></td>
+                                <td><a href="{{redirectionType item}}">{{ item.fields.AccrualType }}</a></td>
+                                <td><a href="{{redirectionType item}}">{{ floatValue item.fields.AccruedHours }}</a></td>
+                            
+                                {{#if isOnlyDefaultActive }}
+                                        {{#if currencyList}}
+                                            {{#each c in currencyList }}
+                                                {{# if c.active}}
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right "><a href="{{redirectionType item}}">{{ calculateHourPriceConvert item c }}</a></td>
+                                                {{/if}}
+                                            {{/each}}
+                                        {{/if}}
+                                {{else}}
+                                    <td class="text-right"><a href="{{redirectionType item}}">{{ calculateHourPrice item }}</a></td>
+                                {{/if}}
+                            
+                            </tr>
+                            {{/each}}
+                        {{/each}}
+                        
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
+                        </tr>
+                    {{/if}}
+                    <!-- <tr>
+                        <td>23/05/2022</td>
+                        <td>Annual</td>
+                        <td>Josef</td>
+                        <td class="text-right">0007</td>
+                        <td></td>
+                        <td class="text-right">17.5</td>
+                        <td class="text-right">$ 52,000.00</td>
+                    </tr> -->
+                    <!-- {{#if records}}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
+                        </tr>
+                    {{/if}} -->
+                </tbody>
+            </table>
+        </div>
+    {{/vs1_report_template}}                        
+</template>

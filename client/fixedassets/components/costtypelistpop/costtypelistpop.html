@@ -1,0 +1,161 @@
+<template name="costtypelistpop">
+
+  <style>
+    #row1 {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    #column1 {
+      display: flex;
+    }
+
+    #column2 {
+      display: flex;
+      flex-direction: column;
+      margin: 16px;
+      padding: .375rem .75rem;
+    }
+
+    .groove {
+      border-style: solid;
+      border-width: 1px;
+      width: 200px;
+      padding: 2px;
+      border-radius: .35rem;
+    }
+
+    .custom-control-label {
+      position: absolute;
+    }
+
+    @media only screen and (max-width: 480px) {
+      .modal.show .modal-dialog {
+        float: inherit !important;
+        left: inherit !important;
+        top: auto !important;
+
+      }
+    }
+  </style>
+  <div class="row no-gutters" style="padding: 0px 32px;">
+    <div class="col-12">
+      <div class="card mb-3"> 
+
+        <div class="card-body">
+          <div class="d-xl-flex justify-content-xl-end">
+            <div>
+              <div class="modal fade" role="dialog" tabindex="-1" id="displaySettingsModal2">
+                <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                      <div>
+                        <form class="d-xl-flex align-items-xl-center">
+                          <div class="flex-grow-1">
+                            {{#each displayfield in displayfields}}
+                            {{#if displayfield.display}}
+                            <div class="columnSettings customDisplaySettings" custid="{{displayfield.id}}">
+                              <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                <input class="custom-control-input {{displayfield.class}}" type="checkbox"
+                                  id="{{displayfield.class}}" checked="{{displayfield.active}}"
+                                  name="{{displayfield.class}}">
+                                <label class="custom-control-label" for="{{displayfield.class}}"></label>
+                                <div contenteditable="true" class="groove divcolumn" type="text"
+                                  value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">
+                                  {{displayfield.custfieldlabel}}</div>
+                              </div>
+                              <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number"
+                                  style="margin: 8px;" value="{{displayfield.width}}"
+                                  valueclass="{{displayfield.class}}" min="0" max="1000">
+                              </div>
+                            </div>
+                            {{/if}}
+                            {{/each}}
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
+                          style="margin-right: 5px;"></i>Save</button>
+                      <button class="btn btn-warning resetTable" type="reset"><i class="fa fa-repeat"
+                          style="margin-right: 5px;"></i>Reset</button>
+                      <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+                          style="margin-right: 5px;"></i>Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table id="tblFixedAssetCostType" name="tblFixedAssetCostType"
+              class="dataTable table table-hover table-striped table-bordered tblFixedAssetCostType">
+              <thead>
+                <tr class="dasnd-moved">
+                  <th class="th colFixedID hiddenColumn">ID</th>
+                  {{#each displayfield in displayfields}}
+                  {{#if displayfield.display}}
+                  <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
+                    style="width:{{displayfield.width}}px">
+                    {{displayfield.custfieldlabel}}
+                  </th>
+                  {{/if}}
+                  {{/each}}
+                </tr>
+              </thead>
+              <tbody>
+                {{#if datatablerecords}}
+                {{#each item in datatablerecords}}
+                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                  <td contenteditable="false" class="colCostTypeId hiddenColumn">{{item.id}}</td>
+                  <td contenteditable="false"
+                    class="colAdministrativeCost {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.assetname}}
+                  </td>
+                  <td contenteditable="false"
+                    class="colDepreciation {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.color}}
+                  </td>
+                  <td contenteditable="false"
+                    class="colFuel {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.brandname}}</td>
+                  <td contenteditable="false"
+                    class="colInsurance {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"
+                    accounttype="{{item.accounttypeshort}}">
+                    {{item.manufacture}}
+                  </td>
+                  <td contenteditable="false"
+                    class="colLoan {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"
+                    style="text-align: right!important;">
+                    {{item.model}}
+                  </td>
+                  <td contenteditable="false"
+                    class="colMaintenance {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{item.assetcode}}
+                  </td>
+                  <td contenteditable="false"
+                    class="colRegistration {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.assettype}}
+                  </td>
+                  <td contenteditable="false"
+                    class="colTolls {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.department}}</td>  
+                </tr>
+                {{/each}}
+                {{/if}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</template>

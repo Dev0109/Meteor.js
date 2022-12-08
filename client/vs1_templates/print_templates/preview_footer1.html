@@ -1,0 +1,134 @@
+<template name="preview_footer1">
+    <style>
+        .template-preview-footer1 {
+            display: flex;
+            border-top: 5px solid black;
+            border-bottom: 5px solid black;
+            padding: 2px;
+            font-family: Calibri, sans-serif !important;
+            width: 90%;
+            margin: 0px auto;
+        }
+        #printcomment {
+            color: black;
+            height: 3em;
+            line-height: 1em;
+            overflow: hidden;
+            padding: 2px;
+            font-size: 18px;
+        }
+        .field_payment {
+            font-size: 18px;
+            padding: 0px 1px;
+        }
+        .field_payment p {
+            line-height: 1em;
+        }
+        .field_amount {
+            font-size: 18px;
+            padding: 0px 1px;
+            margin-left: 1px;
+        }
+        .field_amount p {
+            line-height: 1em;
+        }
+        .field_company {
+            font-family: Calibri, sans-serif;
+            width: 90%;
+            margin: 5px auto;
+            font-size: 18px;
+        }
+        .field_company p {
+            text-align: center;
+        }
+    </style>
+    <div class="template-preview-footer1">
+        <div style="margin: 0px; width: 100%; border: 1px solid black;">
+            <div style="border-bottom: 1px solid black; height: 100px;">
+                <div class="col-12">
+                    <p id="printcomment">
+                        
+                    </p>
+                </div>
+            </div>
+            <div class="hp" style="display: flex;">
+                <div class="field_payment" style="width: 60%; border-right: 1px solid black;">
+                    <div style="width: 100%;">
+                        <div class="col-12">
+                            <p style="font-weight: bold; color: blue; margin-bottom: 0px;">AUSTRALIAN $ DOLLAR PAYMENTS</p>
+                        </div>
+                        <div class="col-12">
+                            <p style="margin-bottom: 0px;">
+                                <span class="bankname"></span>
+                                <br>
+                                <span class="bankdesc"></span>
+                            </p>
+                        </div>
+                        <div class="col-12" style="font-weight: bold; color: black; text-align: left; margin-top: 2px;">
+                            <p style="margin-bottom: 0px;">
+                                <span class="ban">Name :</span>
+                                <br>
+                                <span class="bsb">BSB (Branch Number) :</span>
+                                <br>
+                                <span class="account_number">Account Number:</span>
+                                <br>
+                                <span class="swift">Swift Code:</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field_amount" style="width: 40%; border-left: 1px solid black;">
+                    <div style="height: 100%; padding: 10px; border: none !important; display: flex; flex-direction: column; justify-content: space-evenly;">
+                        <div style="width: 100%; display: flex;">
+                            <div style="width: 50%;">
+                                <p id="subtotal_totalLabel" style="margin-bottom: 0px;">
+                                    Sub Total</p>
+                            </div>
+                            <div style="width: 50%;">
+                                <p id="subtotal_totalPrint" style="text-align: right; margin-bottom: 0px;">
+                                </p>
+                            </div>
+                        </div>
+                        <div style="width: 100%; display: flex;">
+                            <div style="width: 50%;">
+                                <p id="grandTotalLabel" style="margin-bottom: 0px;">Total Tax</p>
+                            </div>
+                            <div style="width: 50%;">
+                                <p id="totalTax_totalPrint" style="text-align: right; margin-bottom: 0px;">
+                                </p>
+                            </div>
+                        </div>
+                        <div style="width: 100%; height: 5px; border-top: 2px solid black; border-bottom: 2px solid black;"></div>
+                        <div style="width: 100%; display: flex; font-weight: bold;">
+                            <div style="width: 50%;">
+                                <p style="margin-bottom: 0px;">TOTAL (inc. Tax)</p>
+                            </div>
+                            <div style="width: 50%;">
+                                <p id="grandTotalPrint" style="text-align: right; margin-bottom: 0px;">
+                                </p>
+                            </div>
+                        </div>
+                        <div style="width: 100%; display: flex; font-weight: bold;">
+                            <div style="width: 50%;">
+                                <p style="margin-bottom: 0px;">Balance Due</p>
+                            </div>
+                            <div style="width: 50%;">
+                                <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 0px;">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+    <div class="field_company">
+        <p>
+            <span class="companyInfo1"></span>
+            <br>
+            <span class="companyInfo2"></span>
+            <br>
+            <span class="companyInfo3" style="font-weight: bold;"></span>
+        </p>
+    </div>
+</template>

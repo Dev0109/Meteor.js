@@ -1,0 +1,82 @@
+<template name="preview_body2">
+    <style>
+        .template-preview-body2 {
+            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+            font-family: Calibri, sans-serif !important;
+            font-size: 14px;
+            height: 130mm;
+            width: 90%;
+            margin: 10px auto;
+        }
+        .label-p2-right {
+            line-height: 1em;
+            margin-bottom: 5px;
+            text-align: right;
+        }
+        .total-underline {
+            border-bottom: 1px solid black;
+        }
+        .div-total-label {
+            width: 50%;
+        }
+        .div-total-value {
+            width: 30%;
+        }
+    </style>
+    <div class="template-preview-body2">
+        <div style="margin: 0px; border: none !important; background-color: rgba(0,0,0,0);">
+            <table class="invoice_print" style="width: 100%;  margin: auto;">
+                <thead style="color: rgb(251,251,251);">
+                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); color: #000000;">
+                    </tr>
+                </thead>
+                <tbody class="tbl_content" style="color: rgb(0 0 0);">
+                </tbody>
+            </table>
+        </div>
+        <div class="subtotal2" style="margin: 0px; border: none !important; background-color: rgba(0,0,0,0);">
+            <div style="width: 100%; display: flex;">
+                <div style="width: 50%;">
+                </div>
+                <div style="width: 50%;">
+                    <div style="width: 100%; display: flex; margin-top: 5px;">
+                        <div style="width: 20%;"></div>
+                        <div class="div-total-label total-underline">
+                            <p class="label-p2-right">Sub Total</p>
+                        </div>
+                        <div class="div-total-value total-underline">
+                            <p id="subtotal_totalPrint2" class="label-p2-right"></p>
+                        </div>
+                    </div>
+                    <div style="width: 100%; display: flex; margin-top: 5px;">
+                        <div style="width: 20%;"></div>
+                        <div class="div-total-label">
+                            <p class="label-p2-right" style="font-weight: bold;">TOTAL AUD</p>
+                        </div>
+                        <div class="div-total-value">
+                            <p id="grandTotalPrint2" class="label-p2-right"></p>
+                        </div>
+                    </div>
+                    <div style="width: 100%; display: flex; margin-top: 0px;">
+                        <div style="width: 20%;"></div>
+                        <div class="div-total-label total-underline">
+                            <p class="label-p2-right">Less Amount Creditted</p>
+                        </div>
+                        <div class="div-total-value total-underline">
+                            <p id="paid_amount2" class="label-p2-right"></p>
+                        </div>
+                    </div>
+                    <div style="width: 100%; display: flex; margin-top: 5px;">
+                        <div style="width: 20%;"></div>
+                        <div class="div-total-label">
+                            <p class="label-p2-right" style="font-weight: bold;">AMOUNT DUE AUD</p>
+                        </div>
+                        <div class="div-total-value">
+                            <p id="totalBalanceDuePrint2" class="label-p2-right"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,177 @@
+<template name="jobprofitabilityreport"> 
+  {{# vs1_report_template tabledisplayname="Job Profitability Report" tablename="jobprofitabilityreport" dateAsAt=dateAsAt}} 
+    <div class="table-responsive">
+      <table class="table table-sm" id="tableExport" name="tableExport">
+        <thead>
+          <tr class="table-active customDoubleTableHeading">
+            <th>Company</th>
+            <th>Job Name</th>
+            <th class="text-cetner">Job No</th>
+            <th colspan="{{countActive currencyList}}" class="text-center">Cost (ex)</th>
+            <th colspan="{{countActive currencyList}}" class="text-center">Income (ex)</th>
+            <th colspan="{{countActive currencyList}}" class="text-center">Quoted (ex)</th>
+            <th colspan="{{countActive currencyList}}" style="min-width: 120px;" class="text-center">Diff Inc Cost</th>
+            <th class="text-center">Backorders</th>
+            <th colspan="{{countActive currencyList}}" class="text-center">Credit</th>
+            <th class="text-right">Profit %</th>
+            <th class="text-right" colspan="{{countActive currencyList}}">Profit</th>
+          </tr>
+          {{#if isOnlyDefaultActive equal "false" }}
+            <tr class="table-active tblAvoid customDoubleTableHeading">
+              <th></th>
+              <th></th>
+              <th></th>
+
+              {{#if currencyList}}
+                {{#each c in currencyList }}
+                  {{# if c.active}}
+                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                  {{/if}}
+                {{/each}}
+
+                {{#each c in currencyList }}
+                  {{# if c.active}}
+                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                  {{/if}}
+                {{/each}}
+
+                {{#each c in currencyList }}
+                  {{# if c.active}}
+                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                  {{/if}}
+                {{/each}}
+
+                {{#each c in currencyList }}
+                  {{# if c.active}}
+                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                  {{/if}}
+                {{/each}}
+                <th></th>
+          
+                {{#each c in currencyList }}
+                  {{# if c.active}}
+                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                  {{/if}}
+                {{/each}}
+                <th></th>
+
+                {{#each c in currencyList }}
+                    {{# if c.active}}
+                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                    {{/if}}
+                {{/each}}
+
+
+
+              {{/if}}
+            
+
+          
+
+            </tr>
+          {{/if}}
+        </thead>
+        <tbody>
+          {{#if records}}
+            {{#each arrayify records}}
+              <tr>
+                <td colspan="8" style="font-weight: 800;">{{ value.CompanyName }}</td>
+              </tr>
+              {{#each item in value.SubAccounts}}
+                <tr data-type="{{item.TransactionType}} {{item.SaleID}}">
+                  <td></td>
+                  <td>
+                    <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.JobName }}</a>
+                  </td>
+                  <td class="text-center">
+                    <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.JobNumber }}</a>
+                  </td>
+
+                  {{#if isOnlyDefaultActive}}
+                    {{#if currencyList}}
+
+                      {{#each c in currencyList }}
+                        {{#if c.active}}
+                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.IncomeEx}} text-danger{{else}} text-success {{/if}}" style="font-weight: 800;">{{ convertAmount item.IncomeEx c}}</td>
+                        {{/if}}
+                      {{/each}}
+
+                      {{#each c in currencyList }}
+                        {{#if c.active}}
+                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.CostEx}} text-danger{{else}} text-success {{/if}}" style="font-weight: 800;">{{ convertAmount  item.CostEx c}}</td>
+                        {{/if}}
+                      {{/each}}
+
+                      {{#each c in currencyList }}
+                        {{#if c.active}}
+                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.Quotedex}} text-danger{{else}} text-success {{/if}}" style="font-weight: 800;">{{ convertAmount item.Quotedex c}}</td>
+                        {{/if}}
+                      {{/each}}
+
+                      {{#each c in currencyList }}
+                        {{#if c.active}}
+                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.DiffIncome_Cost}} text-danger{{else}} text-success {{/if}}" style="font-weight: 800;">{{ convertAmount item.DiffIncome_Cost c}}</td>
+                        {{/if}}
+                      {{/each}}
+
+                    {{/if}}
+
+                  {{else}}
+                    <td class="text-right {{#if isNegativeAmount item.IncomeEx}} text-danger{{else}} text-success {{/if}}">
+                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.IncomeEx }}</a>
+                    </td>
+                    <td class="text-right {{#if isNegativeAmount item.CostEx}} text-danger{{else}} text-success {{/if}}">
+                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CostEx }}</a>
+                    </td>
+                    <td class="text-right {{#if isNegativeAmount item.Quotedex}} text-danger{{else}} text-success {{/if}}">
+                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Quotedex }}</a>
+                    </td>
+                    <td class="text-right {{#if isNegativeAmount item.DiffIncome_Cost}} text-danger{{else}} text-success {{/if}}">
+                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.DiffIncome_Cost }}</a>
+                    </td>
+                  {{/if}}
+                  <td class="text-center">
+                    <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Backorders }}</a>
+                  </td>
+
+                  {{#if isOnlyDefaultActive}}
+                    {{#if currencyList}}
+                      {{#each c in currencyList }}
+                        {{#if c.active}}
+                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.CreditEx}} text-danger{{else}} text-success {{/if}}" style="font-weight: 800;">{{ convertAmount item.CreditEx c}}</td>
+                        {{/if}}
+                      {{/each}}
+                    {{/if}}
+
+                  {{else}}
+                    <td class="text-right {{#if isNegativeAmount item.CreditEx}} text-danger{{else}} text-success {{/if}}">
+                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CreditEx }}</a>
+                    </td>
+                  {{/if}}
+
+                  <td class="text-right">
+                    <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPercent item.ProfitPercent }}</a>
+                  </td>
+
+                  {{#if isOnlyDefaultActive}}
+                    {{#if currencyList}}
+                      {{#each c in currencyList }}
+                        {{#if c.active}}
+                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.ProfitDollars}} text-danger{{else}} text-success {{/if}}" style="font-weight: 800;">{{ convertAmount item.ProfitDollars c}}</td>
+                        {{/if}}
+                      {{/each}}
+                    {{/if}}
+                  {{else}}
+                    <td class="text-right {{#if isNegativeAmount item.ProfitDollars}} text-danger{{else}} text-success {{/if}}">
+                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.ProfitDollars }}</a>
+                    </td>
+                  {{/if}}
+                </tr>
+              {{/each}}
+            {{/each}}
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  {{/vs1_report_template}}
+</template>

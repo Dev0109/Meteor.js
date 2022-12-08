@@ -1,0 +1,253 @@
+<template name="AddPayRunModal">
+  <div class="modal fade" role="dialog" tabindex="-1" id="newPayRunModal">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>
+            <div id="add-timesheet-title" name="add-account-title" style="float: left;">Add a Pay Run</div>
+          </h4>
+          <a role="button" data-toggle="modal" href="#helpModal" class="helpModal" style="    margin-left: 8px; margin-top: 3px; font-size: 18px;">Help
+            <i class="fa fa-question-circle-o"></i>
+          </a>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">Select a Pay Period</label>
+            <input type="text" class="form-control selectAPayRun" id="selectAPayRun">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btnPayRunNext" type="button" style="margin: 8px;">
+            <i class="fas fa-caret-right" style="margin-right: 5px;"></i>Next</button>
+          <button class="btn btn-secondary" data-dismiss="modal" type="button" style="margin: 8px;">
+            <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="AppTableModal" style="z-index: 99999999 !important;">
+    <!-- {{> AppTableModal AppTableModalData=AppTableModalData}} -->
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Pay Calendars</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="col-12">
+            <div class="mb-2 d-flex">
+              <button type="button" class="btn btn-primary btnAddNewPayCalender ml-auto" data-toggle="modal" data-target="#newPayCalendarModal">
+                <i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button>
+              <div class="modal fade" id="newPayCalendarModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="newPayCalendarLabel">New Pay Calendar</h5>
+                      <button type="button" class="close" id="closemodel" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label for="edtRateName">Pay Period</label>
+                            <input type="hidden" id="paycalendarId" name="paycalendarId" value="0"/>
+                            <input type="search" class="form-control" style="cursor: pointer;" id="payperiod" name="payperiod" placeholder="How often will you pay your employees?">
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label for="edtRateName">Name</label>
+                            <input type="text" class="form-control" id="calender_name">
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label>Start Date</label>
+                            <div class="input-group date" style="cursor: pointer;">
+                              <input type="text" class="form-control formClassDate edtStartDate" id="edtStartDate" name="edtStartDate" value="">
+                              <div class="input-group-addon" style="">
+                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label>First Payment Date</label>
+                            <div class="input-group date" style="cursor: pointer;">
+                              <input type="text" class="form-control formClassDate edtFirstPaymentDate" id="edtFirstPaymentDate" name="edtFirstPaymentDate" value="">
+                              <div class="input-group-addon" style="">
+                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-success savenewcalender">
+                        <i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <style>
+                th {
+                  background-color: #ededed;
+                }
+
+                .table-striped tbody tr:nth-of-type(odd) {
+                  background-color: white !important;
+                }
+
+                .table-striped tbody tr:nth-of-type(even) {
+                  background-color: #0000000d !important;
+                }
+
+                .JColResizer > tbody > tr > td,
+                .JColResizer > tbody > tr > th {
+                  padding: 0.75rem !important;
+                }
+
+                .hiddenColumn {
+                  display: none;
+                }
+
+                .showColumn {
+                  display: table-cell;
+                  padding: 0.75rem;
+                  vertical-align: top;
+                }
+
+                .colNextPayPeriod {
+                  width: 80px;
+                }
+
+                .colNextPaymentDate {
+                  width: 80px;
+                }
+
+                .colDeleteCalenders {
+                  width: 3% !important;
+                }
+
+                .colHolidayDelete {
+                  width: 3% !important;
+                }
+
+                .colDeletesup {
+                  width: 3% !important;
+                }
+
+                .colDeletepaidrem {
+                  width: 3% !important;
+                }
+
+                .colDeleterei {
+                  width: 3% !important;
+                }
+              </style>
+
+              <style>
+                .colPayCalendarName {
+                  width: 25%;
+                }
+
+                .colPayPeriod {
+                  width: 25%;
+                }
+
+                .colNextPayPeriod {
+                  width: 25%;
+                }
+
+                .colNextPaymentDate {
+
+                  width: 25%;
+                }
+              </style>
+
+              <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
+                <thead>
+                  <tr class="dnd-moved">
+                    <th class="th colCalenderID hiddenColumn">ID</th>
+                    <th class="th colPayCalendarName">Name</th>
+                    <th class="th colPayPeriod">Pay Period</th>
+                    <th class="th colNextPayPeriod">Next Pay Period</th>
+                    <th class="th colNextPaymentDate">Next Payment Date</th>
+                    <th class="th colDelete" style="width: 3% !important;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                    <td contenteditable="false" class="colCalenderID hiddenColumn"></td>
+                    <td contenteditable="false" class="colPayCalendarName"></td>
+                    <td contenteditable="false" class="colPayPeriod"></td>
+                    <td contenteditable="false" class="colNextPayPeriod"></td>
+                    <td contenteditable="false" class="colNextPaymentDate"></td>
+                    <td contenteditable="false" style="width: 3% !important;" class="colDeleteCalenders">
+                      <span class="table-remove">
+                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0">
+                          <i class="fa fa-remove"></i>
+                        </button>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="deleteCalenderLineModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+
+        <input type="hidden" style="width: 100%; display:none;" id="selectColDeleteLineID" name="selectColDeleteLineID" readonly="readonly">
+        <input type="hidden" style="width: 100%; display:none;" id="selectCalenderName" name="selectCalenderName" readonly="readonly">
+
+        <div class="modal-header">
+          <h4 style="margin-bottom: 0px;">Delete Calender</h4>
+          <button type="button" class="close" id="hidedeleteca" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p style="text-align: center;">
+            Are you sure you want to delete this Calender?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger float-right btnDeleteCalender" type="button">
+            <i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
+          <button class="btn btn-secondary  float-right " data-dismiss="modal" type="button">
+            <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

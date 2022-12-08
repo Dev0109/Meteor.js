@@ -1,0 +1,33 @@
+<template name="transactionDescriptionModal">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Transaction Description List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" style="width: 100%; display:none;" id="selectBankNameID" name="selectBankNameID" readonly>
+        <div class="card-body p-1 rounded">
+          <div class="table-responsive">
+            <style>
+              .thTransactionDescription {
+                width: 100% !important;
+              }
+            </style>
+            <table id="tblTransactionDescription" style="width:100%" class="table table-striped table-bordered tblTransactionDescription">
+              <thead>
+                <tr class="dnd-moved">
+                  <th style="width: 30px;">ID</th>
+                  <th class="thTransactionDescription">Transaction Description</th>
+                </tr>
+              </thead>
+              <tbody> 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+    </div>
+  </div>
+</template>

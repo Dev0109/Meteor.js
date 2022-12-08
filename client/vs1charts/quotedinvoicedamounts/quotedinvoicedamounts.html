@@ -1,0 +1,33 @@
+<template name="quotedinvoicedamounts">
+    <style type="text/css">
+        .hidequotechat {
+            display: none;
+        }
+
+        .showquotechat {
+            display: block;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id="quotedinvoicedamount"
+        headerClass="quotedamountsheader"
+        headerColor="primary"
+        headerTitle="Quoted Amounts / Invoiced Amounts"
+        hrefDetails="/agedpayables"
+        editModalID="editDashboardModal"
+    }}
+    <canvas id="quotedinvoicedamounts" name="quotedinvoicedamounts"></canvas>
+    {{/draggablePanel}}
+</template>

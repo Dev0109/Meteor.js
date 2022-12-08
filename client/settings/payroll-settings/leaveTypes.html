@@ -1,0 +1,100 @@
+<template name="leaveTypeSettings">
+    <div class="modal fade" role="dialog" tabindex="-1" id="leaveTypeSettingsModal" style="z-index:99999;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Leaves</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="dropdownleaveID" name="dropdownleaveID" />
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <table id="tblLeaves" style="width:100%" class="table table-striped table-bordered tblInventoryService">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="th colLeaveID hiddenColumn" >Leave ID</th>
+                                        <th class="th colLeaveName" >Leave Name</th>
+                                        <th class="th colLeaveUnits" >Units</th>
+                                        <th class="th colLeaveNormalEntitlement" style="">Normal Entitlement</th>
+                                        <th class="th colLeaveLeaveLoadingRate" style="">Leave Loading Rate</th>
+                                        <th class="th colLeavePaidLeave" style="">Paid Leave</th>
+                                        <th class="th colLeaveShownOnPayslip" style="">Shown On Payslip</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <div class="modal fade" id="leaveModal" tabindex="-1" role="dialog" style="z-index:999999;" aria-labelledby="leaveLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaveLabel">Leave</h5>
+                    <button type="button" class="close" id="closeleave" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="row" id="leaveRateForm">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtLeaveName">Leave Name</label>
+                                <input type="text" class="form-control" id="edtLeaveName">
+                                <input type="hidden" id="leaveID" value="0"/>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-1">
+                            <div class="form-group mb-0">
+                                <label for="edtLeaveType">Typers of Leave</label>
+                                <select id="edtLeaveType" class="form-control">
+                                    <option value="Paid Leave">Paid Leave</option>
+                                    <option value="Unpaid Leave">Unpaid Leave</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-1">
+                            <div class="form-group mb-0">
+                                <label for="edtTypeOfUnits">Typers of Units</label>
+                                <input type="search"  style="cursor: pointer;" class="form-control" id="edtTypeOfUnits" name="edtTypeOfUnits" placeholder="Typers of Units">
+                            </div>
+                            <span style="font-size: 12px;white-space: normal;line-height: 12px !important;display: inline-block;margin-top: 9px; ">The type of units by which leave entitlements are normally tracked. These are typically the same as the type of units used for the employee's ordinary earnings rate.</span>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtLeaveLoadingRate">Leave Loading Rate <span style="font-weight: 200;">(optional)</span></label>
+                                <input type="text" class="form-control" id="edtLeaveLoadingRate">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtNormalEntitlement">Normal Entitlement <span style="font-weight: 200;">(optional)</span></label>
+                                <input type="text" class="form-control" id="edtNormalEntitlement">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="custom-control custom-switch pointer">
+                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ShowBalance" value="showbalance">
+                                <label class="custom-control-label chkBox pointer" for="formCheck-ShowBalance">Show Balance on Payslip</label>
+                            </div>
+                            <span style="font-size: 12px;">Check this box if you want a balance for this leave type to be shown on your employee's payslips.</span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success saveLeave"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

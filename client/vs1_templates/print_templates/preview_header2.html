@@ -1,0 +1,96 @@
+<template name="preview_header2">
+    <style>
+        .template-preview-header2 {
+            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+            font-family: Calibri, sans-serif !important;
+            width: 90%;
+            margin: 0px auto;
+        }
+        .label-p {
+            font-family: Calibri, sans-serif !important;
+            line-height: 1em;
+            margin-bottom: 0px;
+        }
+        .label-p2 {
+            font-family: Calibri, sans-serif !important;
+            line-height: 1em;
+            margin-bottom: 10px;
+        }
+        .print-header2 {
+            font-family: Calibri, sans-serif !important;
+            font-size: 36px;
+            padding-right: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .o_abn_label2 {
+            font-family: Calibri, sans-serif !important;
+            text-align: right;
+        }
+        .pdfCustomerAddress2 {
+            font-family: Calibri, sans-serif !important;
+            font-size: 18px;
+            padding: 0px;
+            min-height: 160px;
+            width: 100%;
+            margin-bottom: 0px;
+            color: rgb(0 0 0);
+            line-height: 1.2rem;
+        }
+    </style>
+    <div class="template-preview-header2">
+        <div class="d-flex flex-row d-sm-flex d-md-flex">
+            <div class="col-6 col-md-6 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center;">
+                <div style="width: 100%"><!-- max-width: 60mm; max-height: 30mm; -->
+                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 50%; margin-bottom: 0px;">
+                </div>
+            </div>
+            <div class="col-6 col-md-6 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly;">
+                <p class="label-p print-header2"></p>
+            </div>
+        </div>
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="margin: 10px 0px 0px;">
+            <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding: 0px;">
+                <div style="width: 100%; border: none !important; font-size: 18px;">
+                    <p class="label-p">
+                        <span class="o_name2"></span><br>
+                        <span class="o_address2"></span><br>
+                        <span class="o_city2"></span><br>
+                        <span class="o_phone2"></span><br>
+                        <span class="o_email2"></span><br>
+                        <span class="o_state2"></span><br>
+                    </p>
+                    <p class="label-p2">
+                        <span class="o_abn_label2"></span>&nbsp;&nbsp;
+                        <span class="o_abn2"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">
+                <div style="width: 100%; border: none !important; font-size: 18px; min-height: 180px;">
+                    <p class="label-p2">
+                        <span style="font-weight: bold;">Invoice Date</span><br>
+                        <span class="date2"></span>
+                    </p>
+                    <p class="label-p2">
+                        <span style="font-weight: bold;">Invoice Number</span><br>
+                        <span class="io2"></span>
+                    </p>
+                    <p class="label-p2">
+                        <span style="font-weight: bold;">Reference</span><br>
+                        <span class="ro2"></span>
+                    </p>
+                    <p class="label-p2">
+                        <span style="font-weight: bold;">Due Date</span><br>
+                        <span class="due2"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">
+                <div style="width: 100%; border: none !important;">
+                    <p class="pdfCustomerAddress2"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

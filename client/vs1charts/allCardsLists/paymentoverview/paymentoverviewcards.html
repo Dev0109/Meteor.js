@@ -1,0 +1,129 @@
+<template name="paymentoverviewcards">
+    <!-- All Outstanding Invoices -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard1"
+        chartGroup="PaymentOverview"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="paymentoverview-customers-outstanding-invoices"
+        highlightColor="info"
+    }}
+        {{> kpiCardTitle
+            title="All Outstanding Invoices"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/customerawaitingpayments"
+                id="invoiceOutstandingAmt"
+                name="invoiceOutstandingAmt"
+                subValueId="invoiceOutstandingQTY"
+                subValueName="invoiceOutstandingQTY"
+                subText="Awaiting"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Overdue Invoices -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard2"
+        chartGroup="PaymentOverview"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="paymentoverview-customers-overdue"
+        highlightColor="warning"
+    }}
+        {{> kpiCardTitle
+            title="Overdue Invoices"
+            size="small"
+            color="warning"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/overduecustomerawaitingpayments"
+                id="invoiceOverDueAmt"
+                name="invoiceOverDueAmt"
+                subValueId="invoiceOverDueQTY"
+                subValueName="invoiceOverDueQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- All Outstanding Payments -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard3"
+        chartGroup="PaymentOverview"
+        defaultPosition=2
+        position=2
+        cardActive=true
+        cardKey="paymentoverview-suppliers-outstanding-expenses"
+        highlightColor="info"
+    }}
+        {{> kpiCardTitle
+            title="All Outstanding Payments"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/supplierawaitingpurchaseorder"
+                id="SuppOutstandingAmt"
+                name="SuppOutstandingAmt"
+                subValueId="SuppOutstandingQTY"
+                subValueName="SuppOutstandingQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Overdue Payments -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard3"
+        chartGroup="PaymentOverview"
+        defaultPosition=3
+        position=3
+        cardActive=true
+        cardKey="paymentoverview-suppliers-overdue"
+        highlightColor="warning"
+    }}
+        {{> kpiCardTitle
+            title="Overdue Payments"
+            size="small"
+            color="warning"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/overduesupplierawaiting"
+                id="suppOverdueAmount"
+                name="suppOverdueAmount"
+                subValueId="suppOverdueQTY"
+                subValueName="suppOverdueQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+</template>

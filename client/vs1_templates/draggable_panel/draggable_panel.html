@@ -1,0 +1,30 @@
+<template name="draggablePanel">
+    <div class="draggable-panel col-xs-{{xs}} col-sm-{{sm}} col-md-{{md}} col-lg-{{lg}} col-xl-{{xl}} sortable-chart-widget-js hideelement"
+    data-default-position="{{defaultPosition}}" data-default-class="col-md-{{md}}"
+    id=""
+    key="{{key}}">
+        <div class="minHeight{{hLenght}} {{id}}" id="{{id}}">
+            <div class="overflow-hidden card shadow mb-4 portlet">
+                <div class="card-header {{headerClass}} d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip=""
+                title="{{tooltipTitle}}">
+                    <h6 class="text-{{headerColor}} font-weight-bold m-0">{{headerTitle}}</h6>
+                    <div class="dropdown no-arrow" style="display: inline-flex;">
+                        <a id="hideearnings" class="on-editor-change-mode hideelement bankaccountschartedit btn btn-link" role="presentation" href="" ><i class="far fa-eye"></i></a>
+                        <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                        <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                            <a id="earnings" class="dropdown-item" role="presentation" href="{{hrefDetails}}">&nbsp;More Details</a>
+                            <div class="dropdown-divider"></div>
+                            <a id="" class="dropdown-item editchartsbtn pointer" role="presentation" data-toggle="modal" data-target="#{{editModalID}}">&nbsp;Edit Chart</a>
+                            <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                        </div>
+                  </div>
+              </div>
+              <div class="{{bodyClass}} card-body">
+                <div class="canvasParentDiv canvasHeight100">
+                    {{> Template.contentBlock}}
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</template>

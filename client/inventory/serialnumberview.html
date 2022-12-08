@@ -1,0 +1,51 @@
+<template name="serialnumberview">
+
+    <div style="margin-top: -24px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <style>
+            th {
+                background-color: #ededed;
+            }
+            .table-striped tbody tr:nth-of-type(odd) {
+                background-color: white !important;
+            }
+
+            .table-striped tbody tr:nth-of-type(even) {
+                background-color: #0000000d !important;
+            }
+        </style>
+        <header style="padding: 16px;padding-bottom: 0px;">
+            <h1 style="margin: 16px;" id="serialnumberviewtitle">Serial Number - {{currentSerialNumber}}</h1>
+        </header>
+        <div style="padding: 0px 16px;">
+            <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
+                <div class="col-lg-6 col-md-12 col-sm-12 productCard" id="productCard">
+                    <div class="card shadow mb-4">
+                        <table id="tblStockAdjustmentLine" style="width:100%" class="table table-striped table-bordered tblStockAdjustmentLine">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colProductName" style="width: 300px; border-right: 0px;">Date</th>
+                                    <th class="th colProductName" style="width: 300px; border-right: 0px;">Trans Type</th>
+                                    <th class="th colProductName" style="width: 300px; border-right: 0px;">Serial Number</th>
+                                    <th class="th colProductName" style="width: 300px; border-right: 0px;">Bin Location</th>
+                                    <th class="th colProductName" style="width: 300px; border-right: 0px;">Bin Number</th>
+                                    <th class="th colProductName" style="width: 300px; border-right: 0px;">Batch No</th>
+                                    <th class="th colProductName" style="width: 300px; border-right: 0px;">Expiry Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        modalDraggable();
+    </script>
+</template>

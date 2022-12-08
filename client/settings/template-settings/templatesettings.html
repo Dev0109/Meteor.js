@@ -1,0 +1,270 @@
+<template name="templatesettings">
+    <style>
+        .templateItem {
+            display: inline-flex !important;
+
+        }
+
+        .btnPreviewTemplate {
+            padding: 6px;
+            cursor: pointer;
+        }
+
+        .btnPreviewTemplate:hover {
+            background-color: #f8f9fc;
+        }
+    </style>
+
+
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="row" style="background-color: #ededed; margin: -1.5rem -1.5rem 1.5rem -1.5rem; padding: 1.5rem;">
+            <div class="col-12" style="padding: 0px;">
+                <h2>Print Template Options
+                    <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=37" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
+            </div>
+            <div class="col-6" style="padding: 0px;">
+                <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px 0px;" autocomplete="off"><i class="icon ion-android-bulb" style="margin-right: 8px;"></i>Refresh</button>
+            </div>
+            <div class="col-6" style="padding: 0px;">
+                <button class="btn btn-secondary btnBack float-right" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button>
+                <button class="btn btn-warning float-right resetcards" id="resetcards" type="button" style="margin:8px 3px 44px;" autocomplete="off">
+                    <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset
+                </button>
+                <button class="btn btn-success btnTopGlobalSave float-right" type="button" style="margin: 8px;margin-left: 8px;"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-3">
+            <div class="col-12 col-md-8">
+
+                <div class="row">
+                    {{#each title in getTemplateList}}
+                        <div class="col-12 col-md-4">
+                            <div class="card shadow mb-3">
+                                <div class="card-header py-3">
+                                    <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">{{title}}</span>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        {{#each index in getTemplateNumber}}
+                                            <li class="list-group-item templateItem justify-content-between" data-id="{{title}}" data-template-id="{{index}}">
+                                                <div class="custom-control custom-switch">
+
+                                                    {{#if equals index '1'}}
+                                                         {{#if equals title 'Customer Payments'}}  
+                                                              <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Customer_Payments_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Customer Statements'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Customer_Statements_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Invoice Back Orders'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Invoice_Back_Orders_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Purchase Orders'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Purchase_Orders_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Sales Orders'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Sales_Orders_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Supplier Payments'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Supplier_Payments_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Delivery Docket'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Delivery_Docket_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Bills' }}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Credits'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Invoices'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Quotes'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Refunds'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Statements'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Journal Entry'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Journal_Entry_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Deposits'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                         {{#if equals title 'Cheques'}}
+                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                         {{/if}}
+                                                    {{else}}
+                                                            {{#if equals title 'Customer Payments'}}  
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Customer_Payments_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Customer Statements'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Customer_Statements_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Invoice Back Orders'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Invoice_Back_Orders_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Purchase Orders'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Purchase_Orders_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Sales Orders'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Sales_Orders_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            
+                                                            {{#if equals title 'Supplier Payments'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Supplier_Payments_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Delivery Docket'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Delivery_Docket_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Bills' }}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Credits'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Invoices'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Quotes'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Refunds'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Statements'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Journal Entry'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Journal_Entry_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Deposits'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                            {{/if}}
+                                                            {{#if equals title 'Cheques'}}
+                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                            {{/if}}
+                                                    {{/if}}
+
+
+                                                    {{#if equals title 'Customer Payments'}}  
+                                                    <label class="custom-control-label" for="Customer_Payments_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Customer Statements'}}
+                                                    <label class="custom-control-label" for="Customer_Statements_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Invoice Back Orders'}}
+                                                    <label class="custom-control-label" for="Invoice_Back_Orders_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Purchase Orders'}}
+                                                    <label class="custom-control-label" for="Purchase_Orders_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Sales Orders'}}
+                                                    <label class="custom-control-label" for="Sales_Orders_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    
+                                                    {{#if equals title 'Supplier Payments'}}
+                                                    <label class="custom-control-label" for="Supplier_Payments_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Delivery Docket'}}
+                                                    <label class="custom-control-label" for="Delivery_Docket_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Bills' }}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Credits'}}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Invoices'}}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Quotes'}}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Refunds'}}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Statements'}}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Journal Entry'}}
+                                                    <label class="custom-control-label" for="Journal_Entry_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Deposits' }}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                    {{#if equals title 'Cheques'}}
+                                                    <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                    {{/if}}
+                                                   
+                                                    <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
+                                                    <!-- <label style="margin-right: 50px;" for="{{title}}_{{index}}"> </label> -->
+
+                                                </div>
+
+                                                <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
+                                            </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
+        {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper" namePrefix="html-2-pdfwrapper" }}
+    </div>
+
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">Print Templates Settings</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/organizationdetails.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Help Video Modal -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

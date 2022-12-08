@@ -1,0 +1,50 @@
+<template name="mailchimp">
+    <div class="card shadow mb-3">
+        <div class="card-header py-3" style="background-color: rgb(248,249,252);">
+            <div align="left">
+                <p class="text-primary m-0 font-weight-bold">Mail Chimp </p>
+
+            </div>
+        </div>
+        
+        <div class="card-body text-center">
+            <div class="d-xl-flex flex-column justify-content-xl-center" style="margin-bottom: 10px;">
+                <div class="d-sm-flex d-xl-flex flex-column justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="padding: 10px;">
+                    <div align="center" style="width: 100%;">
+                        <button class="btn btn-primary" type="button" id="openMailchimpLink"><i class="fa fa-phone" style="margin-right: 8px;"></i>Mail Chimp Sign Up</button>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col-6">
+                        <div align="left">
+                            <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start"><label>API Key</label>
+                                <input class="form-control" id="VS1MailchimpApiKey" type="text" name="ApiKey">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div align="left">
+                            <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start"><label>Audience ID</label>
+                                <input class="form-control" id="VS1MailchimpAudienceID" type="text" name="AudienceID">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none !important;" class="col-md-4 col-6">
+                        <div align="left">
+                            <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start"><label>Campaign ID</label>
+                                <input class="form-control" id="VS1MailchimpCampaignID" type="text" name="CampaignID">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-success float-left" type="button" id="saveMailChimpSetting" name="" style="margin-right: 8px;"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+                <button class="btn btn-secondary float-right btnBack" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button>
+            </div>
+        </div>
+    </div>
+</template>

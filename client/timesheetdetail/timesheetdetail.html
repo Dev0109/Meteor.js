@@ -1,0 +1,468 @@
+<template name="timesheetdetail">
+    <style>
+       .dimmedChart>div {
+       background-color: #dddfeb !important;
+       }
+       .card.hovered {
+       box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+       cursor: move;
+       transition-duration: 300ms;
+       }
+       .hideelement {
+       display: none !important;
+       }
+       .showelement {
+       display: block;
+       }
+    </style>
+    <div class="container-fluid">
+       <div class="fullScreenSpin" style="display:none;">
+          <div class="spinner"></div>
+       </div>
+       <div>
+          <header class="pt-2 pb-3 d-flex align-items-center">
+             <h2 class="mr-1">Timesheet</h2>
+             {{> helpbutton}}
+             <!-- Start Help View Modal -->
+             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                   <div class="modal-content">
+                      <div class="modal-header" style="padding-bottom: 8px;">
+                         <h4>Help</h4>
+                         <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close"><span aria-hidden="true">×</span></button>
+                      </div>
+                      <div class="modal-body">
+                         <p class="text-center text-muted"><a role="button" data-toggle="modal"
+                            href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                         <p class="text-center text-muted"><a
+                            href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank"
+                            class="btn btn-primary">Download Help File</a></p>
+                         {{> helpadvisor}}
+                         {{> helpgotoforum}}
+                      </div>
+                      <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                         data-dismiss="modal" type="button">Close</button></div>
+                   </div>
+                </div>
+             </div>
+          </header>
+          <!-- All charts list -->
+          <style>
+             @media screen and (max-width: 450px) {
+                .btnNav {
+                    width: 90% !important;
+                    margin: 12px 0px !important;
+                }
+                .btnNewOptions {
+                    display: none !important;
+                }
+                .QuoteList {
+                    width: 120px;
+                }
+                .salesOrderList {
+                    width: 120px;
+                }
+                .invoiceList {
+                    width: 120px;
+                }
+                .btnOpenSettingsMobile {
+                    display: block !important;
+                    margin: 12px 0px !important;
+                }
+                .btnOpenSettingsDesktop {
+                    display: none;
+                }
+                .dateSelectMobile {
+                    float: right !important;
+                    margin-right: 0px !important;
+                }
+                .dropdownMobile {
+                    margin: 0px !important;
+                }
+             }
+          </style>
+          <div class="row">
+             <div class="col-12" style="margin-bottom: 16px;">
+                <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">
+                   <style>
+                      th {
+                        background-color: #ededed;
+                      }
+                      .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                      }
+                      .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                      }
+                      .JColResizer>tbody>tr>td,
+                      .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                      }
+                      .hiddenColumn {
+                        display: none;
+                      }
+                      .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                      }
+                      input[type=number]::-webkit-inner-spin-button,
+                      input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                      }
+                      .highlightInput {
+                        border: 0px solid transparent !important;
+                        background-color: rgba(0, 0, 0, 0) !important;
+                        padding: 0px !important;
+                        width: 100% !important;
+                        text-align: right !important;
+                        color: #858796 !important;
+                      }
+                      .highlightInput::-webkit-outer-spin-button,
+                      .highlightInput::-webkit-inner-spin-button {
+                      -webkit-appearance: none !important;
+                        margin: 0 !important;
+                      }
+                      /* Firefox */
+                      .highlightInput[type=number] {
+                        -moz-appearance: textfield !important;
+                      }
+                      .colFlag {
+                        width: 1% !important;
+                      }
+                      .tdEmpty {
+                        width: 3% !important;
+                      }
+                      @media screen and (max-width: 450px) {
+                        #tblTimeSheet_filter {
+                            width: 70%;
+                        }
+                        .form-control-sm {
+                            width: 70% !important;
+                        }
+                        .input-group.date {
+                            width: 130px !important;
+                        }
+                        .dateFromGroup {
+                            float: right !important;
+                            width: 183px !important;
+                        }
+                        .dateToGroup {
+                            float: right !important;
+                            width: 172px !important;
+                        }
+                        .myvarFilterForm {
+                            /* display: inline-flex !important; */
+                            padding: 0px !important;
+                        }
+                        .colDateFilter {
+                            padding-left: 0px !important;
+                        }
+                        .dropdownDateRange {
+                            float: right !important;
+                            width: 100% !important;
+                        }
+                        .btn-daterange {
+                            float: right !important;
+                        }
+                        .btnSetupSingleTouch {
+                            margin-bottom: 16px;
+                            padding: 0px;
+                        }
+                      }
+                      input.timeSheetCheckBox {
+                        display: inline-block;
+                        width: 17px;
+                        height: 17px;
+                        position: relative;
+                        top: 3px;
+                      }
+                   </style>
+
+                    <div class="row">
+                        <div class="col-md-6 col-xl-3 mb-4 card-visibility ui-sortable-handle">
+                            <div class="card shadow border-left-info customCardMainDiv">
+                                <div class="card-body customerAwaitingPayment">
+                                    <div class="row align-items-center no-gutters justify-content-between">
+                                        <a>
+                                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Employee</span></div>
+                                            <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> {{ employee.EmployeeName }} </span>
+                                            </div>
+                                        </a>
+                                        <div class="col-auto"><i class="fas fa-user fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3 mb-4 card-visibility ui-sortable-handle">
+                            <div class="card shadow border-left-info customCardMainDiv">
+                                <div class="card-body customerAwaitingPayment">
+                                    <div class="row align-items-center no-gutters justify-content-between">
+                                        <a>
+                                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Status</span></div>
+                                            <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> {{ timesheet.Status }} </span>
+                                            </div>
+                                        </a>
+                                        <div class="col-auto"><i class="fas fa-shield-check fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3 mb-4 card-visibility ui-sortable-handle">
+                            <div class="card shadow border-left-info customCardMainDiv">
+                                <div class="card-body customerAwaitingPayment">
+                                    <div class="row align-items-center no-gutters justify-content-between">
+                                        <a>
+                                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Week ending</span></div>
+                                            <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> {{ formatDate timesheet.TimeSheetDate }} </span>
+                                            </div>
+                                        </a>
+                                        <div class="col-auto"><i class="fas fa-calendar-alt fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3 mb-4 card-visibility ui-sortable-handle">
+                            <div class="card shadow border-left-info customCardMainDiv">
+                                <div class="card-body customerAwaitingPayment">
+                                    <div class="row align-items-center no-gutters justify-content-between">
+                                        <a>
+                                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Weekly Total</span></div>
+                                            <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> {{ weeklyTotal }} </span>
+                                            </div>
+                                        </a>
+                                        <!-- <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ 
+                   <div class="table-responsive my-3">
+                      <!-- <div class="row no-gutters d-xl-flex align-items-xl-end mb-3">
+                         <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                            <h4 style="font-weight: 600;">Draft Pay Run</h4>
+                            </div>
+                         <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                            <button type="button" class="btn btn-primary btnAddTimeSheet" data-toggle="modal" data-target="#addTimeSheetModal" ><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Timesheet</button>
+                         </div>
+                      </div> -->
+                      <table id="tblTimeSheetInner" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTimeSheetInner">
+                         <thead>
+                            <tr>
+                               <th>Earning Type</th>
+                               {{#if earningDays}}
+                                {{#each day in earningDays}}
+                                    <th date-index="{{ day.dayIndex }}">{{ day.date }}</th>
+                                {{/each}}
+                               {{/if}}
+                               <th style="width: 20px;"></th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <style>
+                                tr.template {
+                                    display: none;
+                                }
+                                #tblTimeSheetInner.table-bordered, #tblTimeSheetInner.table-bordered td, #tblTimeSheetInner.table-bordered th {
+                                    border: 1px solid #e3e6f0 !important;
+                                    border-collapse: collapse !important;
+                                }
+                            </style>
+
+                            <tr class="template">
+                               <td style="width: 250px; display: flex;">
+                                <!-- <select style="width: auto;" class="es-input form-control">
+                                    <option>Select</option>
+                                    {{#if earningOptions}}
+                                        {{#each option in earningOptions}}
+                                            <option value="{{option.value}}">{{option.text}}</option>
+                                        {{/each}}
+                                    {{/if}}
+                                </select> -->
+                                <input class="es-input --highlightSelect-- select-rate-js form-control" type="search" autocomplete="off">
+                               </td>
+                                {{#if earningDays}}
+                                    {{#each day in earningDays}}
+                                        <td date-index="{{ day.dayIndex }}"><input class="hours form-control" date-index="{{ day.dayIndex }}" type="text" value="{{ day.defaultValue }}"></td>
+                                    {{/each}}
+                                {{/if}}
+                              
+                               <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeleteRow" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
+                            </tr>
+
+                            {{#if timeSheetDetails}}
+                                {{#each t in timeSheetDetails.earningLines}}
+                                <tr>
+                                    <td style="width: 250px; display: flex;">
+                                    <!-- <select style="width: auto;" class="es-input form-control">
+                                        <option>Select</option>
+                                        {{#if earningOptions}}
+                                            {{#each option in earningOptions}}
+                                                <option value="{{option.value}}">{{option.text}}</option>
+                                            {{/each}}
+                                        {{/if}}
+                                    </select> -->
+                                    <input value="{{ t.earningRateName }}" class="es-input --highlightSelect-- select-rate-js form-control" type="search" autocomplete="off">
+                                    </td>
+                                    {{#if earningDays}}
+                                        {{#each day in earningDays}}
+                                            <td date-index="{{ day.dayIndex }}"><input  class="hours form-control" date-index="{{ day.dayIndex }}" type="text" value="{{indexMatchedHours day t.dailyHours}}"></td>
+                                        {{/each}}
+                                    {{/if}}
+                                
+                                    <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeleteRow" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
+                                </tr>
+                                {{/each}}
+                             {{/if}}
+                           
+                            <!-- <tr>
+                               <td>
+                                <button type="button" class="btn btn-primary btnAddNewLine"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add another line</button>
+                               </td>
+                                {{#if earningDays}}
+                                    {{#each day in earningDays}}
+                                        <td>0.00</td>
+                                    {{/each}}
+                                {{/if}}
+                               <td></td>
+                            </tr> -->
+                         </tbody>
+                         <tfoot>
+                            <tr class="total">
+                                <th>Total</th>
+                                 {{#if earningDays}}
+                                     {{#each day in earningDays}}
+                                         <th class="daily-total" date-index="{{ day.dayIndex }}">0</th>
+                                     {{/each}}
+                                 {{/if}}
+                               
+                                <th></th>
+                             </tr>
+                         </tfoot>
+                          
+
+                      </table>
+                        <div class="m-1">
+                            <button type="button" class="btn btn-primary btnAddNewLine" style="width: max-content;">
+                                <i class="fas fa-plus" style="margin-right: 5px;"></i> Add another line
+                            </button>
+                        </div>
+                   </div>
+
+                   <div class="row">
+                        <div class="col-6 col-md-7 col-lg-8">
+                            <button class="btn btnNav btn-danger delete-timesheet" type="button" role="button" style="margin: 12px;">
+                                <!-- <i class="fas fa-dollar-sign" style="padding-right: 5px;"></i> -->
+                                Delete Timesheet</button>
+                        </div>
+                        <div class="col-6 col-md-5 col-lg-4">
+                            <button class="btn btnNav btn-secondary float-right cancel-timesheet" type="button" style="margin: 12px;"><i class="fa fa-close" style="padding-right: 5px;"></i>Cancel</button>
+                            <button class="btn btnNav btn-success float-right approve-timesheet" type="button" style="margin: 12px;"><i class="fas fa-thumbs-up" style="padding-right: 5px;"></i>Approve</button>
+                            <button class="btn btnNav btn-primary float-right save-draft" type="button" style="margin: 12px;"><i class="fas fa-save" style="padding-right: 5px;"></i>Save Draft</button>
+                        </div>
+                    </div>
+
+
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="select-rate-modal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Earning Types</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+        <!--
+                    <div style="margin: 4px; margin-bottom: 8px;">
+                        <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
+                    </div>
+        -->
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <style>
+                                .th.chkBox {
+                                    width: 2% !important;
+                                }
+                                .thQty {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thTax {
+                                    width: 8% !important;
+                                }
+                                .thCostPrice {
+                                    width: 8% !important;
+                                }
+                                .thProductName {
+                                    width: 20% !important;
+                                }
+      
+                                .thColBarcode {
+                                    width: 15% !important;
+                                }
+                            </style>
+                            <table id="tblEarnigRatesList" class="table table-striped table-bordered tblInventoryService">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                       
+                                        <th>Earnings name</th>
+                                     
+                                        <th>Earnings type</th>
+                                        <th>Display Name</th>
+                                        <th>Rate type</th>
+                                        <th>Amount</th>
+                                        <th>Account</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#if earningOptions}}
+                                        {{#each rate in earningOptions}}
+                                            <tr ratetype-id="{{rate.Id}}">
+                                                <td>{{ rate.EarningName }}</td>
+                                            
+                                                <td>{{ rate.EarningType }}</td>
+                                                <td>{{ rate.EarningDisplayName }}</td>
+                                                <td>{{ rate.EarningRateType }}</td>
+                                                <td>{{ rate.Amount }}</td>
+                                                <td>{{ rate.EarningExpanceAccount }}</td>
+        
+                                            </tr>
+                                        {{/each}}
+                                    {{/if}}
+                                  
+      
+                                </tbody>
+                              
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+             
+                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+ </template>
+ 

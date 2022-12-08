@@ -1,0 +1,164 @@
+<template name="dashboardManagerCharts">
+    <style>
+        .highcharts-title {
+            font-size: 14px !important;
+        }
+        .spd-gauge-charts {
+            margin: auto;
+            display: none;
+        }
+        .rev-counter {
+            margin-top: -20px;
+        }
+        .rev-counter span{
+            font-size: 14px !important;
+        }
+        .Gauge .portlet .card-body {
+            padding: 0;
+        }
+
+        .gaugeCardBody{
+            max-height:300px !important;
+        }
+    </style>
+    <div style="width:16.6%; display:none">
+        {{# draggablePanel
+            md=2
+            defaultPosition=5
+            key="dsmcharts__sales_quota_1"
+            hLenght=100
+            id="gauge-card-1"
+            headerClass=""
+            headerColor="primary"
+            headerTitle=""
+            hrefDetails="/invoicelist"
+            editModalID="editDashboardModal"
+            bodyClass="gaugeCardBody"
+        }}
+            <div class="" key="spd-gauge-area1">
+                <div id="spd-gauge-area1" class="ds-highcharts spd-gauge-charts" style="height:270px"></div>
+                <div id="spd-gauge-area1-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                <div id="spd-gauge-area1-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+            </div>
+        {{/draggablePanel}}
+    </div>
+    <div style="width:16.6%; display:none">
+        {{# draggablePanel
+            md=2
+            defaultPosition=6
+            key="dsmcharts__sales_quota_2"
+            hLenght=100
+            id="gauge-card-2"
+            headerClass=""
+            headerColor="primary"
+            headerTitle=""
+            hrefDetails="/invoicelist"
+            editModalID="editDashboardModal"
+            bodyClass="gaugeCardBody"
+        }}
+            <div class="" key="spd-gauge-area2">
+                <div id="spd-gauge-area2" class="ds-highcharts spd-gauge-charts" style="height:270px"></div>
+                <div id="spd-gauge-area2-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                <div id="spd-gauge-area2-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+            </div>
+        {{/draggablePanel}}
+    </div>
+    <div style="width:16.6%; display:none">
+        {{# draggablePanel
+            md=2
+            defaultPosition=7
+            key="dsmcharts__sales_quota_3"
+            hLenght=100
+            id="gauge-card-3"
+            headerClass=""
+            headerColor="primary"
+            headerTitle=""
+            hrefDetails="/invoicelist"
+            editModalID="editDashboardModal"
+            bodyClass="gaugeCardBody"
+        }}
+            <div class="" key="spd-gauge-area3">
+                <div id="spd-gauge-area3" class="ds-highcharts spd-gauge-charts" style="height:270px"></div>
+                <div id="spd-gauge-area3-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                <div id="spd-gauge-area3-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+            </div>
+        {{/draggablePanel}}
+    </div>
+    <div style="width:16.6%; display:none">
+        {{# draggablePanel
+            md=2
+            defaultPosition=8
+            key="dsmcharts__sales_quota_4"
+            hLenght=100
+            id="gauge-card-4"
+            headerClass=""
+            headerColor="primary"
+            headerTitle=""
+            hrefDetails="/invoicelist"
+            editModalID="editDashboardModal"
+            bodyClass="gaugeCardBody"
+        }}
+            <div class="" key="spd-gauge-area4">
+                <div id="spd-gauge-area4" class="ds-highcharts spd-gauge-charts" style="height:270px"></div>
+                <div id="spd-gauge-area4-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                <div id="spd-gauge-area4-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+            </div>
+        {{/draggablePanel}}
+    </div>
+    <div style="width:16.6%; display:none">
+        {{# draggablePanel
+            md=2
+            defaultPosition=9
+            key="dsmcharts__sales_quota_5"
+            hLenght=100
+            id="gauge-card-5"
+            headerClass=""
+            headerColor="primary"
+            headerTitle=""
+            hrefDetails="/invoicelist"
+            editModalID="editDashboardModal"
+            bodyClass="gaugeCardBody"
+        }}
+            <div class="" key="spd-gauge-area5">
+                <div id="spd-gauge-area5" class="ds-highcharts spd-gauge-charts" style="height:270px"></div>
+                <div id="spd-gauge-area5-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                <div id="spd-gauge-area5-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+            </div>
+        {{/draggablePanel}}
+    </div>
+    <div style="width:16.6%; display:none">
+        {{# draggablePanel
+            md=2
+            defaultPosition=10
+            key="dsmcharts__sales_quota_6"
+            hLenght=100
+            id="gauge-card-6"
+            headerClass=""
+            headerColor="primary"
+            headerTitle=""
+            hrefDetails="/invoicelist"
+            editModalID="editDashboardModal"
+            bodyClass="gaugeCardBody"
+        }}
+            <div class="" key="spd-gauge-area6">
+                <div id="spd-gauge-area6" class="ds-highcharts spd-gauge-charts" style="height:270px"></div>
+                <div id="spd-gauge-area6-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                <div id="spd-gauge-area6-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+            </div>
+        {{/draggablePanel}}
+    </div>
+    {{# draggablePanel
+        md=3
+        defaultPosition=25
+        key="dsmcharts__discount_employee"
+        hLenght=100
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Discount Given By Employee"
+        hrefDetails="/employeelist"
+        editModalID="editDashboardModal"
+    }}
+    <canvas id="spd-employee-chart" name="spd-employee-chart"></canvas>
+    {{/draggablePanel}}
+</template>

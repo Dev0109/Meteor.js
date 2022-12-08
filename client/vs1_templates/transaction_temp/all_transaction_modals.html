@@ -1,0 +1,120 @@
+<template name="all_transaction_modals">
+  <!-- Modal print-button -modal -->
+  <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+      {{> productlistpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+      {{> newproductpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+      {{> addcustomerpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
+      {{> termlistpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
+      {{> newtermspop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
+      {{> departmentpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
+      {{> newdepartmentpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
+      {{> statuspop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
+      {{> newstatuspop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldPop">
+      {{> customfieldformpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
+      {{> serialnumberpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
+      {{> lotnumberpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="availableSerialNumberModal">
+      {{> availableserialnumberpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="availableLotNumberModal">
+      {{> availablelotnumberpop}}
+  </div>
+
+  <!-- End Modal Product -->
+  <!-- Start of Status Modal -->
+  <div class="modal fade" role="dialog" tabindex="-1" id="statusModal">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
+          <div class="modal-content">
+              <form id="newstatus" name="newstatus">
+                  <div class="modal-header">
+                      <h4>Add New Lead Status</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body" style="padding: 24px;">
+                      <div class="row">
+                          <div class="col-12">
+                              <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                  <label>Status</label>
+                                  <input type="text" id="status" name="status" class="form-control">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn btn-success btnSaveStatus" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                      <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                      <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  <!-- End of Status Modal -->
+  <!-- Modal Tax Rate -modal -->
+  <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
+      {{> taxratelistpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
+      {{> newtaxratepop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="taxDetailModal">
+      {{> taxdetailpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="UOMListModal">
+      {{> uomlistpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+      {{> copyfrequencypop}}
+  </div>
+
+  <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+          <div class="modal-content customerListContent">
+              <div class="modal-header">
+                  <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                  <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
+                  {{> customerlistpop}}
+
+              </div>
+              <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</template>

@@ -1,0 +1,31 @@
+[{
+    "Id": 1,
+    "name": "All",
+    "isdefaultlogin": false
+},
+{
+    "Id": 2,
+    "name": "Accounts",
+    "isdefaultlogin": true
+},
+{
+    "Id": 3,
+    "name": "Executive",
+    "isdefaultlogin": false
+},
+{
+    "Id": 4,
+    "name": "Marketing",
+    "isdefaultlogin": false
+},
+{
+    "Id": 5,
+    "name": "Sales",
+    "isdefaultlogin": false
+},
+{
+    "Id": 6,
+    "name": "Sales Manager",
+    "isdefaultlogin": false
+}
+]

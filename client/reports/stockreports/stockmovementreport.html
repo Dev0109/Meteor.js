@@ -1,0 +1,117 @@
+<template name="stockmovementreport"> 
+    {{# vs1_report_template tabledisplayname="Stock Movement Report" tablename="stockmovementreport" dateAsAt=dateAsAt}} 
+        <div class="table-responsive">
+            <table class="table table-sm" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-active customDoubleTableHeading">
+                        <th style="width: 170px;">Product</th>
+                        <th class="text-left">Trans Date</th>
+                        <th class="fgrtotal text-left">Trans Type</th>
+                        <th class="text-left">Trans No</th>
+                        <th class="text-right">Opening Qty</th>
+                        <th class="text-right">Trans Qty</th>
+                        <th class="text-right">Running Qty</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Unit Cost</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Cost</th>
+                        <!-- <th class="text-center" colspan="{{countActive currencyList}}">Unit Cost (Ex)</th> -->
+                        <!-- <th class="text-center" colspan="{{countActive currencyList}}">Total Cost (Ex)</th> -->
+                    </tr>
+
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid customDoubleTableHeading">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                        
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+
+                        
+                        </tr>
+                    {{/if}}
+                </thead>
+                <tbody>
+                    {{#if records}}
+                        {{#each arrayify records}}
+                            <tr>
+                            <td  class="fgrtotal">{{ value.ProductName }}</td>
+                                <td  class="fgrtotal"></td>
+                                <td  class="fgrtotal text-left"></td>
+                                <td  class="fgrtotal text-left"></td>
+                                <!-- <td class="text-right"  class="fgrtotal">{{ value.TotalRunningQty }}</td>
+                                <td class="text-right"  class="fgrtotal">{{ value.TotalCurrentQty }}</td>
+                                <td class="text-right"  class="fgrtotal">{{ formatPrice value.TotalUnitCost }}</td> -->
+                                <td  class="fgrtotal"></td>
+                                <td  class="fgrtotal"></td>
+                                <td  class="fgrtotal"></td>
+                                <td  class="fgrtotal"></td>
+                                <td  class="fgrtotal"></td>
+                                
+                            </tr>
+                            {{#each item in value.SubAccounts}}
+                                <tr data-tr="{{ item.TranstypeDesc }}">
+                                    <td></td>                                                            
+                                    <td><a href="{{redirectionType item}}">{{ formatDate item.TransactionDate }}</a></td>
+                                    
+                                    <td class="text-left"><a href="{{redirectionType item}}">{{ item.TranstypeDesc }}</a></td>
+                                    <td class="text-left"><a href="{{redirectionType item}}">{{ checkZero item.TransactionNo }}</a></td>
+                                    <td class="text-right {{#if isNegativeAmount item.Qty }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
+                                    <td class="text-right {{#if isNegativeAmount item.Qty }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
+                                    <td class="text-right {{#if isNegativeAmount item.Qty }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
+                                    <!-- <td class="text-right text-success">{{ formatPrice item.Cost }}</td>
+                                    <td class="text-right text-success">{{ formatPrice item.TotalCost }}</td> -->
+
+                                    {{#if isOnlyDefaultActive }}
+                                        {{#if currencyList}}
+                                            {{#each c in currencyList }}
+                                                {{# if c.active}}
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.Cost }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.Cost c}}</a></td>
+                                                {{/if}}
+                                            {{/each}}
+                                            {{#each c in currencyList }}
+                                                {{# if c.active}}
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.TotalCost }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.TotalCost c}}</a></td>
+                                                {{/if}}
+                                            {{/each}}
+                                            
+                                            
+                                        {{/if}}
+                                    {{else}}
+                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.Cost }}</a></td>
+                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.TotalCost }}</a></td>
+                                        <!-- <td class="text-right text-success">{{ formatPrice item.Cost }}</td>
+                                        <td class="text-right text-success">{{ formatPrice item.TotalCost }}</td> -->
+
+                                    {{/if}}
+                                </tr>
+
+                            {{/each}}
+                        {{/each}}
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
+                        </tr>
+                    {{/if}}
+                </tbody>
+            </table>
+        </div>
+    {{/vs1_report_template}}
+</template>

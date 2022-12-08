@@ -1,0 +1,125 @@
+<template name="transactionjournallist"> 
+    {{# vs1_report_template tabledisplayname="Transaction Journal" tablename="transactionjournallist" dateAsAt=dateAsAt}} 
+        <div class="table-responsive">
+            <table class="table table-sm" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-active">
+                        <th>Account Name</th>
+                        <th>Date</th>
+                        <th>Product ID</th>
+                        <th>Type</th>
+                        <th colspan="{{countActive currencyList}}"  class="text-center{{countActive currencyList}} text-center">Debit (Ex)</th>
+                        <th colspan="{{countActive currencyList}}"  class="text-center{{countActive currencyList}} text-center">Credit (Ex)</th>
+                        <th colspan="{{countActive currencyList}}"  class="text-center{{countActive currencyList}} text-center">Debit (Inc)</th>
+                        <th colspan="{{countActive currencyList}}"  class="text-center{{countActive currencyList}} text-center">Credit (Inc)</th>
+                        <th class="text-right">Global Ref</th>
+                    </tr>
+
+                    {{#if isOnlyDefaultActive equal "false" }}
+                    <tr class="table-active tblAvoid customDoubleTableHeading">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                
+
+                    {{#if currencyList}}
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+                    
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+                
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+                    {{/if}}
+
+                    <th></th>
+            
+
+                    </tr>
+                {{/if}}
+                </thead>
+                <tbody>
+                    {{#if records}}
+                        {{#each arrayify records}}
+                            {{#if value.ACCOUNT}}
+                                <tr>
+                                    <td colspan="8" style="font-weight: 800;">{{ value.ACCOUNT }}</td>
+                                </tr>
+                            {{/if}}
+                            {{#each item in value.SubAccounts}}
+                                <tr>
+                                    <td></td>
+                                    <td><a href="{{redirectionType item}}">{{ formatDate item.DATE }}</a></td>
+                                    <td><a href="{{redirectionType item}}">{{ item.PRODUCTNAME }}</a></td>
+                                    <td><a href="{{redirectionType item}}">{{ item.TYPE }}</a></td>
+
+
+                                    {{#if isOnlyDefaultActive}}
+
+                                    {{#if currencyList}}
+
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
+                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.DEBITSEX c}}</a></td>
+                                    
+                                        {{/if}}
+                                    {{/each}}
+
+                                    {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                
+                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.CREDITSEX c}}</a></td>
+                                
+                                    {{/if}}
+                                {{/each}}
+
+                                {{#each c in currencyList }}
+                                {{# if c.active}}
+                            
+                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.DEBITSINC c}}</a></td>
+                            
+                                {{/if}}
+                            {{/each}}
+
+                            {{#each c in currencyList }}
+                            {{# if c.active}}
+                        
+                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.CREDITSINC c}}</a></td>
+                            {{/if}}
+                        {{/each}}
+
+                                    {{/if}}
+
+                                {{else}}
+                                <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSEX }}</a></td>
+                                <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSEX }}</a></td>
+                                <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSINC }}</a></td>
+                                <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSINC }}</a></td>
+                                {{/if}}
+                                
+                                    <td class="text-right">{{ item.GLOBALREF }}</td>
+                                </tr>
+                            {{/each}}
+                        {{/each}}
+                    {{/if}}
+                </tbody>
+            </table>
+        </div>
+    {{/vs1_report_template}}
+  </template>

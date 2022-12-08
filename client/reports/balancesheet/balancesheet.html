@@ -1,0 +1,151 @@
+<template name="balancesheetreport">
+    {{# vs1_report_template tabledisplayname="Balance Sheet" tablename="tblBalanceSheet" dateAsAt=dateAsAt currencyList=currencyList}}
+        <div class="table-responsive">
+            <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-secondary customDoubleTableHeading">
+                        <th></th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Sub Account Totals</th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Header Account Totals</th>
+                    </tr>
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid customDoubleTableHeading">
+
+                            {{#if currencyList}}
+                                <th class="text-left"></th>
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+
+                        </tr>
+                    {{/if}}
+                </thead>
+                <tbody>
+                    {{#if records}}
+                        {{#each records}}
+                            <tr>
+                                {{#each value in dataArrHeader}}
+                                    <div style="display:none;">{{item.Company}}</div>
+                                    <td class="text-nowrap {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
+                                        {{value}}
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                {{/each}}
+                            </tr>
+                            <tr>
+                                {{#each value in dataArrAsset}}
+                                    <td class="text-nowrap text-right {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
+                                        {{value}}
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                {{/each}}
+                            </tr>
+                            <tr class="linkvalue">
+
+
+                                {{#each value2 in dataArr2}}
+                                
+                                    {{#if isOnlyDefaultActive}}
+                                        {{#if isObject value2}}
+
+                                            {{#if currencyList}}
+                                                {{#each c in currencyList}}
+                                                    {{#if c.active}}
+
+                                                        <td class="text-nowrap text-right Indent1 __alighnMent{{ countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.code}}">
+                                                            <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
+                                                        </td>
+                                                    {{/if}}
+                                                {{/each}}
+                                            {{/if}}
+
+                                        {{else}}
+                                            <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount value2}} text-danger {{/if}}">
+                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
+                                            </td>
+
+                                        {{/if}}
+
+
+                                    {{else}}
+
+                                        {{#if isObject value2}}
+                                            <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount value2.amount}} text-danger {{/if}}">
+                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2.value}}</a>
+                                            </td>
+
+                                        {{else}}
+                                            <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount value2}} text-danger {{/if}}">
+                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
+                                            </td>
+
+                                        {{/if}}
+
+                                    {{/if}}
+
+                                {{/each}}
+
+
+
+
+                            </tr>
+                            <tr class="balacesheettable">
+                                {{#each item in dataArrTotal}}
+
+                                    {{#if isOnlyDefaultActive }}
+                                        {{#if isObject item}}
+
+                                            {{#if currencyList}}
+                                                {{#each c in currencyList}}
+                                                    {{#if c.active}}
+
+                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                                        {{convertAmount item.value c}}
+                                                    </td>
+                                                    {{/if}}
+                                                {{/each}}
+                                            {{/if}}
+
+                                        {{else}}
+                                            <td class="text-nowrap text-right {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
+
+                                        {{/if}}
+
+
+                                    {{else}}
+
+                                        {{#if isObject item}}
+                                            <td class="text-nowrap text-right {{#if isNegativeAmount item.amount}} text-danger {{/if}}" style="font-weight: 800;">{{item.value}}</td>
+
+                                        {{else}}
+                                            <td class="text-nowrap text-right {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
+
+                                        {{/if}}
+
+                                    {{/if}}
+
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                        </tr>
+                    {{/if}}
+                </tbody>
+
+            </table>
+        </div>
+    {{/vs1_report_template}}
+</template>

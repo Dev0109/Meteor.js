@@ -1,0 +1,93 @@
+<template name="supplierpaymentPrintTemp">
+    {{#each record in records}}
+    <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible;" class="printReport">
+        <div style="display: flex; height: fit-content; min-height: 30mm;">
+            <div style="margin: 0px; padding: 16px; width: 120mm; max-width: 120mm;">
+                <div style="display: flex;">
+                    <div style="max-width: 60mm; max-height: 30mm;">
+                        <img src="assets/img/VS1.png" class="uploadedImage" style="max-width: 200px; max-height: 30mm; margin-bottom: 8px;">
+                    </div>
+                    <div style="width: 70mm;">
+                        <div style="padding-left: 16px;font-weight: bold;">
+                            <a href="{{organizationurl}}">{{organizationurl}}</a>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{organizationname}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress1}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress2}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{city}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{state}} {{poBox}} </p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">ABN: {{companyabn}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);"> {{companyphone}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size: 14px;">
+                    <p style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: bold;">Supplier</p>
+                    <p style="margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerName"></p>
+                    <div style="min-height:50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress"></div>
+                </div>
+            </div>
+            <div style="margin: 0px; padding: 16px; border: none !important; width: 80mm; max-width: 80mm;">
+                <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Supplier Payment</h4>
+                <div style="display: flex; width: 100%;">
+                    <div style="width: 50%; padding-right: 16px;font-weight: bold;">
+                        <label style="margin-bottom: 4px; color: rgb(0 0 0); width: 100%;">Date:</label>
+                        <label class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</label>
+                    </div>
+                    <div style="width: 50%; padding-left: 16px;">
+                        <p style="margin-bottom: 4px; color: rgb(0 0 0);">{{currentDate}}</p>
+                        <p style="margin-bottom: 0px; color: rgb(0 0 0); white-space: nowrap;">{{record.reference}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div style="height: 195mm;">
+            <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
+                <table class="credit_print" style="width: 200mm; max-width: 200mm; margin: auto;">
+                    <thead style="color: rgb(251,251,251);">
+                        <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1);">
+                            <th style="background-color: white; color: rgb(0 0 0);">Date</th>
+                            <th style="background-color: white; color: rgb(0 0 0);">Type</th>
+                            <th style="background-color: white; color: rgb(0 0 0);">No.</th>
+                            <th style="background-color: white; color: rgb(0 0 0); text-align: right;">Amount</th>
+                            <th style="background-color: white; color: rgb(0 0 0); text-align: right;">Due</th>
+                            <th style="background-color: white; color: rgb(0 0 0); text-align: right;">Paid</th>
+                            <th style="background-color: white; color: rgb(0 0 0); text-align: right;">Outstanding</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: rgb(0 0 0);">
+                        {{#each item in record.LineItems}}
+                            <tr>
+                                <td class="text-nowrap">{{item.invoicedate}}</td>
+                                <td class="text-nowrap" style="color:#00a3d3">{{item.transtype}}</td>
+                                <td class="text-nowrap">{{item.transid}}</td>
+                                <td class="text-nowrap text-right">{{item.orginalamount}}</td>
+                                <td class="text-nowrap text-right">{{item.amountdue}}</td>
+                                <td class="text-nowrap text-right">{{item.paymentamount}}</td>
+                                <td class="text-nowrap text-right">{{item.ouststandingamount}}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div style="width: 100%; height: 30px;">
+            <div style="margin-right: 16px; border: none !important; float: right;">
+                <div style="width: 100%; display: flex;">
+                    <div style="padding-right: 16px; width: 50%;">
+                        <p style="font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0);">Applied</p>
+                    </div>
+                    <div style="padding-left: 16px; width: 50%;">
+                        <p id="grandTotalPrint" style="text-align: right; margin-bottom: 8px; font-weight: 800;">{{record.applied}}<br></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style="width: 100%;">
+            <span style="font-size: 10px;margin-right: 8px; float: right;">Page 1 of 1</span>
+        </div>
+    </div>
+    {{/each}}
+</template>

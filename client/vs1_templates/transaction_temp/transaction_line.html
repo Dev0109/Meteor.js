@@ -1,0 +1,549 @@
+<template name="transaction_line">
+
+  <style>
+      .widthElement {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          pointer-events: auto;
+          background-color: rgb(255, 255, 255);
+          background-clip: padding-box;
+          border: 1px solid rgb(133, 135, 150);
+          border-radius: .3rem;
+          border-style: solid;
+          border-width: 1px;
+          padding: 2px;
+          border-radius: .35rem;
+          color: rgb(128, 128, 128);
+          height: inherit !important;
+      }
+
+      .groove {
+          border-style: solid;
+          border-width: 1px;
+          width: 200px;
+          padding: 2px;
+          border-radius: .35rem;
+      }
+
+      .custom-control-label {
+          position: absolute;
+      }
+
+      .file-name span {
+          width: 100%;
+          float: left;
+      }
+
+      #file-display .fileIocns i.fa.fa-file {
+          color: rgb(252, 181, 38);
+          font-size: 24px;
+      }
+
+      #file-display {
+          padding: 0;
+          margin: 0;
+      }
+
+      .uploaded-element {
+          display: inherit;
+      }
+
+      .uploaded-element {
+
+          border: 1px solid rgb(237, 237, 237);
+          border-top: none;
+
+          float: left;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          padding: 1rem;
+      }
+
+      #file-display .fileIocns {
+          background-image: url(img/file_icons-samall.png);
+          background-repeat: no-repeat;
+          background-position: 0 -105px;
+      }
+
+      #file-display .fileIocns {
+          float: left;
+          margin-right: 10px;
+      }
+
+      .file-name {
+          float: left;
+          width: 87%;
+      }
+
+      .uploaded-element-header {
+          border: 1px solid rgb(237, 237, 237);
+          border-top: none;
+          float: left;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          background: #e3e6f0;
+      }
+
+      .uploaded-header {
+          width: 100%;
+          text-align: center;
+      }
+
+      .uploaded-element .confirm-action a.confirm-delete-attachment {
+          padding: 6px 13px 5px;
+          background-color: rgb(216, 68, 68) !important;
+          border-color: rgb(197, 112, 119) rgb(169, 29, 29) rgb(169, 29, 29) rgb(197, 112, 119);
+          color: rgb(255, 255, 255) !important;
+          text-shadow: 1px 1px 1px rgba(30, 30, 30, 0.15);
+          line-height: initial;
+          font-size: 12px;
+          float: left;
+      }
+
+      button.save-to-library {
+          padding: 6px 13px 5px;
+          border-radius: 4px;
+          background: linear-gradient(rgb(255, 255, 255), rgb(230, 234, 236));
+          border: 1px solid rgb(230, 230, 230);
+          border-color: rgb(230, 230, 230) rgb(179, 179, 179) rgb(179, 179, 179) rgb(230, 230, 230) !important;
+          color: rgb(204, 0, 0) !important;
+          font-weight: bold;
+          margin-left: 10px !important;
+          font-size: 12px;
+      }
+
+      .uploaded-element {
+          display: inherit;
+      }
+
+      /* HERE */
+      #files_view .modal-title {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 70%;
+      }
+
+      #files_view .modal-title {
+          color: #333;
+          font-size: 18px;
+          font-weight: 700;
+          text-rendering: optimizelegibility;
+          padding: 9px 0;
+          padding-left: 15px;
+          padding-top: 11px;
+      }
+
+      #files_view .modal-dialog {
+          /* width: 750px; */
+          margin: 30px auto;
+      }
+
+      #files_view .modal-header .close {
+          margin-top: 0;
+          width: 46px;
+          height: 46px;
+          padding: 6px 0 0;
+          border-left: 1px solid #ddd;
+          opacity: 1;
+          margin: 0;
+      }
+
+      #files_view .modal-header {
+          padding: 0;
+          display: block;
+      }
+
+      #files_view .modal-body {
+          background-color: rgb(250, 251, 251);
+      }
+
+      #files_view .image-previewer img {
+          border: 3px solid #fff;
+          box-shadow: 2px 2px 8px rgba(0, 0, 0, .2);
+          width: 100%;
+      }
+
+      .download_button {
+          width: 100%;
+          text-align: center;
+          margin-top: 20px;
+      }
+  </style>
+
+  <div class="card-body rounded transTable" style="padding-bottom: 0px !important;padding-top: 0px !important;">
+      <!-- Remove p-5 to resize the form -->
+      <!-- Start {{> optionNav}} -->
+      <div class="d-xl-flex justify-content-xl-end">
+          <div>
+            <a class="btn btnOpenTranSettings" role="button" data-toggle="modal" href="#"><i class="icon ion-android-more-horizontal"></i></a>
+          </div>
+      </div>
+      <!-- END -->
+      <div class="tbl_responsive" style="padding: .375rem .75rem;">
+          <style>
+              th {
+                  background-color: #ededed;
+              }
+
+              .table-striped tbody tr:nth-of-type(odd) {
+                  background-color: white !important;
+              }
+
+              .table-striped tbody tr:nth-of-type(even) {
+                  background-color: rgba(0, 163, 211, 0.07) !important;
+              }
+
+              #productListModal .dataTables_scrollHeadInner,
+              #productListModal .dataTables_scrollHeadInner .table {
+                  width: 100% !important;
+              }
+
+              #taxRateListModal .dataTables_scrollHeadInner,
+              #taxRateListModal .dataTables_scrollHeadInner .table {
+                  width: 100% !important;
+              }
+
+              @media only screen and (max-width: 480px) {
+
+                  #ponumber,
+                  #edtRef,
+                  .form-group,
+                  .input-group,
+                  .formgoup {
+                      max-width: 100% !important;
+                      width: 100% !important;
+                  }
+
+                  .formgoup {
+                      margin: 0px !important;
+                  }
+
+                  .flex-row {
+                      margin: 16px !important;
+                  }
+              }
+
+              .resizer {
+                  position: absolute;
+                  top: 0;
+                  right: -8px;
+                  bottom: 0;
+                  left: auto;
+                  width: 16px;
+                  cursor: col-resize;
+              }
+
+              .box {
+                  /* display: none; */
+              }
+
+              .outerBox {
+                  display: none;
+              }
+
+              .hiddenColumn {
+                  display: none;
+              }
+
+              .showColumn {
+                  display: table-cell;
+                  padding: .75rem;
+                  vertical-align: top;
+              }
+
+              th.colAmountEx {
+                  color: #00a3d3;
+              }
+
+              th.colAmountInc {
+                  color: #17a673;
+              }
+
+              th.colAmount {
+                  cursor: pointer;
+                  -webkit-touch-callout: none;
+                  -webkit-user-select: none;
+                  -khtml-user-select: none;
+                  -moz-user-select: none;
+                  -ms-user-select: none;
+                  user-select: none;
+              }
+
+
+              th.colUnitPriceEx {
+                  color: #00a3d3;
+              }
+
+              th.colUnitPriceInc {
+                  color: #17a673;
+              }
+
+              th.colUnitPrice {
+                  cursor: pointer;
+                  -webkit-touch-callout: none;
+                  -webkit-user-select: none;
+                  -khtml-user-select: none;
+                  -moz-user-select: none;
+                  -ms-user-select: none;
+                  user-select: none;
+              }
+
+              .fa-random {
+                  float: right;
+                  margin-top: 4px;
+              }
+
+              .fa-trans {
+                  -ms-transform: rotate(180deg);
+                  transform: rotate(180deg);
+              }
+
+              .colPaid {
+                  display: block !important;
+              }
+              .table-bordered{
+                  border: 1px solid #e3e6f0!important;
+             }
+
+             .tbl_responsive{
+               width: 100%!important;
+               overflow-x: auto!important;
+               overflow-y: hidden!important;
+              }
+
+              .convert-to-foreign {
+                    display: none;
+                }
+
+                .convert-to-foreign.fx-enabled {
+                    display: table-cell;
+                }
+
+                .convert-to-foreign.showColumn {
+                    display: none !important;
+                }
+                .convert-to-foreign.fx-enabled.showColumn {
+                    display: table-cell !important;
+                }
+                .convert-to-foreign.fx-enabled.hiddenColumn {
+                    display: none;
+                }
+          </style>
+          {{#if displayfields}}
+          <table id="{{tablename}}" name="{{tablename}}" style="width:100%" class="dataTable table table-striped table-bordered {{tablename}}">
+              <thead>
+                <tr class="dnd-moved">
+                 {{#each displayfield in displayfields}}
+                   {{#if displayfield.display}}
+                   <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" colspan="{{displayFieldColspan displayfield isForeignEnabled}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                     {{displayfield.custfieldlabel}}
+                     {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
+                       {{else}}
+                       {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>
+                         {{else}}
+                         {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i>
+                           {{else}}
+                           {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i>
+                           {{/if}}
+                         {{/if}}
+                       {{/if}}
+                     {{/if}}
+
+                   </th>
+                   {{/if}}
+                 {{/each}}
+                 <th class="th" style="width: 25px;"></th>
+               </tr>
+               {{#if equals isForeignEnabled true}}
+                    <tr>
+                        {{#each displayfield in displayfields}}
+                            {{#if displayfield.display}}
+                                {{#if subHeaderForeign displayfield}}
+                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">{{ getDefaultCurrency }}</th>
+                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">Foreign</th>
+                                {{else}}
+                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"></th>
+                                {{/if}}
+
+                            {{/if}}
+                        {{/each}}
+                        <th class="th" style="width: 25px;"></th>
+
+                    </tr>
+                {{/if}}
+              </thead>
+              <tbody>
+                {{#each item in recordLineItems}}
+                  <tr class="dnd-moved" id={{item.lineID}}>
+                    <td contenteditable="false" class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
+                        class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}" itemid="{{item.itemID}}"></td>
+                    <td contenteditable="true"
+                      class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.description}}</td>
+                  {{#if canShowBackOrder}}
+                  {{#if equals includeBOnShippedQty true}}
+                    <td class="colOrdered {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
+                        class="lineOrdered colOrdered highlightInput" type="number" value="{{item.qtyordered}}"></td>
+                    <td class="colShipped {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
+                        class="lineQty colQty lineShipped highlightInput" type="number" value="{{item.qtyshipped}}"></td>
+                    <td class="colBackOrder {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"><input
+                      class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtybo}}" readonly></td>
+                  {{else}}
+                    <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
+                      class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
+                  {{/if}}
+                  {{else}}
+                  <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
+                    class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
+                  {{/if}}
+                  {{#if equals isBatchSerialNoTracking true}}
+                  <td class="th colSerialNo {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
+                    style="margin-left: 40px; font-size: 22px;"></i></td>
+                  {{/if}}
+                    <td class="colUnitPrice colUnitPriceEx {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
+                        class="lineUnitPrice colUnitPrice colUnitPriceEx highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
+                    </td>
+
+                  
+                      <td class="colUnitPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colUnitPriceEx {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPrice}}
+                      </td>
+                   
+
+                    <td class="colUnitPriceInc {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><input
+                        class="lineUnitPrice highlightInput colUnitPriceIncChange" type="text"
+                        value="{{item.unitPriceInc}}"></td>
+
+                
+                      <td class="colUnitPriceInc  convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPriceInc}}</td>
+                 
+
+                    <td class="colDiscount {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}" max="100"></td>
+                    <td class="colCostPrice {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"><input
+                        class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
+                    <td contenteditable="true"
+                      class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.SalesLinesCustField1}}</td>
+                    <td contenteditable="false"
+                      class="lineTaxRate colTaxRate pointer {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"
+                      style="text-align: right!important;">{{item.taxRate}}</td>
+                    <td contenteditable="false" class="colTaxCode {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"><input
+                        class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
+
+                        <td contenteditable="false"
+                          class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
+                          style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+
+                          
+
+                              <td contenteditable="false"
+                              class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
+                              style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount item.TaxTotal}}</td>
+
+
+                    
+                    <td contenteditable="false"
+                      class="lineAmt colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
+                      style="text-align: right!important;">{{item.TotalAmt}}</td>
+
+                 
+                          <td contenteditable="false"
+                          class="lineAmt convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
+                          style="text-align: right!important;">{{convertToForeignAmount item.TotalAmt}}</td>
+
+                     
+
+                      <td contenteditable="false" class="lineAmtInc colAmountInc {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"
+                      style="text-align: right!important;">{{item.TotalAmtInc}}</td>
+
+                      
+
+                          <td contenteditable="false" class="lineAmtInc convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}}  colAmountInc {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"
+                          style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
+
+
+                      {{#if canShowUOM}}
+                    <td contenteditable="false"
+                      class="lineUOM colUnits pointer {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}"
+                      style="text-align: right!important;cursor: pointer;"><input class="es-input highlightSelect colUnits lineUOM" type="search" value="{{item.UnitOfMeasure}}"></td>
+                    {{/if}}
+
+                      <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
+                            class="fa fa-remove"></i></button></span></td>
+                  </tr>
+                  {{/each}}
+              </tbody>
+          </table>
+          {{/if}}
+          <style>
+              .highlightInput {
+                  border: 0px solid transparent !important;
+                  background-color: rgba(0, 0, 0, 0) !important;
+                  padding: 0px !important;
+                  width: 100% !important;
+                  text-align: right !important;
+                  color: #858796 !important;
+              }
+
+              .highlightInput::-webkit-outer-spin-button,
+              .highlightInput::-webkit-inner-spin-button {
+                  -webkit-appearance: none !important;
+                  margin: 0 !important;
+              }
+
+              /* Firefox */
+              .highlightInput[type=number] {
+                  -moz-appearance: textfield !important;
+              }
+          </style>
+      </div>
+  </div>
+
+
+  <div class="modal fade {{tablename}}_Modal" role="dialog" tabindex="-1" id="myModal2">
+      <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body">
+                  <div>
+                      <form class="d-xl-flex align-items-xl-center">
+                          <div class="flex-grow-1">
+
+
+                              {{#each displayfield in displayfields}}
+                              {{#if displayfield.display}}
+                              <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                    <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
+                                    <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
+                                </div>
+                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                    <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
+                                </div>
+                              </div>
+                              {{/if}}
+                              {{/each}}
+
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                  <button class="btn btn-warning btnResetGridSettings" type="button"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                  <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</template>

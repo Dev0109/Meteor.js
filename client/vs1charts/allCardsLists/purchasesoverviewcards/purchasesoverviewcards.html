@@ -1,0 +1,59 @@
+<template name="purchasesoverviewcards">
+    <div class="col-md-6 col-xl-3 mb-4 hideelement card-visibility"  card-id="0" data-default-position="0" position="0" chartgroup="Purchases" card-active="true" card-key="outstanding-purchase-orders">
+        <div class="card shadow border-left-info py-2 customCardMainDiv" style="cursor: pointer;">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body cardOutPO">
+                <div class="row align-items-center no-gutters">
+                    <a href="/purchaseorderlist?ignoredate=true" class="col mr-2">
+                        <div class="text-uppercase text-primary font-weight-bold text-xs mb-1">
+                            <span class="text-info">Outstanding PO</span>
+                        </div>
+                        <div class="text-dark font-weight-bold h5 mb-0">
+                                <span class="suppAwaitingAmt">0.00</span>
+                        </div>
+                    </a>
+                    <div class="col-auto">
+                        <i class="fas fa-file-contract fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 hideelement card-visibility"  card-id="0" data-default-position="1" position="1" chartgroup="Purchases" card-active="true" card-key="outstanding-bills">
+        <div class="card shadow border-left-info py-2 customCardMainDiv" style="cursor: pointer;">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body cardBills">
+                <div class="row align-items-center no-gutters">
+                    <a href="/billlist?overview=true" class="col mr-2">
+                        <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span class="text-info">Outstanding Bills</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span class="billAmt">0.00</span></div>
+                    </a>
+                    <div class="col-auto"><i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 hideelement card-visibility"  card-id="0" data-default-position="2" position="2" chartgroup="Purchases" card-active="true" card-key="outstanding-credit">
+        <div class="card shadow border-left-info py-2 customCardMainDiv" key="" style="cursor: pointer;">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body cardCredit">
+                <div class="row align-items-center no-gutters">
+                    <a href="/creditlist?ignoredate=true" class="col mr-2">
+                        <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span class="text-info">Outstanding Credit</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span class="creditAmt">0.00</span></div>
+                    </a>
+                    <div class="col-auto"><i class="fas fa-file-invoice fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,633 @@
+<template name="accountsoverview">
+    <style>
+        .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+
+        .card.hovered {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+            cursor: move;
+            transition-duration: 300ms;
+
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- <header class="p-0 d-flex align-items-center">
+            <h2 class="mr-1">Accounts Overview</h2>
+
+            <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                                    class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=30"
+                                    target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ
+                                    Advisor</button></p>
+                            <p class="text-center text-muted" style="margin: 0;">
+                                <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
+                                    target="_blank" class="btn btn-primary">
+                                Go To Forum
+                                </a>
+                            </p>
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                                data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons" style="margin-left: auto; display: flex; gap: 0.5rem; flex-direction: row;">
+                <button class="btn btn-primary btnBatchUpdate" id="btnBatchUpdate" type="button">
+                    <i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
+            </div>
+        </header> -->
+        <style>
+          .divLogged .loggedCompanyName{
+            width:100%!important;
+          }
+        </style>
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <header class="pt-2 pb-3 d-flex">
+                    <h2 class="mr-1">Accounts List {{> helpbutton}}</h2>
+                </header>
+            </div>
+            <div class="col-12 col-md-4 divLogged">
+                {{> loggedcompanyoverview}}
+            </div>
+            <div class="col-12 col-md-4 justify-content-end">
+                  <div class="form-group">
+
+                    <button class="btn btn-primary btnBatchUpdate float-right vs1ButtonMargin" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
+                    <button class="btn btn-primary btnClosingDates float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#ModalClosingDate" type="button" style="margin-right: 14px;"><i class="fa fa-calendar" style="padding-right: 5px;"></i>Closing Dates</button>
+                    <span class="text-gray-600 small trans_lastupdate float-right" id="trans_lastupdate" style="width:100%;text-align: end!important;"><a href="#">Last Updated: </a>{{lastBatchUpdate}}</span>
+                 </div>
+            </div>
+
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-sm-flex justify-content-between align-items-center mb-4" style="padding: 0 1.5rem 0 1.5rem;">
+
+
+        </div>
+        <!-- All charts list -->
+        {{> allChartLists  tabGroupID="2" chartGroup="Accounts" }}
+
+        <!-- <div class="row">
+            <div class="col">
+                <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin-right: 32px;">
+                  <i class="icon ion-android-more-horizontal"></i>
+                </a>
+            </div>
+        </div> -->
+
+        <style>
+            @media screen and (max-width: 450px) {
+                .btnNav {
+                    width: 90%;
+                    margin: 12px 0px !important;
+                }
+
+                .btnOpenSettingsDesktop {
+                    display: none !important;
+                }
+
+                .btnOpenSettingsMobile {
+                    display: block !important;
+                    margin: 12px 0px !important;
+                }
+            }
+        </style>
+
+        <div class="row justify-content-between">
+            <div class="col-5 col-md-5">
+                <button class="btn btnNav btn-primary btnRefresh float-left vs1FirstButtonMargin" type="button" ><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                <a class="btn btnNav btn-primary float-left btnAddNewAccounts vs1ButtonMargin" role="button" data-toggle="modal" href="#addNewAccount" ><i class="fa fa-plus" style="margin-right: 8px;"></i>New Account</a>
+                <div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
+                        {{> addAccountModal}}
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
+                        {{> taxratelistpop}}
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
+                        {{> newtaxratepop}}
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a>
+                                    </p>
+                                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                    {{> helpadvisor}}
+                                    {{> helpgotoforum}}
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group btnNav vs1ButtonMargin" >
+                    <button type="button" class="btn btn-primary btnJournalEntries" id="btnJournalEntries"><i class="fas fa-user" style="margin-right: 5px;"></i>Journal Entries</button>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item btnJournalEntries pointer" id="btnJournalEntries">Journal Entries List</a>
+                        <a class="dropdown-item btnNewJournalEntry pointer" id="btnNewJournalEntry">+ New Journal Entry</a>
+                    </div>
+                </div>
+
+                <div class="btn-group btnNav vs1ButtonMargin btnBasReturnGroup" style="display:none">
+                    <button type="button" class="btn btn-primary btnBasReturn" id="btnBasReturn"><i class="fas fa-user" style="margin-right: 5px;"></i>BAS Return</button>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item btnBasReturn pointer" id="btnBasReturn">BAS Return List</a>
+                        <a class="dropdown-item btnNewBasReturn pointer" id="btnNewBasReturn">+ New BAS Return</a>
+                    </div>
+                </div>
+                <div class="btn-group btnNav vs1ButtonMargin btnVatReturnGroup"  style="display:none">
+                    <button type="button" class="btn btn-primary btnVatReturn" id="btnVatReturn"><i class="fas fa-user" style="margin-right: 5px;"></i>VAT Return</button>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item btnVatReturn pointer" id="btnVatReturn">VAT Return List</a>
+                        <a class="dropdown-item btnNewVatReturn pointer" id="btnNewVatReturn">+ New VAT Return</a>
+                    </div>
+                </div>
+                <button class="btn btnNav btn-primary vs1ButtonMargin btnTaxSummary" type="button" style="display:none"><i class="fas fa-user" style="padding-right: 5px;"></i>Tax Summary</button>
+            </div>
+            {{#if equals isSetupFinished false}}
+                <div class="col-2 setupIncompleatedMsg text-danger">
+                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                </div>
+            {{/if}}
+            <div class="col-5 col-md-5">
+                <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin" role="button" data-toggle="modal" href="#tblAccountOverview_Modal" ><i class="icon ion-android-more-horizontal"></i></a>
+                <button class="btn btnNav btn-primary float-right printConfirm vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                <button class="btn btnNav btn-primary float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                <div class="btn-group btnNav float-right exportbtngroup vs1ButtonMargin" >
+                    <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div role="menu" class="dropdown-menu">
+                        <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
+                        <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                    </div>
+                </div>
+                <!-- <button style="margin: 12px;" class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> -->
+                <div>
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="importAccountModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                        <p style="margin-bottom: 0;font-weight: bold;">1. Download the
+                                            &lt;&lt;form&gt;&gt; template</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by
+                                            downloading our template file. This file has the correct column headings to
+                                            allow VS1 Cloud to import your form's details.</p>
+                                        <div class="col flex-grow-1">
+                                            <button class="btn btn-primary templateDownload" type="button" style="margin: 12px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
+                                            <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 12px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
+                                        </div>
+                                        <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
+                                            <a href="downloads/csvHelpFile.pdf" target="_blank" download><i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip=""
+                                                    title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                                                    style="margin: 16px;"></i></a>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                        <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the
+                                            template</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel,
+                                            or another spreadsheet editor, you can fill in the VS1 Cloud template file
+                                            with your desired details.</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important:
+                                            Avoid changing the column headings in the template file.</p>
+                                    </div>
+                                    <hr>
+                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                        <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template
+                                            file</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your
+                                            updated template and you're ready to go.</p>
+
+                                        <div class="divTable" id="file-display">
+                                        </div>
+                                        <input type="file" id="attachment-upload" style="display:none" accept=".csv,.txt,.xlsx">
+                                        <style>
+                                            #row1 {
+                                                display: flex;
+                                                flex-direction: row;
+                                                justify-content: space-around;
+                                            }
+
+                                            #column1 {
+                                                display: flex;
+                                            }
+
+
+                                            #column2 {
+                                                display: flex;
+                                                flex-direction: column;
+                                                margin: 16px;
+                                                padding: .375rem .75rem;
+                                            }
+                                        </style>
+                                        <div id="row1">
+                                            <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
+                                            <div class="file-name" id="column2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer"><button class="btn btn-primary btnImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;"></i>Import</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myAccountModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+            </div>
+        </div>
+
+        <div class="card-body p-0 rounded">
+            <!-- Start {{> optionNavSalesOverview}} -->
+            <!-- End -->
+            {{> non_transactional_list tablename="tblAccountOverview"}}
+            <!--
+            <div class="table-responsive">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
+
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
+
+                    .hiddenColumn {
+                        display: none;
+                    }
+
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
+
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
+
+                    .isNotBankAccount {
+                        display: none !important;
+                    }
+
+                    .isNotCreditAccount {
+                        display: none !important;
+                    }
+                    .th.Balance,
+                    .th.colBalance {
+                        text-align: right !important;
+                    }
+                </style>
+                <table id="tblAccountOverview" style="width:100%" class="dataTable table table-striped table-bordered tblAccountOverview">
+                    <thead>
+                        <tr class="dnd-moved">
+                            <th class="th colAccountId hiddenColumn" style=" ">Account ID</th>
+
+                            {{#each displayfield in displayfields}}
+                              {{#if displayfield.display}}
+                              <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                  {{displayfield.custfieldlabel}}
+                                </th>
+                              {{/if}}
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if datatablerecords}}
+                            {{#each item in datatablerecords}}
+                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                    <td contenteditable="false" class="colAccountId hiddenColumn">{{item.id}}</td>
+                                    <td contenteditable="false" class="colAccountName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{item.accountname}}</td>
+                                    <td contenteditable="false" class="colDescription {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.description}}</td>
+                                    <td contenteditable="false" class="colAccountNo {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.accountnumber}}</td>
+                                    <td contenteditable="false" class="colType {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" accounttype="{{item.accounttypeshort}}">
+                                        {{item.accounttypename}}
+                                    </td>
+                                    <td contenteditable="false" class="colBalance {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
+                                        {{item.balance}}
+                                    </td>
+                                    <td contenteditable="false" class="colTaxCode {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{item.taxcode}}</td>
+                                    <td contenteditable="false" class="colBankName {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.bankname}}</td>
+                                    <td contenteditable="false" class="colBankAccountName {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{item.bankaccountname}}</td>
+                                    <td contenteditable="false" class="colBSB {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.bsb}}</td>
+                                    <td contenteditable="false" class="colBankAccountNo {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.bankaccountnumber}}</td>
+                                    <td contenteditable="false" class="colCardNumber {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">{{item.cardnumber}}</td>
+                                    <td contenteditable="false" class="colExpiryDate {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.expirydate}}</td>
+                                    <td contenteditable="false" class="colCVC {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.cvc}}</td>
+                                    <td contenteditable="false" class="colExtra {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.swiftcode}}</td>
+                                    <td contenteditable="false" class="colAPCANumber {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}" checkheader="{{item.forTransaction}}">{{item.apcanumber}}</td>
+                                    <td contenteditable="false" class="colIsHeader {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}" checkheader="{{item.isheader}}">{{item.isheader}}</td>
+                                    <td contenteditable="false" class="colUseReceiptClaim {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}" checkheader="{{item.useReceiptClaim}}">{{item.useReceiptClaim}}</td>
+                                    <td contenteditable="false" class="colExpenseCategory {{#if displayfields.[18].active}}{{else}}hiddenColumn{{/if}}" category="{{item.expenseCategory}}">{{item.expenseCategory}}</td>
+
+                                </tr>
+                            {{/each}}
+                        {{/if}}
+                    </tbody>
+                </table>
+            </div>
+            -->
+        </div>
+
+        <!-- Start Help Video Modal -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+            <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="title-header">Accounts Overview</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                        <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/newaccount.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                        <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                            <source src="https://erphelpes.com/vs1videos/accountsoverview.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Help Video Modal -->
+    </div>
+
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModalAdd">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="title-header">Accounts</h4>
+                    <button type="button" class="close closeAdd" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/newaccount.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideoAdd" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/newaccount.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Help Video Modal -->
+    <div class="modal fade categoryListModal" role="dialog" tabindex="-1" id="categoryListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Category List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <style>
+                                .thCategory {
+                                    width: 20% !important;
+                                }
+                                .thAccountName {
+                                    width: 20% !important;
+                                }
+                                .thDescription {
+                                    width: 40% !important;
+                                }
+                                .thAccountNo {
+                                    width: 10% !important;
+                                }
+                                .thTaxRate {
+                                    width: 10% !important;
+                                }
+                            </style>
+                            <table id="tblCategory" style="width:100%" class="table table-striped table-bordered tblCategory">
+                                <thead>
+                                <tr class="dnd-moved">
+                                    <th class="thCategory">Category</th>
+                                    <th class="thAccountName">Account Name</th>
+                                    <th class="thDescription">Description</th>
+                                    <th class="thAccountNo">Account No</th>
+                                    <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
+                                    <th class="thAccountID hiddenColumn">Account ID</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="addReceiptCategoryModal">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style="" >
+                        <div id="add-receiptcategory-title" name="add-receiptcategory-title" style="float: left;">Add New Receipt Category</div>
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="background-color: #ededed;">
+                    <input type="hidden" class="form-control" id="edtReceiptCategoryID" name="edtReceiptCategoryID" style="display:none;">
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Category Name</label>
+                                <input type="text" class="form-control" id="edtReceiptCategoryName" name="edtReceiptCategoryName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                <label>Description</label>
+                                <input type="text" class="form-control" id="edtReceiptCategoryDesc" name="edtReceiptCategoryDesc">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #ededed;">
+                    <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="ModalClosingDate">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 style="" >
+                    <div id="closing-dates" name="closing-dates" style="float: left;">Closing Dates</div>
+                    <!-- <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> -->
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtSummarisedDate">(1) Summarised Transactions Before</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="text" class="form-control" id="edtSummarisedDate" name="edtSummarisedDate" title="Select date for summarised transactions before">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtGlobal">(2) Global</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="text" class="form-control" id="edtGlobal" name="edtGlobal" title="Select date for global">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtReceivable">(3) Accounts Receivable</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="text" class="form-control" id="edtReceivable" name="edtReceivable" title="Select date for accounts receiveable">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtPayable">(4) Accounts Payable</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="text" class="form-control" id="edtPayable" name="edtPayable" title="Select date for accounts payable">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="row col-lg-12">
+                    <div class="col-lg-5"><label for="edtMonthsAfter">Automatically Update the Closing Dates</label></div>
+                    <div class="col-lg-2"><input type="number" class="form-control" id="edtMonthsAfter" value="0" title="Enter number of months"></div>
+                    <div class="col-lg-5"><label for="edtMonthsAfter">Months after the Fiscal Year End</label></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row col-lg-12 justify-content-end">
+                    <div class="form-group col-6">
+                    <button class="btn btn-warning btnRefreshClosingDates vs1ButtonMargin float-left" type="button"><i class="fa fa-history" style="padding-right: 8px;"></i>Refresh</button>
+                        <button class="btn btn-secondary vs1ButtonMargin float-left" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                    </div>
+                    <div class="form-group col-6">
+                        <button class="btn btn-outline-secondary btnNextTenYrs vs1ButtonMargin float-right" type="button">10 yrs<i class="fa fa-chevron-right" style="padding-left: 8px;"></i><i class="fa fa-chevron-right"></i></button>
+                        <button class="btn btn-outline-secondary btnPrevTenYrs vs1ButtonMargin float-right" type="button"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left" style="margin-right: 5px;"></i>10 yrs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start Help View Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
+                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                    <p class="text-center text-muted" style="margin: 0px;">
+                        <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
+                    </p>
+                </div>
+                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Help View Modal -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

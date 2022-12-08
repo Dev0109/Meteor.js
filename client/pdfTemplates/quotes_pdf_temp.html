@@ -1,0 +1,169 @@
+<template name="quotesPrintTemp">
+    {{#each quoterecord in quoterecords}}
+    <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000;  overflow-x: visible;" class="printReport">
+        <div style="display: flex; height: fit-content; min-height: 30mm;">
+            <div style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm;">
+                <div style="display: flex;">
+                    <div style="max-width: 60mm; max-height: 30mm;">
+                        <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm;max-width: 200px;margin-bottom: 8px;">
+                    </div>
+                    <div style="width: 70mm;">
+                        <div style="padding-left: 16px;font-weight: bold;">
+                            <a href="{{organizationurl}}">{{organizationurl}}</a>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{organizationname}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress1}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress2}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{city}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{state}} {{poBox}} </p>
+                            {{#if equals companyReg ''}}
+
+                            {{else}}
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyReg}}</p>
+                            {{/if}}
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyabn}}</p>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyphone}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size: 14px;">
+                    <p style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: 600;">Customer</p>
+                    <p style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></p>
+                    <div style="min-height:50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress"></div>
+                </div>
+            </div>
+            <div style="margin: 0px; padding: 16px; border: none !important; width: 60mm; max-width: 60mm;">
+                <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Quote&nbsp;&nbsp;&nbsp; {{quoterecord.id}}</h4>
+                <div style="display: flex; width: 100%;">
+                    <div style="width: 50%; padding-right: 16px;font-weight: bold;">
+                        <label style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</label>
+                        <label class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O Number:</label>
+                        <label class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</label>
+                        <label class="link" style="color: rgb(0 0 0);" >Pay Link:</label>
+                    </div>
+                    <div style="width: 50%; padding-left: 16px;">
+                        <p style="margin-bottom: 4px; color: rgb(0 0 0);">{{quoterecord.saledate}}</p>
+                        <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;">{{quoterecord.custPONumber}}.</p>
+                        <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;">{{quoterecord.termsName}}.</p>
+                        <p class="d-none" id="duedate">{{quoterecord.unformattedDueDate}}</p>
+                        <p class="d-none" id="saleDate">{{quoterecord.unformattedSaleDate}}</p>
+                        <p class="link" style="margin-bottom: 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;"><a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px;">Pay Now</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div style="height: 120mm;">
+            <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
+                <table class="quote_print" style="width: 200mm; max-width: 200mm; margin: auto;">
+                    <thead style="color: rgb(251,251,251);">
+                        <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1);">
+                            <th style="width: 200px; background-color: white; color: rgb(0 0 0);">Product Name</th>
+                            <th style="width: 250px; background-color: white; color: rgb(0 0 0);">Description</th>
+                            <th style="text-align: right; width: 50px; background-color: white; color: rgb(0 0 0);">Qty</th>
+                            <th style="text-align: right; width: 90px; background-color: white; color: rgb(0 0 0);">Unit Price</th>
+                            <th style="text-align: right; width: 77px; background-color: white; color: rgb(0 0 0);">Tax</th>
+                            <th style="text-align: right; width: 77px; background-color: white; color: rgb(0 0 0);" class="hiddenColumn">Tax</th>
+                            <th style="text-align: right; width: 100px; background-color: white; color: rgb(0 0 0);">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: rgb(0 0 0);">
+                        {{#each item in quoterecord.LineItems}}
+                        <tr id={{item.lineID}} style="border-bottom: 1px solid rgba(0, 0, 0, .1);">
+                            <td id="lineProductName">{{item.item}}</td>
+                            <td id="lineProductDesc">{{item.description}}</td>
+                            <td id="lineQty" style="text-align: right;">{{item.quantity}}</td>
+                            <td id="lineUnitPrice" style="text-align: right;">{{item.unitPrice}}</td>
+                            <td id="lineTaxAmount" style="text-align: right;">{{item.TaxTotal}}</td>
+                            <td id="lineTaxCode" class="hiddenColumn" style="text-align: right;">{{item.taxCode}}</td>
+                            <td id="lineAmt" style="text-align: right;">{{item.TotalAmt}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div style="display: flex;">
+            <div style="margin: 8px; width: 100%;">
+                <div class="row">
+                    <div class="col-12">
+                        <p style="font-weight: 600; color: rgb(0 0 0);">Comments</p>
+                        <div id="printcomment" style="color: rgb(0 0 0);  height: 3em; line-height: 1em; overflow: hidden;">{{quoterecord.comments}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6"  style="border: 1px solid;">
+                        <div class="row">
+                            <div class="col-12">
+                                <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
+                            </div>
+                            <div class="col-12">
+                                {{#if vs1companyBankAccountName}}
+                                <p style="font-weight: 600; color: rgb(0 0 0);">{{vs1companyBankName}}</p>
+                                {{/if}}
+                            </div>
+
+                            <div class="col-12">
+                                {{#if vs1companyBankAccountName}}
+                                <p style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">Name: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);">{{vs1companyBankAccountName}}</span></p>
+                                {{/if}}
+                                <!-- <p style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">Account Name</p> -->
+                                {{#if vs1companyBankBSB}}
+                                <p style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{bsbRegionName}}: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);">{{vs1companyBankBSB}}</span></p>
+                                {{/if}}
+                                {{#if vs1companyBankAccountNo}}
+                                <p style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);">{{vs1companyBankAccountNo}}</span></p>
+                                {{/if}}
+                                {{#if vs1companyBankSwiftCode}}
+                                <p style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);">{{vs1companyBankSwiftCode}}</span></p>
+                                {{/if}}
+                                {{#if vs1companyBankRoutingNo}}
+                                <p style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">Routing No: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);">{{vs1companyBankRoutingNo}}</span></p>
+                                {{/if}}
+                            </div>
+                          
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div style="margin: 8px; border: none !important;">
+                            <div style="width: 100%; display: flex;">
+                                <div style="padding-right: 16px; width: 50%;">
+                                    <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Sub Total</p>
+                                    <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Total GST</p>
+                                </div>
+                                <div style="padding-left: 16px; width: 50%;">
+                                    <p id="subtotal_totalPrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.SubTotal}}</p>
+                                    <p id="totalTax" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.TotalTax}}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div style="width: 100%; display: flex;">
+                                <div style="padding-right: 16px; width: 50%;">
+                                    <p  style="font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0);">TOTAL</p>
+                                </div>
+                                <div style="padding-left: 16px; width: 50%;">
+                                    <p id="grandTotalPrint" style="text-align: right; margin-bottom: 8px; font-weight: 800;">{{quoterecord.Total}}<br></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div style="width: 100%; display: flex;">
+                                <div style="padding-right: 16px; width: 50%;">
+                                    <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Paid Amount</p>
+                                    <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Balance Due</p>
+                                </div>
+                                <div style="padding-left: 16px; width: 50%;">
+                                    <p style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.totalPaid}}</p>
+                                    <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.balanceDue}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <span style="font-size: 10px;margin-right: 8px; float: right;">Page 1 of 1</span>
+    </div>
+    {{/each}}
+</template>

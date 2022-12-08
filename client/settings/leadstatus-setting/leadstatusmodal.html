@@ -1,0 +1,47 @@
+<template name="leadstatusmodal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalLeadStatus">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style="" >
+                        <div id="add-leadstatus-title" name="add-leadstatus-title" style="float: left;">Add New Lead Status</div>
+                        {{> helpbutton}}
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="background-color: #ededed;">
+                    <input type="hidden" class="form-control" id="edtLeadStatusID" name="edtLeadStatusID" style="display:none;">
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Status Name</label>
+                                <input type="text" class="form-control" id="edtLeadStatusName" name="edtLeadStatusName">
+                                <input type="hidden" class="form-control" id="statusID" name="statusID">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
+                                <textarea class="form-control" rows="5" id="statusDescription" name="statusDescription"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                <label>Expected Quantity per Month</label>
+                                <input type="text" class="form-control text-right" id="statusQuantity" name="statusQuantity">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #ededed;">
+                    <button class="btn btn-primary btnSaveLeadStatus vs1ButtonMargin" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                    <span id="view-in-active"></span>
+                    <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,275 @@
+<template name="assetcostreport">
+
+  <style>
+    #row1 {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    #column1 {
+      display: flex;
+    }
+
+    #column2 {
+      display: flex;
+      flex-direction: column;
+      margin: 16px;
+      padding: .375rem .75rem;
+    }
+
+    .groove {
+      border-style: solid;
+      border-width: 1px;
+      width: 200px;
+      padding: 2px;
+      border-radius: .35rem;
+    }
+
+    .custom-control-label {
+      position: absolute;
+    }
+
+    @media only screen and (max-width: 480px) {
+      .modal.show .modal-dialog {
+        float: inherit !important;
+        left: inherit !important;
+        top: auto !important;
+
+      }
+    }
+  </style>
+  <div class="fullScreenSpin" style="display:none;">
+    <div class="spinner"></div>
+  </div>
+
+  <div style="margin-top: -24px;">
+
+    <header style="padding: 16px;padding-bottom: 24px;">
+      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">Asset Cost Report</span>
+        {{> crm_help_modal}}
+      </h2>
+    </header> 
+
+    <div class="row no-gutters" style="padding: 0px 32px;">
+      <div class="col-12">
+        <div class="card mb-3">
+          <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px;">
+            <div class=" col float-left flex-grow-1 mb-1">
+              <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px"><i class="la la-lightbulb-o"
+                  style="padding-right: 5px;"></i>Refresh</button>
+              <button id="btnNewCostType" name="btnNewCostType" class="btn btn-primary" type="button"
+                style="margin: 12px 0 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Cost Type</button> 
+            </div>
+  
+            <div class="col">
+              <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#displaySettingsModal2"
+                style="margin: 12px 0 12px 12px ;"><i class="icon ion-android-more-horizontal"></i></a>
+              <button class="btn btnNav btn-primary float-right printConfirm" type="button" style="margin: 12px;"><i
+                  class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+              <div class="btn-group btnNav float-right exportbtngroup" style="margin: 12px;">
+                <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export"
+                    style="margin-right: 5px;"></i>Export</button>
+                <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                  aria-expanded="false" type="button"></button>
+                <div role="menu" class="dropdown-menu">
+                  <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export
+                    Excel</a>
+                  <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                </div>
+              </div>
+              <button style="margin: 12px;" class="btn btnNav btn-primary float-right" role="button" data-toggle="modal"
+                href="#importCostTypeModal"><i class="fas fa-file-import"
+                  style="padding-right: 5px;"></i>Import</button>
+            </div>
+  
+            <div class="modal fade" role="dialog" tabindex="-1" id="importCostTypeModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                      <p style="margin-bottom: 0;font-weight: bold;">1. Download the
+                        &lt;&lt;form&gt;&gt; template</p>
+                      <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by
+                        downloading our template file. This file has the correct column headings to
+                        allow VS1 Cloud to import your form's details.</p>
+                      <div class="col flex-grow-1">
+                        <button class="btn btn-primary templateDownload" type="button"
+                          style="margin: 12px;margin-bottom: 0;"><i class="fas fa-file-csv"
+                            style="margin-right: 5px;"></i>Download CSV Template</button>
+                        <button class="btn btn-primary templateDownloadXLSX" type="button"
+                          style="margin: 12px;margin-bottom: 0;"><i class="fas fa-file-csv"
+                            style="margin-right: 5px;"></i>Download Excel Template</button>
+                      </div>
+                      <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
+                        <a href="downloads/csvHelpFile.pdf" target="_blank" download><i class="fa fa-question-circle-o"
+                            data-toggle="tooltip" data-bs-tooltip=""
+                            title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                            style="margin: 16px;"></i></a>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                      <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the
+                        template</p>
+                      <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel,
+                        or another spreadsheet editor, you can fill in the VS1 Cloud template file
+                        with your desired details.</p>
+                      <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important:
+                        Avoid changing the column headings in the template file.</p>
+                    </div>
+                    <hr>
+                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                      <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template
+                        file</p>
+                      <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your
+                        updated template and you're ready to go.</p>
+  
+                      <div class="divTable" id="file-display">
+                      </div>
+                      <input type="file" id="attachment-upload" style="display:none" accept=".csv,.txt,.xlsx">
+                      <div id="row1">
+                        <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn"
+                          type="button" style="margin: 12px;"><i class="fa fa-cloud-upload"
+                            style="margin-right: 5px;"></i>Browse</button>
+                        <div class="file-name" id="column2"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer"><button class="btn btn-primary btnImport" type="button" disabled><i
+                        class="fas fa-file-import" style="margin-right: 5px;"></i>Import</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+                        style="margin-right: 5px;"></i>Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="card-body">
+            <div class="d-xl-flex justify-content-xl-end">
+              <div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="displaySettingsModal2">
+                  <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"
+                          aria-label="Close"><span aria-hidden="true">×</span></button>
+                      </div>
+                      <div class="modal-body">
+                        <div>
+                          <form class="d-xl-flex align-items-xl-center">
+                            <div class="flex-grow-1">
+                              {{#each displayfield in displayfields}}
+                              {{#if displayfield.display}}
+                              <div class="columnSettings customDisplaySettings" custid="{{displayfield.id}}">
+                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                  <input class="custom-control-input {{displayfield.class}}" type="checkbox"
+                                    id="{{displayfield.class}}" checked="{{displayfield.active}}"
+                                    name="{{displayfield.class}}">
+                                  <label class="custom-control-label" for="{{displayfield.class}}"></label>
+                                  <div contenteditable="true" class="groove divcolumn" type="text"
+                                    value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">
+                                    {{displayfield.custfieldlabel}}</div>
+                                </div>
+                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                  <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                  <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number"
+                                    style="margin: 8px;" value="{{displayfield.width}}"
+                                    valueclass="{{displayfield.class}}" min="0" max="1000">
+                                </div>
+                              </div>
+                              {{/if}}
+                              {{/each}}
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
+                            style="margin-right: 5px;"></i>Save</button>
+                        <button class="btn btn-warning resetTable" type="reset"><i class="fa fa-repeat"
+                            style="margin-right: 5px;"></i>Reset</button>
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+                            style="margin-right: 5px;"></i>Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="table-responsive">
+              <table id="tblFixedAssetCostType" name="tblFixedAssetCostType"
+                class="dataTable table table-hover table-striped table-bordered tblFixedAssetCostType">
+                <thead>
+                  <tr class="dasnd-moved">
+                    <th class="th colFixedID hiddenColumn">ID</th>
+                    {{#each displayfield in displayfields}}
+                    {{#if displayfield.display}}
+                    <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}"
+                      data-col-active="{{ displayfield.active}}"
+                      class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
+                      style="width:{{displayfield.width}}px">
+                      {{displayfield.custfieldlabel}}
+                    </th>
+                    {{/if}}
+                    {{/each}}
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#if datatablerecords}}
+                  {{#each item in datatablerecords}}
+                  <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                    <td contenteditable="false" class="colCostTypeId hiddenColumn">{{item.id}}</td>
+                    <td contenteditable="false"
+                      class="colAdministrativeCost {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.assetname}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colDepreciation {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.color}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colFuel {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.brandname}}</td>
+                    <td contenteditable="false"
+                      class="colInsurance {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"
+                      accounttype="{{item.accounttypeshort}}">
+                      {{item.manufacture}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colLoan {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"
+                      style="text-align: right!important;">
+                      {{item.model}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colMaintenance {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.assetcode}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colRegistration {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.assettype}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colTolls {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.department}}</td>
+                  </tr>
+                  {{/each}}
+                  {{/if}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> 
+  
+
+
+</template>

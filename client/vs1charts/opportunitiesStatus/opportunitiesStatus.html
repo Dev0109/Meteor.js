@@ -1,0 +1,34 @@
+<template name="opportunitiesStatus">
+    <style type="text/css">
+        .hidechat {
+            display: none;
+        }
+
+        .showchat {
+            display: block;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id="opportunitiesStatus"
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Open Opportunities vs Status"
+        hrefDetails=""
+        editModalID=""
+    }}
+        <canvas id="opens-opportunitiesStatus-chart" name="opens-opportunitiesStatus-chart"></canvas>
+    {{/draggablePanel}}
+
+</template>

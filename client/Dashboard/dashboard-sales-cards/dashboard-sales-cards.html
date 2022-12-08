@@ -1,0 +1,267 @@
+<template name="dashboardSalesCards">
+    <style>
+        .card-inner-heading {
+            font-size: 1.2em;
+            text-align: center;
+            font-weight: bold;
+            padding: 0;
+            margin: 0;
+            /*color: #00a3d3;*/
+        }
+        .card-inner-heading>h5 {
+            font-size: 1.3rem;
+        }
+        .card-inner-matrics>h5 {
+            font-size: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        .card-inner-heading>h6 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .card-inner-matrics>h6 {
+            /*font-size: 1.2rem;*/
+            font-size: 28px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .light-grey-text {
+            color: rgb(221,223,235);
+        }
+        .light-dark-text {
+            color: #333;
+        }
+    </style>
+    <!-- New Leads -->
+    {{# kpiCard md=3
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="dashboard-sales-performance-new-leads"
+        highlightColor="primary"
+        tooltipTitle=newLeadsTooltip
+    }}
+        {{> kpiCardTitle
+            title="New Leads"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Leads with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="new-leads-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="new-leads-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- New Opportunities -->
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="dashboard-sales-performance-new-oppertunities"
+        highlightColor="primary"
+        tooltipTitle=newOpportunitiesTooltip
+    }}
+        {{> kpiCardTitle
+            title="New Opportunities"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Leads with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="new-opptertunties-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="new-opptertunties-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Won Opportunities -->
+    {{# kpiCard md=3
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=2
+        position=2
+        cardActive=true
+        cardKey="dashboard-sales-performance-won-oppertunities"
+        highlightColor="primary"
+        tooltipTitle=wonOpportunitiesTooltip
+    }}
+        {{> kpiCardTitle
+            title="Won Opportunities"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="won-opptertunties-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="won-opptertunties-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Gap to Quota -->
+    {{# kpiCard md=2
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=3
+        position=3
+        cardActive=true
+        cardKey="dashboard-sales-performance-gap-to-quota"
+        highlightColor="primary"
+        tooltipTitle=gapToQuotaTooltip
+    }}
+        {{> kpiCardTitle
+            title="Gap to Quota"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="Behind"
+                valueColor="primary"
+                id="gap-to-quota"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Win Rate % -->
+    {{# kpiCard md=3
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=4
+        position=4
+        cardActive=true
+        cardKey="dashboard-sales-performance-win-rate"
+        highlightColor="primary"
+        tooltipTitle=winRateTooltip
+    }}
+        {{> kpiCardTitle
+            title="Win Rate %"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="win-rate-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="win-rate-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Average Sales Cycle -->
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=5
+        position=5
+        cardActive=true
+        cardKey="dashboard-sales-performance-avg-sale"
+        highlightColor="primary"
+        tooltipTitle=averageSalesCycleTooltip
+    }}
+        {{> kpiCardTitle
+            title="Average Sales Cycle"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="avg-sales-cycle-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="avg-sales-cycle-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Pipeline Amount -->
+    {{# kpiCard md=5
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=6
+        position=6
+        cardActive=true
+        cardKey="dashboard-sales-performance-pipeline"
+        highlightColor="primary"
+        tooltipTitle=pipelineAmountTooltip
+    }}
+        {{> kpiCardTitle
+            title="Pipeline Amount"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="pipeline-amount-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="pipeline-amount-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+</template>

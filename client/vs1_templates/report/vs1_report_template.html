@@ -1,0 +1,359 @@
+<template name="vs1_report_template">
+    <div style="margin-top: -24px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <header style="padding: 16px;">
+            <h2 style="margin: 16px;">{{tabledisplayname}} {{> helpbutton}}</h2>
+        </header>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding-bottom: 8px;">
+                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                    <div class="modal-body">
+                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=39" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                        {{> helpadvisor}}
+                        {{> helpgotoforum}}
+                    </div>
+                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            @media only screen and (min-width: 1200px) {
+
+                .cardB {
+                    width: 1000px;
+                }
+            }
+            .tableExportDetailDiv td.text-right,
+            .text-center0,
+            .text-center1 {
+                text-align: right !important;
+            }
+            tr {
+                border-bottom: 1px solid #e3e6f0;
+            }
+            .printReport > .row > .col > p {
+                font-size: 1.5rem !important;
+            }
+            /* Remove Hyperlinks */
+            @media print {
+                a:link {text-decoration: none !important;}
+                a[href]:after {content: none !important;}
+            }
+
+            .clsDateRange{
+              margin:8px!important;
+            }
+            .printVisibleOnly {
+                display: none;
+            }
+            @media print {
+                .printVisibleOnly {
+                    display: inline-block;
+                    width: 100%;
+                }
+            }
+        </style>
+        <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
+            <div class="col-12 col-md-8">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3" style="background-color: rgb(248,249,252);">
+                        <p class="text-primary m-0 font-weight-bold">{{tabledisplayname}}</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-5">
+                                <div class="row no-gutters">
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>Search:</label>
+                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
+                                    </div>
+                                </div>
+                                <div class="row no-gutters">
+                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 9px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    {{>FxRatesButton}}
+                                    {{#if isAccountingMoreOption }}
+                                        <div class="dropdown periodSelector scnd" style="margin: 9px;">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More
+                                            </button>
+                                            <div class="dropdown-menu accountingBasisDropdown p-3" aria-labelledby="dropdownMenuButton" style="width: 250px;">
+                                            <span>Accounting basis</span>
+                                            <br/>
+                                            <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                                <input class="form-check-input rbAccrual" type="radio" name="radio" id="mddItem1" value="accrual">
+                                                <label class="form-check-label" for="mddItem1">Accrual</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                                <input class="form-check-input rbCash" type="radio" name="radio" id="mddItem2" value="cash">
+                                                <label class="form-check-label" for="mddItem2">Cash</label>
+                                            </div>
+                                            <hr class="periodSelectorLine" style="margin-top: 8px; margin-bottom: 8px;"/>
+                                            <span>Show</span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkAccBasis" id="mddItem3" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem3">Accounting basis</label>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <style>
+                                    #uploadedImage {
+                                        margin: 0 auto !important;
+                                        width: 100%;
+                                    }
+                                    .vs1ButtonMargin,
+                                    .vs1LastButtonMargin,
+                                    .btn.btn-primary.fx-rate-btn {
+                                        margin: 9px !important;
+                                    }
+                                    
+                                </style>
+                                <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
+                            </div>
+                            <div class="col-12 col-md-5">
+                                <div class="row no-gutters justify-content-end">
+                                    <div class="dropdown" style="margin: 9px;">
+                                        <style>
+                                            .dropdown-toggle::after {
+                                                display: none;
+                                            }
+                                        </style>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 40px;"><i class="fas fa-ellipsis-v"></i></button>
+                                        {{> daterangedropdownoption}}
+                                    </div>
+                                    {{> daterangefromto}}
+                                </div>
+                                <div class="row no-gutters justify-content-end">
+                                    {{> export_import_print_display_button Export="btnExportReport" Import="hiddenButton" Print="btnPrintReport" DisplaySettings="btnOpenReportSettings"}}
+                                    <!-- <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="printReport">
+                            
+                            <div class="text-center printVisibleOnly">
+                                <style>
+                                    #uploadedImage2 {
+                                        margin: 0 auto 10px !important;
+                                        width: 100%;
+                                        max-width: 165px;
+                                    }
+                                </style>
+                                <img class="imageUpload img-fluid" id="uploadedImage2" src="assets/img/VS1.png">
+                            </div>
+                            <div class="row">
+                                {{#if isTaxCodeOption }}
+                                    <div class="col-12">
+                                        <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="taxCodeCategory" id="mainTaxCode" checked="checked">
+                                        <label class="form-check-label" for="mainTaxCode">
+                                            Main Taxcode
+                                        </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="taxCodeCategory" id="subTaxCode">
+                                        <label class="form-check-label" for="subTaxCode">
+                                            Sub Taxcode
+                                        </label>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                <div class="col">
+                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">{{tabledisplayname}}</p>
+                                    <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
+                                    <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
+                                </div>
+                            </div>
+                            <div class="row no-gutters">
+                                <style>
+                                    /* .totalhr {
+                                        border-top: 2px #858999 solid;
+                                    }
+                                    .grandtotal {
+                                        border-top: 2px #858999 solid;
+                                        border-bottom: 2px #858999 solid;
+                                    } */
+                                    .tableExportDetailDiv th,
+                                    .tableExportDetailDiv td {
+                                        white-space: nowrap;
+                                        padding: 5px 10px;
+                                    }
+                                    /* .tableExportDetailDiv th {
+                                        text-align: center;
+                                    } */
+                                    .tableExportDetailDiv th.rightAlignMent,
+                                    .tableExportDetailDiv td.rightAlignMent {
+                                        text-align: right !important;
+                                    }
+
+                                    .tableExportDetailDiv td {
+                                        text-align: left !important;
+                                    }
+                                    .tableExportDetailDiv th:first-child,
+                                    .tableExportDetailDiv td:first-child {
+                                        text-align: left !important;
+                                    }
+                                    .tableExportDetailDiv .text-center {
+                                        text-align: center !important;
+                                    }
+                                    .tableExportDetailDiv .text-center1,
+                                    .tableExportDetailDiv .text-center0 {
+                                        text-align: right !important;
+                                    }
+                                    table tr .text-danger,
+                                    table tr .text-danger a {
+                                        color: #e74a3b !important;
+                                    }
+
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
+                                    table.tableExportDetailDiv th {
+                                        max-width: 190px !important;
+                                    }
+                                    .swal2-popup.swal2-modal {
+                                        padding-bottom: 25px !important;
+                                    }
+                                </style>
+                                {{> Template.contentBlock}}
+                                <!-- <div class="table-responsive">
+                                    <table id="{{tablename}}" class="table tableExportDetailDiv table-sm {{tablename}}">
+                                        <thead>
+                                            <tr class="dnd-moved">
+                                                {{#each displayfield in report_displayfields}}
+                                                    {{#if displayfield.display}}
+                                                        <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                            {{displayfield.custfieldlabel}}
+                                                        </th>
+                                                    {{/if}}
+                                                {{/each}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        {{> poweredby}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .groove {
+            border-style: solid;
+            border-width: 1px;
+            width: 200px;
+            padding: 2px;
+            border-radius: .35rem;
+        }
+
+        .custom-control-label {
+            position: absolute;
+        }
+
+        .rngRange {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: rgb(255, 255, 255);
+            background-clip: padding-box;
+            border: 1px solid rgb(133, 135, 150);
+            border-radius: .3rem;
+            border-style: solid;
+            border-width: 1px;
+            padding: 2px;
+            border-radius: .35rem;
+            color: rgb(128, 128, 128);
+            height: inherit !important;
+        }
+
+        @media only screen and (max-width: 480px) {
+            .modal.show .modal-dialog {
+                float: inherit !important;
+                left: inherit !important;
+                top: auto !important;
+
+            }
+        }
+    </style>
+    <div class="modal fade {{tablename}}_Modal divDisplaySettings" role="dialog" tabindex="-1" id="{{tablename}}_Modal">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                            <form class="d-xl-flex align-items-xl-center">
+                                <div class="flex-grow-1">
+
+                                  {{#each displayfield in report_displayfields}}
+                                      {{#if displayfield.display}}
+                                          <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                              <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                  <input class="custom-control-input chkDatatable chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
+                                                  <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                                  <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
+                                              </div>
+                                              <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                  <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                  <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" valueclass="{{displayfield.class}}" min="0" max="1000">
+                                              </div>
+                                          </div>
+                                      {{/if}}
+                                  {{/each}}
+                                </div>
+                            </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary saveTable" type="button" style='margin: 14px !important;'><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-warning resetTable" type="reset" style='margin: 14px !important;'><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button" style='margin: 14px !important;'><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header" >
+                    <h4 class="title-header" >{{tabledisplayname}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/{{tablename}}report.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Help Video Modal -->
+    {{> FxRateModal currencies=currencyList}}
+
+</template>

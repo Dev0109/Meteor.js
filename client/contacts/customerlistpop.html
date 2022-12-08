@@ -1,0 +1,31 @@
+<template name="customerlistpop">
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+        <div class="card-body rounded" style="margin: 0px;">
+
+            <!-- Start {{> optionNavSalesOverview}} -->
+            <div class="row">
+                <div class="col flex-grow-1" style="align-content: flex-start;">
+                    <style>
+                        .refreshpagelist {
+                            margin: 0px !important;
+                        }
+                        .btnRefreshGlobal {
+                            padding: 0px !important;
+                        }
+                    </style>
+                    <!-- {{> refreshbutton}} -->
+                </div>
+            </div>
+            <!-- End -->
+
+            <div class="table-responsive">
+              {{> global_customerlist}}
+            </div>
+        </div>
+    </div>
+
+    <!-- End Help Video Modal -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

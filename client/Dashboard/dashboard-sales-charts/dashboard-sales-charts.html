@@ -1,0 +1,33 @@
+<template name="dashboardSalesCharts">
+    {{# draggablePanel
+        md=6
+        defaultPosition=30
+        key="dscharts__performance_quota"
+        hLenght=100
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Sales Performance vs Quota"
+        hrefDetails=""
+        editModalID=""
+        tooltipTitle=salesPerformanceTooltip
+    }}
+    <div id="sd-comparison-chart" class="ds-highcharts"></div>
+    {{/draggablePanel}}
+
+    {{# draggablePanel
+        md=6
+        defaultPosition=31
+        key="dscharts__opportunities_source"
+        hLenght=100
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Open Opportunities vs Source"
+        hrefDetails=""
+        editModalID=""
+        tooltipTitle=openOpportunitiesTooltip
+    }}
+    <div id="opens-opportunities-chart" class="ds-highcharts"></div>
+    {{/draggablePanel}}
+</template>

@@ -1,0 +1,27 @@
+<!--
+    title: string,
+    size: string (small, medium, large),
+    color: string (primary, info, success...),
+    textTransform: uppercase || null,
+    align: center || null
+ -->
+<template name="kpiCardTitle">
+    <style>
+        .small-card-title{
+            font-size: .9rem;
+        }
+        .medium-card-title{
+            font-size: 1.3rem;
+        }
+        .large-card-title{
+            font-size: 1.6rem;
+        }
+        .kpi-card-title{
+            padding-left: 0.8rem;
+            padding-right: 0.8rem;
+        }
+    </style>
+    <div class="text-{{align}} text-{{textTransform}} text-{{color}} h5 {{size}}-card-title kpi-card-title font-weight-bold mb-3">
+        <span>{{title}}</span>
+    </div>
+</template>

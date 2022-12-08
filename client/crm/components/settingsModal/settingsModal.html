@@ -1,0 +1,75 @@
+<template name="settingsModal">
+  {{> helpbutton}}
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="settingsModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>CRM Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-12" style="margin-bottom: 8px;">
+                <div class="d-xl-flex justify-content-between align-items-xl-center">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input feeOnTopInput"
+                            id="feeOnTopInput" checked />
+                        <label style="width: 275px;" class="custom-control-label"
+                            for="feeOnTopInput">Apply online payment fee to total.</label>
+                    </div>
+                    <i data-toggle="tooltip" data-placement="left"
+                        class="fa fa-question-circle-o float-right"
+                        title="Include the payment link fee on top of the final price. This will be visible to your clients."></i>
+                </div>
+            </div>
+          </div>
+          <div class="row">
+              <div class="col-12" style="margin-bottom: 8px;">
+                  <div class="d-xl-flex justify-content-between align-items-xl-center">
+                      <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input feeInPriceInput"
+                              id="feeInPriceInput" />
+                          <label style="width: 275px;" class="custom-control-label"
+                              for="feeInPriceInput">Include online payment fee in total.</label>
+                      </div>
+                      <i data-toggle="tooltip" data-placement="left"
+                          class="fa fa-question-circle-o float-right"
+                          title="Include the payment link fee in the final price. This will be hidden from your clients."></i>
+                  </div>
+              </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <button id="" class="btn btn-primary btnTaxRateSettings" type="button"
+                style="width: 100%; margin: 8px 0px;">
+                <i class="fas fa-cog" style="margin-right: 5px;"></i>Tax Rate Settings
+              </button>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <button id="" class="btn btn-primary btnTermsSettings" type="button"
+                style="width: 100%; margin: 8px 0px;">
+                <i class="fas fa-cog" style="margin-right: 5px;"></i>Terms Settings
+              </button>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <button id="" class="btn btn-primary btnCurrencySettings" type="button"
+                style="width: 100%; margin: 8px 0px;">
+                <i class="fas fa-cog" style="margin-right: 5px;"></i>Currency Settings
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+              style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</template>

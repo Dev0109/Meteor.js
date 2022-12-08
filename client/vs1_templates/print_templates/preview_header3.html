@@ -1,0 +1,126 @@
+<template name="preview_header3">
+    <style>
+        .template-preview-header3 {
+            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+            font-family: Calibri, sans-serif !important;
+            width: 90%;
+            margin: 20px auto;
+        }
+        .companyLogo {
+            height: 200px;
+            margin: 0px;
+            padding: 0px;
+            flex-wrap: wrap;
+            align-content: center;
+        }
+        .headerTitle3 {
+            font-family: Calibri, sans-serif !important;
+            margin: 0px;
+            padding: 0px;
+            border: none !important;
+            justify-content: right;
+            flex-wrap: wrap;
+            align-content: center;
+        }
+        .titleBack3 {
+            width: 100%;
+            height: 50px;
+            background-image: url("assets/img/print/tmp3_header.png");
+            background-position: center right;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .label-p {
+            font-family: Calibri, sans-serif !important;
+            line-height: 1em;
+            margin-bottom: 0px;
+        }
+        .label-p3 {
+            font-family: Calibri, sans-serif !important;
+            line-height: 1em;
+            margin-bottom: 10px;
+        }
+        .print-header3 {
+            font-family: Calibri, sans-serif !important;
+            font-size: 36px;
+            line-height: 50px !important;
+            padding-right: 5px;
+            text-align: right;
+            color: white;
+        }
+        .pdfCustomerAddress3 {
+            font-family: Calibri, sans-serif !important;
+            font-size: 18px;
+            padding: 0px;
+            width: 100%;
+            margin-bottom: 0px;
+            color: rgb(0 0 0);
+            line-height: 1.2rem;
+        }
+        .headerColumn3 {
+            font-family: Calibri, sans-serif !important;
+            width: 20%;
+            margin: 0px;
+            padding: 10px 5px;
+            text-align: center;
+            border: 1px solid black;
+            background-color: #e3e3e3;
+        }
+    </style>
+    <div class="template-preview-header3">
+        <div class="d-flex flex-row d-sm-flex d-md-flex">
+            <div class="col-6 col-md-6 col-sm-12 d-flex companyLogo">
+                <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
+                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 43%; margin-bottom: 0px;">
+                </div>
+            </div>
+            <div class="col-6 col-md-6 col-sm-12 d-flex headerTitle3">
+                <div class="titleBack3"><!-- max-width: 60mm; max-height: 30mm; -->
+                    <p class="label-p print-header3">INVOICE</p>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
+            <div class="col-6 col-md-6 col-sm-12 d-flex">
+                <div style="width: 100%;">
+                    <p class="label-p3 toLabel3" style="color: #71c6a5;">INVOICE TO: </p>
+                    <div style="width: 100%; min-height: 100px;">
+                        <p class="label-p pdfCustomerAddress3"></p>
+                        <p class="label-p">
+                            <span class="o_abn_label3"></span>&nbsp;
+                            <span class="o_abn3"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-6 col-sm-12 d-flex">
+                <div style="width: 100%;">
+                    <p class="label-p3 dateLabel3" style="color: #71c6a5; text-align: right;">INVOICE DATE: </p>
+                    <p class="label-p date3" style="font-weight: bold; text-align: right;"></p>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px; margin: 20px auto;">
+            <div class="headerColumn3">
+                <p class="label-p invNumber3">INVOICE NUMBER</p>
+                <p class="label-p io3">1038</p>
+            </div>
+            <div class="headerColumn3" style="background-color: white;">
+                <p class="label-p">PO/REFERENCE</p>
+                <p class="label-p ro3"></p>
+            </div>
+            <div class="headerColumn3">
+                <p class="label-p">ACCOUNT NUMBER</p>
+                <p class="label-p po3"></p>
+            </div>
+            <div class="headerColumn3" style="background-color: white;">
+                <p class="label-p">AMOUNT DUE</p>
+                <p class="label-p amountdue3"></p>
+            </div>
+            <div class="headerColumn3">
+                <p class="label-p">DUE DATE</p>
+                <p class="label-p due3"></p>
+            </div>
+        </div>
+    </div>
+</template>

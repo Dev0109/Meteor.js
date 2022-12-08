@@ -1,0 +1,231 @@
+<template name="tripgroup">
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <h3 class="text-dark mb-4">Trip-Group
+            <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+            <!-- Start Help View Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=15" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                            <p class="text-center text-muted" style="margin: 0px;">
+                                <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
+                            </p>
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Help View Modal -->
+        </h3>
+        <div class="row mb-3">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 font-weight-bold">Trip-Group Settings</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-body rounded">
+                                    <div class="row no-gutters">
+                                        <style>
+                                            @media screen and (max-width: 420px) {
+                                                .btnRefresh {
+                                                    margin-left: 0px !important;
+                                                    margin-bottom: 0px !important;
+                                                }
+                                                .btnAddMobile {
+                                                    margin-left: 0px !important;
+                                                    margin-bottom: 0px !important;
+                                                }
+                                                .btnAddRoomMobile {
+                                                    margin-left: 0px !important;
+                                                }
+                                                .card-body {
+                                                    padding: 0.75rem !important;
+                                                }
+                                            }
+
+                                        </style>
+                                        <div class="col">
+                                            <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 12px; "><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                            <a class="btn btn-primary btnAdd btnAddMobile" role="button" data-toggle="modal" href="#tripGroupModal" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Trip-Group<br></a>
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="tripGroupModal">
+                                                <div class="modal-dialog  modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 style="" ><div id="add-tripgroup-title" name="add-tripgroup-title" style="float: left;">Add New Trip-Group</div>
+                                                                <!-- <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+                                                                <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                                                                <!-- Start Help View Modal -->
+                                                                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+                                                                    <div class="modal-dialog modal-sm" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header" style="padding-bottom: 8px;">
+                                                                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                                            <div class="modal-body">
+                                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
+                                                                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                                                                                <p class="text-center text-muted" style="margin: 0px;">
+                                                                                    <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- End Help View Modal -->
+                                                            </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        </div>
+                                                        <div class="modal-body" style="background-color: #ededed;">
+                                                            <input type="hidden" class="form-control" id="edtTripGroupID" name="edtTripGroupID" style="display:none;">
+                                                            <div class="row no-gutters">
+                                                                <div class="col d-xl-flex align-items-xl-end">
+                                                                    <div class="form-group flex-grow-1" style="margin: 8px;">
+                                                                        <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Trip-Group Name</label>
+                                                                        <input type="text" class="form-control" id="edtTripGroupName" name="edtTripGroupName">
+                                                                    </div>                                                          
+                                                                </div>
+                                                            </div>
+                                                            <div class="row no-gutters">
+                                                                <div class="col d-xl-flex align-items-xl-end">
+                                                                    <div class="form-group flex-grow-1" style="margin: 8px;">
+                                                                        <label>Trip-Group Description</label>
+                                                                        <input type="text" class="form-control" id="edtTripGroupDesc" name="edtTripGroupDesc">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer" style="background-color: #ededed;">
+                                                            <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-gutters" style="display: none;">
+                                        <div class="col text-left">
+                                            <button class="btn btn-primary btnAddNew" type="button" style="margin: 8px 0px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add New Trip-Group</button>
+                                        </div>
+                                    </div>
+                                    <div class="tripGroupCard">
+                                        <style>
+                                            .hiddenColumn{
+                                                display:none;
+                                            }
+                                            .showColumn {
+                                                display:table-cell;
+                                                padding:.75rem;
+                                                vertical-align:top;
+                                            }
+                                        </style>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID"  readonly>
+                                                    <div class="modal-header">
+                                                        <h4>Delete</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Please click "Delete" to deactivate trip-group</p>
+
+                                                        <button class="btn btn-danger float-right btnDelete" type="button">
+                                                            <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <table id="tripGroupList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tripGroupList">
+                                            <thead>
+                                            <tr class="dnd-moved">
+                                                <th class="th colName">Trip-Group Name</th>
+                                                <th class="th colDescription" >Description</th>
+                                                <th class="th colDelete" style="width:20px;"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {{#if tripgrouprecords}}
+                                                {{#each item in tripgrouprecords}}
+                                                    <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
+                                                        <td contenteditable="false" class="colName">{{item.tripName}}</td>
+                                                        <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                                        <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
+                                                    </tr>
+                                                {{/each}}
+                                            {{/if}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row no-gutters">
+                                    <div class="col">
+                                        <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                        <!-- <button class="btn btn-primary float-right" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+
+                    <h4 class="title-header" >Trip-Group</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/departmentlist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/departmentsettings.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Help Video Modal -->
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModalAdd">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+
+                    <h4 class="title-header" >New Trip-Group</h4>
+                    <button type="button" class="close closeAdd" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/departments.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideoAdd" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/newdepartment.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Help Video Modal -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

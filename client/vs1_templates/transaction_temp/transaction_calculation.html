@@ -1,0 +1,102 @@
+<template name="transaction_calculation">
+  <!-- <div class="{{rowClass}}">
+      <div class="col-{{col1}}" style="padding: 0px;">
+          <p data-toggle="{{tooltip}}" data-placement="{{top}}" title="{{title}}" class="{{classP1}}">{{displayName}}</p>
+      </div>
+      <div class="col-{{col2}}" style="padding: 0px;">
+          <p data-toggle="{{tooltip}}" data-placement="{{top}}" title="{{title}}" class="{{classP2}}" id="{{id}}" name="{{name}}">{{> Template.contentBlock}}</p>
+      </div>
+  </div> -->
+<style media="screen">
+  .leadLabel {
+      font-size: 25px;
+      font-weight: 500;
+      margin: 0px;
+      color: #696969;
+      float: left;
+  }
+</style>
+  <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+      <div class="row">
+          <div class="col-4" style="padding: 0px;">
+              <p class="leadLabel">Subtotal</p>
+          </div>
+          <div class="col-8" style="padding: 0px;">
+              <p class="lead" id="subtotal_total" name="subtotal_total">{{SubTotal}}</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-4" style="padding: 0px;">
+              <p class="leadLabel">Tax</p>
+          </div>
+          <div class="col-8" style="padding: 0px;">
+              <p class="lead" id="subtotal_tax" name="subtotal_tax">{{TotalTax}}</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-4" style="padding: 0px;">
+              <p class="leadLabel">Net</p>
+          </div>
+          <div class="col-8" style="padding: 0px;">
+              <p class="lead" id="subtotal_nett" name="subtotal_nett">{{NetTotal}}</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-12" style="padding: 0px;">
+              <hr style="border-top: 1px solid #696969;" />
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-4" style="padding: 0px;">
+              <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="leadLabel">Discount</p>
+          </div>
+          <div class="col-8" style="padding: 0px;">
+              <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead" id="subtotal_discount" name="subtotal_discount">{{TotalDiscount}}</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-12" style="padding: 0px;">
+              <hr style="border-top: 1px solid #696969;" />
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-4" style="padding: 0px;">
+              <p class="leadLabel leadTotal">TOTAL</p>
+          </div>
+          <div class="col-8" style="padding: 0px;">
+              <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{Total}}</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-12" style="padding: 0px;">
+              <hr style="border-top: 3px solid #696969;" />
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-4" style="padding: 0px;">
+              {{#if equals isPartialPaid true}}
+                  <p class="leadLabel text-success pointer btnTransactionPaid" id=""><i class="fas fa-comments-dollar paidIcon"></i> Paid</p>
+              {{else}}
+                  <p class="leadLabel">Paid</p>
+              {{/if}}
+          </div>
+          <div class="col-8" style="padding: 0px;">
+              <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{TotalPaid}}</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-4" style="padding: 0px;">
+              <p class="leadLabel">Due</p>
+          </div>
+          <div class="col-8" style="padding: 0px;">
+              <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{BalanceDue}}</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-12" style="padding: 0px;">
+              <hr style="border-top: 3px solid #696969;" />
+              <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{BalanceDue}}</p>
+          </div>
+      </div>
+  </div>
+</template>

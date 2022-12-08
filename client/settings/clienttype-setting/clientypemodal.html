@@ -1,0 +1,40 @@
+<template name="clienttypemodal">
+<div class="modal fade" role="dialog" tabindex="-1" id="myModalClientType" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 style=""><div id="add-clienttype-title" name="add-clienttype-title" style="float: left;">Add Customer Type</div>
+                    <!-- Start Help View Modal -->
+                    {{> helpbutton}}
+                    <!-- End Help View Modal -->
+                </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body" style="background-color: #ededed;">
+                <input type="hidden" class="form-control" id="edtClientTypeID" name="edtClientTypeID" style="display:none;">
+                <div class="row no-gutters">
+                    <div class="col d-xl-flex align-items-xl-end">
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Type Name</label>
+                            <input type="text" class="form-control" id="edtClientTypeName" name="edtClientTypeName">
+                            <input type="hidden" class="form-control" id="typeID" name="typeID">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row no-gutters">
+                    <div class="col d-xl-flex align-items-xl-end">
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
+                            <textarea class="form-control" rows="5" id="txaDescription" name="txaDescription"></textarea>
+                          </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="background-color: #ededed;">
+                <button class="btn btn-primary btnSaveClientType vs1ButtonMargin" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                <button class="btn btn-danger btnDeleteClientType vs1ButtonMargin" id="make-in-active" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Make In-Active</button>
+                <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</template>

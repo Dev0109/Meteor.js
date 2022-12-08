@@ -1,0 +1,35 @@
+[
+    {
+        "transactionType": "my type",
+        "reportNames": [
+            "name of the report"
+        ],
+        "frequency": {
+            "frequency": {
+                "type": "Every",
+                "rythm": "1 (day)"
+            },
+            
+            "settings": "every day",
+            "startTime": "Start date time",
+            "startDate": "Starte date"
+        },
+        "send": "my send",
+        "recipients": "My recipients"
+    },
+    {
+        "transactionType": "my type",
+        "frequency": {
+            "frequency": {
+                "type": "Every",
+                "rythm": "1 (day)"
+            },
+            
+            "settings": "every day",
+            "startTime": "Start date time",
+            "startDate": "Starte date"
+        },
+        "send": "my send",
+        "recipients": "My recipients"
+    }
+]

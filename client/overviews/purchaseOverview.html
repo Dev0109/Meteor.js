@@ -1,0 +1,367 @@
+<template name="purchasesoverview">
+    <style>
+        .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+
+        .hideShowDiv {
+            display: inline-block;
+            width: 100%;
+            text-align: right;
+            padding: 0 8px;
+            margin: 0;
+            position: absolute;
+            top: 5px;
+            left: 0;
+        }
+
+        .text-deleted{
+          background-color: #e74a3b !important; color:#fff;
+        }
+    </style>
+
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <header class="pt-2 pb-3 d-flex align-items-center">
+            <h2 class="mr-1 pageHeader">Purchases Overview {{> helpbutton}}</h2>
+            <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+
+            {{> loggedcompanyoverview}}
+            <!-- Start Help View Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Help View Modal -->
+
+        </header>
+
+        <!-- All Cards List -->
+        {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
+        <!-- All Cards List -->
+        <!-- {{> allCardsLists tabGroupID="4" chartGroup="Purchases"}} -->
+
+        <!-- All charts list -->
+        {{> allChartLists  tabGroupID="7" chartGroup="Purchases" }}
+
+        <style>
+            @media screen and (max-width: 450px) {
+                .btnNav {
+                    width: 95% !important;
+                    margin: 12px 0px !important;
+                }
+                .btnOpenSettingsDesktop {
+                    display: none !important;
+                }
+                .btnOpenSettingsMobile {
+                    margin: 12px 0px !important;
+                    display: block !important;
+                }
+            }
+        </style>
+
+        <div class="row ">
+            <div class="col-6 col-md-8">
+                <button id="btnRefresh" class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px;margin-left:0"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+
+                <div class="btn-group btnNav" style="margin: 12px;">
+                    <a class="btn btn-primary allList" role="button" href="/purchasesoverview?id=all">All</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
+                    <div class="dropdown-menu" role="menu">
+                        <a class="dropdown-item newpo" role="presentation" href="/purchaseordercard">+ New Purchase
+                            Order</a>
+                        <a class="dropdown-item newBill" role="presentation" href="/billcard">+ New Bill</a>
+                        <a class="dropdown-item newCredit" role="presentation" href="/creditcard">+ New Credit</a>
+                    </div>
+                </div>
+                <div class="btn-group btnNav text-nowrap" style="margin: 12px;">
+                    <a class="btn btn-primary purchaseorderList" role="button" href="/purchaseorderlist">Purchase Order</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu" role="menu">
+                        <a class="dropdown-item purchaseorderList" role="presentation" href="/purchaseorderlist">Purchase Order List</a>
+                        <a class="dropdown-item purchaseorderListBO" role="presentation" href="/purchaseorderlistBO">Purchase Order List - BO</a>
+                        <a class="dropdown-item" role="presentation" href="/purchaseordercard" id="newPurchaseorder" name="newPurchaseorder">+ New Purchase Order</a>
+                    </div>
+                </div>
+                <div class="btn-group btnNav" style="margin: 12px;">
+                    <a class="btn btn-primary billList" role="button" href="/billlist" id="billList" name="billList">Bill</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu" role="menu">
+                        <a class="dropdown-item billList" role="presentation" href="/billlist">Bill List</a>
+                        <a class="dropdown-item" role="presentation" href="/billcard" id="newBill" name="newBill">+ New Bill</a>
+                    </div>
+                </div>
+                <div class="btn-group btnNav" style="margin: 12px;">
+                    <a class="btn btn-primary creditList" role="button" href="/creditlist" id="creditList" name="creditList">Credit</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu" role="menu">
+                        <a class="dropdown-item creditList" role="presentation" href="/creditlist">Credit List</a>
+                        <a class="dropdown-item" role="presentation" href="/creditcard" id="newCredit" name="newCredit">+ New Credit</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#tableWodthModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+                <button class="btn btnNav btn-primary printConfirm float-right" type="button" style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
+                <button class="btn btnNav btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#tableWodthModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+            </div>
+        </div>
+
+        <div class="card-body px-0 py-3 rounded" style="padding-top: 0px !important;">
+            <!-- Start {{> optionNavSalesOverview}} -->
+            <div class="d-xl-flex justify-content-xl-end">
+                <div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="tableWodthModal">
+                        <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                            <form class="d-xl-flex align-items-xl-center">
+                                                <div class="flex-grow-1">
+                                                    <style>
+                                                        .groove {
+                                                            border-style: solid;
+                                                            border-width: 1px;
+                                                            width: 200px;
+                                                            padding: 2px;
+                                                            border-radius: .35rem;
+                                                        }
+
+                                                        .custom-control-label {
+                                                            position: absolute;
+                                                        }
+
+                                                        .rngRange {
+                                                            position: relative;
+                                                            display: flex;
+                                                            flex-direction: column;
+                                                            width: 100%;
+                                                            pointer-events: auto;
+                                                            background-color: rgb(255, 255, 255);
+                                                            background-clip: padding-box;
+                                                            border: 1px solid rgb(133, 135, 150);
+                                                            border-radius: .3rem;
+                                                            border-style: solid;
+                                                            border-width: 1px;
+                                                            padding: 2px;
+                                                            border-radius: .35rem;
+                                                            color: rgb(128, 128, 128);
+                                                            height: inherit !important;
+                                                        }
+
+                                                        @media only screen and (max-width: 480px) {
+                                                            .modal.show .modal-dialog {
+                                                                float: inherit !important;
+                                                                left: inherit !important;
+                                                                top: auto !important;
+
+                                                            }
+                                                        }
+                                                    </style>
+
+                                                    {{#each displayfield in displayfields}}
+                                                    {{#if displayfield.display}}
+                                                    <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                                      <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                          <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
+                                                          <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                                          <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
+                                                      </div>
+                                                      <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                          <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                          <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
+                                                      </div>
+                                                    </div>
+                                                    {{/if}}
+                                                    {{/each}}
+                                                </div>
+                                            </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                    <button class="btn btn-warning resetTable" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End -->
+            <div class="table-responsive">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
+
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
+
+                    .hiddenColumn {
+                        display: none;
+                    }
+
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
+
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
+                </style>
+                <div class="row no-gutters d-xl-flex align-items-xl-end">
+                    <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                    </div>
+                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <div class="dropdown" style="margin: 8px; margin-top: 0px;">
+                            <style>
+                                .btn-daterange::after {
+                                    display: none;
+                                }
+                            </style>
+                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                            {{> daterangedropdownoption}}
+                        </div>
+                        <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateTo" name="dateTo">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="tblPurchaseOverview" style="width:100%" class="dataTable table table-striped table-bordered tblPurchaseOverview">
+                    <thead>
+                        <tr class="dnd-moved">
+                            <th class="th colSortDate hiddenColumn">id</th>
+                            {{#each displayfield in displayfields}}
+                              {{#if displayfield.display}}
+                              <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                  {{displayfield.custfieldlabel}}
+                                </th>
+                              {{/if}}
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if datatablerecords}}
+                            {{#each item in datatablerecords}}
+                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                    <td contenteditable="false" class="colSortDate {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}">{{item.sortdate}}</td>
+                                    <td contenteditable="false" class="colOrderDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}"><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
+                                    <td contenteditable="false" class="colPurchaseNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>
+                                    <td contenteditable="false" class="colType {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.type}}</td>
+                                    <td contenteditable="false" class="colSupplier {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">{{item.suppliername}}</td>
+                                    <td contenteditable="false" class="colAmountEx {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
+                                        {{item.totalamountex}}
+                                    </td>
+                                    <td contenteditable="false" class="colTax {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
+                                        {{item.totaltax}}
+                                    </td>
+                                    <td contenteditable="false" class="colAmount {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
+                                        {{item.totalamount}}
+                                    </td>
+                                    <td contenteditable="false" class="colBalanceOutstanding {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaloustanding}}</td>
+                                    <td contenteditable="false" class="colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.orderstatus}}</td>
+                                    <td contenteditable="false" class="colPurchaseCustField1 {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">
+                                        {{item.Phone}}
+                                    </td>
+                                    <td contenteditable="false" class="colPurchaseCustField2 {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
+                                        {{item.InvoiceNumber}}
+                                    </td>
+                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
+                                    <td contenteditable="false" class="colComments {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.comments}}</td>
+
+                                    <!-- <td contenteditable="false" class="colSaleCustField1  {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}
+                                    </td>
+                                    <td contenteditable="false" class="colSaleCustField2  {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}
+                                    </td>
+                                    <td contenteditable="false" class="colSaleCustField3  {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}
+                                    </td> -->
+                                </tr>
+                            {{/each}}
+                        {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="title-header">Purchase Overview</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/paymentoverview.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Help Video Modal -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

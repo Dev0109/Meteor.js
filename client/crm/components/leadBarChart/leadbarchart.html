@@ -1,0 +1,86 @@
+<template name="leadbarchart">
+  <style type="text/css">
+    .hideelement {
+      display: none !important;
+    }
+
+    .showelement {
+      display: block;
+    }
+
+    .sortableMonthlyExpense {
+      width: 75%;
+
+    }
+
+    .sortableMonthlyExpense .monthly-expense-widget {
+      min-width: 275px !important;
+      max-width: 100% !important;
+    }
+
+    @media screen and (max-width: 1306px) {
+      .sortableMonthlyExpense {
+        width: 100%;
+
+      }
+    }
+
+    .sortableExpenseBreakdown {
+      width: 100%;
+      min-width: 275px;
+      max-width: calc(25% - 0.5rem);
+    }
+
+    .sortableExpenseBreakdown .expense-widget {
+      width: -webkit-fill-available;
+
+    }
+
+
+    @media screen and (max-width: 1306px) {
+      .sortableExpenseBreakdown {
+        width: 100%;
+        max-width: 512px;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .sortableExpenseBreakdown {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+
+  <div class="charts row connectedChartSortable connectedSortable" style="margin: 0px 16px;">
+    <div class="col-auto col-md-6 sortable-chart-widget-js" position="0" data-default-class="col-md-8">
+      <div class="minHeight100">
+        <div class="card shadow mb-4 portlet expense-widget">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="text-info font-weight-bold m-0">All Leads By Source</h6>
+          </div>
+          <div class="card-body">
+            <canvas id="chart_leadpiechart" name="chart_leadpiechart" width="400" height="400"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto col-md-6 sortable-chart-widget-js" position="1" data-default-class="col-md-8">
+      <div class="minHeight100" id="sortableMonthlyExpense">
+        <div class="card overflow-hidden shadow mb-4 portlet">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="text-primary font-weight-bold m-0">Leads Per Week</h6>
+          </div>
+          <div class="card-body">
+            <div class="canvasParentDiv canvasHeight100">
+              <canvas id="chart_leadbarchart" name="chart_leadbarchart" width="400" height="400"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</template>

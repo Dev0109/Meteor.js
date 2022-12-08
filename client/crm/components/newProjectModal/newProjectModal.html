@@ -1,0 +1,59 @@
+<template name="newProjectModal">
+  <div class="modal fade" id="newCrmProject" tabindex="-1" role="dialog" aria-labelledby="newCrmProjectLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newCrmProjectLabel">New Project</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label>Project Name</label>
+                <input type="text" class="form-control" id="crmProjectName" name="crmProjectName" autocomplete="off">
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label>Project Color</label>
+                <input type="color" class="form-control" id="crmProjectColor" name="crmProjectColor" autocomplete="off" list="apresetColors">
+                <datalist id="apresetColors">
+                  <option value="#FDEADB"></option>
+                  <option value="#DDEFF4"></option>
+                  <option value="#EBF2DF"></option>
+                  <option value="#F3DFDE"></option>
+                  <option value="#DDE7F2"></option>
+                </datalist>
+              </div>
+            </div>
+            <!-- <div class="col-12 mb-4">
+              <div class="custom-control custom-switch">
+                <input class="custom-control-input" type="checkbox" value="swtNewCrmProjectFavorite"
+                  id="swtNewCrmProjectFavorite" name="swtNewCrmProjectFavorite" style="cursor: pointer;">
+                <label class="custom-control-label" for="swtNewCrmProjectFavorite" style="cursor: pointer;">Add to
+                  Favorites</label>
+              </div>
+            </div> -->
+            <div class="col-12 no-modal">
+              <div class="form-group no-modal">
+                <label class="no-modal">Project Description</label>
+                <textarea class="form-control no-modal" rows="4" id="crmProjectDescription" name=""
+                  autocomplete="off"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btnSaveNewCrmProject" style="margin :12px" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button class="btn btn-secondary" data-dismiss="modal" style="margin:12px;margin-right:0px;" type="button"><i class="fa fa-close"
+              style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,86 @@
+<template name="preview_footer3">
+    <style>
+        .template-preview-footer3 {
+            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+            font-family: Calibri, sans-serif !important;
+            width: 90%;
+            margin: 0px auto;
+        }
+        .footerTitle3 {
+            margin: 0px;
+            padding: 0px;
+            border: none !important;
+            justify-content: right;
+            flex-wrap: wrap;
+            align-content: center;
+        }
+        .infoBack3 {
+            width: 100%;
+            height: 50px;
+            background-image: url("assets/img/print/tmp3_footer.png");
+            background-position: center right;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <div class="template-preview-footer3">
+        <div style="width: 100%;">
+            <p style="font-weight: bold; font-size: 18px; color: #00949e;">Payment Details</p>
+        </div>
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
+            <div class="col-4 col-md-4 col-sm-12" style="padding-left: 0px;">
+                <p class="label-p">
+                    <span style="font-weight: bold;">Bank Account Name:</span>
+                    <br>
+                    <span class="ban3"></span>
+                    <br>
+                    <span style="font-weight: bold;">BANK:</span>&nbsp;<span class="bankname3"></span>
+                    <br>
+                    <span style="font-weight: bold;">Sort Code:</span>&nbsp;<span class="swift3"></span>
+                    <br>
+                    <span style="font-weight: bold;">A/C Number:</span>&nbsp;<span class="account_number3"></span>
+                </p>
+            </div>
+            <div class="col-4 col-md-4 col-sm-12">
+                <p class="label-p">
+                    <span style="font-weight: bold;">International Account Details:</span>
+                    <!-- <br><span>IBAN: 11ABC123456789000</span><br>
+                    <span>BIC: ABCDEF1XXX</span> -->
+                </p>
+            </div>
+            <div class="col-4 col-md-4 col-sm-12">
+                <p class="label-p" style="font-weight: bold;">
+                    <span>Payment Terms:</span>&nbsp;<span class="termdays"></span>
+                </p>
+                <p class="label-p termdesc"></p>
+            </div>
+        </div>
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px; height: 50px; margin-top: 30px;">
+            <div class="col-2 col-md-2 col-sm-12 d-flex companyLogo" style="height: 50px;">
+                <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
+                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 50%;">
+                </div>
+            </div>
+            <div class="col-10 col-md-10 col-sm-12 d-flex footerTitle3">
+                <div class="infoBack3"><!-- max-width: 60mm; max-height: 30mm; -->
+                    <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 12px; color: white;">
+                        <div style="width: 50%; padding-left: 12%; margin-top: 8px;">
+                            <p class="label-p o_name3"></p>
+                            <p class="label-p o_reg3"></p>
+                        </div>
+                        <div style="width: 20%; margin-top: 8px;">
+                            <p class="label-p o_address3"></p>
+                            <p class="label-p o_city3"></p>
+                            <p class="label-p o_state3"></p>
+                        </div>
+                        <div style="width:30%; margin-top: 8px; text-align: right; padding-right: 10px;">
+                            <p class="label-p o_phone3"></p>
+                            <p class="label-p o_email3"></p>
+                            <p class="label-p o_url3"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

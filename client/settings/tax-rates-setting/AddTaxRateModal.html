@@ -1,0 +1,79 @@
+<template name="AddTaxRateModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="addTaxRateModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <h4 id="add-tax-title" name="add-tax-title">Add New Tax Rate</h4> -->
+                    <h4 style="" ><div id="add-tax-title" name="add-tax-title" style="float: left;">Add New Tax Rate</div>  <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body">
+                    <input type="hidden" class="form-control" id="edtTaxID" name="edtTaxID" style="display:none;">
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Name</label>
+                                <input type="text" class="form-control" id="edtTaxName" name="edtTaxName">
+                            </div>
+                            <div class="form-group" style="margin: 8px;">
+                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Rate %</label>
+                                <input type="text" class="form-control" style="width: 110px;" placeholder="0" id="edtTaxRate" name="edtTaxRate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
+                                <input type="text" class="form-control" id="edtTaxDesc" name="edtTaxDesc">
+                            </div>
+                            <!-- <div class="form-group" style="margin: 8px;"><label>Rate</label><input type="text" class="form-control" style="width: 110px;" placeholder="0 %"></div> -->
+                        </div>
+                    </div>
+
+                    {{#if isChkUSRegionTax}}
+                    <div class="row no-gutters">
+                        <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="margin: 10px 0 0 0;">Sub Taxcodes</label>
+                        <table id="subTaxList" style="width: 100%;" class="dataTable table table-hover table-striped table-bordered subTaxList">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colCode" style="width:100px">Code</th>
+                                    <th class="th colPercent">Percent</th>
+                                    <th class="th colPercentageOn" style="width:150px">Percentage On</th>
+                                    <th class="th colCapAmt" style="width:150px">Cap Amt</th>
+                                    <th class="th colThresholdAmt" style="width:150px">Threshold Amt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if subTaxes}}
+                                {{#each item in subTaxes}}
+                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                    <td contenteditable="false" class="colName">{{item.codename}}</td>
+                                    <td contenteditable="false" class="colPercent">{{item.percent}}</td>
+                                    <td contenteditable="false" class="colPercentageOn">{{item.percentageOn}}</td>
+                                    <td contenteditable="false" class="colCapAmt">{{item.capAmt}}</td>
+                                    <td contenteditable="false" class="colThresholdAmt">{{item.thresholdAmt}}</td>
+                                </tr>
+                                {{/each}}
+                                {{else}}
+                                <tr class="dnd-moved" style="cursor: pointer;">
+                                    <td contenteditable="false" colspan="5" style="text-align: center;">
+                                        <span>
+                                            Table data doesn't exist
+                                        </span>
+                                    </td>
+                                </tr>
+                                {{/if}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btnSaveTaxRate" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                    {{#if isChkUSRegionTax}}
+                    <button class="btn btn-primary btnNewSubTax" data-toggle="modal" href="#addSubTaxModal" type="button"><i class="fa fa-plus" style="padding-right: 8px;"></i>Sub</button>
+                    {{/if}}
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button></div>
+            </div>
+        </div>
+    </div>
+</template>

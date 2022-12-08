@@ -1,0 +1,100 @@
+<template name="statementPrintTemp">
+        {{#each record in statementrecords}}
+            <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible;" class="printReport">
+                <div style="display: flex; height: 28mm;">
+                    <div style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm;">
+                        <div style="display: flex;">
+                            <div style="max-width: 60mm; max-height: 30mm">
+                                <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm;max-width: 200px;margin-bottom: 8px;">
+                            </div>
+                            <div style="width: 70mm;">
+                                <div style="padding-left: 16px;font-weight: bold;">
+                                    <a href="{{organizationurl}}">{{organizationurl}}</a>
+                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{organizationname}}</p>
+                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress1}}</p>
+                                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">{{companyaddress2}}</p>
+                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">ABN: {{companyabn}}</p>
+                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">Phone: {{companyphone}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin: 0px; padding: 16px; width: 60mm; max-width: 60mm;">
+                        <p class="link" style="margin-bottom: 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px; padding: 16px; font-weight: 800; font-size: 20px;">
+                            <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 32px;">Pay Now</a></p>
+                    </div>
+                </div>
+                <div style="display: flex; height: 35mm;">
+                    <div style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm;">
+                        <div style="font-size: 14px;">
+                            <h4 style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: bold;">Customer</h4>
+                            <p style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></p>
+                            <div style="min-height:50px; width:30%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress">
+                                {{record.customername}} <br>
+                                {{record.billaddress}} <br>
+                                {{record.billstate}} <br>
+                                {{record.billcountry}}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin: 0px; padding: 16px; width: 60mm; max-width: 60mm;">
+                        <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Statement {{invoicerecord.id}}</h4>
+                        <div style="display: flex; width: 100%;">
+                            <div style="width: 50%; padding-right: 16px;font-weight: bold;">
+                                <label style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</label>
+                                <label class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Opening Bal:</label>
+                            </div>
+                            <div style="width: 50%; padding-left: 16px;">
+                                <p style="margin-bottom: 4px; color: rgb(0 0 0);">{{record.printdate}}.</p>
+                                <p class="total" style="margin-bottom: 4px; color: rgb(0 0 0);">{{record.openingBalance}}.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div style="max-height: 210mm;">
+                    <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
+                        <table id="statement" style="width: 200mm; max-width: 200mm; margin: auto;">
+                            <thead style="color: rgb(251,251,251);">
+                                <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1);">
+                                    <th style="width: 50px; background-color: white; color: rgb(0 0 0);">ID#</th>
+                                    <th style="width: 60px; background-color: white; color: rgb(0 0 0);">Date</th>
+                                    <th style="width: 50px; background-color: white; color: rgb(0 0 0);">Type</th>
+                                    <th style="width: 60px; background-color: white; color: rgb(0 0 0);">Due Date</th>
+                                    <th style="text-align: right; width: 50px; background-color: white; color: rgb(0 0 0);">Total</th>
+                                    <th style="text-align: right; width: 50px; background-color: white; color: rgb(0 0 0);">Paid</th>
+                                    <th style="text-align: right; width: 50px; background-color: white; color: rgb(0 0 0);">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: rgb(0 0 0);">
+                                {{#each item in record.LineItems}}
+                                    <tr>
+                                        <td class="id">{{item.lineID}}</td>
+                                        <td class="date">{{item.date}}</td>
+                                        <td class="type">{{item.type}}</td>
+                                        <td class="type">{{item.duedate}}</td>
+                                        <td class="status" style="text-align: right;">{{item.total}}</td>
+                                        <td class="status" style="text-align: right;">{{item.paidamt}}</td>
+                                        <td class="balance" style="text-align: right;">{{item.balance}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <div style="width: 100%;">
+                    <div style="float: right; margin: 12px; border: none !important; min-width: 90mm;max-width: 90mm;width: 90mm;">
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0);">Closing Balance: </p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="text-align: right; margin-bottom: 8px; font-weight: 800;">{{record.closingBalance}}<br></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+</template>

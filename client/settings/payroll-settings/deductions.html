@@ -1,0 +1,110 @@
+<template name="deductionSettings">
+    <div class="modal fade" role="dialog" tabindex="1" id="deductionSettingsModal" style="z-index:99999;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Deductions List</h4>
+                    <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#noneModal">None</a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <input type="hidden" style="width: 100%; display:none;" id="deductionID" name="deductionID" /> -->
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <table id="tblDeductions" style="width:100%" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="th colDeductionsID hiddenColumn" style="">Deduction ID</th>
+                                        <th class="th colDeductions" style="width: 200px;">Deduction Name</th>
+                                        <th class="th colDeductionsType" style="width: 80px;">Deduction Type</th>
+                                        <th class="th colDeductionsDisplayName" style="">Display Name</th>
+                                        <th class="th colDeductionsAmount" style="width: 80px;">Amount</th>
+                                        <th class="th colDeductionsAccounts" style="">Account</th>
+                                        <th class="th colDeductionsAccountsID hiddenColumn" style="">Account ID</th>
+                                        <th class="th colDeductionsPAYG hiddenColumn" style="">Reduces PAYG Withholding</th>
+                                        <th class="th colDeductionsSuperannuation hiddenColumn" style="">Reduces Superannuation Guarantee Contribution</th>
+                                        <th class="th colDeductionsReportableasW1 hiddenColumn" style="">Excluded from W1 on Activity Statement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tbody>
+
+                                    </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="modal fade" id="noneModal" tabindex="-1" role="dialog" aria-labelledby="noneLabel" aria-hidden="true" style="z-index:9999">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="headerDeductionLabel">Add New Deduction</h5>
+                    <input type="hidden" class="form-control" id="edtDeductionDropDownID" name="edtDeductionDropDownID">
+                    <input type="hidden" class="form-control" id="edtDeductionTitle" name="edtDeductionTitle">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" class="form-control" id="edtDeductionID" name="edtDeductionID">
+                    <form class="row" id="deductionRateForm">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtDeductionDesctiption">Deduction Name</label>
+                                <input type="text" class="form-control" id="edtDeductionDesctiption" name="edtDeductionDesctiption">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtDeductionName">Deduction Type</label>
+                                <select type="search" name="edtDeductionType" class="form-control customEditableSelect" id="edtDeductionType">
+                                    <option value="Nones">Nones</option>
+                                    <option value="Workplace Giving">Workplace Giving</option>
+                                    <option value="Union / Association Fees">Union / Association Fees</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtDeductionAmount">Amount</label>
+                                <input type="text" class="form-control" id="edtDeductionAmount" name="edtDeductionAmount">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="edtDeductionAccount">Account</label>
+                                <input type="text" class="form-control edtExpenseAccountDropDown" id="edtDeductionAccount" name="edtDeductionAccount">
+                                <input type="hidden" class="form-control" id="edtDeductionAccountID" name="edtDeductionAccountID">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="custom-control custom-switch pointer">
+                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ReducesPAYGDeduction" name="formCheck-ReducesPAYGDeduction" value="none1">
+                                <label class="custom-control-label chkBox pointer" for="formCheck-ReducesPAYGDeduction">Reduces PAYG Withholding</label>
+                            </div>
+                            <div class="custom-control custom-switch pointer">
+                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ReducesSuperannuationDeduction" name="formCheck-ReducesSuperannuationDeduction" value="none2">
+                                <label class="custom-control-label chkBox pointer" for="formCheck-ReducesSuperannuationDeduction">Reduces Superannuation Guarantee Contribution</label>
+                            </div>
+                            <div class="custom-control custom-switch pointer">
+                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ExcludedDeduction"  name="formCheck-ExcludedDeduction" value="none3">
+                                <label class="custom-control-label chkBox pointer" for="formCheck-ExcludedDeduction">Excluded from W1 on Activity Statement</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btnSaveDeduction"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

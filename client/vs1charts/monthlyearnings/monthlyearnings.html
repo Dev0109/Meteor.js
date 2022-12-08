@@ -1,0 +1,25 @@
+<template name="monthlyearnings">
+    <style type="text/css">
+        .hideearningschat {
+            display: none;
+        }
+
+        .showearningschat {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id="showearningchat"
+        headerClass="monthlyearningsheader"
+        headerColor="primary"
+        headerTitle="Monthly Earnings"
+        hrefDetails="/agedreceivables"
+        editModalID="editDashboardModal"
+    }}
+    <canvas id="myMonthlyEarningChart" name="myMonthlyEarningChart"></canvas>
+    {{/draggablePanel}}
+</template>

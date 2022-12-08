@@ -1,0 +1,117 @@
+<template name="employeelist">
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <!-- <style>
+            .dataTables_filter {
+                display: none;
+            }
+        </style> -->
+        <div style="margin-top: -24px;">
+            <header style="padding: 16px; padding-bottom: 0px; background-color: #ededed;">
+                <h1 style="margin: 16px; margin-bottom: 0px;">Employee List
+                    <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+                    {{> helpbutton}}
+
+                    <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                    {{> helpadvisor}}
+                                    {{> helpgotoforum}}
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Help View Modal -->
+
+                    <style>
+                        @media screen and (max-width: 376px) {
+                            .btnOpenSettings {
+                                margin-right: 0px;
+                            }
+                        }
+                    </style>
+
+                </h1>
+            </header>
+
+            <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px 20px 20px; background-color: #ededed;">
+
+                <div class="col float-left flex-grow-1">
+                    <button class="btn btn-primary btnRefresh vs1ButtonMargin" type="button"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary vs1ButtonMargin" type="button" ><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
+                    <button class="btn btn-success btnAddVS1User vs1ButtonMargin" type="button" ><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button>
+                </div>
+                {{#if equals isSetupFinished false}}
+                    <div class="col-2 setupIncompleatedMsg text-danger">
+                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                    </div>
+                {{/if}}
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button tablename="tblEmployeelist"}}
+                </div>
+
+            </div>
+
+
+            <div>
+                <div class="card-body p-3 rounded" style="margin: 0px 16px;">
+                  {{> non_transactional_list tablename="tblEmployeelist"}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+
+                    <h4 class="title-header" >Employee</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/employeeslist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/employees.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Help Video Modal -->
+
+    <!-- Start Modal Product -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- {{> refreshbutton}} -->
+                    {{> popemployeelist}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary btnProdSelect" type="button" style="background-color: #00A3D3; border-color: #00A3D3;">Select</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- Import Modal -->
+    {{> import_template}}
+    <!-- End Modal Product -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

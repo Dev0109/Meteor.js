@@ -1,0 +1,255 @@
+<template name="eftExportModal">
+  <style>
+    .btnRemoveAll {
+      font-size: 20px;
+      color: #e74a3a;
+      cursor: pointer;
+    }
+
+    .colIdx,
+    .colApply {
+      text-align: center;
+    }
+
+    .eftInput {
+      border: none;
+    }
+
+    .eftExportTableContainer {
+      margin: 8px 8px 8px 16px;
+      min-height: 300px;
+      max-height: 360px;
+    }
+
+    #eftExportTable {
+      border: solid 1px #e3e3e3;
+    }
+
+    #eftExportTableBody td {
+      padding: 0.1rem;
+    }
+
+    #eftExportTableBody .colIdx,
+    #eftExportTableBody .colApply {
+      /* padding: 0.5rem; */
+      vertical-align: middle;
+    }
+
+    .colAmount {
+      text-align: right;
+    }
+
+    .border-none {
+      border: none !important;
+      border-top: solid 1px #e3e3e3 !important;
+    }
+  </style>
+  <div class="modal-content" style="border: none; padding: 10px">
+    <div class="modal-header justify-content-start" style="border: none;">
+      <h2 style="">
+        <div style="float: left;">Electronic Funds Transfer</div>
+      </h2>
+      {{> helpbutton}}
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-6 col-md-6">
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Account</label>
+                <!-- <select class="form-control pointer" id="sltAccountType" name="sltAccountType">
+                  {{#each item in accountTypes}}
+                  <option value="{{item.accounttypename}}">{{item.description}}
+                  </option>
+                  {{/each}}
+                </select> -->
+                <select type="search" class="form-control" id="sltBankAccountName" name="sltBankAccountName"
+                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
+                <select type="search" class="form-control pointer" id="sltBankName" name="sltBankName">
+                </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Processing Date</label>
+                <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: YYYY-MM-DD">
+                  <div class="input-group date">
+                    <input type="text" class="form-control eftProcessingDate" id="eftProcessingDate"
+                      autocomplete="off" />
+                    <div class="input-group-addon">
+                      <span class="glyphicon glyphicon-th" style="cursor: pointer"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Name of User</label>
+                <input type="text" class="form-control" id="eftUserName" name="eftUserName">
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Number of User</label>
+                <input type="text" class="form-control" id="eftNumberUser" name="eftNumberUser">
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;">
+                <label>Transaction Description</label>
+                <select type="search" class="form-control pointer" id="sltTransactionDescription" name="sltTransactionDescription">
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="table-responsive eftExportTableContainer" style="overflow-y: auto !important;">
+          <table id="eftExportTable" name="eftExportTable"
+            class="dataTable table table-hover table-striped table-bordered eftExportTable">
+            <thead>
+              <tr class="dasnd-moved">
+                <th class="th colApply">Apply?</th>
+                <th class="th colAccountName">Account Name</th>
+                <th class="th colBsb">BSB</th>
+                <th class="th colAccountNo">Account No</th>
+                <th class="th colTransactionCode">Transaction Code</th>
+                <th class="th colLodgement">Lodgement References</th>
+                <th class="th colAmount">Amount</th>
+                <th class="th colFromBsb">From BSB</th>
+                <th class="th colFromAccountNo">From Account No</th>
+                <th class="th colIdx" style="width: 25px">
+                  <!-- <i class="fa fa-close btnRemoveAll"></i> -->
+                </th>
+              </tr>
+            </thead>
+            <tbody id="eftExportTableBody">
+              {{#each item in tabadetailrecordList}}
+              <tr id="{{eftRowId}}">
+                <td class="colApply">
+                  <input type="checkbox" class="isApply" checked="{{item.Apply}}" />
+                </td>
+                <td class="colAccountName">
+                  <input type="text" class="form-control eftInput eftInputAccountName" value="{{item.AccountName}}" />
+                </td>
+                <td class="colBsb">
+                  <input type="text" class="form-control eftInput eftInputBsb" value="{{item.BSB}}" placeholder="___-___" />
+                </td>
+                <td class="colAccountNo">
+                  <input type="text" class="form-control eftInput eftInputAccountNo" value="{{item.CreditDebitAccountNumber}}" />
+                </td>
+                <td class="colTransactionCode">
+                  <select class="form-control pointer sltTranslactionCode" value="{{item.TransactionCode}}">
+                    <option value="{{item.TransactionCode}}">{{item.TransCodeDesc}}</option>
+                    <option value="13">Debit Items</option>
+                    <option value="50">Credit Items</option>
+                    <option value="51">Australian Govt. Security Interest</option>
+                    <option value="52">Basic Family Payments/Additional Family Payment</option>
+                    <option value="53">Pay</option>
+                    <option value="54">Pension</option>
+                    <option value="55">Allotment</option>
+                    <option value="56">Dividend</option>
+                    <option value="57">Debenture/Note Interest</option>
+                  </select>
+                </td>
+                <td class="colLodgement">
+                  <input type="text" class="form-control eftInput eftInputTransactionCode" value="{{item.LodgementReferences}}"/>
+                </td>
+                <td class="colAmount">
+                  <input type="text" class="form-control eftInput eftInputAmount text-right" value="{{item.Amount}}"/>
+                </td>
+                <td class="colFromBsb">
+                  <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" value="{{item.UsersBSB}}"/>
+                </td>
+                <td class="colFromAccountNo">
+                  <input type="text" class="form-control eftInput eftInputFromAccountNo" value="{{item.UsersAccountNumber}}"/>
+                </td>
+                <td class="colIdx addNewRow" style="width: 25px">
+                  <span class="table-remove btnEftRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+            <tr>
+              <td class="border-none">
+              </td>
+              <td class="border-none">
+              </td>
+              <td class="border-none">
+              </td>
+              <td class="border-none">
+              </td>
+              <td class="border-none">
+              </td>
+              <td class="border-none">
+              </td>
+              <td class="border-none text-right">
+                <span id="totalAmount">0</span>
+              </td>
+              <td class="border-none">
+              </td>
+              <td class="border-none">
+              </td>
+              <td class="border-none" style="width: 25px">
+              </td>
+            </tr>
+          </table>
+
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-4">
+          <div class="d-xl-flex justify-content-xl-center">
+            <div align="left" style="width:100%;">
+              <button class="btn btn-primary addNewEftRow" type="button" id="addNewEftRow" style="margin: 14px;">+ Add New</button>
+              <input type="hidden" id="rowID" name="rowID">
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-8">
+          <div class="row justify-content-end desktopButtons">
+            <button class="btn btn-success btnDoEftExport" type="button" style="margin:14px; width: 120px;"><i
+                class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+            <button class="btn btn-danger btnCancelEftExport" type="button" style="margin: 14px; width: 120px;"><i
+                class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+            <button class="btn btn-primary btnOptionsEft" type="button"
+              style="margin: 14px; width: 120px;">Options</button>
+            <button class="btn btn-primary btnSelectAllEft" type="button" style="margin: 14px; width: 120px;">Select
+              All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    {{> accountlistpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+    {{> addaccountpop}}
+  </div> -->
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
+    {{> bankNameModal}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="transactionDescriptionModal">
+    {{> transactionDescriptionModal}}
+  </div>
+
+  {{> eftBankCodesModal}}
+  {{> addNewEftModal}}
+  {{> eftOptionsModal}}
+   
+
+</template>

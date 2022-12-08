@@ -1,0 +1,2038 @@
+<template name="payrolloverview">
+    <style>
+        .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+
+        .card.hovered {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+            cursor: move;
+            transition-duration: 300ms;
+
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <style>
+            .now-success {
+                background-color: #1cc88a;
+            }
+
+            @media screen and (max-width: 376px) {
+                .btnOpenSettings {
+                    margin-right: 0px;
+                }
+            }
+
+            .colPayDate {
+                width: 80px !important;
+            }
+
+            .colPayInBatch {
+                width: 70px !important;
+            }
+
+            .colEarning {
+                width: 80px !important;
+            }
+
+            .colTax {
+                width: 80px !important;
+            }
+
+            .colSuper {
+                width: 80px !important;
+            }
+
+            .colGross {
+                width: 80px !important;
+            }
+
+            .colPaid {
+                width: 10px !important;
+            }
+
+            .colNetPay {
+                width: 80px !important;
+            }
+        </style>
+        <div>
+            <header class="pt-2 pb-3 d-flex align-items-center">
+                <h2 class="mr-1">Payroll Overview</h2>
+                  {{> helpbutton}}
+
+                    <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal"
+                                            href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                    <p class="text-center text-muted"><a
+                                            href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank"
+                                            class="btn btn-primary">Download Help File</a></p>
+                                            {{> helpadvisor}}
+                                            {{> helpgotoforum}}
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                                        data-dismiss="modal" type="button">Close</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Help View Modal -->
+
+
+                <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+                                    {{#if tableheaderrecords}}
+                                    <form class="d-xl-flex align-items-xl-center">
+                                        <div class="flex-grow-1">
+                                            <style>
+                                                .groove {
+                                                    border-style: solid;
+                                                    border-width: 1px;
+                                                    width: 200px;
+                                                    padding: 2px;
+                                                    border-radius: .35rem;
+                                                }
+
+                                                .custom-control-label {
+                                                    position: absolute;
+                                                }
+
+                                                .rngRange {
+                                                    position: relative;
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    width: 100%;
+                                                    pointer-events: auto;
+                                                    background-color: rgb(255, 255, 255);
+                                                    background-clip: padding-box;
+                                                    border: 1px solid rgb(133, 135, 150);
+                                                    border-radius: .3rem;
+                                                    border-style: solid;
+                                                    border-width: 1px;
+                                                    padding: 2px;
+                                                    border-radius: .35rem;
+                                                    color: rgb(128, 128, 128);
+                                                    height: inherit !important;
+                                                }
+
+                                                @media only screen and (max-width: 480px) {
+                                                    .modal.show .modal-dialog {
+                                                        float: inherit !important;
+                                                        left: inherit !important;
+                                                        top: auto !important;
+
+                                                    }
+                                                }
+                                            </style>
+                                            {{#each item in tableheaderrecords}}
+                                            {{#if equals item.sTitle "id"}}
+                                            {{else}}
+
+                                            <div id="{{item.sIndex}}" class="columnSettings">
+                                                <div class="custom-control custom-switch"
+                                                    style="margin: 8px; float:left;">
+                                                    <input class="custom-control-input chkDatatable" type="checkbox"
+                                                        id="chkSalesNo-{{item.sIndex}}"
+                                                        name="chkSalesNo-{{item.sIndex}}"
+                                                        checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
+                                                        value="{{item.sTitle}}">
+                                                    <label class="custom-control-label"
+                                                        for="chkSalesNo-{{item.sIndex}}"></label>
+                                                    <div contenteditable="true" class="groove divcolumn" type="text"
+                                                        value="{{item.sTitle}}" valueupdate="{{item.sClass}}">
+                                                        {{item.sTitle}}</div>
+                                                </div>
+                                                <div class="d-xl-flex align-items-xl-center divColWidth"
+                                                    style="margin: 8px;">
+                                                    <label class="text-nowrap"
+                                                        style="padding-left: 0px;margin-top: 8px;">Width:
+                                                        <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
+                                                    </label>
+                                                    <input class="custom-range rngRange" type="number"
+                                                        style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
+                                                    <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
+                                                </div>
+                                            </div>
+
+                                            {{#if equals item.sVisible true}}
+                                            <script>
+                                                $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
+                                            </script>
+                                            {{else}}
+                                            <script>
+                                                $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
+                                            </script>
+                                            {{/if}}
+
+                                            {{/if}}
+                                            {{/each}}
+                                        </div>
+                                    </form>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save"
+                                        style="margin-right: 5px;"></i>Save</button>
+                                <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i
+                                        class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                        class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- All charts list -->
+            {{> allChartLists  tabGroupID="6" chartGroup="Payroll" }}
+            <style>
+                @media screen and (max-width: 450px) {
+                    .btnNav {
+                        width: 90% !important;
+                        margin: 12px 0px !important;
+                    }
+
+                    .btnNewOptions {
+                        display: none !important;
+                    }
+
+                    .QuoteList {
+                        width: 120px;
+                    }
+
+                    .salesOrderList {
+                        width: 120px;
+                    }
+
+                    .invoiceList {
+                        width: 120px;
+                    }
+
+                    .btnOpenSettingsMobile {
+                        display: block !important;
+                        margin: 12px 0px !important;
+                    }
+
+                    .btnOpenSettingsDesktop {
+                        display: none;
+                    }
+
+                    .dateSelectMobile {
+                        float: right !important;
+                        margin-right: 0px !important;
+                    }
+
+                    .dropdownMobile {
+                        margin: 0px !important;
+                    }
+                }
+            </style>
+            {{#if includePayrollClockOnOffOnly}}
+                <div class="row">
+                    <div class="col-6 col-md-7 col-lg-8">
+                        <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+
+
+                        {{#if equals clockOnOff true}}
+                        <button id="btnClockOnOff" name="btnClockOnOff" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-user-clock" style="padding-right: 5px;"></i>Clock On/Off</button>
+                        {{/if}}
+
+
+                    </div>
+                    <div class="col-6 col-md-5 col-lg-4">
+                        <a class="btn btnNav btnNewOptions float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+
+                        <button class="btn btnNav btn-primary printConfirm float-right" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+
+                        <button style="margin: 12px;" class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div
+                                            class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                            <p style="margin-bottom: 0px;font-weight: bold;">1. Download the
+                                                &lt;&lt;form&gt;&gt; template</p>
+                                            <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Start by
+                                                downloading our template file. This file has the correct column headings to
+                                                allow VS1 Cloud to import your form's details.</p>
+                                            <div class="col flex-grow-1">
+                                                <button class="btn btn-primary templateDownload" type="button"
+                                                    style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv"
+                                                        style="margin-right: 5px;"></i>Download CSV Template</button>
+                                                <button class="btn btn-primary templateDownloadXLSX" type="button"
+                                                    style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv"
+                                                        style="margin-right: 5px;"></i>Download Excel Template</button>
+                                            </div>
+                                            <div class="col d-xl-flex align-items-xl-center"
+                                                style="width: 50px;max-width: 50px;">
+                                                <a href="#" download><i class="fa fa-question-circle-o"
+                                                        data-toggle="tooltip" data-bs-tooltip=""
+                                                        title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                                                        style="margin: 12px;"></i></a>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div
+                                            class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                            <p style="margin-bottom: 0px;font-weight: bold;">2. Copy your items into the
+                                                template</p>
+                                            <p style="margin-left: 12px;margin-bottom: 0px;margin-top: 4px;">Using MS Excel,
+                                                or another spreadsheet editor, you can fill in the VS1 Cloud template with
+                                                your desired details.</p>
+                                            <p style="margin-left: 12px;margin-bottom: 0px;margin-top: 16px;">Important:
+                                                Avoid changing the column headings in the template file.</p>
+                                        </div>
+                                        <hr>
+                                        <div
+                                            class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                            <p style="margin-bottom: 0px;font-weight: bold;">3. Import the updated template
+                                                file</p>
+                                            <p style="margin-left: 12px;margin-bottom: 0px;margin-top: 4px;">Save your
+                                                updated template and you're ready to go.</p>
+
+                                            <div class="divTable" id="file-display">
+                                            </div>
+                                            <input type="file" id="attachment-upload" style="display:none"
+                                                accept=".csv,.txt,.xlsx">
+                                            <style>
+                                                #row1 {
+                                                    display: flex;
+                                                    flex-direction: row;
+                                                    justify-content: space-around;
+                                                }
+
+                                                #column1 {
+                                                    display: flex;
+                                                }
+
+
+                                                #column2 {
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    margin: 16px;
+                                                    padding: .375rem .75rem;
+                                                }
+                                            </style>
+                                            <div id="row1">
+                                                <div id="column1"></div><button
+                                                    class="btn btn-primary btnUploadFile new_attachment_btn" type="button"
+                                                    style="margin: 12px;"><i class="fa fa-cloud-upload"
+                                                        style="margin-right: 5px;"></i>Browse</button>
+                                                <div class="file-name" id="column2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer"><button class="btn btn-primary btnImport" type="button"
+                                            disabled><i class="fas fa-file-import"
+                                                style="margin-right: 5px;"></i>Import</button>
+                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                                class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="btn-group float-right btnNav" style="margin: 12px;">
+                            <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                            <div role="menu" class="dropdown-menu">
+                                <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
+                                <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                            </div>
+                        </div>
+
+                        <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+                    </div>
+                </div>
+
+                <div class="card-body px-0 py-2 rounded">
+
+                    <!-- Start {{> optionNavSalesOverview}} -->
+
+                    <!-- End -->
+
+                    <div class="table-responsive">
+                        <style>
+                            th {
+                                background-color: #ededed;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer>tbody>tr>td,
+                            .JColResizer>tbody>tr>th {
+                                padding: .75rem !important;
+                            }
+
+                            .hiddenColumn {
+                                display: none;
+                            }
+
+                            .showColumn {
+                                display: table-cell;
+                                padding: .75rem;
+                                vertical-align: top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+                        </style>
+                        <table id="tblPayHistorylist" name="tblPayHistorylist"  class="dataTable table table-hover table-striped table-bordered tblPayHistorylist">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colPayNo hiddenColumn">Pay No</th>
+                                    <th class="th colEmployeeName">Employee Name</th>
+                                    <th class="th colEmployeeNo hiddenColumn">Emp #</th>
+                                    <th class="th colCalendar">Calendar</th>
+                                    <th class="th colPayDate">Payment Date</th>
+                                    <th class="th colWages">Wages</th>
+                                    <th class="th colTax">Tax</th>
+                                    <th class="th colSuper">Super</th>
+                                    <th class="th colGross">Gross</th>
+                                    <th class="th colNetPay">Net Pay</th>
+                                    <th class="th colPaid" style="width:20px;">Paid</th>
+                                    <th class="th colCommission hiddenColumn">Commission</th>
+                                    <th class="th colDeduction hiddenColumn">Deduction</th>
+                                    <th class="th colAllowance hiddenColumn">Allowance</th>
+                                    <th class="th colNotes">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if datatablerecords}}
+                                {{#each item in datatablerecords}}
+                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                    <td contenteditable="false" class="colPayNo hiddenColumn">{{item.payid}}</td>
+                                    <td contenteditable="false" class="colEmployeeName">{{item.employeename}}</td>
+                                    <td contenteditable="false" class="colEmployeeNo hiddenColumn">{{item.id}}</td>
+                                    <td contenteditable="false" class="colCalendar">{{item.calendar}}</td>
+
+                                    <td contenteditable="false" class="colPayDate">{{item.paydate}}</td>
+                                    <td contenteditable="false" class="colWages" style="text-align: right!important;">
+                                        {{item.earning}}</td>
+                                    <td contenteditable="false" class="colTax" style="text-align: right!important;">
+                                        {{item.tax}}</td>
+                                    <td contenteditable="false" class="colSuper" style="text-align: right!important;">
+                                        {{item.super}}</td>
+                                    <td contenteditable="false" class="colGross" style="text-align: right!important;">
+                                        {{item.gross}}</td>
+                                    <td contenteditable="false" class="colNetPay" style="text-align: right!important;">
+                                        {{item.netpay}}</td>
+                                    <td contenteditable="false" class="colPaid" style="text-align: center;">
+                                        {{#if equals item.paid true}}
+                                        <div class="custom-control custom-switch"
+                                            style="display: inline-flex !important;">
+                                            <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                                id="chkPaid" checked>
+                                            <label class="custom-control-label"
+                                                style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                        </div>
+                                        {{else}}
+                                        <div class="custom-control custom-switch"
+                                            style="display: inline-flex !important;">
+                                            <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                                id="chkPaid">
+                                            <label class="custom-control-label"
+                                                style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                        </div>
+                                        {{/if}}
+                                    </td>
+                                    <td contenteditable="false" class="colCommission hiddenColumn"
+                                        style="text-align: right!important;">{{item.commission}}</td>
+                                    <td contenteditable="false" class="colDeduction hiddenColumn"
+                                        style="text-align: right!important;">{{item.deduction}}</td>
+                                    <td contenteditable="false" class="colAllowance hiddenColumn"
+                                        style="text-align: right!important;">{{item.allowance}}</td>
+                                    <td contenteditable="false" class="colNotes">{{item.notes}}</td>
+
+                                </tr>
+                                {{/each}}
+                                {{/if}}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {{else}}
+            <div class="row">
+                <div class="col-6 col-md-7 col-lg-8">
+                    <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0px"><i
+                            class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;" data-toggle="modal" data-target="#newPayRunModal">
+                        <i class="fas fa-check" style="margin-right: 5px;"></i>Add Pay Run
+                    </button>
+                    <!-- <button id="btnPayRun" name="btnPayRun" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-hand-holding-usd" style="padding-right: 5px;"></i>Pay Run</button> -->
+                    <!-- <button id="btnNewEmployee" name="btnNewEmployee" class="btn btnNav btn-primary" type="button"
+                        style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New
+                        Employee</button> -->
+                    <!-- <button class="btn btnNav btn-success btnAddVS1User" type="button" style="margin: 12px;"><i
+                            class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
+                    {{#if equals showTimesheet true}}
+                    <button class="btn btnNav btn-primary" id="btnTimesheet" name="btnTimesheet" type="button"
+                        style="margin: 12px;"><i class="fas fa-clock"
+                            style="padding-right: 5px;"></i>Timesheet List</button>
+                    {{/if}}
+
+                    {{#if equals clockOnOff true}}
+                    <button id="btnClockOnOff" name="btnClockOnOff" class="btn btnNav btn-primary" type="button"
+                        role="button" style="margin: 12px;"><i class="fas fa-user-clock"
+                            style="padding-right: 5px;"></i>Clock On/Off</button>
+                    {{/if}}
+
+                    <button id="btnSingleTouchPayroll" name="btnSingleTouchPayroll" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-dollar-sign" style="padding-right: 5px;"></i>ST Payroll</button>
+                    <a href="/payrollleave" class="btn btnNav btn-primary">Payroll Leave</a>
+                </div>
+                <div class="col-6 col-md-5 col-lg-4">
+                    <a class="btn btnNav float-right" role="button" data-toggle="modal" href="#myModal2"
+                        style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+
+                    <button class="btn btnNav btn-primary printConfirm float-right" type="button"
+                        style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+
+                    <button style="margin: 12px;" class="btn btnNav btn-primary float-right" role="button"
+                        data-toggle="modal" href="#importModal"><i class="fas fa-file-import"
+                            style="padding-right: 5px;"></i>Import</button>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div
+                                        class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                        <p style="margin-bottom: 0px;font-weight: bold;">1. Download the
+                                            &lt;&lt;form&gt;&gt; template</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Start by
+                                            downloading our template file. This file has the correct column headings to
+                                            allow VS1 Cloud to import your form's details.</p>
+                                        <div class="col flex-grow-1">
+                                            <button class="btn btn-primary templateDownload" type="button"
+                                                style="margin: 16px;margin-bottom: 0px;"><i class="fas fa-file-csv"
+                                                    style="margin-right: 5px;"></i>Download CSV Template</button>
+                                            <button class="btn btn-primary templateDownloadXLSX" type="button"
+                                                style="margin: 16px;margin-bottom: 0px;"><i class="fas fa-file-csv"
+                                                    style="margin-right: 5px;"></i>Download Excel Template</button>
+                                        </div>
+                                        <div class="col d-xl-flex align-items-xl-center"
+                                            style="width: 50px;max-width: 50px;">
+                                            <a href="#" download><i class="fa fa-question-circle-o"
+                                                    data-toggle="tooltip" data-bs-tooltip=""
+                                                    title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                                                    style="margin: 12px;"></i></a>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div
+                                        class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                        <p style="margin-bottom: 0px;font-weight: bold;">2. Copy your items into the
+                                            template</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Using MS Excel,
+                                            or another spreadsheet editor, you can fill in the VS1 Cloud template with
+                                            your desired details.</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 16px;">Important:
+                                            Avoid changing the column headings in the template file.</p>
+                                    </div>
+                                    <hr>
+                                    <div
+                                        class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                        <p style="margin-bottom: 0px;font-weight: bold;">3. Import the updated template
+                                            file</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your
+                                            updated template and you're ready to go.</p>
+
+                                        <div class="divTable" id="file-display">
+                                        </div>
+                                        <input type="file" id="attachment-upload" style="display:none"
+                                            accept=".csv,.txt,.xlsx">
+                                        <style>
+                                            #row1 {
+                                                display: flex;
+                                                flex-direction: row;
+                                                justify-content: space-around;
+                                            }
+
+                                            #column1 {
+                                                display: flex;
+                                            }
+
+
+                                            #column2 {
+                                                display: flex;
+                                                flex-direction: column;
+                                                margin: 16px;
+                                                padding: .375rem .75rem;
+                                            }
+                                        </style>
+                                        <div id="row1">
+                                            <div id="column1"></div><button
+                                                class="btn btn-primary btnUploadFile new_attachment_btn" type="button"
+                                                style="margin: 12px;"><i class="fa fa-cloud-upload"
+                                                    style="margin-right: 5px;"></i>Browse</button>
+                                            <div class="file-name" id="column2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer"><button class="btn btn-primary btnImport" type="button"
+                                        disabled><i class="fas fa-file-import"
+                                            style="margin-right: 5px;"></i>Import</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                            class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group float-right btnNav" style="margin: 12px;">
+                        <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export"
+                                style="margin-right: 5px;"></i>Export</button>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                            aria-expanded="false" type="button"></button>
+                        <div role="menu" class="dropdown-menu">
+                            <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel"
+                                href="#">Export Excel</a>
+                            <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export
+                                CSV</a>
+                        </div>
+                    </div>
+
+                    <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal"
+                        href="#myModal2" style="margin: 16px; display: none;"><i
+                            class="icon ion-android-more-horizontal"></i></a>
+                </div>
+            </div>
+
+            <div class="card-body  px-0 py-2  rounded" style="display: none;">
+
+                <!-- Start {{> optionNavSalesOverview}} -->
+
+                <!-- End -->
+
+                <div class="table-responsive">
+                    <style>
+                        th {
+                            background-color: #ededed;
+                        }
+
+                        .table-striped tbody tr:nth-of-type(odd) {
+                            background-color: white !important;
+                        }
+
+                        .table-striped tbody tr:nth-of-type(even) {
+                            background-color: #0000000d !important;
+                        }
+
+                        .JColResizer>tbody>tr>td,
+                        .JColResizer>tbody>tr>th {
+                            padding: .75rem !important;
+                        }
+
+                        .hiddenColumn {
+                            display: none;
+                        }
+
+                        .showColumn {
+                            display: table-cell;
+                            padding: .75rem;
+                            vertical-align: top;
+                        }
+
+                        input[type=number]::-webkit-inner-spin-button,
+                        input[type=number]::-webkit-outer-spin-button {
+                            opacity: 1;
+                        }
+                    </style>
+                    <table id="tblPayHistorylist" name="tblPayHistorylist" class="dataTable table table-hover table-striped table-bordered tblPayHistorylist">
+                        <thead>
+                            <tr class="dnd-moved">
+                                <th class="th colPayNo hiddenColumn">Pay No</th>
+                                <th class="th colEmployeeName">Employee Name</th>
+                                <th class="th colEmployeeNo hiddenColumn">Emp #</th>
+                                <th class="th colCalendar">Calendar</th>
+                                <th class="th colPayDate">Payment Date</th>
+                                <th class="th colWages">Wages</th>
+                                <th class="th colTax">Tax</th>
+                                <th class="th colSuper">Super</th>
+                                <th class="th colGross">Gross</th>
+                                <th class="th colNetPay">Net Pay</th>
+                                <th class="th colPaid" style="width:20px;">Paid</th>
+                                <th class="th colCommission hiddenColumn">Commission</th>
+                                <th class="th colDeduction hiddenColumn">Deduction</th>
+                                <th class="th colAllowance hiddenColumn">Allowance</th>
+                                <th class="th colNotes">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#if datatablerecords}}
+                            {{#each item in datatablerecords}}
+                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                <td contenteditable="false" class="colPayNo hiddenColumn">{{item.payid}}</td>
+                                <td contenteditable="false" class="colEmployeeName">{{item.employeename}}</td>
+                                <td contenteditable="false" class="colEmployeeNo hiddenColumn">{{item.id}}</td>
+                                <td contenteditable="false" class="colCalendar">{{item.calendar}}</td>
+
+                                <td contenteditable="false" class="colPayDate">{{item.paydate}}</td>
+                                <td contenteditable="false" class="colWages" style="text-align: right!important;">
+                                    {{item.earning}}</td>
+                                <td contenteditable="false" class="colTax" style="text-align: right!important;">
+                                    {{item.tax}}</td>
+                                <td contenteditable="false" class="colSuper" style="text-align: right!important;">
+                                    {{item.super}}</td>
+                                <td contenteditable="false" class="colGross" style="text-align: right!important;">
+                                    {{item.gross}}</td>
+                                <td contenteditable="false" class="colNetPay" style="text-align: right!important;">
+                                    {{item.netpay}}</td>
+                                <td contenteditable="false" class="colPaid" style="text-align: center;">
+                                    {{#if equals item.paid true}}
+                                    <div class="custom-control custom-switch"
+                                        style="display: inline-flex !important;">
+                                        <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                            id="chkPaid" checked>
+                                        <label class="custom-control-label"
+                                            style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                    </div>
+                                    {{else}}
+                                    <div class="custom-control custom-switch"
+                                        style="display: inline-flex !important;">
+                                        <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                            id="chkPaid">
+                                        <label class="custom-control-label"
+                                            style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                    </div>
+                                    {{/if}}
+                                </td>
+                                <td contenteditable="false" class="colCommission hiddenColumn"
+                                    style="text-align: right!important;">{{item.commission}}</td>
+                                <td contenteditable="false" class="colDeduction hiddenColumn"
+                                    style="text-align: right!important;">{{item.deduction}}</td>
+                                <td contenteditable="false" class="colAllowance hiddenColumn"
+                                    style="text-align: right!important;">{{item.allowance}}</td>
+                                <td contenteditable="false" class="colNotes">{{item.notes}}</td>
+
+                            </tr>
+                            {{/each}}
+                            {{/if}}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{/if}}
+
+            <div class="row">
+                <div class="col-12" style="margin-bottom: 16px;">
+                    <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">
+                        <style>
+                            th {
+                                background-color: #ededed;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer>tbody>tr>td,
+                            .JColResizer>tbody>tr>th {
+                                padding: .75rem !important;
+                            }
+
+                            .hiddenColumn {
+                                display: none;
+                            }
+
+                            .showColumn {
+                                display: table-cell;
+                                padding: .75rem;
+                                vertical-align: top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+
+                            .highlightInput {
+                                border: 0px solid transparent !important;
+                                background-color: rgba(0, 0, 0, 0) !important;
+                                padding: 0px !important;
+                                width: 100% !important;
+                                text-align: right !important;
+                                color: #858796 !important;
+                            }
+
+                            .highlightInput::-webkit-outer-spin-button,
+                            .highlightInput::-webkit-inner-spin-button {
+                                -webkit-appearance: none !important;
+                                margin: 0 !important;
+                            }
+
+                            /* Firefox */
+                            .highlightInput[type=number] {
+                                -moz-appearance: textfield !important;
+                            }
+
+                            .colFlag {
+                                width: 1% !important;
+                            }
+
+                            .tdEmpty {
+                                width: 3% !important;
+                            }
+
+                            @media screen and (max-width: 450px) {
+
+                                #tblTimeSheet_filter {
+                                    width: 70%;
+                                }
+
+                                .form-control-sm {
+                                    width: 70% !important;
+                                }
+
+                                .input-group.date {
+                                    width: 130px !important;
+                                }
+
+                                .dateFromGroup {
+                                    float: right !important;
+                                    width: 183px !important;
+                                }
+
+                                .dateToGroup {
+                                    float: right !important;
+                                    width: 172px !important;
+                                }
+
+                                .myvarFilterForm {
+                                    /* display: inline-flex !important; */
+                                    padding: 0px !important;
+                                }
+
+                                .colDateFilter {
+                                    padding-left: 0px !important;
+                                }
+
+                                .dropdownDateRange {
+                                    float: right !important;
+                                    width: 100% !important;
+                                }
+
+                                .btn-daterange {
+                                    float: right !important;
+                                }
+
+                                .btnSetupSingleTouch {
+                                    margin-bottom: 16px;
+                                    padding: 0px;
+                                }
+                            }
+                            input.timeSheetCheckBox {
+                                display: inline-block;
+                                width: 17px;
+                                height: 17px;
+                                position: relative;
+                                top: 3px;
+                            }
+                        </style>
+
+                    <div class="table-responsive my-3">
+                        <div class="row no-gutters d-xl-flex align-items-xl-end mb-3">
+                            <!-- <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                                <h4 style="font-weight: 600;">Draft Pay Run</h4>
+                            </div> -->
+                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                            </div>
+                            <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                                <button type="button" class="btn btn-primary btnAddTimeSheet" data-toggle="modal" data-target="#addTimeSheetModal" ><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Timesheet</button>
+                            </div>
+                        </div> 
+                        <table id="tblTimeSheet" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTimeSheet">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Surname</th>
+                                    <th>Period</th>
+                                    <th>Status</th>
+                                    <th>Last edited</th>
+                                    <th>Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if timeSheetList }}
+                                    {{#each item in timeSheetList}}
+                                        <tr timesheet-id="{{ item.ID }}">
+                                            <td>{{ getFirstName item.EmployeeName }}</td>
+                                        <td>{{ getLastName item.EmployeeName }}</td>
+                                            <td>Week ending {{ formatDate item.TimeSheetDate }}</td>
+                                            <td>{{ item.Status }}</td>
+                                            <td>{{ lastEdit item.MsTimeStamp }}</td>
+                                            <td>{{ formatHours item.Hours }}</td>
+                                        </tr>
+                                    {{/each}}
+                                {{/if}}
+                              
+                                <!-- <tr>
+                                    <td>Odette</td>
+                                    <td>Garrison</td>
+                                    <td>Week ending 14 Oct 2022</td>
+                                    <td>Processed</td>
+                                    <td>31 Jan 2023 06:09</td>
+                                    <td>48.00</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                        <div class="table-responsive">
+                            <div class="row no-gutters d-xl-flex align-items-xl-end">
+                                <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                                    <h4 style="font-weight: 600;">Draft Pay Run</h4>
+                                </div>
+                                <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                                </div>
+                                <!-- <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                                    <button type="button" class="btn btn-link btnSetupSingleTouch" ><i class="fas fa-wrench" style="margin-right: 5px;"></i>Setup Single Touch Payroll</button>
+                                </div> -->
+                            </div>
+                            <table id="tblPayRunHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRunHistory">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="th colPayRunCalendar" >Calendar</th>
+                                        <th class="th colPayRunPeriod" >Period</th>
+                                        <th class="th colPayRunPaymentDate" >Payment Date</th>
+                                        <th class="th colPayRunWages" >Wages</th>
+                                        <th class="th colPayRunTax" >Tax</th>
+                                        <th class="th colPayRunSuper" >Super</th>
+                                        <th class="th colPayRunNetPay" >Net Pay</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#if draftPayRunRecords}}
+                                        {{#each item in draftPayRunRecords}}
+                                            <tr class="dnd-moved redirect-to-payrun-details" payrun-id="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                                <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
+                                                <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
+                                                <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
+                                                <td class="colPayRunWages" contenteditable="false">{{ item.wages }}</td>
+                                                <td class="colPayRunTax" contenteditable="false">{{ item.taxes }}</td>
+                                                <td class="colPayRunSuper" contenteditable="false">{{ item.superAnnuation }}</td>
+                                                <td class="colPayRunNetPay" contenteditable="false">{{ item.netPay }}</td>
+                                            </tr>
+                                        {{/each}}
+                                    {{/if}}
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr class="mt-2" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12" style="margin-bottom: 16px;">
+                    <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">
+                        <style>
+                            th {
+                                background-color: #ededed;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer>tbody>tr>td,
+                            .JColResizer>tbody>tr>th {
+                                padding: .75rem !important;
+                            }
+
+                            .hiddenColumn {
+                                display: none;
+                            }
+
+                            .showColumn {
+                                display: table-cell;
+                                padding: .75rem;
+                                vertical-align: top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+
+                            .highlightInput {
+                                border: 0px solid transparent !important;
+                                background-color: rgba(0, 0, 0, 0) !important;
+                                padding: 0px !important;
+                                width: 100% !important;
+                                text-align: right !important;
+                                color: #858796 !important;
+                            }
+
+                            .highlightInput::-webkit-outer-spin-button,
+                            .highlightInput::-webkit-inner-spin-button {
+                                -webkit-appearance: none !important;
+                                margin: 0 !important;
+                            }
+
+                            /* Firefox */
+                            .highlightInput[type=number] {
+                                -moz-appearance: textfield !important;
+                            }
+
+                            .colFlag {
+                                width: 1% !important;
+                            }
+
+                            .tdEmpty {
+                                width: 3% !important;
+                            }
+
+                            @media screen and (max-width: 450px) {
+
+                                #tblPayRunList_filter {
+                                    width: 70%;
+                                }
+
+                                .form-control-sm {
+                                    width: 70% !important;
+                                }
+
+                                .input-group.date {
+                                    width: 130px !important;
+                                }
+
+                                .dateFromGroup {
+                                    float: right !important;
+                                    width: 183px !important;
+                                }
+
+                                .dateToGroup {
+                                    float: right !important;
+                                    width: 172px !important;
+                                }
+
+                                .myvarFilterForm {
+                                    /* display: inline-flex !important; */
+                                    padding: 0px !important;
+                                }
+
+                                .colDateFilter {
+                                    padding-left: 0px !important;
+                                }
+
+                                .dropdownDateRange {
+                                    float: right !important;
+                                    width: 100% !important;
+                                }
+
+                                .btn-daterange {
+                                    float: right !important;
+                                }
+                            }
+                        </style>
+                        <div class="table-responsive">
+                            <div class="row no-gutters d-xl-flex align-items-xl-end">
+                                <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                                    <h4 style="font-weight: 600;">Pay Run History</h4>
+                                </div>
+                                
+                                <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                                </div>
+                                <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                                    <div class="dropdown dropdownDateRange" style="margin: 8px; margin-top: 0px;">
+                                        <style>
+                                            .btn-daterange::after {
+                                                display: none;
+                                            }
+                                        </style>
+                                        <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                                        <div class="dropdown-menu" role="menu">
+                                            <h6 class="dropdown-header" role="presentation">Date ranges</h6>
+                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
+                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
+                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
+                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group dateFromGroup" style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                                        <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                                        <div class="input-group date" style="width: 160px;">
+                                            <input type="text" class="form-control formClassDate" id="dateFrom" name="dateFrom">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group dateToGroup" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                                        <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                                        <div class="input-group date" style="width: 160px;">
+                                            <input type="text" class="form-control formClassDate" id="dateTo" name="dateTo">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="tblPayRunList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRunList">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="th colPayRunCalendar" >Calendar</th>
+                                        <th class="th colPayRunPeriod" >Period</th>
+                                        <th class="th colPayRunPaymentDate" >Payment Date</th>
+                                        <th class="th colPayRunWages" >Wages</th>
+                                        <th class="th colPayRunTax" >Tax</th>
+                                        <th class="th colPayRunSuper" >Super</th>
+                                        <th class="th colPayRunNetPay" >Net Pay</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#if payRunHistoryRecords}}
+                                        {{#each item in payRunHistoryRecords}}
+                                            <!-- <tr class="dnd-moved" id="{{item.id}}" name="{{item.id}}">
+                                                <td class="colPayRunCalendar" contenteditable="false"></td>
+                                                <td class="colPayRunPeriod" contenteditable="false"></td>
+                                                <td class="colPayRunPaymentDate" contenteditable="false"></td>
+                                                <td class="colPayRunWages" contenteditable="false"></td>
+                                                <td class="colPayRunTax" contenteditable="false"></td>
+                                                <td class="colPayRunSuper" contenteditable="false"></td>
+                                                <td class="colPayRunNetPay" contenteditable="false"></td>
+                                            </tr> -->
+
+                                            <tr class="dnd-moved redirect-to-payrun-details" payrun-id="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                                <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
+                                                <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
+                                                <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
+                                                <td class="colPayRunWages" contenteditable="false">{{ item.wages }}</td>
+                                                <td class="colPayRunTax" contenteditable="false">{{ item.taxes }}</td>
+                                                <td class="colPayRunSuper" contenteditable="false">{{ item.superAnnuation }}</td>
+                                                <td class="colPayRunNetPay" contenteditable="false">{{ item.netPay }}</td>
+                                            </tr>
+                                        {{/each}}
+                                    {{/if}}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="title-header">Employee</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/employeeslist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media"
+                        style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/payrolloverview.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="clockOnOffModal">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style="margin-bottom: 0px;">Clock On/Off <span id="timesheetID"></span></h4>
+                    <a role="button" data-toggle="modal" href="#helpViewModal2"
+                        style="font-size: 20px; margin-left: 6px;">Help <i class="fa fa-question-circle-o"
+                            style="font-size: 20px;"></i></a>
+                    <div class="input-group" style="width:30%; margin-left: 25px;">
+                        <input class="form-control" id="barcodeScanInput" name="barcodeScanInput" type="text"
+                            placeholder="Enter the barcode" autocomplete="off">
+                        <style>
+                            .btnDesktopSearch {
+                                color: #fff;
+                            }
+                        </style>
+                        <div class="input-group-append">
+                            <a class="btn btn-success btnDesktopSearch" href="" id="btnDesktopSearch" role="button"
+                                style="border-top-right-radius: 0.35rem; border-bottom-right-radius: 0.35rem;"><i
+                                    class="fas fa-search"></i></a>
+                        </div>
+                        <a class="btn btn-success scanBarcode" href="" id="scanBarcode" role="button"
+                            style="margin-left: 8px;"><i class="fas fa-camera"></i></a>
+                        <button type="button" class="btn btn-success" id="mobileBarcodeScanClockOff" data-toggle="modal"
+                            data-target="#scanBarcodeModalClockOff" style="margin-left: 8px; display: none;"><i
+                                class="fas fa-camera"></i></button>
+                        <!-- IDEA: Scan will open the scanning modal UNLESS you type in a valid barcode, then it will open the corresponding Shipping Docket -->
+                    </div>
+                    <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal2">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal"
+                                            href="#helpModal2" class="btn btn-primary helpModal">View Help Video</a></p>
+                                    <p class="text-center text-muted"><a
+                                            href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank"
+                                            class="btn btn-primary">Download Help File</a></p>
+                                            {{> helpadvisor}}
+                                            {{> helpgotoforum}}
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                                        data-dismiss="modal" type="button">Close</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Help View Modal -->
+
+                    <!-- End Help Video Modal -->
+                    <!-- Start Help Video Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal2">
+                        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+                                    <h4 class="title-header">Employee</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/employeeslist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media"
+                                        style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                        <source src="https://erphelpes.com/vs1videos/clockonoff.mp4" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Help Video Modal -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        @media screen and (max-width: 450px) {
+                            .btnLogMobile {
+                                display: block !important;
+                            }
+
+                            .btnLogDesktop {
+                                display: none;
+                            }
+                        }
+
+                        @media screen and (max-width: 1024px) {
+                            .btnClockOn {
+                                font-size: 14px;
+                            }
+
+                            .btnOnHold {
+                                font-size: 14px;
+                            }
+
+                            .btnClockOff {
+                                font-size: 14px;
+                            }
+
+                            .btnTimesheetList {
+                                font-size: 14px;
+                                padding: 6px;
+                            }
+                        }
+                    </style>
+
+                    <div class="row">
+                        <div class="col-12 col-lg-4 col-xl-5">
+                            <div class="form-group" style="margin: 8px 0px;"><label>Employee Name</label><input
+                                    id="clock_employee_name" name="clock_employee_name" type="text" required
+                                    class="form-control employee_name" readonly></div>
+                        </div>
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group" style="margin: 8px 0px;">
+                                        <label>Customer / Job</label>
+                                        <select type="search" class="form-control sltJob" id="sltJob" name="sltJob"
+                                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                            <!-- {{#if jobsrecords}}
+                                                <option value=""></option>
+                                                {{#each itemjob in jobsrecords}}
+                                                    <option value="{{itemjob.jobname}}">{{itemjob.jobname}}</option>
+                                                {{/each}}
+                                            {{/if}} -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Product /
+                                            Service</label>
+                                        <select type="search" id="product-list" name="product-list" class="form-control"
+                                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                            <!-- <option value=""></option> -->
+                                            <!-- {{#if datatablerecords1}}
+                                                {{#each item in datatablerecords1}}
+                                                    <option value="{{item.id}}"  id="{{item.productcost}}">{{item.productname}}</option>
+                                                {{/each}}
+                                            {{/if}} -->
+                                        </select>
+                                        <input id="edtProductCost" name="edtProductCost" type="hidden">
+                                        <input id="updateID" name="updateID" type="hidden">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <div class="form-group" style="margin: 8px 0px;">
+                                <label>Date</label>
+                                <div class="input-group date" style="cursor: pointer;">
+                                    <input type="text" class="form-control formClassDate statementDate" id="dtSODate"
+                                        name="dtSODate" value="{{invoicerecord.saledate}}">
+                                    <div class="input-group-addon" >
+                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .mt-32 {
+                            margin-top: -32px !important;
+                        }
+
+                        input[type=time]::-webkit-datetime-edit-ampm-field {
+                            display: none;
+                        }
+
+                        input[type="time"]::-webkit-calendar-picker-indicator {
+                            background: none;
+                        }
+                    </style>
+                    <div class="row">
+                        <div class="col-12 col-lg-4 col-xl-5">
+                            <div class="form-group" style="margin: 8px 0px;">
+                                <label>Notes</label>
+                                <textarea class="border rounded form-control" rows="3" id="txtNotes" name="txtNotes"
+                                    style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 col-xl-5">
+                            <div class="row">
+                                <div class="col-6 col-md-4 col-lg-4">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Start Time</label><input class="form-control" id="startTime" required
+                                            name="startTime" type="time">
+                                    </div>
+                                    <button class="btn btn-success btnClockOn" type="submit" style="width: 100%;"
+                                        id="btnClockOn" name="btnClockOn"><i class="far fa-clock"
+                                            style="margin-right: 5px;"></i><span class="clockOn">Clock
+                                            On</span></button>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-4">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End
+                                            Time</label><input required class="form-control" id="endTime" name="endTime"
+                                            type="time"></div>
+                                    <span class="btn btn-warning paused"
+                                        style="margin: 8px 0px; width: 100%; margin-top: -72px; background-color: rgba(246, 194, 62, 0.4); cursor: default;">Paused</span>
+                                    <button class="btn btn-warning btnOnHold" type="button" style="width: 100%;"
+                                        id="btnHold"><span class="isPaused"
+                                            style="width: 100% !important; padding:9px;">On Hold</span></button>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-4">
+                                    {{#if equals edithours true}}
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Hours</label>
+                                        <input type="text" id="txtBookedHoursSpent" name="txtBookedHoursSpent" required
+                                            class="form-control" value="00:00">
+                                    </div>
+                                    {{else}}
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Hours</label><input type="text" id="txtBookedHoursSpent"
+                                            name="txtBookedHoursSpent" required class="form-control" value="00:00"
+                                            readonly>
+                                        <input type="hidden" id="txtBookedHoursSpent1" name="txtBookedHoursSpent1">
+                                    </div>
+                                    {{/if}}
+                                    <button class="btn btn-danger btnClockOff" type="submit" style="width: 100%;"
+                                        id="btnClockOff" name="btnClockOff"><i class="fas fa-clock"
+                                            style="margin-right: 5px;"></i>Clock Off</button>
+                                </div>
+                                <div class="col-6 btnLogMobile" style="display: none;">
+                                    <button class="btn btn-success btnTimesheetList" type="button"
+                                        style="margin-top: 85px; width: 45px;" id="btnTimesheetList"><i
+                                            class="far fa-clock"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 btnLogDesktop">
+                            <button class="btn btn-success btnTimesheetList" type="button"
+                                style="margin: 39px 0px; width: 45px;" id="btnTimesheetList"><i
+                                    class="far fa-clock"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                        <div class="col" style="padding: 0px;">
+                            <div class="row" style="padding: 0px 8px;">
+
+                                <div class="col-3 colEmpName" id="colEmpName">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Employee Name</label><input id="employee_name" name="employee_name" type="text" required class="form-control employee_name" readonly></div>
+                                </div>
+                                <div class="col-3 colJobName" id="colJobName">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Job Name</label>
+                                        <select class="form-control sltJob" id="sltJob" name="sltJob">
+                                            {{#if jobsrecords}}
+                                                <option value=""></option>
+                                                {{#each itemjob in jobsrecords}}
+                                                    <option value="{{itemjob.jobname}}">{{itemjob.jobname}}</option>
+                                                {{/each}}
+                                            {{/if}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3 colRate" id="colRate">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Rate</label><input id="hourly_rate" name="hourly_rate" type="text" class="form-control hourly_rate" required>
+                                        <input id="updateID" name="updateID" type="hidden">
+                                    </div>
+                                </div>
+                                <div class="col-3 colStartDate" id="colStartDate">
+                                    <div class="form-group" style="margin: 8px 0px;">
+                                        <label>Date</label>
+                                        <div class="input-group date" style="cursor: pointer;">
+                                            <input type="text" class="form-control formClassDate statementDate" id="dtSODate" name="dtSODate" value="{{invoicerecord.saledate}}">
+                                            <div class="input-group-addon" >
+                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding: 0px 8px;">
+                                <div class="col-12" id="colBookedTimeParent">
+                                    <div class="row">
+                                        <div class="col-3 colNotesParent" id="colNotesParent">
+                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                                <label>Notes</label>
+                                                <textarea class="border rounded form-control" rows="2" id="txtNotes" name="txtNotes" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 colBookedStartTime" id="colBookedStartTime">
+                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                                <label>Start Time</label><input class="form-control" id="startTime" required name="startTime" type="time">
+                                            </div>
+                                            <button class="btn btn-success btnClockOn" type="submit" style="width: 100%;" id="btnClockOn" name="btnClockOn"><i class="far fa-clock" style="margin-right: 5px;"></i>Clock On</button>
+                                        </div>
+                                        <div class="col-2 colBookedEndTime" id="colBookedEndTime">
+                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End Time</label><input required class="form-control" id="endTime" name="endTime" type="time"></div>
+                                            <button class="btn btn-warning" type="button" style="width: 100%;" id="btnHold">On Hold</button>
+                                        </div>
+                                        <div class="col-2 colBookedHours" id="colBookedHours" style="padding-right: .3rem;">
+                                            {{#if equals edithours true}}
+                                                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                                    <label>Hours</label><input type="text" id="txtBookedHoursSpent" name="txtBookedHoursSpent" required class="form-control">
+                                                </div>
+                                            {{else}}
+                                                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                                    <label>Hours</label><input type="text" id="txtBookedHoursSpent" name="txtBookedHoursSpent" required class="form-control" readonly>
+                                                </div>
+                                            {{/if}}
+                                            <button class="btn btn-danger btnClockOff" type="submit" style="width: 100%;" id="btnClockOff" name="btnClockOff"><i class="fas fa-clock" style="margin-right: 5px;"></i>Clock Off</button>
+                                        </div>
+                                        <div class="col-1 colAppointmentList" id="colAppointmentList" style="padding-right: .3rem;">
+                                            <label></label>
+                                            <button class="btn btn-success btnTimesheetList" type="button" style="margin: 15px 0px; width: 48px;" id="btnTimesheetList"><i class="far fa-clock"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding: 0px 8px;">
+                                <div class="col-12 colNotesParent" id="colNotesParent">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Notes</label>
+                                        <textarea class="border rounded form-control" rows="2" id="txtNotes" name="txtNotes" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btnSaveTimeSheet" type="submit" style="margin: 8px;"
+                        id="btnSaveTimeSheet" name="btnSaveTimeSheet"><i class="fa fa-save"
+                            style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-success processTimesheet" type="submit" style="margin: 8px;" id="btnSaveTime"
+                        name="btnSaveTimeSheet"><i class="fa fa-check" style="margin-right: 5px;"></i>Process</button>
+                    <button class="btn btn-danger btnDeleteTimeSheet" type="button" style="margin: 8px;"
+                        autocomplete="off"><i class="fa fa-trash" style="margin-right: 5px;"></i>Delete</button>
+                    <button class="btn btn-secondary" id="btnDeleteAppointment" name="btnDeleteAppointment"
+                        data-dismiss="modal" type="button" style="margin: 8px;"><i class="fa fa-close"
+                            style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" role="dialog" id="frmOnHoldModal">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Reason For Pausing Job</h4><button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 24px;">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch"><input type="checkbox"
+                                    class="custom-control-input" id="break" value="Break" /><label
+                                    class="custom-control-label" for="break">Break</label></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch"><input type="checkbox"
+                                    class="custom-control-input" id="lunch" value="Lunch" /><label
+                                    class="custom-control-label" for="lunch">Lunch</label></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch"><input type="checkbox"
+                                    class="custom-control-input" id="purchase" value="Purchase" /><label
+                                    class="custom-control-label" for="purchase">Purchase</label></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px 0px 0px;">
+                                <label>Notes</label><textarea class="form-control" id="txtpause-notes">
+                                </textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btnPauseJob"><i class="fa fa-save"
+                            style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+                            style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Modal Product -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- {{> refreshbutton}} -->
+                    {{> popemployeelist}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal"
+                        type="button">Close</button>
+                    <button class="btn btn-primary btnProdSelect" type="button"
+                        style="background-color: #00A3D3; border-color: #00A3D3;">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+            style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID"
+                        name="customerSelectLineID" readonly>
+                    {{> customerlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal"
+                        type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+        {{> addcustomerpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+        {{> payrollproductlistpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+        {{> newproductpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="scanBarcodeModalClockOff">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Barcode Scanner</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        #qr-reader-ClockOff>div:first-of-type {
+                            display: none !important;
+                        }
+
+                        #qr-reader-ClockOff__dashboard_section_swaplink {
+                            display: none !important;
+                        }
+
+                        #qr-reader-ClockOff__dashboard_section_csr>div>button:first-of-type {
+                            color: #fff !important;
+                            background-color: #00a3d3 !important;
+                            border-color: #00a3d3 !important;
+                            border: 1px solid transparent;
+                            display: inline-block !important;
+                            font-weight: 400 !important;
+                            text-align: center !important;
+                            vertical-align: middle !important;
+                            padding: .375rem .75rem !important;
+                            font-size: 1rem !important;
+                            line-height: 1.5 !important;
+                            border-radius: .35rem !important;
+                            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+                        }
+                    </style>
+                    <!-- <div id="reader" style="width: 100%"></div> -->
+                    <div id="qr-reader-ClockOff" style="width:100%"></div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button"
+                        data-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addTimeSheetModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable ui-draggable" role="document" style="left: -6px; top: -49px;">
+            <div class="modal-content">
+              <div class="modal-header supportHelpModal ui-draggable-handle">
+                  <h4>Add Timesheet</h4>
+              </div>
+              <div class="modal-body supportHelpModal">
+                <form class="addTimeSheetForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Employee</label>
+                            <input class="form-control es-input select-employee-js employee-select" type="search" autocomplete="off" value="Select an employee">
+
+                            <!-- <select class="form-control employee-select">
+                                <option value="0">Select an employee</option>
+
+                                {{#if employees}}
+                                    {{#each employee in employees}}
+                                        <option value="{{ employee.ID }}">{{ employee.EmployeeName }}</option>
+                                    {{/each}}
+                                {{/if}}
+
+                            </select> -->
+                        </div>
+                        <style>
+                            .hidden {
+                                display: none;
+                            }
+                        </style>
+                        <div class="col-md-6 payperiod-field hidden">
+                            <label>Period</label>
+                            <input class="form-control es-input select-period-js payperiod-select" type="search" autocomplete="off" value="Select a pay period">
+
+                            <!-- <select class="form-control payperiod-select">
+                                <option value="0">Select a pay period</option>
+
+                                {{#if payPeriods}}
+                                    {{#each pay in payPeriods}}
+                                        <option value="{{ pay.ID }}">{{ pay.PayrollCalendarName }} ({{ pay.PayrollCalendarPayPeriod }})</option>
+                                    {{/each}}
+                                {{/if}}
+                             
+                            </select> -->
+                        </div>
+                    </div>
+                </form>
+              </div>
+                <div class="modal-footer ui-draggable-handle">
+                    <button class="btn btn-primary add-new-timesheet" disabled type="button"><i class="fas fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button" autocomplete="off"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    {{> AddPayRunModal }}
+
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="SelectPayRunModal" style="z-index: 99999999 !important;">
+        <!-- {{> AppTableModal AppTableModalData=AppTableModalData}} -->
+    
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>Pay Calendars</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+    
+            <div class="modal-body">
+    
+              <div class="col-12">
+                <div class="table-responsive">
+                  <style>
+                    th {
+                      background-color: #ededed;
+                    }
+    
+                    .table-striped tbody tr:nth-of-type(odd) {
+                      background-color: white !important;
+                    }
+    
+                    .table-striped tbody tr:nth-of-type(even) {
+                      background-color: #0000000d !important;
+                    }
+    
+                    .JColResizer > tbody > tr > td,
+                    .JColResizer > tbody > tr > th {
+                      padding: 0.75rem !important;
+                    }
+    
+                    .hiddenColumn {
+                      display: none;
+                    }
+    
+                    .showColumn {
+                      display: table-cell;
+                      padding: 0.75rem;
+                      vertical-align: top;
+                    }
+    
+                    .colNextPayPeriod {
+                      width: 80px;
+                    }
+    
+                    .colNextPaymentDate {
+                      width: 80px;
+                    }
+    
+                    .colDeleteCalenders {
+                      width: 3% !important;
+                    }
+    
+                    .colHolidayDelete {
+                      width: 3% !important;
+                    }
+    
+                    .colDeletesup {
+                      width: 3% !important;
+                    }
+    
+                    .colDeletepaidrem {
+                      width: 3% !important;
+                    }
+    
+                    .colDeleterei {
+                      width: 3% !important;
+                    }
+                  </style>
+    
+                  <style>
+                    .colPayCalendarName {
+                      width: 25%;
+                    }
+    
+                    .colPayPeriod {
+                      width: 25%;
+                    }
+    
+                    .colNextPayPeriod {
+                      width: 25%;
+                    }
+    
+                    .colNextPaymentDate {
+    
+                      width: 25%;
+                    }
+                  </style>
+    
+                  <table id="tblEmployees" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
+                    <thead>
+                      <tr class="dnd-moved">
+                        <th class="th colCalenderID hiddenColumn">ID</th>
+                        <th class="th colPayCalendarName">Name</th>
+                        <th class="th colPayPeriod">Pay Period</th>
+                        <th class="th colNextPayPeriod">Next Pay Period</th>
+                        <th class="th colNextPaymentDate">Next Payment Date</th>
+                        <th class="th colDelete" style="width: 3% !important;"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#if calendarPeriods}}
+                        {{#each p in calendarPeriods}}
+                          <tr class="dnd-moved" calendar-id="{{p.ID}}" style="cursor: pointer;">
+                            <td contenteditable="false" class="colCalenderID hiddenColumn clickable">{{p.ID}}</td>
+                            <td contenteditable="false" class="colPayCalendarName clickable">{{ p.PayrollCalendarName }}</td>
+                            <td contenteditable="false" class="colPayPeriod clickable">{{ p.PayrollCalendarPayPeriod }}</td>
+                            <td contenteditable="false" class="colNextPayPeriod clickable">{{ formatDate p.PayrollCalendarStartDate }}</td>
+                            <td contenteditable="false" class="colNextPaymentDate clickable">{{ formatDate p.PayrollCalendarFirstPaymentDate }}</td>
+                            <td contenteditable="false" style="width: 3% !important;" class="colDeleteCalenders">
+                              <span class="table-remove">
+                                <button calendar-id="{{p.ID}}" type="button" class="btn btn-danger btn-rounded btn-sm my-0">
+                                  <i class="fa fa-remove"></i>
+                                </button>
+                              </span>
+                            </td>
+                          </tr>
+                        {{/each}}
+                      {{/if}}
+                    </tbody>
+    
+                  </table>
+                </div>
+              </div>
+    
+            </div>
+    
+          </div>
+        </div>
+    
+      </div>
+
+
+      <div class="modal fade" role="dialog" tabindex="-1" id="select-employee-modal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Select an employee</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+        <!--
+                    <div style="margin: 4px; margin-bottom: 8px;">
+                        <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
+                    </div>
+        -->
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <style>
+                                .th.chkBox {
+                                    width: 2% !important;
+                                }
+                                .thQty {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thTax {
+                                    width: 8% !important;
+                                }
+                                .thCostPrice {
+                                    width: 8% !important;
+                                }
+                                .thProductName {
+                                    width: 20% !important;
+                                }
+      
+                                .thColBarcode {
+                                    width: 15% !important;
+                                }
+                            </style>
+                            <table id="tblEmployeesList" class="table table-striped table-bordered tblInventoryService">
+                                <thead>
+                                    <tr  class="dnd-moved">
+                                       
+                                        <th>Employee Name</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#if employees}}
+                                        {{#each employee in employees}}
+                                            <tr employee-id="{{ employee.ID }}">
+                                                <td>{{ employee.EmployeeName }}</td>
+                                            </tr>
+                                        {{/each}}
+                                    {{/if}}
+                                  
+      
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+             
+                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="select-payperiod-modal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Select a Pay Period</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+        <!--
+                    <div style="margin: 4px; margin-bottom: 8px;">
+                        <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
+                    </div>
+        -->
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <style>
+                                .th.chkBox {
+                                    width: 2% !important;
+                                }
+                                .thQty {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thTax {
+                                    width: 8% !important;
+                                }
+                                .thCostPrice {
+                                    width: 8% !important;
+                                }
+                                .thProductName {
+                                    width: 20% !important;
+                                }
+      
+                                .thColBarcode {
+                                    width: 15% !important;
+                                }
+                            </style>
+                            <table id="tblPayPeriodsList" class="table table-striped table-bordered tblInventoryService">
+                                <thead>
+                                    <tr  class="dnd-moved">
+                                       
+                                        <th>Calendar Name</th>
+                                        <th>Calendar Period</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {{#if payPeriods}}
+                                        {{#each pay in payPeriods}}
+                                            <tr calendar-id="{{pay.ID }}">
+                                                <td>{{ pay.PayrollCalendarName }}</td>
+                                                <td>{{ pay.PayrollCalendarPayPeriod }}</td>
+                                            </tr>
+                                        
+                                        {{/each}}
+                                    {{/if}}
+                                    {{#if employees}}
+                                        {{#each employee in employees}}
+                                           
+                                        {{/each}}
+                                    {{/if}}
+                                  
+      
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+             
+                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Modal Product -->
+    <script>
+        modalDraggable();
+    </script>
+</template>

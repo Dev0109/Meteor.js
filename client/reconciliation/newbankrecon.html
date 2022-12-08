@@ -1,0 +1,1248 @@
+<template name="newbankrecon">
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div class="row mb-4" style="padding: 16px;">
+            <h2 class="text-dark mb-0">New Bank Reconciliation
+                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+            </h2>
+            <!-- Start Help View Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                            <p class="text-center text-muted" style="margin: 0;">
+                                <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">
+                                Go To Forum
+                                </a>
+                            </p>
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+                <div class="modal-dialog" role="document" style="max-width: 670px !important;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title-header">Reconciliation List</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                <source src="https://erphelpes.com/vs1videos/newreconciliationvideo.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Help View Modal -->
+        </div>
+        <style>
+            .rightsideheader {
+                padding: 0 !important;
+            }
+            .mb-6 {
+                margin-bottom: 3rem;
+            }
+            .nav-tabs {
+                border-bottom: 0 solid #dddfeb;
+            }
+            .matchedtab {
+                border-color: #8BD2B9 !important;
+                background-color: rgba(23, 166, 115, 0.5) !important;
+            }
+            .matched {
+                position: relative;
+                color: #000;
+            }
+            .matched:after {
+                content: " ";
+                z-index: 10;
+                display: block;
+                position: absolute;
+                height: 100%;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: rgba(23, 166, 115, 0.5);
+            }
+            .matchedRow {
+                color: #000;
+                background: rgba(23, 166, 115, 0.5) !important;
+            }
+            .sortBtn {
+                cursor: pointer;
+            }
+            .sortBtn .fa-sort {
+                color: #858796 !important;
+            }
+            .manage-account {
+                width: 550px !important;
+                /*left: unset !important;*/
+                right: 0 !important;
+            }
+            .manage-account ul {
+                list-style: none;
+                padding: 0;
+            }
+            .textFindMatch {
+                min-height: 80px;
+                text-align: center;
+                background-color: #f2f3f4;
+            }
+            .textFindMatch p {
+                line-height: 80px;
+                margin: 0;
+                text-align: center;
+            }
+            .noTransaction {
+                min-height: 150px;
+                text-align: center;
+                background-color: #f2f3f4;
+            }
+            .noTransaction p {
+                line-height: 150px;
+                margin: 0;
+                text-align: center;
+            }
+            .btnFindMatch {
+                min-height: 110px;
+            }
+            .btnFindMatch button{
+                margin-top: 32px;
+                margin-left: 32px;
+            }
+            .moreDetailValue {
+                color: #000a1e;
+            }
+            .moreDetailLabel {
+                text-align: right;
+            }
+            .moreDetailLine {
+                border-top: 1px solid #ccced2;
+                padding: 10px 0;
+            }
+            .moreDetailBox {
+                border-left: 1px solid #ccced2;
+                border-right: 1px solid #ccced2;
+                border-bottom: 1px solid #ccced2;
+            }
+            .dropdown-toggle::after {
+                display: none;
+            }
+            .dataTables_scroll {
+                overflow:auto;
+            }
+            .dataTables_wrapper {
+                min-height: 400px !important;
+                /*height: 400px;*/
+            }
+            .tab-pane {
+                border: 1px solid;
+                border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;
+            }
+            #tblFindTransaction_wrapper {
+                height: 350px;
+            }
+            #tblViewTransaction_wrapper {
+                height: 250px;
+            }
+            .itemBox {
+                /*border: 1px solid red;*/
+                box-shadow: inset 0 0 3px 3px rgba(0, 10, 30, 0.25);
+                margin-top: 10px;
+                margin-bottom: 10px;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            .compactView {
+                font-size: 12px !important;
+            }
+            .compactView .form-control {
+                font-size: 12px !important;
+            }
+            .compactPadding {
+                padding: 16px;
+                /*padding-bottom: 0;*/
+            }
+            .compactView .compactPadding {
+                padding: 4px;
+                /*padding-bottom: 0;*/
+            }
+            /* If there's a reconciliation match, add class "matched" to the Tab-Pane and "matchedtab" to the Match Nav-Item anchor tag */
+        </style>
+        <div class="row justify-content-center mb-6">
+            <div class="col-12 col-md-11">
+                <div class="card shadow" style="padding: 16px;">
+                    <div class="row">
+                        <div class="col-12 col-md-6" style="display: flex;">
+                            <div style="border-right: 1px solid #e3e6f0; padding-right: 16px; margin-right: 16px;">
+                                <p class="yodleeBalance" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">$ 0.00</p>
+                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Statement Balance</p>
+                            </div>
+                            <div style="border-right: 1px solid #e3e6f0; padding-right: 16px; margin-right: 16px;">
+                                <p class="vs1cloudBalance" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">$ 0.00</p>
+                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Balance in VS1</p>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Select Bank Account</span></div>
+                                <div class="form-group">
+                                    <select type="search" class="form-control" id="bankAccountName" name="bankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                    </select>
+                                    <input type="hidden" style="width: 100%; display:none;" id="bankAccountID" name="bankAccountID" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6" style="display: flex; justify-content: end;">
+                            <div style="padding-right: 16px; margin-right: 16px; text-align: right;">
+                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px; margin-top: 12px;">{{ lastTransactionDate }}</p>
+                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;"><a href="/reconciliationlist">Reconciliation Report</a></p>
+                            </div>
+
+                            <!--<div>
+                                <div class="dropdown" style="margin-top: 14px;">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Manage Account
+                                    </button>
+                                    <div class="dropdown-menu manage-account" aria-labelledby="dropdownMenuButton">
+                                        <div class="row">
+                                            <div class="col-12 col-md-4">
+                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">Find</div>
+                                                <ul>
+                                                    <li><a class="dropdown-item" href="">Account Transactions</a></li>
+                                                    <li><a class="dropdown-item" href="">Bank Statements</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-12 col-md-4">
+                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">New</div>
+                                                <ul>
+                                                    <li><a class="dropdown-item" href="">Spend Money</a></li>
+                                                    <li><a class="dropdown-item" href="">Receive Money</a></li>
+                                                    <li><a class="dropdown-item" href="">Transfer Money</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-12 col-md-4">
+                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">Reconcile</div>
+                                                <ul>
+                                                    <li><a class="dropdown-item" href="">Reconcile Account</a></li>
+                                                    <li><a class="dropdown-item" href="">Bank Rules</a></li>
+                                                    <li><a class="dropdown-item" href="">Reconciliation Report</a></li>
+                                                    <li><a class="dropdown-item" href="">Import a Statement</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <button type="button" class="btn btn-primary" style="margin: 5px 10px;">Edit Account Details</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end mb-2">
+            <span class="float-left">
+                <div class="custom-control custom-switch" style="margin-left: -240px;">
+                    <input class="custom-control-input" type="checkbox" id="swtCompactView" style="cursor: pointer;">
+                    <label class="custom-control-label" for="swtCompactView" style="width: 200px; cursor: pointer;">Compact View</label>
+                </div>
+            </span>
+        </div>
+        <div class="row justify-content-center mb-4">
+            <div class="col-5">
+                <p style="margin-bottom: 0; border-bottom: 1px solid #e3e6f0;">
+                    Review your bank statement lines...
+                </p>
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-5">
+                <p style="margin-bottom: 0; border-bottom: 1px solid #e3e6f0;">
+                    ... then match with your transaction in VS1 Cloud
+                </p>
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-6">
+                    </div>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortDepositSpent">Spent <i class="fas {{ fa_sortDepositSpent }}" style="margin-left: 5px;"></i></span>
+                    </div>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortDepositReceived">Received <i class="fas {{ fa_sortDepositReceived }}" style="margin-left: 5px;"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-6">
+                    </div>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortWithdrawSpent">Spent <i class="fas {{ fa_sortWithdrawSpent }}" style="margin-left: 5px;"></i></span>
+                    </div>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortWithdrawReceived">Received <i class="fas {{ fa_sortWithdrawReceived }}" style="margin-left: 5px;"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="justify-content-center mb-4" id="transactionDataBox">
+        {{#if bankTransactionData}}
+            {{#each itemTransaction in bankTransactionData}}
+                <input type="hidden" id="reconID_{{ itemTransaction.YodleeLineID }}" value="">
+                <input type="hidden" id="paymentID_{{ itemTransaction.YodleeLineID }}" value="">
+                <input type="hidden" id="DepOrWith_{{ itemTransaction.YodleeLineID }}" value="">
+                <input type="hidden" id="PaymentType_{{ itemTransaction.YodleeLineID }}" value="">
+                <div class="justify-content-center" id="divItemBox_{{ itemTransaction.YodleeLineID }}">
+                    <div class="row justify-content-center mb-1" id="divLine_{{ itemTransaction.YodleeLineID }}">
+                        <div class="col-12 col-md-5">
+                            <div class="card shadow" style="border: 1px solid #00a3d3;">
+                                <div class="card-header">
+                                    {{ itemTransaction.YodleeTransactionDate }}
+    <!--                                <div class="dropdown float-right">-->
+    <!--                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"-->
+    <!--                                        style="color: #00a3d3 !important; background-color: rgba(0,0,0,0) !important;"></button>-->
+    <!--                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">-->
+    <!--                                        <a class="dropdown-item" href="" data-toggle="modal" data-target="#newBankRuleModal">Create Bank Rule</a>-->
+    <!--                                        <a class="dropdown-item" href="" style="color: red;" id="btnDeleteLine_{{ itemTransaction.YodleeLineID }}">Delete Line</a>-->
+    <!--                                    </div>-->
+    <!--                                </div>-->
+                                </div>
+                                <div class="card-body" style="padding: 0;">
+                                    <div class="row" style="margin-left: 0; margin-right: 0;">
+                                        <div class="col-6 compactPadding" style="border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0;">
+                                            <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
+                                            <p style="margin-bottom: 0;"><span id="YNote_{{ itemTransaction.YodleeLineID }}">{{ itemTransaction.YodleeDescription }}</span></p>
+                                            <br>
+                                            <a href="" id="btnMoreDetail_{{ itemTransaction.YodleeLineID }}">More Details</a>
+                                        </div>
+                                        <div class="col-3 compactPadding" style="border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
+                                            <span style="float: right; font-weight: 700;">{{ itemTransaction.spentYodleeAmount }}</span>
+                                        </div>
+                                        <div class="col-3 compactPadding" style="border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
+                                            <span style="float: right; font-weight: 700;">{{ itemTransaction.receivedYodleeAmount }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="card-footer">
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-1" style="text-align: center;">
+                            {{#if itemTransaction.matched }}
+                                <div>
+                                    <button type="button" class="btn btn-primary" style="margin: 50% auto 0;">Ok</button>
+                                </div>
+                            {{/if}}
+                            <div>
+                                <button type="button" class="btn btn-primary" style="margin: 50% auto 0; display:none;" id="btnSaveDiscuss_{{ itemTransaction.YodleeLineID }}">Save</button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <div class="card shadow">
+                                <div class="card-header rightsideheader">
+                                    <ul class="nav nav-tabs nav-fill" role="tablist">
+                                        <li class="nav-item" id="matchNav_{{ itemTransaction.YodleeLineID }}">
+                                            <a class="nav-link {{#if itemTransaction.matched }}active matchedtab{{/if}}" data-toggle="tab" href="#match_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="#match">Match</a>
+                                        </li>
+                                        <li class="nav-item" id="createNav_{{ itemTransaction.YodleeLineID }}">
+                                            <a class="nav-link {{#unless itemTransaction.matched }}active{{/unless}}" data-toggle="tab" href="#create_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="create">Create</a>
+                                        </li>
+                                        <li class="nav-item" id="transferNav_{{ itemTransaction.YodleeLineID }}">
+                                            <a class="nav-link" data-toggle="tab" href="#transfer_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="transfer">Transfer</a>
+                                        </li>
+                                        <li class="nav-item" id="discussNav_{{ itemTransaction.YodleeLineID }}">
+                                            <a class="nav-link" data-toggle="tab" href="#discuss_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="discuss">Discuss</a>
+                                        </li>
+                                        <li class="nav-item" id="findMatchNav_{{ itemTransaction.YodleeLineID }}">
+                                            <a class="nav-link" id="btnFindMatch_{{ itemTransaction.YodleeLineID }}" style="font-weight: 700; color: #00a3d3; cursor: pointer;">Find & Match</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-body" style="padding: 0;">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade {{#if itemTransaction.matched }}show active matched{{/if}}" id="match_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="match-tab">
+                                            {{#if itemTransaction.matched }}
+                                                <div class="row" style="margin-left: 0; margin-right: 0;">
+                                                    <div class="col-6 compactPadding" style="border: 1px solid #e3e6f0;">
+                                                        <p style="margin-bottom: 0;">{{ itemTransaction.VS1Date }}</p>
+                                                        <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
+                                                    </div>
+                                                    <div class="col-3 compactPadding" style="border: 1px solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
+                                                        <p style="margin-bottom: 0; text-align:right;">Spent</p>
+                                                        <p style="text-align: right; font-weight: 700;">{{ itemTransaction.spentVS1Amount }}</p>
+                                                    </div>
+                                                    <div class="col-3 compactPadding" style="border: 1px solid #e3e6f0;">
+                                                        <p style="margin-bottom: 0; text-align: right;">Received</p>
+                                                        <p style="text-align: right; font-weight: 700;">{{ itemTransaction.receivedVS1Amount }}</p>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#unless itemTransaction.matched }}
+                                                <div class="textFindMatch" style="display: none;">
+                                                    <p>Find & select matching transactions below</p>
+                                                </div>
+                                                <div class="btnFindMatch" style="display: none;">
+                                                    <button class="btn btn-primary" type="button" id="btnFindMatch2_{{ itemTransaction.YodleeLineID }}">Find & Match</button>
+                                                </div>
+                                            {{/unless}}
+                                        </div>
+                                        <div class="tab-pane fade {{#unless itemTransaction.matched }}show active{{/unless}}" id="create_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="create-tab">
+                                            <div class="row" style="margin-left: 0; margin-right: 0;">
+                                                <div class="col-6 compactPadding" style="padding-bottom: 0;">
+                                                    <div class="form-group mb-0">
+                                                        <label>Who</label>
+                                                        <select type="search" class="form-control" id="who_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                                        <input type="hidden" id="whoID_{{ itemTransaction.YodleeLineID }}" value="">
+<!--                                                        <input type="text" class="form-control" id="who_{{ itemTransaction.YodleeLineID }}" placeholder="Name of the contact..." value="">-->
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 compactPadding" style="padding-bottom: 0;">
+                                                    <div class="form-group mb-0">
+                                                        <label>What</label>
+                                                        <select type="search" class="form-control" id="what_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the account..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                                        <input type="hidden" id="whatID_{{ itemTransaction.YodleeLineID }}" value="">
+                                                        <input type="hidden" id="whatTaxCode_{{ itemTransaction.YodleeLineID }}" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 compactPadding" style="padding-bottom: 5px;">
+                                                    <div class="form-group mb-0">
+                                                        <label>Why</label>
+                                                        <input type="text" class="form-control" id="why_{{ itemTransaction.YodleeLineID }}" placeholder="Enter a description..." value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-4" style="padding: 0 !important; border: 0;">
+                                                    <select type="search" class="form-control" id="ctaxRate_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the tax code..." style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
+                                                    <input type="hidden" id="ctaxRateID_{{ itemTransaction.YodleeLineID }}" value="">
+                                                </div>
+                                                <div class="col-8" style="padding: 6px 16px 4px 4px; border: 1px solid #e3e6f0; border-right: 0;">
+                                                    <a href="" style="float: right;" id="btnAddDetail_{{ itemTransaction.YodleeLineID }}">Add Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="transfer_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="transfer-tab">
+                                            <div class="row" style="margin-left: 0; margin-right: 0;">
+                                                <div class="col-6 compactPadding">
+                                                    <div class="form-group mb-0">
+                                                        <label>Select a Bank Account</label>
+                                                        <select type="search" class="form-control" id="transferAccount_{{ itemTransaction.YodleeLineID }}" value=""
+                                                            style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 compactPadding">
+                                                    <div class="form-group mb-0">
+                                                        <label>Reference</label>
+                                                        <input type="text" class="form-control" id="reference_{{ itemTransaction.YodleeLineID }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="discuss_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="discuss-tab">
+                                            <div class="row" style="margin-left: 0; margin-right: 0;">
+                                                <div class="col-12 compactPadding">
+                                                    <div class="form-group mb-0">
+                                                        <textarea class="form-control" id="discussText_{{ itemTransaction.YodleeLineID }}" rows="6">{{ itemTransaction.VS1Notes }}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow" style="display: none;" id="divLineFindMatchTotal_{{ itemTransaction.YodleeLineID }}">
+                                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="">
+                                    <p style="margin: 16px; font-size: 19px; font-weight: 700;">Total Match: <span id="matchTotal3"></span></p>
+                                    <button class="btn btn-primary" type="button" style="margin: 12px;" id="btnReconcile"><i class="fa fa-save" style="margin-right: 5px;"></i>Reconcile</button>
+                                    <button class="btn btn-secondary" type="button" style="margin: 12px;" id="btnMatchCancel"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mb-3" id="divLineDetail_{{ itemTransaction.YodleeLineID }}" style="display:none;">
+                        <div class="col-12 col-md-11">
+                            <div class="card d-xl-flex flex-row" style="padding: 20px 10px; background-color: #ededed;">
+                                <h4>1. Find & select matching transactions - 0 transactions selected</h4>
+                            </div>
+                            <div class="card">
+                                <div class="card d-xl-flex flex-row" style="padding: 20px 10px;">
+                                    <h4>2. View your selected transactions. Add new transactions, as needed.</h4>
+                                </div>
+                                <div class="card" style="margin: 20px;">
+                                    <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 0 20px; background-color: #ededed;">
+                                        <div class="col d-xl-flex float-left flex-grow-1 mb-4">
+                                            <div class="">
+                                                <label style="margin-top: 30px; margin-right: 16px;" id="labelPaymentMethod_{{ itemTransaction.YodleeLineID }}">Received as</label>
+                                                <select class="form-control pointer"  id="#sltPaymentMethod_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                    <option value="directpayment">Direct Payment</option>
+                                                    <option value="prepayment">Prepayment</option>
+                                                    <option value="overpayment">Overpayment</option>
+                                                </select>
+                                            </div>
+                                            <div class="suppPaymentType" id="suppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-left: 50px; display:none;">
+                                                <label style="margin-top: 30px; margin-right: 16px;">Supplier Payment Type</label>
+                                                <select class="form-control pointer selectSuppPaymentType" id="#sltSuppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                    <option value="Purchase Order">Purchase Order</option>
+                                                    <option value="Bill">Bill</option>
+                                                    <option value="Cheque">Cheque</option>
+                                                </select>
+                                            </div>
+                                        </div>
+<!--                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">-->
+<!--                                            -->
+<!--                                        </div>-->
+                                    </div>
+                                    <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
+                                        <h1 class="transactionTitle" id="transactionTitle_{{ itemTransaction.YodleeLineID }}"></h1>
+                                    </div>
+                                    <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
+                                        <div class="col d-xl-flex float-left flex-grow-1 mb-4">
+<!--                                            <div class="form-group" style="width: 700px;">-->
+<!--                                                <label for="" id="labelWho">From</label>-->
+<!--                                                <input type="text" class="form-control" id="FromWho" value="">-->
+<!--                                            </div>-->
+                                            <input type="hidden" id="YNote_{{ itemTransaction.YodleeLineID }}" value="">
+                                            <div class="form-group" style="margin-left: 20px;">
+                                                <label id="labelSender_{{ itemTransaction.YodleeLineID }}">Customer</label>
+                                                <select type="search" class="form-control" id="sender_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                            </div>
+                                            <div class="form-group" style="margin-left: 20px;">
+                                                <label for="">Date</label>
+                                                <div class="input-group date" style="width: 160px;">
+                                                    <input type="text" class="form-control" id="DateIn_{{ itemTransaction.YodleeLineID }}" >
+                                                    <div class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-th"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" style="margin-left: 20px;">
+                                                <label for="">Reference</label>
+                                                <input type="text" class="form-control" id="reference" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                                            <div class="form-group">
+                                                <label for="">Total</label>
+                                                <input type="text" class="form-control" id="TotalAmount" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body d-xl-flex flex-row no-gutters" style="padding: 0 20px;">
+                                        <hr style="width: 100%; margin-top: 0;" />
+                                    </div>
+                                    <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 0 20px;">
+                                        <div class="col d-xl-flex float-left flex-grow-1">
+                                            <label for="" style="font-weight: 700;">AUD Australlian Dollar</label>
+                                        </div>
+                                        <div class="col d-xl-flex flex-grow-1 justify-content-xl-end align-items-xl-start">
+                                            <label style="margin-top: 10px; margin-right: 16px;">Amounts are</label>
+                                            <select class="form-control pointer" style="margin-top: 10px; width: 200px;" id="taxOption">
+                                                <option value="tax_exclusive">Tax Exclusive</option>
+                                                <option value="tax_inclusive">Tax Inclusive</option>
+                                                <option value="no_tax">No Tax</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-3" style="padding: 0 20px;">
+                                        <div class="table-responsive" style="padding: .375rem .75rem;">
+                                            <style>
+                                                th {
+                                                    background-color: #ededed;
+                                                }
+                                                .table-striped tbody tr:nth-of-type(odd) {
+                                                    background-color: white !important;
+                                                }
+
+                                                .table-striped tbody tr:nth-of-type(even) {
+                                                    background-color: #0000000d !important;
+                                                }
+
+                                                .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                                                    padding: .75rem!important;
+                                                }
+                                                .hiddenColumn{
+                                                    display:none;
+                                                }
+                                                .showColumn {
+                                                    display:table-cell;
+                                                    padding:.75rem;
+                                                    vertical-align:top;
+                                                }
+
+                                                input[type=number]::-webkit-inner-spin-button,
+                                                input[type=number]::-webkit-outer-spin-button {
+                                                    opacity: 1;
+                                                }
+                                                .highlightInput {
+                                                    border: 0 solid transparent !important;
+                                                    background-color: rgba(0, 0, 0, 0) !important;
+                                                    padding: 0 !important;
+                                                    width: 100% !important;
+                                                    text-align: right !important;
+                                                    color: #858796 !important;
+                                                }
+
+                                                .highlightInput::-webkit-outer-spin-button,
+                                                .highlightInput::-webkit-inner-spin-button {
+                                                    -webkit-appearance: none !important;
+                                                    margin: 0 !important;
+                                                }
+
+                                                /* Firefox */
+                                                .highlightInput[type=number] {
+                                                    -moz-appearance: textfield !important;
+                                                }
+                                            </style>
+                                            <table id="tblReconInvoice" style="width:100%" class="table table-striped table-bordered tblReconInvoice">
+                                                <thead>
+                                                    <tr class="dnd-moved">
+                                                        <th class="th colSortDate hiddenColumn">id</th>
+                                                        <th class="th colAccount">Account</th>
+                                                        <th class="th colItem">Item</th>
+                                                        <th class="th colDescription">Description</th>
+                                                        <th class="th colQty">Qty</th>
+                                                        <th class="th colUnitPrice" style="text-align: left!important;">Unit Price</th>
+                                                        <th class="th colSubTotal" style="text-align: left!important;">Sub Total</th>
+                                                        <th class="th colAmountInput" style="text-align: left!important;">AmountEx</th>
+                                                        <!-- <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Unit Price (Inc) <i class="fas fa-random fa-trans"></i></th>-->
+                                                        <th data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="th colDiscount" style="text-align: left!important;">Disc %</th>
+                                                        <th class="th colCustomer">Customer</th>
+                                                        <th class="th colTaxRate " style="text-align: left!important;">Tax Code</th>
+                                                        <th class="th colTaxAmount " style="text-align: left!important;">Tax Amount</th>
+                                                        <th class="th colAmount" style="text-align: left!important;">Amount AUD</th>
+                                                        <!-- <th class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount AUD(Inc) <i class="fas fa-random fa-trans"></i></th>-->
+                                                        <th class="th colStatus"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="dnd-moved" id="firstLine" style="cursor: pointer;">
+                                                        <td contenteditable="false" class="colAccount">
+                                                            <input class="es-input highlightSelect lineAccountName" type="search" value="">
+                                                            <input class="lineAccountID" type="hidden" value="">
+                                                        </td>
+                                                        <td contenteditable="false" class="colItem">
+                                                            <input class="es-input highlightSelect lineProductName" type="search" value="">
+                                                        </td>
+                                                        <td contenteditable="false" class="colDescription">
+                                                            <input class="lineProductDesc colQty highlightInput" type="text" style="text-align: left !important;" value="">
+                                                        </td>
+                                                        <td class="colQty">
+                                                            <input class="lineQty colQty highlightInput" type="number" value="">
+                                                        </td>
+                                                        <td class="colUnitPrice">
+                                                            <input class="lineUnitPrice colUnitPrice highlightInput" type="text" value="">
+                                                        </td>
+                                                        <!--<td class="colUnitPriceInc hiddenColumn">-->
+                                                        <!--   <input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="">-->
+                                                        <!--</td>-->
+                                                        <td contenteditable="false" class="colSubTotal lineSubTotal" style="text-align: right!important;cursor: pointer;"></td>
+                                                        <td class="colAmountInput">
+                                                            <input class="lineAmountInput colAmountInput highlightInput" type="number" value="">
+                                                        </td>
+                                                        <td contenteditable="false" class="lineDiscount colDiscount" style="text-align: right!important;"></td>
+                                                        <td contenteditable="false" class="colCustomer">
+                                                            <input class="es-input highlightSelect lineCustomerName" type="search" value="">
+                                                            <input class="lineCustomerID" type="hidden" value="">
+                                                        </td>
+                                                        <td contenteditable="false" class="colTaxRate" style="text-align: right!important;">
+                                                            <input class="es-input highlightSelect lineTaxRate" type="search" value="">
+                                                        </td>
+                                                        <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;"></td>
+                                                        <td contenteditable="false" class="lineAmount colAmount" style="text-align: right!important;"></td>
+                                                        <!--<td contenteditable="false" class="lineAmount colAmountInc colAmount hiddenColumn" style="text-align: right!important;"></td>-->
+                                                        <td class="text-center">
+                                                            <span class="table-remove btnRemove">
+                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row no-gutters" style="padding: 0 20px;">
+                                        <div class="col-5">
+                                            <div class="row">
+                                                <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new line</button>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 col-md-10">
+                                                    <div class="form-group" style="margin-left: 20px; margin-top: 20px;">
+                                                        <label>Comments</label>
+                                                        <textarea class="form-control" rows="3" id="textComment"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <hr class="spacerHR" style="display: none;">
+                                            <hr class="spacerHR spacerHR2" style="display: none;">
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="row no-gutters" style="margin-bottom: 16px;">
+                                                <div class="col-12 row">
+                                                    <div class="col-6">
+                                                        <p style="margin: 0; margin-left: 16px; font-size: 19px; font-weight: 700;">Subtoal</p>
+                                                    </div>
+                                                    <div class="col-6 d-xl-flex justify-content-xl-end">
+                                                        <p style="margin: 0; font-size: 19px; font-weight: 400; margin-right: 16px;"><span class="sub_total"></span></p>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <hr style="margin: 16px;" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 row" id="taxTotalDiv">
+                                                    <div class="col-6">
+                                                        <p style="margin: 0; margin-left: 16px; font-size: 19px; font-weight: 400;">Total GST</p>
+                                                    </div>
+                                                    <div class="col-6 d-xl-flex justify-content-xl-end">
+                                                        <p style="margin: 0; font-size: 19px; font-weight: 400; margin-right: 16px;"><span class="tax_total"></span></p>
+                                                    </div>
+                                                    <div class="col-12" id="taxTotalDivHR">
+                                                        <hr style="margin: 16px;" />
+                                                    </div>
+                                                </div>
+                                                {{#if equals itemTransaction.deporwith 'received' }}
+                                                <div class="col-12 row">
+                                                    <div class="col-6">
+                                                        <p style="margin: 0; margin-left: 16px; font-size: 19px; font-weight: 400;">Discount</p>
+                                                    </div>
+                                                    <div class="col-6 d-xl-flex justify-content-xl-end">
+                                                        <p style="margin: 0; font-size: 19px; font-weight: 400; margin-right: 16px;"><span class="discount_total"></span></p>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <hr style="margin: 16px;" />
+                                                    </div>
+                                                </div>
+                                                {{/if }}
+                                                <div class="col-12 row">
+                                                    <div class="col-6">
+                                                        <p style="margin: 0; margin-left: 16px; font-size: 19px; font-weight: 700;">TOTAL</p>
+                                                    </div>
+                                                    <div class="col-6 d-xl-flex justify-content-xl-end">
+                                                        <p style="margin: 0; font-size: 19px; font-weight: 700; margin-right: 16px;"><span class="grand_total"></span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-gutters" style="padding: 0 20px;">
+                                        <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;">
+                                            <button class="btn btn-primary" type="button" style="margin: 12px;" id="btnSave"><i class="fa fa-save" style="margin-right: 5px;"></i>Save Transaction</button>
+                                            <button class="btn btn-secondary" type="button" style="margin: 12px;" id="btnCancel"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card d-xl-flex flex-row" style="padding: 20px 10px; background-color: #ededed;">
+                                <h4>3. The sum of your selected transactions must match the money <span id="textSORBottom">spent - Spent</span> <span id="totalBottom1"></span> - Total is out by <span id="totalBottom2"></span></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mb-3" id="divLineFindMatch_{{ itemTransaction.YodleeLineID }}" style="display:none;">
+                        <style>
+                            th {
+                                background-color: #ededed;
+                            }
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                                padding: .75rem!important;
+                            }
+                            .hiddenColumn{
+                                display:none;
+                            }
+                            .showColumn {
+                                display:table-cell;
+                                padding:.75rem;
+                                vertical-align:top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+                        </style>
+                        <div class="col-12 col-md-11">
+                            <div class="card">
+                                <div class="card d-xl-flex flex-row justify-content-xl-center" style="padding-top: 10px;">
+                                    <div class="col-5 d-xl-flex float-left flex-grow-1" style="padding: 20px 10px;">
+                                        <h4>1. Find & select matching transactions</h4>
+                                    </div>
+                                    <div class="col-7 d-xl-flex justify-content-xl-end align-items-xl-start">
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch" style="padding-top: 30px;">
+                                                <input type="checkbox" class="custom-control-input" id="chkSOR_{{ itemTransaction.YodleeLineID }}" style="cursor: pointer;" checked/>
+                                                <label style="position: relative !important; cursor: pointer;" class="custom-control-label" for="chkSOR_{{ itemTransaction.YodleeLineID }}" id="labelChkSOR">Show Spent Items</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 20px;">
+                                            <label for="">Search by name or reference</label>
+                                            <input type="text" class="form-control" id="searchName" value="">
+                                        </div>
+                                        <div class="form-group" style="margin-left: 10px;">
+                                            <label for="">Search by amount</label>
+                                            <input type="text" class="form-control" id="searchAmount" value="">
+                                        </div>
+                                        <div class="form-group" style="margin-left: 20px;">
+                                            <button class="btn btn-primary" type="button" id="btnGoSearch" style="margin-top: 32px;">Go</button>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 10px;">
+                                            <button class="btn btn-secondary" type="button" id="btnClearSearch" style="margin-top: 32px;">Clear Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card" style="margin: 20px;">
+                                    <div class="card-body p-3" style="padding: 0 20px;">
+                                        <div class="table-responsive" style="padding: .375rem .75rem;">
+                                            <table id="tblFindTransaction" style="width:100%;" class="table table-bordered tblFindTransaction">
+                                                <thead>
+                                                    <tr class="dnd-moved">
+                                                        <th class="no-sort" style="width:15px;"></th>
+                                                        <th class="th colSortDate hiddenColumn">id</th>
+                                                        <th style="width:80px;">Date</th>
+                                                        <th style="width:200px;">Name</th>
+                                                        <th style="width:100px;">Ref</th>
+                                                        <th style="width:200px;">Description</th>
+                                                        <th class="text-right" style="width:120px;">Spent</th>
+                                                        <th class="text-right" style="width:120px;">Received</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {{#if matchTransactionData}}
+                                                    {{#each item in matchTransactionData}}
+                                                        <tr class="dnd-moved">
+                                                            <td style="width:15px;">
+                                                                <div class="custom-control custom-checkbox pointer" style="width:15px;">
+                                                                    <input type="checkbox" class="custom-control-input selectMatchRow" id="formCheck{{ itemTransaction.YodleeLineID }}_{{item.ID}}" />
+                                                                    <label class="custom-control-label" for="formCheck{{ itemTransaction.YodleeLineID }}_{{item.ID}}"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td contenteditable="false" class="colSortDate hiddenColumn">{{item.SortDate}}</td>
+                                                            <td class="colDate">{{item.VS1Date}}</td>
+                                                            <td class="colName">{{item.CompanyName}}</td>
+                                                            <td class="colRef">{{item.ReferenceNo}}</td>
+                                                            <td class="colDesc">{{item.PaymentType}}</td>
+                                                            <td class="text-right colSpentAmount">{{item.spentVS1Amount}}</td>
+                                                            <td class="text-right colReceivedAmount">{{item.receivedVS1Amount}}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card d-xl-flex flex-row justify-content-xl-center">
+                                    <div class="col-8 d-xl-flex float-left flex-grow-1" style="padding: 20px 10px;">
+                                        <h4>2. View your selected transactions. Add new transactions, as needed.</h4>
+                                    </div>
+                                    <div class="col-4 d-xl-flex justify-content-xl-end align-items-xl-start">
+                                        <div class="btn-group" style="margin-top:20px; margin-right:20px;">
+                                            <button type="button" class="btn btn-primary" id="NewTransactionOption">New Transaction</button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-caret-down"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item btnReconcile pointer" id="btnSpendMoney">Spend Money</a>
+                                                <a class="dropdown-item btnReconList pointer" id="btnTransferMoney">Transfer Money</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card" style="margin: 20px;">
+                                    {{#if viewTransactionData}}
+                                    <div class="card-body p-3" style="padding: 0 20px;">
+                                        <div class="table-responsive" style="padding: .375rem .75rem;">
+                                            <table id="tblViewTransaction" style="width:100%" class="table table-bordered tblViewTransaction">
+                                                <thead>
+                                                    <tr class="dnd-moved">
+                                                        <th class="no-sort" style="width:15px;"></th>
+                                                        <th class="th colSortDate hiddenColumn">id</th>
+                                                        <th style="width:80px;">Date</th>
+                                                        <th style="width:200px;">Name</th>
+                                                        <th style="width:100px;">Ref</th>
+                                                        <th style="width:200px;">Description</th>
+                                                        <th class="text-right" style="width:120px;">Spent</th>
+                                                        <th class="text-right" style="width:120px;">Received</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{#each item in viewTransactionData}}
+                                                        <tr class="dnd-moved matchedRow">
+                                                            <td style="width:15px;">
+                                                                <div class="custom-control custom-checkbox pointer" style="width:15px;">
+                                                                    <input type="checkbox" class="custom-control-input selectViewRow" id="formCheck{{ itemTransaction.YodleeLineID }}_{{item.ID}}" checked/>
+                                                                    <label class="custom-control-label" for="formCheck{{ itemTransaction.YodleeLineID }}_{{item.ID}}"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td contenteditable="false" class="colSortDate hiddenColumn">{{item.SortDate}}</td>
+                                                            <td class="colDate">{{item.VS1Date}}</td>
+                                                            <td class="colName">{{item.CompanyName}}</td>
+                                                            <td class="colRef">{{item.ReferenceNo}}</td>
+                                                            <td class="colDesc">{{item.PaymentType}}</td>
+                                                            <td class="colSpentAmount text-right">{{item.spentVS1Amount}}</td>
+                                                            <td class="colReceivedAmount text-right">{{item.receivedVS1Amount}}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    {{/if}}
+                                    {{#unless viewTransactionData}}
+                                        <div class="card-body noTransaction">
+                                            <p>No transactions have been selected</p>
+                                        </div>
+                                    {{/unless}}
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card d-xl-flex flex-row" style="padding: 20px 10px; background-color: #ededed;">
+                                    <h4>3. The sum of your selected transactions must match the money received. Make adjustments, as needed.</h4>
+                                </div>
+                                <div class="row no-gutters" style="padding: 30px 20px 0 20px;">
+                                    <div class="col-9">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p style="margin: 0; margin-left: 16px; font-size: 19px; font-weight: 700;">Subtoal</p>
+                                            </div>
+                                            <div class="col-6 d-xl-flex justify-content-xl-end">
+                                                <p style="margin: 0; font-size: 19px; font-weight: 400; margin-right: 16px;"><span id="matchSubtotal"></span></p>
+                                            </div>
+                                            <div class="col-12">
+                                                <hr style="margin: 16px;" />
+                                            </div>
+                                            <div class="col-6">
+                                                <p style="margin: 0; margin-left: 16px; font-size: 19px; font-weight: 700;">Must match money spent: <span id="matchTotal"></span></p>
+                                            </div>
+                                            <div class="col-6 d-xl-flex justify-content-xl-end">
+                                                <p style="margin: 0; font-size: 19px; font-weight: 400; margin-right: 16px;"><span id="matchTotal2"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="padding-top:63px; padding-left:20px;">
+                                        <p id="textOutBy" style="display:none; color:red; text-color:red;"><i class="fa fa-info-circle" style="margin-right: 5px;"></i>Total is out by: <span id="matchOutBy"></span></p>
+                                        <p id="textMatched" style="display:none; color:green; text-color:green;"><i class="fa fa-check-circle" style="margin-right: 5px;"></i>Totals Match</p>
+                                    </div>
+                                </div>
+    <!--                            <div class="row no-gutters" style="padding: 0 20px;">-->
+    <!--                                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;">-->
+    <!--                                    <button class="btn btn-primary" type="button" style="margin: 12px;" id="btnReconcile"><i class="fa fa-save" style="margin-right: 5px;"></i>Reconcile</button>-->
+    <!--                                    <button class="btn btn-secondary" type="button" style="margin: 12px;" id="btnMatchCancel"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        {{/if}}
+        </div>
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-md-11">
+                <div class="card shadow" style="padding: 16px;">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="float-left">
+                                Page <strong>{{ page_number }}</strong> of <strong>{{ page_count }}</strong>
+                                <span style="font-weight: 200;">({{ page_total }} items to be reconciled)</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="dropdown">
+                                <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #00a3d3 !important; background-color: rgba(0,0,0,0) !important; cursor: pointer;">
+                                    Jump to Page : <strong>{{ page_number }}</strong><i class="fa fa-sort-desc" style="margin-left: 5px;vertical-align: top;"></i>
+                                </span>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
+                                    {{#each i in page_list}}
+                                    <a class="dropdown-item" href="" onclick="window.open('/newbankrecon?page={{ i }}{{ sort_param }}', '_self');"> {{ i }} </a>
+                                    {{/each }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+<!--                            <span class="float-left">-->
+<!--                                <div class="custom-control custom-switch">-->
+<!--                                    <input class="custom-control-input" type="checkbox" value="" id="swtSuggestPreviousEntries" name="swtSuggestPreviousEntries" style="cursor: pointer;" checked>-->
+<!--                                    <label class="custom-control-label" for="swtSuggestPreviousEntries" style="width: 200px; cursor: pointer;">Suggest Previous Entries</label>-->
+<!--                                </div>-->
+<!--                            </span>-->
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <span class="float-right">
+                                <div class="custom-control custom-switch">
+                                    <button class="btn btn-primary btnPageStart" type="button" style="width: 80px; margin: 3px;"><span><i class="fa fa-angle-double-left" style="margin-right: 5px;"></i>Start</span></button>
+                                    <button class="btn btn-primary btnPagePrev" type="button" style="width: 80px; margin: 3px;" ><span><i class="fa fa-angle-left" style="margin-right: 5px;"></i>Prev</span></button>
+                                    <button class="btn btn-primary btnPageNext" type="button" style="width: 80px; margin: 3px;"><span>Next <i class="fa fa-angle-right" style="padding-right: 8px;"></i></span></button>
+                                    <button class="btn btn-primary btnPageEnd" type="button" style="width: 80px; margin: 3px;">End <i class="fa fa-angle-double-right" style="margin-right: 5px;"></i></button>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-md-11">
+                <div class="card shadow" style="padding: 16px;">
+                    <div class="row justify-content-center">
+<!--                        <button class="btn btn-success btnSave" type="button" style="margin: 0 16px;">-->
+<!--                            <i class="fa fa-save" style="padding-right: 8px;"></i>Save-->
+<!--                        </button>-->
+
+<!--                        <button class="btn btn-primary printConfirm" type="button" style="margin: 0 16px;">-->
+<!--                            <i class="fa fa-print" style="padding-right: 8px;"></i>Print-->
+<!--                        </button>-->
+
+                        <button class="btn btn-secondary btnBack" type="button" style="margin: 0 16px;">
+                            <i class="fa fa-remove" style="padding-right: 8px;"></i>Back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newBankRuleModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Bank Rules</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <button type="button" class="btn btn-primary" style="margin-right: 8px;"><i class="fas fa-plus" style="margin-right: 5px;"></i> Create Rule</button>
+                            <button type="button" class="btn btn-primary" style="margin-left: 8px;"><i class="fas fa-check" style="margin-right: 5px;"></i> Reconcile</button>
+                        </div>
+                        <div class="col-12">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-spendmoneyrules" role="tab" aria-controls="pills-home" aria-selected="true">Spend Money Rules</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-receivemoneyrules" role="tab" aria-controls="pills-profile" aria-selected="false">Receive Money Rules</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-transferrules" role="tab" aria-controls="pills-contact" aria-selected="false">Transfer Rules</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-bankrules">
+                                <div class="tab-pane fade show active" id="pills-spendmoneyrules" role="tabpanel" aria-labelledby="">...</div>
+                                <div class="tab-pane fade" id="pills-receivemoneyrules" role="tabpanel" aria-labelledby="">...</div>
+                                <div class="tab-pane fade" id="pills-transferrules" role="tabpanel" aria-labelledby="">...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" type="button" style="margin: 0 16px;">
+                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                    </button>
+                    <button class="btn btn-secondary" type="button" style="margin: 0 16px;">
+                        <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="moreDetailModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 640px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Statement Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row moreDetailBox">
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Transaction Date</div>
+                                <div class="col-md-6 moreDetailValue" id="mdTransactionDate"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Category</div>
+                                <div class="col-md-6 moreDetailValue" id="mdCategory"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Category Type</div>
+                                <div class="col-md-6 moreDetailValue" id="mdCategoryType"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Description</div>
+                                <div class="col-md-6 moreDetailValue" id="mdDescription"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Transaction Amount</div>
+                                <div class="col-md-6 moreDetailValue" id="mdTransactionAmount"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Transaction Type</div>
+                                <div class="col-md-6 moreDetailValue" id="mdTransactionType"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Cheque No.</div>
+                                <div class="col-md-6 moreDetailValue" id="mdChequeNo"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row moreDetailLine">
+                                <div class="col-md-6 moreDetailLabel">Type</div>
+                                <div class="col-md-6 moreDetailValue" id="mdType"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade newbankrecon" role="dialog" tabindex="-1" id="taxRateListModal">
+        {{> taxratelistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
+        {{> newtaxratepop}}
+    </div>
+    <div class="modal fade newbankrecon" role="dialog" tabindex="-1" id="bankAccountListModal">
+        {{> accountlistpop}}
+    </div>
+    <div class="modal fade newbankrecon" role="dialog" tabindex="-1" id="fullAccountListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <style>
+                                .thAccountName {
+                                    width: 20% !important;
+                                }
+                                .thDescription {
+                                    width: 40% !important;
+                                }
+                                .thAccountNo {
+                                    width: 10% !important;
+                                }
+                                .thType {
+                                    width: 10% !important;
+                                }
+                                .thBalance {
+                                    width: 10% !important;
+                                }
+                                .thTaxRate {
+                                    width: 10% !important;
+                                }
+                            </style>
+                            <table id="tblFullAccount" style="width:100%" class="table table-striped table-bordered tblFullAccount">
+                                <thead>
+                                <tr class="dnd-moved">
+                                    <th class="thAccountName">Account Name</th>
+                                    <th class="thDescription">Description</th>
+                                    <th class="thAccountNo">Account No</th>
+                                    <th class="thType">Type</th>
+                                    <th class="thBalance" style="text-align: left!important;">Balance</th>
+                                    <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
+                                    <th class="thAccountID hiddenColumn">Account ID</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+        {{> addaccountpop}}
+    </div>
+    <div class="modal fade newbankrecon" role="dialog" tabindex="-1" id="productListModal">
+        {{> productlistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+        {{> newproductpop}}
+    </div>
+    <div class="modal fade customerListModal newbankrecon" role="dialog" tabindex="-1" id="customerListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
+                    {{> customerlistpop}}
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+        {{> addcustomerpop}}
+    </div>
+    <div class="modal fade supplierListModal newbankrecon" role="dialog" tabindex="-1" id="supplierListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content supplierListContent">
+                <div class="modal-header">
+                    <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
+                    {{> supplierlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
+        {{> addsupplierpop}}
+    </div>
+    <script>
+        modalDraggable();
+    </script>
+</template>

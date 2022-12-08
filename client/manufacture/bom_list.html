@@ -1,0 +1,39 @@
+<template name="bom_list">
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div style="margin-top: 24px">
+            <header style="padding: 16px; padding-bottom: 1px; background-color: #ededed;">
+                <h2 style="margin: 16px 16px 0;">Bill Of Materials {{> helpbutton}}
+                </h2>
+            </header>
+            <div class="row d-xl-flex flex-row justify-content-between" style="padding: 0px 20px; background-color: #ededed;">
+                 <div class="col-6 col-md-8 d-xl-flex flex-grow-1 align-items-xl-start">
+                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button id="btnNewBOM" name="btnNewBOM" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New BOM</button>
+                </div>
+                {{#if equals isSetupFinished false}}
+                    <div class="col-2 setupIncompleatedMsg text-danger">
+                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                    </div>
+                {{/if}}
+                <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button tablename="tblBOMList"}}
+                </div>
+            </div>
+            <div>
+                <div class="card-body p-3 rounded" style="margin: 0px 16px;">
+                  {{> non_transactional_list tablename="tblBOMList"}}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Import Modal -->
+    {{> import_template}}
+    <script>
+        modalDraggable();
+    </script>
+</template>

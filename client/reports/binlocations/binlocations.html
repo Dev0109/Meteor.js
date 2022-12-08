@@ -1,0 +1,48 @@
+<template name="binlocationslist"> 
+    {{# vs1_report_template tabledisplayname="Bin Location List" tablename="binlocationslist" dateAsAt=dateAsAt}} 
+        <div class="table-responsive">
+            <table class="table table-sm" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-active customDoubleTableHeading">
+                        <th>Department</th>
+                        <th>Bin Location</th>
+                        <th>Bin No</th>
+                        <th>Volume Available</th>
+                        <th>Volume Used</th>
+                        <th>Volume Total</th>
+                        <th>Bin ID</th>
+                        <th>Class ID</th>
+                        <th>Global Ref</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#if records}}
+                        {{#each arrayify records}}
+                            <tr>
+                                <td colspan="12" style="font-weight: 800;">{{ value.BinClassName }}</td>
+                            </tr>
+                            {{#each item in value.SubAccounts}}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ item.fields.BinLocation }}</td>
+                                    <td>{{ item.fields.BinNumber }}</td>
+                                    <td class="positiveVolume ">{{#if isZeroValue item.fields.BinVolumeAvailable}} {{ item.fields.BinVolumeAvailable }} {{/if}}</td>
+                                    <td class="neutralVolume">{{#if isZeroValue item.fields.BinVolumeUsed}} {{ item.fields.BinVolumeUsed }} {{/if}}</td>
+                                    <td class="positiveVolume">{{#if isZeroValue item.fields.BinVolume}} {{ item.fields.BinVolume }} {{/if}}</td>
+                                    <td>{{ item.fields.ID }}</td>
+                                    <td></td>
+                                    <td>{{ item.fields.GlobalRef }}</td>
+                                </tr>
+                            {{/each}}
+                        {{/each}}
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                        </tr>
+                    {{/if}}
+                </tbody>
+            </table>
+        </div>
+    {{/vs1_report_template}}
+</template>
+

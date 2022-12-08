@@ -1,0 +1,89 @@
+<template name="profitandlosschart">
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=50
+        id="profitandlosschartparent"
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Profit and Loss"
+        hrefDetails="/newprofitandloss"
+        editModalID="editDashboardModal"
+    }}
+        <div style="height: inherit;">
+            <div class="row no-gutters align-items-center newHeightForLine">
+                <div class="col-4 colSalesLabel" id="colSalesLabel">
+                    <div class="text-dark d-xl-flex flex-column justify-content-xl-center font-weight-bold h5 mb-0 mr-3"><span class="spnTotalSales">0.00</span></div><span
+                        style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Sales</span>
+                </div>
+                <div class="col-8 colSales" id="colSales">
+                    <a href="/newprofitandloss?daterange=ignore" class="progress progress-sm asd" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 85px;" title="Total Sales">
+                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{salesperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{salesperc}}%;"><span class="sr-only">{{salesperc}}%</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="row no-gutters align-items-center newHeightForLine" >
+                <div class="col-4 colExpensesLabel" id="colExpensesLabel">
+                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span class="spnTotalExpense">0.00</span></div><span style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Expenses</span>
+                </div>
+                <div class="col-8 colExpenses" id="colExpenses">
+                    <a href="/newprofitandloss?daterange=ignore" class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 85px;" title="Total Expenses">
+                        <div class="cssExpense progress-bar bg-danger progress-bar-striped progress-bar-animated" aria-valuenow="{{expenseperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{expenseperc}}%;"><span
+                                class="sr-only">{{expenseperc}}%</span></div>
+                        </a>
+                </div>
+            </div>
+            <div class="row no-gutters align-items-center newHeightForLine" >
+                <div class="col-4 colIncomeLabel" id="colIncomeLabel">
+                    <div class="text-dark d-xl-flex flex-column justify-content-xl-center font-weight-bold h5 mb-0 mr-3"><span class="spnTotalnetincome">0.00</span></div><span style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Net
+                        Income</span>
+                </div>
+                <div class="col-8 colIncome" id="colIncome">
+                    <a href="/newprofitandloss?daterange=ignore" class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 85px;" title="Net Income">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{netincomeperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{netincomeperc}}%;"><span
+                                class="sr-only">{{netincomeperc}}%</span></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {{/draggablePanel}}
+    <style>
+        @media (min-width: 1200px) {
+            .col-B {
+                flex: 0 0 33.33333%;
+                max-width: 33.33333%;
+            }
+
+
+            .hideprofitchat {
+                display: none;
+            }
+
+            .showprofitchat {
+                display: block;
+            }
+
+            .hideelement {
+                display: none !important;
+            }
+
+            .showelement {
+                display: block;
+            }
+        }
+        .no-gutters.newHeightForLine {
+            position: relative;
+            height: calc(100% / 3 - 10px);
+            margin: 5px 0;
+            overflow: hidden;
+        }
+        .newHeightForLine {
+            max-height: 100% !important;
+            position: relative;
+        }
+
+    </style>
+
+</template>

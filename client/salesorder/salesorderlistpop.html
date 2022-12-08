@@ -1,0 +1,101 @@
+<template name="salesorderslistpop">
+    <style>
+        @media screen and (max-width: 450px) {
+            .modal-inner-salesorderslist {
+                max-width: 98vw!important;
+            }
+        }
+    </style>
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-inner-salesorderslist" role="document" style="max-width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Sales Order List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" style="width: 100%; display: none" id="selectLineID" name="selectLineID" readonly>
+                <div class="card-body p-1 rounded">
+                    <div class="table-responsive">
+                        <style>
+                             th {
+                                background-color: #ededed;
+                            }
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                                padding: .75rem!important;
+                            }
+                            .hiddenColumn{
+                                display:none;
+                            }
+                            .showColumn {
+                                display:table-cell;
+                                padding:.75rem;
+                                vertical-align:top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+                            .text-deleted{
+                              background-color: #e74a3b !important; color:#fff;
+                            }
+                        </style>
+                        <table id="tblSalesOrderlist" name="tblSalesOrderlist" style="width: 100%" class="dataTable table table-hover table-striped table-bordered tblSalesOrderlist">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colSortDate hiddenColumn">id</th>
+                                    <th class="th colSaleDate">Sale Date</th>
+                                    <th class="th colSalesNo">Sales No.</th>
+                                    <th class="th colDueDate">Due Date</th>
+                                    <th class="th colCustomer">Customer</th>
+                                    <th class="th colAmountEx">Amount (Ex)</th>
+                                    <th class="th colStatus">Status</th>
+                                    <th class="th colEmployee">Employee</th>
+                                    <th class="th colConverted">Converted?</th>
+                                    <th class="th colComments">Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if datatablerecords}}
+                                    {{#each item in datatablerecords}}
+                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                            <td class="colSortDate hiddenColumn">{{item.sortdate}}</td>
+                                            <td class="colSaleDate"><span style="display:none;">{{item.sortdate}}</span>{{item.saledate}}</td>
+                                            <td class="colSalesNo">{{item.id}}</td>
+                                            <td class="colDueDate">{{item.duedate}}</td>
+                                            <td class="colCustomer">{{item.customername}}</td>
+                                            <td class="colAmountEx">{{item.totalamountex}}</td>
+                                            <td class="colStatus">{{item.salestatus}}</td>
+                                            <td class="colEmployee">{{item.employee}}</td>
+                                            {{#if equals item.isConverted true}}
+                                                <td class="colConverted" style="background-color: #1cc88a !important; color:#fff">
+                                                    Converted
+                                                </td>
+                                            {{else}}
+                                                <td class="colConverted" style="background-color: #f6c23e !important; color:#fff">
+                                                    Unconverted
+                                                </td>
+                                            {{/if}}
+                                            <td class="colComments">{{item.comments}}</td>
+                                        </tr>
+                                    {{/each}}
+                                {{/if}}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        modalDraggable();
+    </script>
+</template>

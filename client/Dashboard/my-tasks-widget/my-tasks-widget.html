@@ -1,0 +1,267 @@
+<template name="myTasksWidget">
+    <!-- <h5 class="text-center mb-3 font-weight-bold mytaskHeader" style="color: #333;">My Tasks</h5> -->
+    <style>
+        .taskModalAction {
+            font-size: 18px;
+            padding: 6px;
+            cursor: pointer;
+        }
+        .taskModalAction:hover {
+            background-color: #f8f9fc;
+        }
+        .taskModalActionDropdown:after {
+             display: none;
+        }
+        .taskModalActionFlagDropdown:after {
+            display: none;
+        }
+        .colCompleteTask {
+             width: 18px !important;
+        }
+        .colTaskLabels {
+            /* width: auto !important; */
+            width: 15% !important;
+        }
+        .colTaskActions {
+            width: 122px !important;
+            display: flex;
+            justify-content: center;
+        }
+        #addTaskLabelWrapper,
+        #detailTaskLabelWrapper {
+            width: 270px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .colProjectTaskDesc {
+            width: 50% !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .colProjectTaskLabels {
+            width: 50% !important;
+        }
+        .colSubComplete {
+            width: 30px !important;
+        }
+        .colSubDate {
+            width: 120px !important;
+        }
+        .colSubTaskActions {
+            width: 220px !important;
+        }
+        .colSubTaskName {
+            /* width: calc(100% - 320px) !important; */
+            width: 50% !important;
+        }
+        .btnTaskTableAction {
+            height: 38px !important;
+            /* width: 44px !important; */
+            margin-right: 2px;
+        }
+        td .btnTaskTableAction {
+            display: inline-flex;
+            justify-content: center;
+        }
+        .banklink:hover {
+            color: #00a3d3 !important;
+            text-decoration: underline;
+        }
+        .task_priority_0 {
+            color: #1cc88a;
+            background: #1cc88a;
+        }
+        .task_priority_1 {
+            color: #00a3d3;
+            background: #00a3d3;
+        }
+        .task_priority_2 {
+            color: #f6c23e;
+            background: #f6c23e;
+        }
+        .task_priority_3 {
+            color: #e74a3b;
+            background: #e74a3b;
+        }
+        .task_priority_0 label:before {
+            border: 2px solid #1cc88a !important;
+        }
+        .task_priority_1 label:before {
+            border: 2px solid #00a3d3 !important;
+        }
+        .task_priority_2 label:before {
+            border: 2px solid #f6c23e !important;
+        }
+        .task_priority_3 label:before {
+            border: 2px solid #e74a3b !important;
+        }
+        .task_modal_priority_0,
+        .task_modal_priority_0 a {
+            color: #1cc88a !important;
+        }
+        .task_modal_priority_1,
+        .task_modal_priority_1 a {
+            color: #00a3d3 !important;
+        }
+        .task_modal_priority_2,
+        .task_modal_priority_2 a {
+            color: #f6c23e !important;
+        }
+        .task_modal_priority_3,
+        .task_modal_priority_3 a {
+            color: #e74a3b !important;
+        }
+        .task_modal_priority_0 label:before {
+            border: 2px solid #1cc88a !important;
+        }
+        .task_modal_priority_1 label:before {
+            border: 2px solid #00a3d3 !important;
+        }
+        .task_modal_priority_2 label:before {
+            border: 2px solid #f6c23e !important;
+        }
+        .task_modal_priority_3 label:before {
+            border: 2px solid #e74a3b !important;
+        }
+        .chk_complete:before {
+             /* width: 18px;
+             height: 18px; */
+             /* margin: 3px; */
+             /* border-radius: 100% !important; */
+        }
+        .chk_complete:after {
+            /* margin: 4px; */
+        }
+        .taskNodate {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .taskDropSecondFlag {
+            font-size: 18px;
+            padding: 0.6rem 0.8rem;
+        }
+        #tblSubtaskDatatable_filter,
+        #tblSubtaskDatatable_length {
+            display: none !important;
+        }
+        .ui-datepicker {
+            z-index: 9999 !important;
+        }
+        .crmSelectLeadList, .crmSelectEmployeeList {
+            height: 34px;
+        }
+        .editTaskDetailName {
+            margin-left: 0;
+            height: 34px;
+        }
+        #tblContactlist .chkBox {
+            display: none;
+        }
+        .activityAdded {
+            width: 100%;
+            font-weight: 700;
+            padding: 16px 32px;
+            padding-bottom: 12px;
+        }
+    </style>
+    <div class="row no-gutters">
+<!--        <div class="col-md-2">-->
+<!--            <h5 class="font-weight-bold text-center"></h5>-->
+<!--        </div>-->
+        <div class="col-md-3">
+            <h5 class="font-weight-bold">Date</h5>
+        </div>
+        <div class="col-md-3">
+            <h5 class="font-weight-bold">Priority</h5>
+        </div>
+        <div class="col-md-6">
+            <h5 class="font-weight-bold">Subject</h5>
+        </div>
+    </div>
+    {{#if todayTasks}}
+        {{#each item in todayTasks}}
+        <div class="row no-gutters mb-1 align-items-center taskline" style="font-size: 16px; cursor: pointer;" taskid="{{item.id}}">
+<!--            <div class="col-md-2 no-gutters text-center">-->
+<!--                <a class="mb-0" href="crmoverview?taskid={{item.id}}">View</a>-->
+<!--            </div>-->
+            <div class="col-md-3 no-gutters">
+                <p class="mb-0">{{item.dueDate}}</p>
+            </div>
+            <div class="col-md-3 no-gutters">
+                <p class="mb-0">{{item.priority}}</p>
+            </div>
+            <div class="col-md-3 no-gutters">
+                <p class="mb-0">{{item.taskName}}</p>
+            </div>
+        </div>
+        {{/each}}
+    {{else}}
+    <div class="text-center mt-2"><i>No tasks found.</i></div>
+    {{/if}}
+
+    {{> taskDetailModal}}
+    {{> newTaskModal}}
+    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+             style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Contact List</h4><button type="button" class="close checkclose" data-dismiss="modal"
+                                                 aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID"
+                           name="customerSelectLineID" readonly>
+                    <div class="row">
+                        <!-- <div class="col-12 contactcheckboxcol" style="padding: 16px 32px 0px 32px; display: inline-flex;">
+                          <div class="custom-control custom-switch" style="width: 155px;">
+                            <input class="custom-control-input" type="checkbox" value="swtAllCustomers" id="swtAllCustomers"
+                              name="swtAllCustomers" style="cursor: pointer;">
+                            <label class="custom-control-label" for="swtAllCustomers" style="cursor: pointer;">All
+                              Customers</label>
+                          </div>
+                          <div class="custom-control custom-switch" style="width: 155px;">
+                            <input class="custom-control-input" type="checkbox" value="swtAllEmployees" id="swtAllEmployees"
+                              name="swtAllEmployees" style="cursor: pointer;">
+                            <label class="custom-control-label" for="swtAllEmployees" style="cursor: pointer;">All
+                              Employees</label>
+                          </div>
+                          <div class="custom-control custom-switch" style="width: 155px;">
+                            <input class="custom-control-input" type="checkbox" value="swtAllSuppliers" id="swtAllSuppliers"
+                              name="swtAllSuppliers" style="cursor: pointer;">
+                            <label class="custom-control-label" for="swtAllSuppliers" style="cursor: pointer;">All
+                              Suppliers</label>
+                          </div>
+                        </div> -->
+                        <div class="col-12 contactlistcol">
+                            {{> contactlistpop}}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button class="btn btn-primary btnSelectContact" id="btnSelectContact" type="button"
+                      autocomplete="off">Select</button> -->
+                    <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+                    {{> employeelistpop}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

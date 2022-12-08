@@ -1,0 +1,32 @@
+<template name="mytaskswidgetchart">
+  <style>
+    .my-taskswidget {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 10px;
+        background-color: #ededed;
+        border: 3px solid #878787;
+        border-radius: 14px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #mytaskschartcol .mytaskHeader{
+      display:none;
+    }
+  </style>
+  {{# draggablePanel
+    xs=xs sm=sm md=md lg=lg xl=xl
+    defaultPosition=defaultPosition
+    key=key
+    id="showearningchat"
+    headerClass="mytaskswidgetchartheader"
+    bodyClass="my-taskswidget"
+    headerColor="primary"
+    headerTitle="My Tasks"
+    hrefDetails="/crmoverview"
+    editModalID="editDashboardModal"
+  }}
+    {{> myTasksWidget}}
+  {{/draggablePanel}}
+</template>

@@ -1,0 +1,20 @@
+<template name="serviceloglist">
+  <div class="fullScreenSpin" style="display:none;">
+    <div class="spinner"></div>
+  </div>
+
+  <div style="margin-top: -24px;">
+
+    <header style="padding: 16px;padding-bottom: 24px;">
+      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">Service Log</span>
+        {{> crm_help_modal}}
+      </h2>
+    </header> 
+  </div> 
+
+  {{> serviceloglisttable}}
+
+  <style scoped> 
+  </style>
+
+</template>

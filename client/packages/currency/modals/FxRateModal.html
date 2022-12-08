@@ -1,0 +1,38 @@
+<template name="FxRateModal">
+   
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalFXRates">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    {{#if currencies}}
+                        {{#each c in currencies}}
+                            <span  class="{{ isDefaultCurrency c}} dropdown-item custom-control custom-switch " >
+                                <input checked="{{c.active}}" currency-id="{{c.id}}" type="checkbox" class="custom-control-input currency-selector-js" currency="{{c.code}}" buy-rate="{{c.buyrate}}" sell-rate="{{c.sellrate}}" id="currency_{{c.id}}" name="checkbox">
+                                <label class="custom-control-label" for="currency_{{c.id}}">{{c.currency}} ({{c.code}} - {{c.country}})</label>
+                            </span>
+                        {{/each}}
+                    {{/if}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary currency-modal-save" data-dismiss="modal" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+        <style>
+            .modal-body {
+                max-height: 75vh;
+                overflow: auto;
+            }
+            .hidden {
+                display: none;
+            }
+
+           
+        </style>
+    </div>
+
+</template>

@@ -1,0 +1,273 @@
+<template name="customfieldpop">
+  <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Custom Fields</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <div class="row">
+              <div class="col-12">
+                <span class="custField1Text" style="margin-left: 42px; font-size: 14px;">Text Field</span>
+                <span class="custField1Date" style="margin-left: 42px; font-size: 14px; display: none;">Date
+                  Field</span>
+                <span class="custField1Dropdown" style="margin-left: 42px; font-size: 14px; display: none;">Dropdown
+                  Field</span>
+
+                <input type="hidden" id="currentCustomField" name="currentCustomField" class="form-control" value="1">
+                <input type="hidden" id="statusId1" name="statusId1" class="form-control" value="">
+                <!-- <input type="hidden" id="clickedControl" name="clickedControl" class="form-control" value=""> -->
+                <input type="hidden" id="isdropDown" name="isdropDown" class="form-control" value="">
+                <input type="hidden" id="isdropDown1" name="isdropDown1" class="form-control" value="">
+
+                <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
+                  <input class="custom-control-input chkFieldSettings" type="checkbox" id="formCheck-customOne"
+                    value="one">
+                  <label class="custom-control-label" style="position: absolute; margin-top: 8px;"
+                    for="formCheck-customOne"></label>
+
+                  <div class="input-group">
+                    <!-- text field -->
+                    <input id="customFieldText1" value="{{custfields.[0].custfieldlabel}}"
+                      custid="{{custfields.[0].id}}" type="text" class="form-control customfieldcommon customField1"
+                      placeholder="Custom Field1" style="border-color: #858796;">
+                    <!-- date field -->
+                    <div id="customFieldDate1" class="input-group date pointer"
+                      style="width: 86% !important; display: none;">
+                      <input type="text" class="form-control customField1"
+                        style=" border-color: #858796 !important; width: 86% !important; " id="customdateone"
+                        name="customdateone" value="{{custfields.[0].custfieldlabel}}">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                    <!-- text field -->
+                    <select type="search" class="form-control pointer customField1" id="sltCustomOne1"
+                      name="sltCustomOne"
+                      style="background-color:rgb(255, 255, 255); border-color: #858796; display: none; border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;">
+                    </select>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item pointer btnToggleText1 btnCustomFieldToggleText" data-id="1">Text
+                          Field</a>
+                        <a class="dropdown-item pointer btnToggleDate1 btnCustomFieldToggleDate" data-id="1">Date
+                          Field</a>
+                        <a class="dropdown-item pointer btnToggleDrop1 btnCustomFieldToggleDrop"
+                          data-id="1">Dropdown</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <span class="custField2Text" style="margin-left: 42px; font-size: 14px;">Text Field</span>
+                <span class="custField2Date" style="margin-left: 42px; font-size: 14px; display: none;">Date
+                  Field</span>
+                <span class="custField2Dropdown" style="margin-left: 42px; font-size: 14px; display: none;">Dropdown
+                  Field</span>
+
+                <input type="hidden" id="statusId2" name="statusId2" class="form-control" value="">
+                <!-- <input type="hidden" id="clickedControl2" name="clickedControl2" class="form-control" value=""> -->
+                <input type="hidden" id="isdropDown2" name="isdropDown2" class="form-control" value="">
+
+                <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
+                  <input class="custom-control-input chkFieldSettings" type="checkbox" id="formCheck-customTwo"
+                    value="one">
+                  <label class="custom-control-label" style="position: absolute; margin-top: 8px;"
+                    for="formCheck-customTwo"></label>
+
+                  <div class="input-group">
+                    <!-- text field -->
+                    <input id="customFieldText2" value="{{custfields.[1].custfieldlabel}}"
+                      custid="{{custfields.[1].id}}" type="text" class="form-control customfieldcommon customField2"
+                      placeholder="Custom Field2" style="border-color: #858796;">
+                    <!-- date field -->
+                    <div id="customFieldDate2" class="input-group date pointer"
+                      style="width: 86% !important; display: none;">
+                      <input type="text" class="form-control customField2"
+                        style=" border-color: #858796 !important; width: 86% !important; " id="customdateone"
+                        name="customdateone" value="{{invoicerecord.saledate}}">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                    <!-- text field -->
+                    <select type="search" class="form-control pointer customField2" id="sltCustomOne2"
+                      name="sltCustomOne"
+                      style="background-color:rgb(255, 255, 255); border-color: #858796; display: none; border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;">
+                    </select>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item pointer btnToggleText2 btnCustomFieldToggleText" data-id="2">Text
+                          Field</a>
+                        <a class="dropdown-item pointer btnToggleDate2 btnCustomFieldToggleDate" data-id="2">Date
+                          Field</a>
+                        <a class="dropdown-item pointer btnToggleDrop2 btnCustomFieldToggleDrop"
+                          data-id="2">Dropdown</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <span class="custField3Text" style="margin-left: 42px; font-size: 14px;">Text Field</span>
+                <span class="custField3Date" style="margin-left: 42px; font-size: 14px; display: none;">Date
+                  Field</span>
+                <span class="custField3Dropdown" style="margin-left: 42px; font-size: 14px; display: none;">Dropdown
+                  Field</span>
+
+                <input type="hidden" id="statusId3" name="statusId3" class="form-control" value="">
+                <!-- <input type="hidden" id="clickedControl3" name="clickedControl3" class="form-control" value=""> -->
+                <input type="hidden" id="isdropDown3" name="isdropDown3" class="form-control" value="">
+
+                <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
+                  <input class="custom-control-input chkFieldSettings" type="checkbox" id="formCheck-customThree"
+                    value="one">
+                  <label class="custom-control-label" style="position: absolute; margin-top: 8px;"
+                    for="formCheck-customThree"></label>
+                  <div class="input-group">
+                    <!-- text field -->
+                    <input id="customFieldText3" value="{{custfields.[2].custfieldlabel}}"
+                      custid="{{custfields.[2].id}}" type="text" class="form-control customfieldcommon customField3"
+                      placeholder="Custom Field3" style="border-color: #858796;">
+                    <!-- date field -->
+                    <div id="customFieldDate3" class="input-group date pointer"
+                      style="width: 86% !important; display: none;">
+                      <input type="text" class="form-control customField3"
+                        style=" border-color: #858796 !important; width: 86% !important; " id="customdateone"
+                        name="customdateone" value="{{invoicerecord.saledate}}">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                    <!-- text field -->
+                    <select type="search" class="form-control pointer customField3" id="sltCustomOne3"
+                      name="sltCustomOne"
+                      style="background-color:rgb(255, 255, 255); border-color: #858796; display: none; border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;">
+                    </select>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item pointer btnToggleText3 btnCustomFieldToggleText" data-id="3">Text
+                          Field</a>
+                        <a class="dropdown-item pointer btnToggleDate3 btnCustomFieldToggleDate" data-id="3">Date
+                          Field</a>
+                        <a class="dropdown-item pointer btnToggleDrop3 btnCustomFieldToggleDrop"
+                          data-id="3">Dropdown</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-success btnCustomFieldSaveSettings" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button class="btn btn-warning btnCustomFieldResetSettings" data-dismiss="modal" type="reset"><i
+              class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+          <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+              style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldDropdownModal">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
+      <div class="modal-content">
+        <form id="newCustomFieldDropdownForm" name="newCustomFieldDropdownForm">
+          <div class="modal-header">
+            <h4>
+              <div name="newCustomFieldDropdownHeader" id="newCustomFieldDropdownHeader">Add New Custom Field</div>
+            </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body" style="padding: 8px 24px;">
+            <input type="hidden" id="customFieldDropdownId" name="customFieldDropdownId" class="form-control">
+            <input type="hidden" id="selectCustFieldNumber" name="selectCustFieldNumber">
+
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                  <label>Name</label>
+                  <input type="text" id="newCustomFieldDropdownName" name="newCustomFieldDropdownName"
+                    class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btnSaveCustomFieldDropdown" type="button"><i class="fa fa-save"
+                style="margin-right: 5px;"></i>Save</button>
+            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+                style="margin-right: 5px;"></i>Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldPop">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document" style="max-width: 400px;">
+      <div class="modal-content">
+        <form id="newstatus" name="newstatus">
+          <div class="modal-header">
+            <h4>
+              <div name="newStatusHeader1" id="newStatusHeader1">Add New Dropdown</div>
+            </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body" style="padding: 8px 24px;">
+            <input type="hidden" id="statusId1" name="statusId1" class="form-control">
+            <input type="hidden" id="clickedControl" name="clickedControl" class="form-control">
+            <input type="hidden" id="isdropDown" name="isdropDown" class="form-control">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group flex-grow-1" style="margin: 8px 0px; display:none!important">
+                  <label>Custom Field Label</label>
+                  <input type="text" id="newStatus1" name="newStatus1" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group flex-grow-1 dropDownSection" style="margin: 8px 0px;">
+                  <label>Dropdown Options</label>
+                  <button class="btn btn-primary btnAddNewTextBox" type="button"
+                    style="padding: 3px 6px; font-size: 12px; margin-left: 8px !important; border-radius: 25px;"
+                    autocomplete="off"><i class="fas fa-plus"></i></button>
+                  <div class="row textBoxSection" id="textBoxSection" style="padding:5px">
+                    <div class="col-10">
+                      <input type="text" style="" name="customText" class="form-control customText">
+                    </div>
+                    <div class="col-2">
+                      <button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions"
+                        autocomplete="off"><i class="fa fa-remove"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btnSaveCustomField" type="button"><i class="fa fa-save"
+                style="margin-right: 5px;"></i>Save</button>
+            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+                style="margin-right: 5px;"></i>Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</template>

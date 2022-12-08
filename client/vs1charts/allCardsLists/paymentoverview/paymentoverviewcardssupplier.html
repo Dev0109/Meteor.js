@@ -1,0 +1,65 @@
+<template name="paymentoverviewcardssupplier">
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCardSupplier1"
+        chartGroup="PaymentOverviewSupplier"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="paymentoverview-suppliers-outstanding-expenses-2"
+        highlightColor="info"
+        actionClass="supplierAwaitingPayment"
+    }}
+        {{> kpiCardTitle
+            title="All Outstanding Payments"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="supplierawaitingpurchaseorder"}}
+            {{> kpiCardSingleValue
+                href="javascript:void(0);"
+                id="SuppOutstandingAmt"
+                name="SuppOutstandingAmt"
+                subValueId="SuppOutstandingQTY"
+                subValueName="SuppOutstandingQTY"
+                subText="Awaiting"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCardSupplier2"
+        chartGroup="PaymentOverviewSupplier"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="paymentoverview-suppliers-overdue-2"
+        highlightColor="warning"
+        actionClass="supplierOverdue"
+    }}
+        {{> kpiCardTitle
+            title="Overdue Payments"
+            size="small"
+            color="warning"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="overduesupplierawaiting"}}
+            {{> kpiCardSingleValue
+                href="javascript:void(0);"
+                id="suppOverdueAmount"
+                name="suppOverdueAmount"
+                subValueId="suppOverdueQTY"
+                subValueName="suppOverdueQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+</template>

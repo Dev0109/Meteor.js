@@ -1,0 +1,129 @@
+<template name="purchasesaleschart">
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id=""
+        chartGroup="Dashboard"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="dashboard-customers-outstanding-invoices"
+        highlightColor="info"
+        actionClass="customerAwaitingPayment"
+    }}
+        {{> kpiCardTitle
+            title="All Outstanding Invoices (Customers)"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="banklink"}}
+            {{> kpiCardSingleValue
+                href="/customerawaitingpayments"
+                id="invoiceOutstandingAmt"
+                name="invoiceOutstandingAmt"
+                subValueId="invoiceOutstandingQTY"
+                subValueName="invoiceOutstandingQTY"
+                subText="Awaiting"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id=""
+        chartGroup="Dashboard"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="dashboard-outstanding-invoice-amount"
+        highlightColor="info"
+        actionClass="overdueInvoiceAmt"
+    }}
+        {{> kpiCardTitle
+            title="Aged Receivables Summary (Amount)"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="banklink"}}
+            {{> kpiCardSingleValue
+                href="/agedreceivablessummary"
+                id="oustandaingInvAmt"
+                name="oustandaingInvAmt"
+                subValueId="oustandingInvQty"
+                subValueName="oustandingInvQty"
+                subText="Quantity"
+                iconName="fa-file-invoice-dollar"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id=""
+        chartGroup="Dashboard"
+        defaultPosition=2
+        position=2
+        cardActive=true
+        cardKey="dashboard-suppliers-outstanding-expenses"
+        highlightColor="info"
+        actionClass="supplierAwaitingPayment"
+    }}
+        {{> kpiCardTitle
+            title="All Outstanding Payments (Suppliers)"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="supplierAwaitingPayment"}}
+            {{> kpiCardSingleValue
+                href="/supplierawaitingpurchaseorder"
+                id="SuppOutstandingAmt"
+                name="SuppOutstandingAmt"
+                subValueId="SuppOutstandingQTY"
+                subValueName="SuppOutstandingQTY"
+                subText="Awaiting"
+                iconName="fa-file-invoice-dollar"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id=""
+        chartGroup="Dashboard"
+        defaultPosition=3
+        position=3
+        cardActive=true
+        cardKey="dashboard-outstanding-payables-amount"
+        highlightColor="danger"
+        actionClass="outstaningPayablesAmt"
+    }}
+        {{> kpiCardTitle
+            title="Aged Payables Summary (Amount)"
+            size="small"
+            color="danger"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="supplierAwaitingPayment"}}
+            {{> kpiCardSingleValue
+                href="/agedpayablessummary"
+                id="suppAwaitingAPAmtdash"
+                name="suppAwaitingAPAmtdash"
+                subValueId="suppAwaitingAP"
+                subValueName="suppAwaitingAP"
+                subText="Quantity"
+                iconName="fa-dollar-sign"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+</template>

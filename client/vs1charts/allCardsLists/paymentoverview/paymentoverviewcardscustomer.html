@@ -1,0 +1,63 @@
+<template name="paymentoverviewcardscustomer">
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCardCustomer1"
+        chartGroup="PaymentOverviewCustomer"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="paymentoverview-customers-outstanding-invoices-2"
+        highlightColor="info"
+    }}
+        {{> kpiCardTitle
+            title="All Outstanding Invoices"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="customerawaitingpayments"}}
+            {{> kpiCardSingleValue
+                href="javascript:void(0);"
+                id="invoiceOutstandingAmt"
+                name="invoiceOutstandingAmt"
+                subValueId="invoiceOutstandingQTY"
+                subValueName="invoiceOutstandingQTY"
+                subText="Awaiting"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCardCustomer2"
+        chartGroup="PaymentOverviewCustomer"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="paymentoverview-customers-overdue-2"
+        highlightColor="warning"
+    }}
+        {{> kpiCardTitle
+            title="Overdue Invoices"
+            size="small"
+            color="warning"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody actionClass="overduecustomerawaitingpayments"}}
+            {{> kpiCardSingleValue
+                href="javascript:void(0);"
+                id="invoiceOverDueAmt"
+                name="invoiceOverDueAmt"
+                subValueId="invoiceOverDueQTY"
+                subValueName="invoiceOverDueQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+</template>

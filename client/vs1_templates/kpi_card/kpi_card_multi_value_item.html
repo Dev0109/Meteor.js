@@ -1,0 +1,12 @@
+<!--
+    tooltipTitle: string,
+    title: string,
+    valueColor: string (primary, info, warning...),
+    id: string
+ -->
+<template name="kpiCardMultiValueItem">
+    <div class="px-1 flex-grow-1 text-center card-inner-matrics" data-toggle="tooltip" title="{{tooltipTitle}}">
+        <h5>{{title}}</h5>
+        <h6 class="text-{{valueColor}} mb-0" id="{{id}}"></h6>
+    </div>
+</template>

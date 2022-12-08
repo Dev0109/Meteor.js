@@ -1,0 +1,45 @@
+<template name="daterangedropdownoption">
+  <div class="dropdown-menu daterange" role="menu">
+      <h6 class="dropdown-header" role="presentation">Date Ranges</h6>
+        <a class="dropdown-item ignoreDate"  id="ignoreDate" role="presentation" >Ignore Dates</a>
+        <a class="dropdown-item today"  id="today" role="presentation" >Today</a>
+      <div class="dropdown-divider"></div>
+        <a class="dropdown-item thisweek"  id="thisweek" role="presentation" >This Week</a>
+        <a class="dropdown-item thisMonth"  id="thisMonth" role="presentation" >This Month</a>
+        <a class="dropdown-item thisQuarter"  id="thisQuarter" role="presentation" >This Quarter</a>
+        <a class="dropdown-item thisfinancialyear"  id="thisfinancialyear" role="presentation" >This Financial Year</a>
+      <div class="dropdown-divider"></div>
+        <a class="dropdown-item previousweek"  id="previousweek" role="presentation" >Previous Week</a>
+        <a class="dropdown-item previousmonth"  id="previousmonth" role="presentation" >Previous Month</a>
+        <a class="dropdown-item previousquarter"  id="previousquarter" role="presentation" >Previous Quarter</a>
+        <a class="dropdown-item previousfinancialyear"  id="previousfinancialyear" role="presentation" >Previous Financial Year</a>
+  </div>
+  <style media="screen">
+    .daterange .dropdown-item:focus, .daterange .dropdown-item:hover {
+      color: #2e2f37!important;
+      text-decoration: none!important;
+      background-color: #f8f9fc!important;
+      cursor: pointer!important;
+    }
+
+    .daterange .dropdown-item:active{
+      color: #fff!important;
+      text-decoration: none!important;
+      background-color: #00a3d3!important
+    }
+
+   a:not([href])
+      color: #00a3d3!important;
+      text-decoration: none!important;
+      background-color: transparent
+    }
+
+    a:not([href]):hover {
+      color: #224abe!important;
+      text-decoration: underline!important
+    }
+    .dropdown-menu.daterange{
+      width: 210px!important;
+    }
+  </style>
+</template>

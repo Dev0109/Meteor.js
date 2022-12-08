@@ -1,0 +1,36 @@
+<template name="custom_print_template">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="templatePreviewLabel"></h5>
+                <button type="button" class="close" onclick="$('#{{modalId}}').modal('hide');" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color: #f8f9fc; max-height: calc(100vh - 200px); overflow-y: auto;">
+                <div style="width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
+                    id="{{idPrefix}}" name="{{namePrefix}}">
+                    {{> preview_header1 }}
+                    <!-- <hr style="width: 90%; margin: 0px auto;"> -->
+                    {{> preview_body1 }}
+                    {{> preview_footer1 }}
+                </div>
+                <div style="display: none; width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
+                    id="{{idPrefix}}2" name="{{namePrefix}}2">
+                    {{> preview_header2 }}
+                    {{> preview_body2 }}
+                    {{> preview_footer2 }}
+                </div>
+                <div style="display: none; width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
+                    id="{{idPrefix}}3" name="{{namePrefix}}3">
+                    {{> preview_header3 }}
+                    {{> preview_body3 }}
+                    {{> preview_footer3 }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times" style="margin-right: 5px;"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</template>

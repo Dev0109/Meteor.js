@@ -1,0 +1,31 @@
+<template name="kpiCardSingleValue">
+    <div class="flex-grow-1 d-flex">
+        <a href="{{href}}" class="mr-2 ml-3">
+            <div class="text-{{color}} d-flex justify-content-center font-weight-bold h5 mb-0">
+                <span 
+                class="text-nowrap banklink" 
+                style="font-size: 28px;">
+                    <span>
+                        <span 
+                        class="{{id}}"
+                        id="{{id}}" 
+                        name="{{name}}">
+                            0
+                        </span>
+                    </span>
+                </span>
+            </div>
+            {{#if subText}}
+                <div class="text-nowrap text-{{color}} font-weight-bold h5 mb-0">
+                    <span style="font-size: 16px;"><span class="">
+                        <span class="{{subValueId}}" id="{{subValueId}}" name="{{subValueName}}">0</span> {{subText}}</span>
+                    </span>
+                </div>
+            {{/if}}
+        </a>
+        {{# if iconName}}
+            <div class="flex-grow-1"></div>
+            <div class="col-auto"><i class="far {{iconName}} fa-2x text-{{color}}"></i></div>
+        {{/if}}
+    </div>
+</template>

@@ -1,0 +1,24 @@
+<template name="bankingoverviewcards">
+    {{#if bankaccountdatarecord}}
+        {{#each itembank in bankaccountdatarecord}}
+        <div class="col-md-6 col-xl-3 mb-4 openaccountreceivable hideelement card-visibility" chartgroup="BankingOverview" data-default-position="{{ @index }}" position="{{ @index }}" card-active="true" card-id="0" card-key={{itembank.cardAccountID}} id={{itembank.name}}>
+            <div class="card shadow customCardMainDiv {{#if equals @index 0 }} border-left-success{{/if}} {{#if equals @index 1 }} border-left-primary{{/if}} {{#if equals @index 2 }} shadow border-left-danger{{/if}}  {{#if equals @index 3 }} border-left-warning{{/if}} {{#if equals @index 4 }} border-left-info{{/if}} {{#if equals @index 5 }} border-left-secondary {{/if}} py-2">
+                <div class="hideShowDiv">
+                    <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                </div>
+                <div class="card-body" style="cursor: pointer;">
+                    <div class="row align-items-center no-gutters opentransBank">
+                        <a class="col mr-2">
+                            <div class="opentransBank text-uppercase {{#if equals @index 0 }} text-success{{/if}} {{#if equals @index 1 }} text-primary{{/if}} {{#if equals @index 2 }} text-danger{{/if}}  {{#if equals @index 3 }} text-warning{{/if}} {{#if equals @index 4 }} text-info{{/if}} {{#if equals @index 5 }} text-secondary {{/if}}font-weight-bold text-xs mb-1"><span style="font-size: 14px;">{{itembank.name}}</span></div>
+                            <div class="opentransBank text-dark font-weight-bold h5 mb-0 mr-3 "><span class="text-nowrap banklink grayColor" style="font-size: 28px; margin-left: 8px;"><span class="custAwaitingAmt" id="custAwaitingAmt" name="custAwaitingAmt">  {{itembank.totalbalance}}</span></span></div>
+                            <div class="opentransBank text-dark font-weight-bold h5 mb-0"><span class="grayColor" style="font-size: 16px;">Bank Balance</span></div>
+                        </a>
+                        <div class="col-auto openbank"><i class="{{itembank.card}} fa-2x text-gray-300 grayColor"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    {{/if}}
+</template>

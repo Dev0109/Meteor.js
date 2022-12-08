@@ -1,0 +1,34 @@
+<template name="deletedOverlay">
+    <!-- To display the Deleted overlay, use CSS to set #deletedOverlay {display: block;}-->
+    <style>
+        #deletedOverlay {
+            margin-top: 70px;
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        #deletedOverlay .text-Deleted {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 80px;
+            font-weight: 800;
+            color: red;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: rotate(-45deg);
+            transform-origin: bottom left;
+        }
+    </style>
+    <div id="deletedOverlay">
+        <p class="text-Deleted">Deleted</p>
+    </div>
+</template>

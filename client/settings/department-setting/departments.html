@@ -1,0 +1,265 @@
+<template name="departmentSettings">
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <h3 class="text-dark mb-4">Department Settings
+            <!-- <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> -->
+            {{> helpbutton}}
+        </h3>
+        <div class="row mb-3">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 font-weight-bold">Department Settings</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-body rounded">
+                                    <div class="row no-gutters">
+
+                                        <style>
+                                            @media screen and (max-width: 420px) {
+                                                .btnRefresh {
+                                                    margin-left: 0px !important;
+                                                    margin-bottom: 0px !important;
+                                                }
+                                                .btnAddDeptMobile {
+                                                    margin-left: 0px !important;
+                                                    margin-bottom: 0px !important;
+                                                }
+                                                .btnAddRoomMobile {
+                                                    margin-left: 0px !important;
+                                                }
+                                                .card-body {
+                                                    padding: 0.75rem !important;
+                                                }
+                                            }
+
+                                        </style>
+
+                                        <div class="col">
+
+                                            <div class="row d-xl-flex flex-row justify-content-xl-center">
+
+                                                <div class="col d-xl-flex flex-grow-1 align-items-xl-start" style="padding: 0px !important;">
+                                                    <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav vs1ButtonMargin" type="button" style="min-width: 117.016px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                                    <a class="btn btn-primary btnAddDept btnAddDeptMobile" role="button" data-toggle="modal" href="#myModalDepartment" style="margin: 14px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Department<br></a>
+
+                                                </div>
+
+
+                                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start" style="padding: 0px !important;">
+                                                    {{> export_import_print_display_button tablename="tblDepartmentList"}}
+                                                </div>
+
+                                            </div>
+
+
+                                            <!--New Room Begin-->
+                                            {{#if isModuleGreenTrack}}
+                                            <a class="btn btn-primary btnAddDept btnAddRoomMobile" role="button" data-toggle="modal" href="#newRoomModal" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Room<br></a>
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="newRoomModal">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 style="" ><div id="add-dept-title" name="add-dept-title" style="float: left;">Add New Room</div>  <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a></h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                        <div class="modal-body" style="background-color: #ededed;">
+                                                            <div class="row no-gutters">
+                                                                <div class="col-12 d-xl-flex align-items-xl-end">
+                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label>Department</label>
+                                                                        <select class="form-control" name="sltDepartmentList" id="sltDepartmentList" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                            {{#each itemDept in listDept}}
+                                                                            <option value="{{itemDept.deptname}}" mytag="{{itemDept.deptid}}">{{itemDept.deptname}}</option>
+                                                                            {{/each}}
+                                                                        </select>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row no-gutters">
+                                                                <div class="col-6 d-xl-flex align-items-xl-end">
+                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label>Room Name</label>
+                                                                        <input type="text" class="form-control" id="newRoomName" name="newRoomName">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 d-xl-flex align-items-xl-end">
+                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label>Room Number</label>
+                                                                        <input type="text" class="form-control" id="newRoomNum" name="newRoomNum">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer" style="background-color: #ededed;">
+                                                            <button class="btn btn-success btnSaveRoom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                            <!--New Room End-->
+                                        </div>
+                                    </div>
+                                    <div class="row no-gutters" style="display: none;">
+                                        <div class="col text-left">
+                                            <button class="btn btn-primary btnAddNewDepart" type="button" style="margin: 8px 0px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add New Department</button>
+                                        </div>
+                                    </div>
+                                    <style>
+                                        .newTaxRate {
+                                            display: none;
+                                            padding: 16px;
+                                            margin: 16px 0px;
+                                        }
+                                    </style>
+
+                                    <!-- Start {{> optionNavSalesOverview}} -->
+                                    <div class="d-xl-flex justify-content-xl-end">
+                                        <div>
+                                            <!-- <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a> -->
+
+                                        </div>
+                                    </div>
+                                    <!-- End -->
+                                    <div class="table-responsive">
+                                        <style>
+                                            .hiddenColumn{
+                                                display:none;
+                                            }
+                                            .showColumn {
+                                                display:table-cell;
+                                                padding:.75rem;
+                                                vertical-align:top;
+                                            }
+                                        </style>
+
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID"  readonly>
+                                                    <div class="modal-header">
+                                                        <h4>Delete</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Please click "Delete" to deactivate department</p>
+
+                                                        <button class="btn btn-danger float-right btnDeleteDept" type="button">
+                                                            <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{> non_transactional_list tablename="tblDepartmentList"}}
+                                    </div>
+                                </div>
+                                <div class="row no-gutters">
+                                    <div class="col">
+                                        <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                        <!-- <button class="btn btn-primary float-right" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+
+                    <h4 class="title-header" >Department</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/departmentsettings.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Help Video Modal -->
+
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModalAdd">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+
+                    <h4 class="title-header" >New Department</h4>
+                    <button type="button" class="close closeAdd" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <video preload="none" id="myVideoAdd" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/newdepartment.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- myModal Department -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style=""><div id="add-dept-title" name="add-dept-title" style="float: left;">Add Department</div>
+                      {{> helpbutton}}
+
+                    </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body" style="background-color: #ededed;">
+                    <input type="hidden" class="form-control" id="edtDepartmentID" name="edtDepartmentID" style="display:none;">
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Department Name</label>
+                                <input type="text" class="form-control" id="edtDeptName" name="edtDeptName">
+                                <input type="hidden" class="form-control" id="deptID" name="deptID">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
+                                <textarea class="form-control" rows="5" id="txaDescription" name="txaDescription"></textarea>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Site Code</label>
+                                <input type="text" class="form-control" id="edtSiteCode" name="edtSiteCode">
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="background-color: #ededed;">
+                    <button class="btn btn-primary btnSaveDept vs1ButtonMargin" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                    <!-- <button class="btn btn-danger btnDeleteDept vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button> -->
+                    <span id="view-in-active"></span>
+                    <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Help Video Modal -->
+    <!-- Import Modal -->
+    {{> import_template ImportformName="Department Settings"}}
+    <script>
+        modalDraggable();
+    </script>
+</template>

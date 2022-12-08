@@ -1,0 +1,25 @@
+<template name="employeecompletedjobs">
+    <style type="text/css">
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id="employeecompletedjobs"
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Employee Jobs Completed"
+        hrefDetails=""
+        editModalID="editDashboardModal"
+    }}
+    <canvas id="employeecompletedjobchart" name="employeecompletedjobchart"></canvas>
+    {{/draggablePanel}}
+</template>

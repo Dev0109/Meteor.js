@@ -1,0 +1,69 @@
+<template name="serialnumberpop">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <style>
+                .tblSNlist{
+                    max-height: 320px;
+                    overflow-y: auto;
+                    padding-left: 25px;
+                }
+
+                #tblSeriallist td {
+                    padding: 4px 10px !important;
+                    border-top: none;
+                }
+
+                #tblSeriallist td input {
+                    border: 0px solid transparent !important;
+                    background-color: rgba(0, 0, 0, 0) !important;
+                    width: 100% !important;
+                    color: #858796 !important;
+                    font-size: 15px!important;
+                }
+
+            </style>
+            <form id="serialform" name="serialform">
+                <div class="modal-header">
+                    <h4><div name="newShipViaMethodName" id="newShipViaMethodName">Serial Numbers</div></h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 8px 24px;">
+                    <div class="row">
+                        <div class="col-12 tblSNlist">
+                            <table id="tblSeriallist" class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="2"></td>
+                                        <td colspan="2" class="text-center">Allocate Serial Numbers</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start">#</td>
+                                        <td class="text-start">Serial number</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td class="serialNo">*</td>
+                                        <td contenteditable="true" class="lineSerialnumbers" id="first-serial-number"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex w-100 justify-content-between" style="gap: 0.5rem;">
+                        <button class="btn btn-success w-100 btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i><div class="spinner-border d-none" role="status"></div>&nbsp;Save</button>
+                        <button class="btn btn-success w-100 btnSelect" type="button">Select</button>
+                        <button class="btn btn-success w-100 btnAutoFill" type="button"><div class="spinner-border d-none" role="status"></div>&nbsp;Auto Fill</button>
+                    </div>
+                    <div class="d-flex w-100 justify-content-between" style="gap: 0.5rem;">
+                        <button class="btn btn-primary w-100 btnPrint" type="button"><i class="fa fa-print" style="padding-right: 3px;"></i>Print</button>
+                        <button class="btn btn-danger w-100 btnDelete" type="button"><i class="fas fa-trash-alt" style="margin-right: 3px;"></i>Delete</button>
+                        <button class="btn btn-secondary w-100" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</template>

@@ -1,0 +1,81 @@
+<template name="crm_mailchimp_add_campaign_modal">
+  <div class="modal fade" role="dialog" tabindex="-1" id="crmMailchimpAddCampaignModal">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="padding-bottom: 8px;">
+          <h4>Add Campaign</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-6">
+              <div align="left">
+                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                  <label>Campaign Title*</label>
+                  <input class="form-control" type="text" id="campaign_title" name="campaign_title">
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div align="left">
+                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                  <label>From Name*</label>
+                  <input class="form-control" type="text" id="campaign_from_name" name="campaign_from_name">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-6">
+              <div align="left">
+                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                  <label>Subject Line*</label>
+                  <input class="form-control" type="text" id="campaign_subject_line" name="campaign_subject_line" required>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div align="left">
+                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                  <label>Reply To (Email)*</label>
+                  <input class="form-control" type="text" id="campaign_reply_to" name="campaign_reply_to">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-6">
+              <div align="left">
+                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                  <label>To Name</label>
+                  <input class="form-control" type="text" id="campaign_to_name" name="campaign_to_name">
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div align="left">
+                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                  <label>Preview Text</label>
+                  <input class="form-control" type="text" id="campaign_preview_text" name="campaign_preview_text">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer" style="padding: 6px;">
+          <button class="btn btn-success" type="button" id="btn_add_campaign">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    modalDraggable();
+  </script>
+
+</template>
