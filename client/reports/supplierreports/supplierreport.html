@@ -1,0 +1,162 @@
+<template name="supplierreport">
+    {{# vs1_report_template tabledisplayname="Supplier Report" tablename="supplierreport"  dateAsAt=dateAsAt}}
+    <div class="table-responsive">
+        <table class="table table-sm" id="tableExport" name="tableExport">
+            <thead>
+                <tr class="table-active customDoubleTableHeading">
+                    <th>Supplier</th>
+                    <th>PO No</th>
+                    <th>Trans Type</th>
+                    <th>Product ID</th>
+                    <th>Product Desc</th>
+                    <th colspan="{{countActive currencyList}}" class="text-center">Cost (ex)</th>
+                    <th colspan="{{countActive currencyList}}" class="text-center">Tax</th>
+                    <th colspan="{{countActive currencyList}}" class="text-center">Cost (inc)</th>
+                    <th class="text-right">Tax Code</th>
+                    <th class="text-right">Qty Ordered</th>
+                    <th class="text-right">Qty Received</th>
+                    <th class="text-right">Qty BO</th>
+                    <th>ETA Date</th>
+                    <th>Order Date</th>
+                    <th>Received Date</th>
+                </tr>
+
+                {{#if isOnlyDefaultActive equal "false" }}
+                    <tr class="table-active tblAvoid customDoubleTableHeading">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+                    {{#if currencyList}}
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+                    {{/if}}
+
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+                    </tr>
+                {{/if}}
+            </thead>
+            <tbody>
+                {{#if records}}
+                    {{#each arrayify records}}
+                        <tr>
+                            <td colspan="15" style="font-weight: 800;">{{ value.Supplier_Name }}</td>
+                        </tr>
+                        {{#each item in value.SubAccounts}}
+                        <tr data-type="{{item.Transaction_Type}}">
+                            <td></td>
+                            <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Purchase_Order_Number }}</a></td>
+                            <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Transaction_Type }}</a></td>
+                            <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.ProductID }}</a></td>
+                            <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Product_Description }}</a></td>
+
+                            {{#if isOnlyDefaultActive}}
+
+                                {{#if currencyList}}
+
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Line_Cost_Ex c}}</a></td>
+                                    {{/if}}
+                                {{/each}}
+
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Line_Tax c}}</a></td>
+                                    {{/if}}
+                                {{/each}}
+
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Line_Cost_Inc c}}</a></td>
+                                    {{/if}}
+                                {{/each}}
+
+                                {{/if}}
+
+                            {{else}}
+                                <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Cost_Ex }}</a></td>
+                                <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Tax }}</a></td>
+                                <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Cost_Inc }}</a></td>
+
+                            {{/if}}
+
+
+
+                            <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Tax_Code }}</a></td>
+                            <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Ordered }}</a></td>
+                            <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.BackOrder }}</a></td>
+                            <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.BackOrder }}</a></td>
+                            <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.ETADate }}</a></td>
+                            <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.Order_Date }}</a></td>
+                            <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.ReceivedDate }}</a></td>
+                        </tr>
+                        {{/each}}
+                        <tr>
+                            <td style="font-weight: 800;" colspan="5">{{ value.Supplier_Name }} Total</td>
+
+
+                            {{#if isOnlyDefaultActive}}
+
+                                {{#if currencyList}}
+
+                                    {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalCostEx c}}</td>
+                                        {{/if}}
+                                    {{/each}}
+
+                                    {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalTax c}}</td>
+                                        {{/if}}
+                                    {{/each}}
+
+                                    {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalCostInc c}}</td>
+                                        {{/if}}
+                                    {{/each}}
+
+                                {{/if}}
+
+                            {{else}}
+
+                                <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostEx }}</td>
+                                <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
+                                <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostInc }}</td>
+                            {{/if}}
+
+                            <td colspan="7"></td>
+                        </tr>
+                    {{/each}}
+                {{/if}}
+            </tbody>
+        </table>
+    </div>
+    {{/vs1_report_template}}
+</template>

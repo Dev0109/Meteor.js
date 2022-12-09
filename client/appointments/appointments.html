@@ -3,16 +3,26 @@
         <div class="spinner"></div>
     </div>
 
-    <div class="d-sm-flex justify-content-between align-items-center mb-4 headerDiv" style="margin-left: 24px;">
-        <h3 class="text-dark mb-0 appointmentHeader" style="width: 100%; margin-right: 1em; padding-right: 32px;">
-            Appointment Overview
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <header class="pt-2 pb-3 d-flex">
+                <h3 class="mr-1">Appointment Overview {{> helpbutton}}</h3>
+            </header>
+        </div>
+        <div class="col-12 col-md-4 divLogged">
+            {{> loggedcompanyoverview}}
+        </div>
 
-            {{> helpbutton}}
-            {{#if equals accessStartStopOnly true}}
-            {{else}}
-                <!-- <a style="margin-right: 12px;" class="btn float-right btnoptionsmodal" role="button" href="#settingsModal"><i class="icon ion-android-more-horizontal"></i></a> -->
-            {{/if}}
-        </h3>
+<!--        <div class="d-sm-flex justify-content-between align-items-center mb-4 headerDiv" style="margin-left: 24px;">-->
+            <!--        <h3 class="text-dark mb-0 appointmentHeader" style="width: 100%; margin-right: 1em; padding-right: 32px;">-->
+<!--            Appointment Overview-->
+
+<!--            {{> helpbutton}}-->
+<!--            {{#if equals accessStartStopOnly true}}-->
+<!--            {{else}}-->
+<!--                &lt;!&ndash; <a style="margin-right: 12px;" class="btn float-right btnoptionsmodal" role="button" href="#settingsModal"><i class="icon ion-android-more-horizontal"></i></a> &ndash;&gt;-->
+<!--            {{/if}}-->
+<!--        </h3>-->
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
             <div class="modal-dialog modal-sm" role="document">
@@ -549,6 +559,7 @@
                                 <div class="form-group flex-grow-1 my-2"><label>App
                                         ID</label><input type="text" id="appID" name="appID" class="form-control" readonly>
                                     <input type="hidden" id="updateID" name="updateID" class="form-control">
+                                    <input type="hidden" id="logID" name="logID" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4 colStreetAddress" id="colStreetAddress">
@@ -882,10 +893,6 @@
                 </div>
             </div>
         </form>
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-        {{> copyfrequencypop}}
     </div>
 
     <div class="modal fade" role="dialog" id="frmOptions">
@@ -1289,7 +1296,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                             </div>
                         </div>
                         <div class="col-12 col-md-4 colProductService1" id="colProductService1" style="padding-top: 44px;">
-                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> 0 <i
+                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> {{attachmentCount}} <i
                                     class="fa fa-paperclip"></i></button>
                             <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera"
                                     aria-hidden="true"></i></button>
@@ -1469,6 +1476,8 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
             </div>
         </div>
     </div>
+    
+    <!-- {{> newLeaveRequestModal}} -->
 
     <style>
         .fc-next-button {

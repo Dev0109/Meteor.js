@@ -1,5 +1,21 @@
+<!-- Params
+    id
+    name
+    classes
+    type
+    value
+    disabled
+-->
 <template name="vs1_dropdown">
-    <select type="search" class="form-control" id="edtCustomerName" name="edtCustomerName" custid=" " custtaxcode=" " value = "{{value}}" disabled = "{{disabled}}"
+    <select 
+        type="{{type}}" 
+        class="form-control {{classes}}" 
+        id="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
+        name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}" 
+        custid=" " 
+        custtaxcode=" " 
+        value = "{{value}}" 
+        disabled = "{{disabled}}"
         style="background-color:rgb(255, 255, 255); cursor: pointer;">
     </select>
 </template>

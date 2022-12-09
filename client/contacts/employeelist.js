@@ -306,23 +306,37 @@ Template.employeelist.onRendered(function() {
     $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
         if(listData){
-            FlowRouter.go('/employeescard?id=' + listData);
+          let params = ''
+          var queryParams = FlowRouter.current().queryParams;
+          if(queryParams.bank) {
+            let edtBankName = queryParams.edtBankName;
+            let edtBankAccountName = queryParams.edtBankAccountName;
+            let edtBSB = queryParams.edtBSB;
+            let edtBankAccountNo = queryParams.edtBankAccountNo;
+            let swiftCode = queryParams.swiftCode;
+            let apcaNo = queryParams.apcaNo;
+            let routingNo = queryParams.routingNo;
+            let sltBankCodes = queryParams.sltBankCodes;
+            params = '&bank=true&edtBankName='+edtBankName+'&edtBankAccountName='+edtBankAccountName+'&edtBSB='+edtBSB+'&edtBankAccountNo='+edtBankAccountNo+'&swiftCode='+swiftCode+'&apcaNo='+apcaNo+'&routingNo='+routingNo+'&sltBankCodes='+sltBankCodes;
+          }
+          FlowRouter.go('/employeescard?id=' + listData + params);
         }
     });
-    templateObject.checkSetupWizardFinished = async function () {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
-        if( setupFinished === null || setupFinished ===  "" ){
-            let setupInfo = await organisationService.getSetupInfo();
-            if( setupInfo.tcompanyinfo.length > 0 ){
-                let data = setupInfo.tcompanyinfo[0];
-                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-                templateObject.setupFinished.set(data.IsSetUpWizard)
-            }
-        }else{
-            templateObject.setupFinished.set(setupFinished)
-        }
-    }
-    templateObject.checkSetupWizardFinished();
+    // templateObject.checkSetupWizardFinished = async function () {
+    //     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+    //     if( setupFinished === null || setupFinished ===  "" ){
+    //         let setupInfo = await organisationService.getSetupInfo();
+    //         if( setupInfo.tcompanyinfo.length > 0 ){
+    //             let data = setupInfo.tcompanyinfo[0];
+    //             localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+    //             templateObject.setupFinished.set(data.IsSetUpWizard)
+    //         }
+    //     }else{
+    //         templateObject.setupFinished.set(setupFinished)
+    //     }
+    // }
+    // templateObject.checkSetupWizardFinished();
+    checkSetupFinished();
 });
 
 Template.employeelist.events({

@@ -891,6 +891,7 @@ export class ReportService extends BaseService {
     getAllBASReturn(data) {
         let options = {
             select: "[Active]=true",
+            OrderBy: "ID desc",
             ListType: "Detail",
         };
         return this.getList(this.ERPObjects.TBASReturn, options);

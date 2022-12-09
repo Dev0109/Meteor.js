@@ -30,11 +30,20 @@
                 display: none;
             }
         </style> -->
-        <header class="py-2 d-flex align-items-center">
-            <h2 class="mr-1">Contact Overview</h2>
+        <header class="row">
+            <div class="col-12 col-md-4">
+                <header class="pt-2 pb-3 d-flex">
+                    <h2 class="mr-1">Contact Overview {{> helpbutton}}</h2>
+                </header>
+            </div>
+            <div class="col-12 col-md-4 divLogged">
+                {{> loggedcompanyoverview}}
+            </div>
 
-            {{> helpbutton}}
-            {{> loggedcompanyoverview}}
+<!--            <h2 class="mr-1">Contact Overview</h2>-->
+
+<!--            {{> helpbutton}}-->
+<!--            {{> loggedcompanyoverview}}-->
             <!-- Start Help View Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">

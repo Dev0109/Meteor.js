@@ -120,6 +120,8 @@ export default class FxGlobalFunctions {
   static handleChangedCurrency(currency = "AUD", defaultCurrencyCode) {
     if (currency != defaultCurrencyCode) {
       $("#sltCurrency").trigger("change");
+      Session.setPersistent("tempCurrencyState", $('#sltCurrency').val());
+      Session.setPersistent("tempExchangeRateState", $('#exchange_rate').val());
     }
   }
 

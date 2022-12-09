@@ -790,47 +790,123 @@ Template.trialbalance.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
+    $('.fullScreenSpin').css('display', 'inline-block')
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_")
-        // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+    setTimeout(async function(){
+      let targetElement = document.getElementsByClassName('printReport')[0];
+      targetElement.style.width = "210mm";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "20px";
+      targetElement.style.height = "fit-content";
+      targetElement.style.fontSize = "13.33px";
+      targetElement.style.color = "#000000";
+      targetElement.style.overflowX = "visible";
+      let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
+      let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
+      for (let k = 0; k< targetTds.length; k++) {
+          $(targetTds[k]).attr('style', 'min-width: 0px !important')
+          $(targetTds[k]).attr('style', 'max-width: 130px !important')
       }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("140")) {
-            reportData.FormID = 140;
-            Meteor.call("sendNormalEmail", reportData);
+      for (let j = 0; j< targetThs.length; j++) {
+          $(targetThs[j]).attr('style', 'min-width: 0px !important')
+          $(targetThs[j]).attr('style', 'max-width: 130px !important')
+      }
+
+      let docTitle = "Trial Balance.pdf";
+
+
+      var opt = {
+          margin: 0,
+          filename: docTitle,
+          image: {
+              type: 'jpeg',
+              quality: 0.98
+          },
+          html2canvas: {
+              scale: 2
+          },
+          jsPDF: {
+              unit: 'in',
+              format: 'a4',
+              orientation: 'portrait'
           }
-        } else {
-          if (reportData.FormID == 140)
-            Meteor.call("sendNormalEmail", reportData);
-        }
+      };
+      let source = targetElement;
+
+      async function getAttachments () {
+        return new Promise(async(resolve, reject)=> {
+          html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
+            let pdfObject = "";
+            let base64data = dataObject.split(',')[1];
+            pdfObject = {
+              filename: docTitle,
+              content: base64data,
+              encoding: 'base64'
+            }
+            let attachments = [];
+            attachments.push(pdfObject);
+            resolve(attachments)
+          })
+        })
       }
-    });
-    document.title = "Trial Balance Report";
-    $(".printReport").print({
-      title: document.title + " | Trial Balance | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+
+      async function checkBasedOnType() {
+        return new Promise(async(resolve, reject)=>{
+          let values = [];
+          let basedOnTypeStorages = Object.keys(localStorage);
+          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split("_")[2];
+            return (
+              storage.includes("BasedOnType_")
+              // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+            );
+          });
+          let i = basedOnTypeStorages.length;
+          if (i > 0) {
+            while (i--) {
+              values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+          }
+          for(let j = 0; j < values.length; j ++) {
+            let value = values[j]
+            let reportData = JSON.parse(value);
+            reportData.HostURL = $(location).attr("protocal")
+              ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+              : "http://" + $(location).attr("hostname");
+            if (reportData.BasedOnType.includes("P")) {
+              if (reportData.FormID == 1) {
+                let formIds = reportData.FormIDs.split(",");
+                if (formIds.includes("140")) {
+                  reportData.FormID = 140;
+                  reportData.attachments = await getAttachments()
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              } else {
+                if (reportData.FormID == 140){
+                  reportData.attachments = await getAttachments();
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              }
+            }
+            if(j == values.length -1) {resolve()}
+          }
+        })
+      }
+
+      await checkBasedOnType();
+      $('.fullScreenSpin').css('display', 'none');
+      targetElement.style.width = "100%";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "0px";
+      targetElement.style.fontSize = "1rem";
+      document.title = "Trial Balance Report";
+      $(".printReport").print({
+        title: document.title + " | Trial Balance | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+      });
+    }, delayTimeAfterSound);
   },
   "click .btnExportReport": function () {
     LoadingOverlay.show();

@@ -282,6 +282,19 @@
             .dataTables_wrapper {
                 min-height: 10vh !important;
             }
+
+            .gutter {
+                z-index: 20;
+                position:relative;
+                background-color: #00a3d3;
+                cursor: col-resize;
+                box-shadow: 2px 1px rgba(40,40,40,0.3);
+            }
+
+            .gutter-vertical {
+                cursor: row-resize;
+                box-shadow: 1px 2px rgba(40,40,40,0.3);
+            }
         </style>
         <script>
             function match() {
@@ -357,87 +370,91 @@
                         <div class="row no-gutters">
                             <hr style="width: 100%; margin: 16px; margin-top: -16px;" />
                         </div>
-                        <div class="row no-gutters">
+                        <div class="row no-gutters" style="height:970px">
                             <div class="col-12">
-                                <h4 style="margin-left: 16px; margin-bottom: 16px;">1. Select your transactions</h4>
-                            </div>
-                            <div class="col-12">
-                                <h5 style="margin-left: 16px; margin-bottom: 0;">Deposits</h5>
-                            </div>
-                            <div class="col-12 card-body p-3 rounded">
-                                <div class="table-responsive" style="max-height:400px; overflow-x:hidden !important; overflow-y:auto !important">
-                                    <style>
-                                        #tblVS1Dep_filter .form-control, #tblVS1Dep_filter label{
-                                            display:none!important;
-                                        }
-
-                                        #tblVS1With_filter .form-control, #tblVS1With_filter label{
-                                            display:none!important;
-                                        }
-                                    </style>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="dataTables_filter">
-                                                <label><input type="search" class="searchInputDep" placeholder="" aria-controls="tblVS1Dep" autocomplete="off" id="myInputSearchDep" name="myInputSearchDep" style="margin-left: 0.5em;"></label>
+                                <div class="row no-gutters" id="topList" style="overflow:hidden">
+                                    <div class="col-12">
+                                        <h4 style="margin-left: 16px; margin-bottom: 16px;">1. Select your transactions</h4>
+                                    </div>
+                                    <div class="col-12">
+                                        <h5 style="margin-left: 16px; margin-bottom: 0;">Deposits</h5>
+                                    </div>
+                                    <div class="col-12 card-body p-3 rounded" style="height:415px; overflow-x:hidden !important; overflow-y:auto !important">
+                                        <div class="table-responsive" style="overflow-x:hidden !important;">
+                                            <style>
+                                                #tblVS1Dep_filter .form-control, #tblVS1Dep_filter label{
+                                                    display:none!important;
+                                                }
+        
+                                                #tblVS1With_filter .form-control, #tblVS1With_filter label{
+                                                    display:none!important;
+                                                }
+                                            </style>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-6">
+                                                    <div class="dataTables_filter">
+                                                        <label><input type="search" class="searchInputDep" placeholder="" aria-controls="tblVS1Dep" autocomplete="off" id="myInputSearchDep" name="myInputSearchDep" style="margin-left: 0.5em;"></label>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <table id="tblVS1Dep" name="tblVS1Dep" class="table dataTable table-striped table-bordered tblVS1Dep">
+                                                <thead>
+                                                    <tr class="dnd-moved">
+                                                        <th class="no-sort" style="width:30px;">
+                                                            <div class="custom-control custom-checkbox" id="" style="width:15px;">
+                                                                <input type="checkbox" class="custom-control-input" id="checkallrecondep">
+                                                                <label class="custom-control-label" for="checkallrecondep"></label>
+                                                            </div>
+                                                        </th>
+                                                        <th class="depositClick" style="width:100px;">Date</th>
+                                                        <th class="depositClick" style="width:200px;">Ref</th>
+                                                        <th class="depositClick" style="width:200px;">Name</th>
+                                                        <th class="depositClick">Description</th>
+                                                        <th class="depositClick" style="width: 100px;">Payment ID</th>
+                                                        <th class="depositClick text-right" style="width: 100px;">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                    <table id="tblVS1Dep" name="tblVS1Dep" class="table dataTable table-striped table-bordered tblVS1Dep">
-                                        <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="no-sort" style="width:30px;">
-                                                    <div class="custom-control custom-checkbox" id="" style="width:15px;">
-                                                        <input type="checkbox" class="custom-control-input" id="checkallrecondep">
-                                                        <label class="custom-control-label" for="checkallrecondep"></label>
-                                                    </div>
-                                                </th>
-                                                <th class="depositClick" style="width:100px;">Date</th>
-                                                <th class="depositClick" style="width:200px;">Ref</th>
-                                                <th class="depositClick" style="width:200px;">Name</th>
-                                                <th class="depositClick">Description</th>
-                                                <th class="depositClick" style="width: 100px;">Payment ID</th>
-                                                <th class="depositClick text-right" style="width: 100px;">Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row no-gutters">
-                            <div class="col-12">
-                                <h5 style="margin-left: 16px; margin-bottom: 0;">Withdrawals</h5>
-                            </div>
-                            <div class="col-12 card-body p-3 rounded">
-                                <div class="table-responsive" style="max-height:400px; overflow-x:hidden !important; overflow-y:auto !important">
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="dataTables_filter">
-                                                <label>Search:<input type="search" class="myInputSearchWith" placeholder="" aria-controls="tblVS1With" autocomplete="off" id="myInputSearchWith" name="myInputSearchWith" style="margin-left: 0.5em;"></label>
+                                <div class="row no-gutters" id="bottomList" style="overflow:hidden">
+                                    <div class="col-12" style="padding-top:18px">
+                                        <h5 style="margin-left: 16px; margin-bottom: 0;">Withdrawals</h5>
+                                    </div>
+                                    <div class="col-12 card-body p-3 rounded" style="height:415px; overflow-x:hidden !important; overflow-y:auto !important">
+                                        <div class="table-responsive" style="overflow-x:hidden !important;">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-6">
+                                                    <div class="dataTables_filter">
+                                                        <label>Search:<input type="search" class="myInputSearchWith" placeholder="" aria-controls="tblVS1With" autocomplete="off" id="myInputSearchWith" name="myInputSearchWith" style="margin-left: 0.5em;"></label>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <table id="tblVS1With" name="tblVS1With" class="table dataTable table-striped table-bordered tblVS1With">
+                                                <thead>
+                                                    <tr class="dnd-moved">
+                                                        <th style="width:30px;">
+                                                            <div class="custom-control custom-checkbox" id="" style="width:15px;">
+                                                                <input type="checkbox" class="custom-control-input" id="checkallreconwith">
+                                                                <label class="custom-control-label" for="checkallreconwith"></label>
+                                                            </div>
+                                                        </th>
+                                                        <th style="width:100px;">Date</th>
+                                                        <th style="width:200px;">Ref</th>
+                                                        <th style="width:200px;">Name</th>
+                                                        <th>Description</th>
+                                                        <th style="width: 100px;">Payment ID</th>
+                                                        <th class="text-right" style="width: 100px;">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>                                            
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                    <table id="tblVS1With" name="tblVS1With" class="table dataTable table-striped table-bordered tblVS1With">
-                                        <thead>
-                                            <tr class="dnd-moved">
-                                                <th style="width:30px;">
-                                                    <div class="custom-control custom-checkbox" id="" style="width:15px;">
-                                                        <input type="checkbox" class="custom-control-input" id="checkallreconwith">
-                                                        <label class="custom-control-label" for="checkallreconwith"></label>
-                                                    </div>
-                                                </th>
-                                                <th style="width:100px;">Date</th>
-                                                <th style="width:200px;">Ref</th>
-                                                <th style="width:200px;">Name</th>
-                                                <th>Description</th>
-                                                <th style="width: 100px;">Payment ID</th>
-                                                <th class="text-right" style="width: 100px;">Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>                                            
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>

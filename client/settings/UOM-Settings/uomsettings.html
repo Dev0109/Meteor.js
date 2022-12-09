@@ -221,7 +221,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success btnSaveUOM" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-danger btnDeleteUOM vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <span id="view-in-active"></span>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                 </div>
             </div>
@@ -229,7 +229,7 @@
     </div>
     <!-- End UOM Settings Modal -->
     <!-- Import Modal -->
-    {{> import_template}}
+    {{> import_template ImportformName="UOM Settings"}}
     <script>
         modalDraggable();
     </script>

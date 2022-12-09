@@ -9,10 +9,22 @@ Template.bankNameModal.onCreated(function () {
 Template.bankNameModal.onRendered(function () {
   let templateObject = Template.instance();
 
-  let splashArrayBankNameList = [['Armidale Building Society Limited', ''], ['Adelaide Bank Limited', ''], ['Test', '']]
+  let splashArrayBankNameList = [
+    ['CBA', 'Commonwealth Bank'],
+    ['NAB', 'National Australian Bank'],
+    ['WBC', 'Westpac Bank'],
+    ['MQG', 'Macquarie Bank'],
+    ['ANZ', 'Australia and New Zealand Banking Group'],
+    ['BEN', 'Bendigo Bank'],
+    ['BOQ', 'Bank of Queensland'],
+    ['VUK', 'Virgin Money'],
+    ['BFL', 'BSP Financial Group'],
+    ['JDO', 'Judo Bank']
+  ];
+
   $('#tblBankName').dataTable({
     data: splashArrayBankNameList,
-    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B", 
+    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
     columnDefs: [
       { className: "bankName", "targets": [0] },
       { className: "bankDescription", "targets": [1] },
@@ -29,8 +41,8 @@ Template.bankNameModal.onRendered(function () {
       $("<button class='btn btn-primary btnRefreshBankName' type='button' id='btnRefreshBankName' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankName_filter");
     }
   });
-
 });
+
 
 Template.bankNameModal.events({
 

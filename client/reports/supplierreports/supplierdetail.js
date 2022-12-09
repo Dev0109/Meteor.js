@@ -24,14 +24,225 @@ Template.supplierdetail.onCreated(() => {
 });
 
 Template.supplierdetail.onRendered(() => {
- 
- 
+  const templateObject = Template.instance();
+  LoadingOverlay.show();
+
+  templateObject.initDate = () => {
+    Datehandler.initOneMonth();
+  };
+
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  };
+
+  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getSupplierDetailReportData();
+
+    // await templateObject.loadReport(
+    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    //   ignoreDate
+    // );
+  };
+
+
+  /**
+   * @deprecated since 23 septemeber 2022
+   */
+   templateObject.getSupplierDetailReportData = async function () {
+    let data = [];
+    if (!localStorage.getItem('VS1SupplierDetail_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
+      if( data.tsupplierproduct.length > 0 ){
+        localStorage.setItem('VS1SupplierDetail_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1SupplierDetail_Report'));
+    }
+
+    let reportSummary = data.tsupplierproduct.map(el => {
+      let resultobj = {};
+      Object.entries(el).map(([key, val]) => {
+          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+          return resultobj;
+      })
+      return resultobj;
+    })
+    let reportData = [];
+    if( reportSummary.length > 0 ){
+      for (const item of reportSummary ) {
+        let isExist = reportData.filter((subitem) => {
+          if( subitem.Supplier_Name == item.Supplier_Name ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
+
+        if( isExist.length == 0 ){
+          reportData.push({
+              TotalCostEx: 0,
+              TotalCostInc: 0,
+              TotalTax: 0,
+              SubAccounts: [item],
+              ...item
+          });
+        }
+       LoadingOverlay.hide();
+      }
+    }
+    let useData = reportData.filter((item) => {
+      let TotalCostEx = 0;
+      let TotalCostInc = 0;
+      let TotalTax = 0;
+      item.SubAccounts.map((subitem) => {
+        TotalCostEx += subitem.Line_Cost_Ex;
+        TotalCostInc += subitem.Line_Cost_Inc;
+        TotalTax += subitem.Line_Tax;
+      });
+      item.TotalCostEx = TotalCostEx;
+      item.TotalCostInc = TotalCostInc;
+      item.TotalTax = TotalTax;
+      return item;
+    });
+    templateObject.records.set(useData);
+
+
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        $("td a").each(function () {
+          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $("td").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+       LoadingOverlay.hide();
+      }, 1000);
+    }
+  }
+
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+    LoadingOverlay.show();
+    templateObject.setDateAs(dateFrom);
+    let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
+      return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+    data = data.response;
+
+    let reportSummary = data.tsupplierproduct.map(el => {
+      let resultobj = {};
+      Object.entries(el).map(([key, val]) => {
+          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+          return resultobj;
+      })
+      return resultobj;
+    })
+    let reportData = [];
+    if( reportSummary.length > 0 ){
+      for (const item of reportSummary ) {
+        let isExist = reportData.filter((subitem) => {
+          if( subitem.Supplier_Name == item.Supplier_Name ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
+
+        if( isExist.length == 0 ){
+          reportData.push({
+              TotalCostEx: 0,
+              TotalCostInc: 0,
+              TotalTax: 0,
+              SubAccounts: [item],
+              ...item
+          });
+        }
+       LoadingOverlay.hide();
+      }
+    }
+    let useData = reportData.filter((item) => {
+      let TotalCostEx = 0;
+      let TotalCostInc = 0;
+      let TotalTax = 0;
+      item.SubAccounts.map((subitem) => {
+        TotalCostEx += subitem.Line_Cost_Ex;
+        TotalCostInc += subitem.Line_Cost_Inc;
+        TotalTax += subitem.Line_Tax;
+      });
+      item.TotalCostEx = TotalCostEx;
+      item.TotalCostInc = TotalCostInc;
+      item.TotalTax = TotalTax;
+      return item;
+    });
+    templateObject.records.set(useData);
+
+
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        $("td a").each(function () {
+          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $("td").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+       LoadingOverlay.hide();
+      }, 1000);
+    }
+  }
+
+  templateObject.initDate();
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) );
 });
 
 Template.supplierdetail.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1SupplierProduct_Report", "");
+    localStorage.setItem("VS1SupplierDetail_Report", "");
     Meteor._reload.reload();
   },
   "click .btnExportReport": function () {
@@ -145,7 +356,7 @@ Template.supplierdetail.events({
   },
   "change .edtReportDates": (e, templateObject) => {
     // LoadingOverlay.show();
-    // localStorage.setItem('VS1SupplierProduct_Report', '');
+    // localStorage.setItem('VS1SupplierDetail_Report', '');
     // let templateObject = Template.instance();
     // var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     // var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -153,14 +364,14 @@ Template.supplierdetail.events({
     // //LoadingOverlay.hide();
 
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     );
   },
   // "click #lastMonth": async function () {
   //   LoadingOverlay.show();
-  //   localStorage.setItem('VS1SupplierProduct_Report', '');
+  //   localStorage.setItem('VS1SupplierDetail_Report', '');
   //   let templateObject = Template.instance();
   //   let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
   //   let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
@@ -169,7 +380,7 @@ Template.supplierdetail.events({
   // },
   // "click #lastQuarter": async function () {
   //   LoadingOverlay.show();
-  //   localStorage.setItem('VS1SupplierProduct_Report', '');
+  //   localStorage.setItem('VS1SupplierDetail_Report', '');
   //   let templateObject = Template.instance();
   //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
   //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
@@ -178,7 +389,7 @@ Template.supplierdetail.events({
   // },
   // "click #last12Months": async function () {
   //   LoadingOverlay.show();
-  //   localStorage.setItem('VS1SupplierProduct_Report', '');
+  //   localStorage.setItem('VS1SupplierDetail_Report', '');
   //   let templateObject = Template.instance();
   //   $(".fullScreenSpin").css("display", "inline-block");
   //   $("#dateFrom").attr("readonly", false);
@@ -210,11 +421,11 @@ Template.supplierdetail.events({
     // $(".fullScreenSpin").css("display", "inline-block");
     // $("#dateFrom").attr("readonly", true);
     // $("#dateTo").attr("readonly", true);
-    // localStorage.setItem('VS1SupplierProduct_Report', '');
+    // localStorage.setItem('VS1SupplierDetail_Report', '');
 
     let templateObject = Template.instance();
     LoadingOverlay.show();
-    localStorage.setItem("VS1SupplierProduct_Report", "");
+    localStorage.setItem("VS1SupplierDetail_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
@@ -288,8 +499,8 @@ Template.supplierdetail.events({
    */
    "change #dateTo, change #dateFrom": (e, templateObject) => {
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     );
     templateObject.dateAsAt.set($('#dateTo').val());

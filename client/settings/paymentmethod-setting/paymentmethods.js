@@ -230,13 +230,13 @@ $('#tblPaymentMethodList tbody').on("click", "tr", function () {
        }else{
          templateObject.includeCreditCard.set(false);
        }
-
-      //});
-
-
-      $(this).closest('tr').attr('data-target', '#myModalPaymentMethod');
-      $(this).closest('tr').attr('data-toggle', 'modal');
-
+       $('#myModalPaymentMethod').modal('show');
+      //Make btnDelete "Make Active or In-Active"
+      if(status == "In-Active"){
+          $('#view-in-active').html("<button class='btn btn-success btnActivePaymentMethod vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+      }else{
+          $('#view-in-active').html("<button class='btn btn-danger btnDeletePaymentMethod vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+      }
     }
 
     }
@@ -273,7 +273,7 @@ Template.paymentmethodSettings.events({
       sideBarService.getPaymentMethodDataList(initialBaseDataLoad, 0, false).then(function (dataReload) {
           addVS1Data('TPaymentMethodList', JSON.stringify(dataReload)).then(function (datareturn) {
             sideBarService.getPaymentMethodDataVS1().then(function (dataPayment) {
-                addVS1Data('TPaymentMethod', JSON.stringify(dataPayment)).then(function (datareturn) {
+                addVS1Data('TPaymentMethodList', JSON.stringify(dataPayment)).then(function (datareturn) {
                     Meteor._reload.reload();
                 }).catch(function (err) {
                     Meteor._reload.reload();
@@ -287,7 +287,6 @@ Template.paymentmethodSettings.events({
       }).catch(function (err) {
           Meteor._reload.reload();
       });
-      // Meteor._reload.reload();
   },
   'click .btnDeletePaymentMethod': function () {
     playDeleteAudio();
@@ -302,9 +301,10 @@ Template.paymentmethodSettings.events({
         }
     };
 
+
     taxRateService.savePaymentMethod(objDetails).then(function (objDetails) {
       sideBarService.getPaymentMethodDataVS1().then(function(dataReload) {
-          addVS1Data('TPaymentMethod',JSON.stringify(dataReload)).then(function (datareturn) {
+          addVS1Data('TPaymentMethodList',JSON.stringify(dataReload)).then(function (datareturn) {
           location.reload(true);
           }).catch(function (err) {
             location.reload(true);
@@ -329,6 +329,60 @@ Template.paymentmethodSettings.events({
         $('.fullScreenSpin').css('display','none');
     });
   }, delayTimeAfterSound);
+  },
+  'click .btnActivatePaymentMethod': function() {
+      playSaveAudio();
+      let contactService = new ContactService();
+      setTimeout(function() {
+          $('.fullScreenSpin').css('display', 'inline-block');
+          let paymentMethodID = $('#edtPaymentMethodID').val();
+          //let headerDept = $('#sltDepartment').val();
+          let paymentName = $('#edtPaymentMethodName').val();
+          let isCreditCard = false;
+          let siteCode = $('#edtSiteCode').val();
+
+          if($('#isformcreditcard').is(':checked')){
+            isCreditCard = true;
+          }else{
+            isCreditCard = false;
+          }
+          objDetails = {
+             type: "TPaymentMethod",
+             fields: {
+                 PayMethodID: parseInt(paymentMethodID),
+                 Active: true,
+                 //Name: paymentName,
+                 IsCreditCard: isCreditCard
+             }
+         };
+
+         taxRateService.savePaymentMethod(objDetails).then(function (objDetails) {
+           sideBarService.getPaymentMethodDataVS1().then(function(dataReload) {
+               addVS1Data('TPaymentMethodList',JSON.stringify(dataReload)).then(function (datareturn) {
+               location.reload(true);
+               }).catch(function (err) {
+                 location.reload(true);
+               });
+           }).catch(function(err) {
+               location.reload(true);
+           });
+         }).catch(function (err) {
+           swal({
+           title: 'Oooops...',
+           text: err,
+           type: 'error',
+           showCancelButton: false,
+           confirmButtonText: 'Try Again'
+           }).then((result) => {
+           if (result.value) {
+            Meteor._reload.reload();
+           } else if (result.dismiss === 'cancel') {
+
+           }
+           });
+             $('.fullScreenSpin').css('display','none');
+         });
+      }, delayTimeAfterSound);
   },
   'click .btnSavePaymentMethod': function () {
     playSaveAudio();
@@ -360,17 +414,16 @@ Template.paymentmethodSettings.events({
         objDetails = {
            type: "TPaymentMethod",
            fields: {
-               ID: parseInt(paymentMethodID),
+               PayMethodID: parseInt(paymentMethodID),
                Active: true,
-               //PaymentMethodName: paymentName,
-               IsCreditCard: isCreditCard,
-               PublishOnVS1:true
+               //Name: paymentName,
+               IsCreditCard: isCreditCard
            }
        };
 
        taxRateService.savePaymentMethod(objDetails).then(function (objDetails) {
          sideBarService.getPaymentMethodDataVS1().then(function(dataReload) {
-             addVS1Data('TPaymentMethod',JSON.stringify(dataReload)).then(function (datareturn) {
+             addVS1Data('TPaymentMethodList',JSON.stringify(dataReload)).then(function (datareturn) {
              location.reload(true);
              }).catch(function (err) {
                location.reload(true);
@@ -399,7 +452,7 @@ Template.paymentmethodSettings.events({
            type: "TPaymentMethod",
            fields: {
                Active: true,
-               PaymentMethodName: paymentName,
+               Name: paymentName,
                IsCreditCard: isCreditCard,
                PublishOnVS1:true
            }
@@ -437,17 +490,16 @@ Template.paymentmethodSettings.events({
      objDetails = {
         type: "TPaymentMethod",
         fields: {
-            ID: parseInt(paymentMethodID),
+            PayMethodID: parseInt(paymentMethodID),
             Active: true,
-            PaymentMethodName: paymentName,
-            IsCreditCard: isCreditCard,
-            PublishOnVS1:true
+            Name: paymentName,
+            IsCreditCard: isCreditCard
         }
     };
 
     taxRateService.savePaymentMethod(objDetails).then(function (objDetails) {
       sideBarService.getPaymentMethodDataVS1().then(function(dataReload) {
-          addVS1Data('TPaymentMethod',JSON.stringify(dataReload)).then(function (datareturn) {
+          addVS1Data('TPaymentMethodList',JSON.stringify(dataReload)).then(function (datareturn) {
           location.reload(true);
           }).catch(function (err) {
             location.reload(true);
@@ -480,6 +532,7 @@ Template.paymentmethodSettings.events({
       $('#edtPaymentMethodID').val('');
       $('#edtPaymentMethodName').val('');
       templateObject.includeCreditCard.set(false);
+      $('#view-in-active').html("<button class='btn btn-danger btnDeletePaymentMethod vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
   },
   'click .btnBack':function(event){
     playCancelAudio();
@@ -592,7 +645,7 @@ Template.paymentmethodSettings.events({
                           objDetails = {
                               type: "TPaymentMethod",
                               fields: {
-                                  PaymentMethodName: results.data[i + 1][0],
+                                  Name: results.data[i + 1][0],
                                   IsCreditCard: isCreditCard || false,
                                   Active: true
                               }

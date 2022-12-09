@@ -83,6 +83,34 @@ Template.addAccountModal.onRendered(function () {
   };
   templateObject.loadAccountTypes();
 
+  $("#edtBankName").editableSelect();
+  $("#edtBankName")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      var bankName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#bankNameModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#bankNameModal").modal("toggle");
+        } else {
+          $("#bankNameModal").modal();
+        }
+      }
+    });
+
+    $(document).on("click", "#tblBankName tbody tr", function (e) {
+      var table = $(this);
+      let BankName = table.find(".bankName").text();
+      $('#bankNameModal').modal('toggle');
+      $('#edtBankName').val(BankName);
+    });
+
   templateObject.getTaxRates = function () {
     getVS1Data("TTaxcodeVS1")
       .then(function (dataObject) {
@@ -957,14 +985,30 @@ Template.addAccountModal.events({
             const supplier = document.querySelector('.btn-add-to-supplier')
             const cancel = document.querySelector('.btn-apca-cancel')
         
+            let edtBankName = $('#edtBankName').val();
+            let edtBankAccountName = $('#edtBankAccountName').val();
+            let edtBSB = $('#edtBSB').val();
+            let edtBankAccountNo = $('#edtBankAccountNo').val();
+            let swiftCode = $('#swiftCode').val();
+            let apcaNo = $('#apcaNo').val();
+            let routingNo = $('#routingNo').val();
+            let sltBankCodes = $('#sltBankCodes').val();
+            let params = 'bank=true&edtBankName='+edtBankName+'&edtBankAccountName='+edtBankAccountName+'&edtBSB='+edtBSB+'&edtBankAccountNo='+edtBankAccountNo+'&swiftCode='+swiftCode+'&apcaNo='+apcaNo+'&routingNo='+routingNo+'&sltBankCodes='+sltBankCodes
+
             employee.addEventListener('click', () => {
-                FlowRouter.go('/employeescard');
                 swal.close();
+                $("#addNewAccount").modal("toggle");
+                setTimeout(() => {
+                  FlowRouter.go('/employeelist?'+params);
+                }, 150);
             })
         
             supplier.addEventListener('click', () => {
-                FlowRouter.go('/supplierscard');
                 swal.close();
+                $("#addNewAccount").modal("toggle");
+                setTimeout(() => {
+                  FlowRouter.go('/supplierlist?'+params);
+                }, 150);
             })
         
             cancel.addEventListener('click', () => {

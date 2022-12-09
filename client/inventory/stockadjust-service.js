@@ -83,6 +83,15 @@ export class StockTransferService extends BaseService {
         return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
     }
 
+    getSerialNumberListByDeptID(deptID,productID) {
+        let options = {
+            AllocType: "In-Stock",
+            DepartmentID: parseInt(deptID)||0,
+            ProductId: parseInt(productID)||0
+        };
+        return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
+    }
+
     getAllSerialNumber(limitcount, limitfrom) {
         let options = {
             LimitCount: parseInt(limitcount),

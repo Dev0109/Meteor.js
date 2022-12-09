@@ -286,11 +286,13 @@ Template.organisationsettings.onRendered(function() {
         let companyName = mainData.CompanyName;
         let postalAddress =
             mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
-        let physicalAddress =
-            mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
+        // let physicalAddress =
+        //     mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
+        let physicalAddress = mainData.Address + "\n" + mainData.Address2;
         templateObject.samePhysicalAddress1.set(mainData.Address);
         templateObject.samePhysicalAddress2.set(mainData.Address2);
-        templateObject.samePhysicalAddress3.set(mainData.Address3);
+        // templateObject.samePhysicalAddress3.set(mainData.Address3);
+        templateObject.samePhysicalAddress3.set("");
 
         $("#displayname").val(mainData.CompanyName);
         $("#tradingname").val(mainData.TradingName);
@@ -1412,7 +1414,11 @@ Template.organisationsettings.events({
             $(".chkusregiontax-col").show();
         } else {
             $("#chkusregiontax").prop("checked", false);
-            $(".chkusregiontax-col").hide();
+            swal('Ooops...', 'Can\'t alter country as the entire VS1 Database are set to this region.', 'error');
+            $(event.target).val("United States");
+            event.preventDefault();
+            return false;
+            // $(".chkusregiontax-col").hide();
         }
     },
 });

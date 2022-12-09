@@ -340,6 +340,7 @@ Template.inventorylist.onRendered(function() {
                                 splashArrayProductList.push(dataList);
                                 dataTableList.push(dataList);
                             }
+                            
 
                             templateObject.datatablerecords.set(dataTableList);
                             templateObject.datatablebackuprecords.set(dataTableList);
@@ -409,7 +410,7 @@ Template.inventorylist.onRendered(function() {
                                       info: true,
                                       responsive: true,
                                       order: [
-                                          [0, "asc"]
+                                          [1, "asc"] // modified by matthias
                                       ],
                                       action: function() {
                                           $("#tblInventoryOverview").DataTable().ajax.reload();
@@ -552,7 +553,8 @@ Template.inventorylist.onRendered(function() {
                     splashArrayProductList.push(dataList);
                     dataTableList.push(dataList);
                 }
-
+                // added bu matthias
+                
                     templateObject.datatablerecords.set(dataTableList);
                     // templateObject.datatablebackuprecords.set(dataTableList);
 
@@ -620,7 +622,7 @@ Template.inventorylist.onRendered(function() {
                                 info: true,
                                 responsive: true,
                                 order: [
-                                    [0, "asc"]
+                                    [1, "asc"] // modified by matthias
                                 ],
                                 action: function() {
                                     $("#tblInventoryOverview").DataTable().ajax.reload();
@@ -757,9 +759,10 @@ Template.inventorylist.onRendered(function() {
                             data.tproductlist[i].CUSTFLD2 || "",
                         ];
                         splashArrayProductList.push(dataList);
+                        
                         dataTableList.push(dataList);
                     }
-
+                    
                         templateObject.datatablerecords.set(dataTableList);
                         templateObject.datatablebackuprecords.set(dataTableList);
 
@@ -827,7 +830,7 @@ Template.inventorylist.onRendered(function() {
                                   info: true,
                                   responsive: true,
                                   order: [
-                                      [0, "asc"]
+                                      [1, "asc"] // modified by matthias
                                   ],
                                   action: function() {
                                       $("#tblInventoryOverview").DataTable().ajax.reload();
@@ -1121,20 +1124,21 @@ Template.inventorylist.onRendered(function() {
             templateObject.taxraterecords.set(taxCodesList);
         });
     };
-    templateObject.checkSetupWizardFinished = async function () {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
-        if( setupFinished === null || setupFinished ===  "" ){
-            let setupInfo = await organisationService.getSetupInfo();
-            if( setupInfo.tcompanyinfo.length > 0 ){
-                let data = setupInfo.tcompanyinfo[0];
-                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-                templateObject.setupFinished.set(data.IsSetUpWizard)
-            }
-        }else{
-            templateObject.setupFinished.set(setupFinished)
-        }
-    }
-    templateObject.checkSetupWizardFinished();
+    // templateObject.checkSetupWizardFinished = async function () {
+    //     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+    //     if( setupFinished === null || setupFinished ===  "" ){
+    //         let setupInfo = await organisationService.getSetupInfo();
+    //         if( setupInfo.tcompanyinfo.length > 0 ){
+    //             let data = setupInfo.tcompanyinfo[0];
+    //             localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+    //             templateObject.setupFinished.set(data.IsSetUpWizard)
+    //         }
+    //     }else{
+    //         templateObject.setupFinished.set(setupFinished)
+    //     }
+    // }
+    // templateObject.checkSetupWizardFinished();
+    checkSetupFinished();
     // templateObject.getAccountNames();
     // templateObject.getAllTaxCodes();
     tableResize();

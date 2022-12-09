@@ -204,7 +204,7 @@ Template.new_process.events({
 
 
         manufacturingService.saveProcessData(objDetail).then(function(){
-            manufacturingService.getAllProcessData().then(function(datareturn) {
+            manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(datareturn) {
                 addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(){
                     $('.fullScreenSpin').css('display', 'none');
                     swal({

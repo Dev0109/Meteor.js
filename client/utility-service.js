@@ -1,8 +1,8 @@
 import 'jquery/dist/jquery.min';
 import 'jQuery.print/jQuery.print.js';
-import {jsPDF} from "jspdf";
-import { autoTable }from 'jspdf-autotable';
-(function($){
+import { jsPDF } from "jspdf";
+import { autoTable } from 'jspdf-autotable';
+(function($) {
     $.fn.extend({
         tableHTMLExport: function(options) {
 
@@ -11,7 +11,7 @@ import { autoTable }from 'jspdf-autotable';
                 newline: '\r\n',
                 ignoreColumns: '',
                 ignoreRows: '',
-                type:'csv',
+                type: 'csv',
                 htmlContent: false,
                 consoleLog: false,
                 trimContent: true,
@@ -26,11 +26,11 @@ import { autoTable }from 'jspdf-autotable';
             }
 
 
-            function parseString(data){
+            function parseString(data) {
 
-                if(defaults.htmlContent){
+                if (defaults.htmlContent) {
                     content_data = data.html().trim();
-                }else{
+                } else {
                     content_data = data.text().trim();
                 }
                 return content_data;
@@ -54,15 +54,15 @@ import { autoTable }from 'jspdf-autotable';
              * @param el
              * @returns {{header: *, data: Array}}
              */
-            function toJson(el){
+            function toJson(el) {
 
                 var jsonHeaderArray = [];
                 $(el).find('thead').find('tr').not(options.ignoreRows).each(function() {
-                    var tdData ="";
+                    var tdData = "";
                     var jsonArrayTd = [];
 
-                    $(this).find('th').not(options.ignoreColumns).each(function(index,data) {
-                        if ($(this).css('display') != 'none'){
+                    $(this).find('th').not(options.ignoreColumns).each(function(index, data) {
+                        if ($(this).css('display') != 'none') {
                             jsonArrayTd.push(parseString($(this)));
                         }
                     });
@@ -72,11 +72,11 @@ import { autoTable }from 'jspdf-autotable';
 
                 var jsonArray = [];
                 $(el).find('tbody').find('tr').not(options.ignoreRows).each(function() {
-                    var tdData ="";
+                    var tdData = "";
                     var jsonArrayTd = [];
 
-                    $(this).find('td').not(options.ignoreColumns).each(function(index,data) {
-                        if ($(this).css('display') != 'none'){
+                    $(this).find('td').not(options.ignoreColumns).each(function(index, data) {
+                        if ($(this).css('display') != 'none') {
                             jsonArrayTd.push(parseString($(this)));
                         }
                     });
@@ -85,7 +85,7 @@ import { autoTable }from 'jspdf-autotable';
                 });
 
 
-                return {header:jsonHeaderArray[0],data:jsonArray};
+                return { header: jsonHeaderArray[0], data: jsonArray };
             }
 
 
@@ -94,7 +94,7 @@ import { autoTable }from 'jspdf-autotable';
              * @param table
              * @returns {string}
              */
-            function toCsv(table){
+            function toCsv(table) {
                 var output = "";
 
                 var rows = table.find('tr').not(options.ignoreRows);
@@ -110,7 +110,7 @@ import { autoTable }from 'jspdf-autotable';
                             var content = options.trimContent ? $.trim(column.text()) : column.text();
 
                             output += options.quoteFields ? quote(content) : content;
-                            if(i !== numCols-1) {
+                            if (i !== numCols - 1) {
                                 output += options.separator;
                             } else {
                                 output += options.newline;
@@ -124,26 +124,26 @@ import { autoTable }from 'jspdf-autotable';
 
             var el = this;
             var dataMe;
-            if(options.type == 'csv' || options.type == 'txt'){
+            if (options.type == 'csv' || options.type == 'txt') {
 
 
                 var table = this.filter('table'); // TODO use $.each
 
-                if(table.length <= 0){
+                if (table.length <= 0) {
                     throw new Error('tableHTMLExport must be called on a <table> element')
                 }
 
-                if(table.length > 1){
+                if (table.length > 1) {
                     throw new Error('converting multiple table elements at once is not supported yet')
                 }
 
                 dataMe = toCsv(table);
 
-                if(defaults.consoleLog){
+                if (defaults.consoleLog) {
 
                 }
 
-                download(options.filename,dataMe);
+                download(options.filename, dataMe);
 
 
                 //var base64data = "base64," + $.base64.encode(tdData);
@@ -155,65 +155,15 @@ import { autoTable }from 'jspdf-autotable';
 })(jQuery);
 
 export class UtilityService {
-  exportReportToCsvTable = function (tableName, filename, type) {
-    $("#"+tableName).tableHTMLExport({
-	    type:'csv',
-		  filename:filename,
-		});
-    $('.fullScreenSpin').css('display','none');
-  }
-  exportReportToCsv = function (rows, filename, type) {
-      let processRow = function (row) {
-          let finalVal = '';
-          for (let j = 0; j < row.length; j++) {
-              let innerValue = row[j] === null ? '' : row[j].toString();
-              if (row[j] instanceof Date) {
-                  innerValue = row[j].toLocaleString();
-              }
-              let result = innerValue.replace(/"/g, '""');
-              if (result.search(/("|,|\n)/g) >= 0)
-                  result = '"' + result + '"';
-              if (j > 0)
-                  finalVal += ',';
-              finalVal += result;
-          }
-          return finalVal + '\n';
-      };
-      let csvFile = '';
-      if (type === 'xls') {
-          csvFile = 'sep=,' + '\n';
-      }
-      if (rows && rows.length) {
-          for (let i = 0; i < rows.length; i++) {
-              csvFile += processRow(rows[i]);
-          }
-      }
-
-      let fileType = 'text/csv;charset=utf-8;';
-      if (type === 'xls') {
-          fileType = 'text/xls;charset=utf-8;';
-      }
-
-      let blob = new Blob([csvFile], {type: fileType});
-      if (navigator.msSaveBlob) { // IE 10+
-          navigator.msSaveBlob(blob, filename);
-      } else {
-          let link = document.createElement("a");
-          if (link.download !== undefined) { // feature detection
-              // Browsers that support HTML5 download attribute
-              let url = URL.createObjectURL(blob);
-              link.setAttribute("href", url);
-              link.setAttribute("download", filename);
-              link.style.visibility = 'hidden';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-          }
-      }
-  };
-
-    exportToCsv = function (rows, filename, type) {
-        let processRow = function (row) {
+    exportReportToCsvTable = function(tableName, filename, type) {
+        $("#" + tableName).tableHTMLExport({
+            type: 'csv',
+            filename: filename,
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    }
+    exportReportToCsv = function(rows, filename, type) {
+        let processRow = function(row) {
             let finalVal = '';
             for (let j = 0; j < row.length; j++) {
                 let innerValue = row[j] === null ? '' : row[j].toString();
@@ -244,7 +194,7 @@ export class UtilityService {
             fileType = 'text/xls;charset=utf-8;';
         }
 
-        let blob = new Blob([csvFile], {type: fileType});
+        let blob = new Blob([csvFile], { type: fileType });
         if (navigator.msSaveBlob) { // IE 10+
             navigator.msSaveBlob(blob, filename);
         } else {
@@ -262,12 +212,62 @@ export class UtilityService {
         }
     };
 
-    exportToPdf = function (id, filename, rows, rows1,) {
+    exportToCsv = function(rows, filename, type) {
+        let processRow = function(row) {
+            let finalVal = '';
+            for (let j = 0; j < row.length; j++) {
+                let innerValue = row[j] === null ? '' : row[j].toString();
+                if (row[j] instanceof Date) {
+                    innerValue = row[j].toLocaleString();
+                }
+                let result = innerValue.replace(/"/g, '""');
+                if (result.search(/("|,|\n)/g) >= 0)
+                    result = '"' + result + '"';
+                if (j > 0)
+                    finalVal += ',';
+                finalVal += result;
+            }
+            return finalVal + '\n';
+        };
+        let csvFile = '';
+        if (type === 'xls') {
+            csvFile = 'sep=,' + '\n';
+        }
+        if (rows && rows.length) {
+            for (let i = 0; i < rows.length; i++) {
+                csvFile += processRow(rows[i]);
+            }
+        }
+
+        let fileType = 'text/csv;charset=utf-8;';
+        if (type === 'xls') {
+            fileType = 'text/xls;charset=utf-8;';
+        }
+
+        let blob = new Blob([csvFile], { type: fileType });
+        if (navigator.msSaveBlob) { // IE 10+
+            navigator.msSaveBlob(blob, filename);
+        } else {
+            let link = document.createElement("a");
+            if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                let url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    };
+
+    exportToPdf = function(id, filename, rows, rows1, ) {
 
         let doc = new jsPDF();
         const totalPagesExp = "{total_pages_count_string}";
         //HEADER
-        const pageContent = function (data) {
+        const pageContent = function(data) {
             doc.setFontSize(22);
             doc.setTextColor(30);
             doc.setFontStyle('Roboto Mono');
@@ -324,20 +324,20 @@ export class UtilityService {
                         }
                     }
                 }
-                if (filename == 'Profit & Loss'||filename == 'General Ledger Summary'||
-                    filename == 'Journal Report'||filename == 'Bank Summary' ||filename=='Income By Contact' ||
-                    filename=='Expenses By Contact'||filename==='Payable Invoice Summary'||filename==='Payable Invoice Detail'
-                ||filename=== 'Inventory Item Details'){
+                if (filename == 'Profit & Loss' || filename == 'General Ledger Summary' ||
+                    filename == 'Journal Report' || filename == 'Bank Summary' || filename == 'Income By Contact' ||
+                    filename == 'Expenses By Contact' || filename === 'Payable Invoice Summary' || filename === 'Payable Invoice Detail' ||
+                    filename === 'Inventory Item Details') {
                     for (let cell in row.cells) {
                         row.cells[cell].styles.lineWidth = 0.01;
                         row.cells[cell].styles.lineColor = 20;
                     }
-                    if ( row.index === data.table.rows.length - 1) {
+                    if (row.index === data.table.rows.length - 1) {
                         for (let cell in row.cells) {
                             row.cells[cell].styles.fontStyle = 'bold';
                         }
                     }
-                    }
+                }
                 if (filename == 'Budget Variance') {
                     if (row.index === 0 || row.index === 2 || row.index === 3 || row.index === 6 || row.index === 8 || row.index === 9) {
                         for (let cell in row.cells) {
@@ -372,12 +372,12 @@ export class UtilityService {
                         for (let cell in row.cells) {
                             row.cells[cell].styles.fontStyle = 'bold';
                             row.cells[cell].styles.fontSize = 12;
-                            row.cells[cell].styles.cellPadding =2;
-                            row.cells[cell].styles.columnWidth=5;
+                            row.cells[cell].styles.cellPadding = 2;
+                            row.cells[cell].styles.columnWidth = 5;
                         }
                     }
                 }
-                if (filename =='Foreign Currency Gains and Losses') {
+                if (filename == 'Foreign Currency Gains and Losses') {
                     if (row.index === 0 || row.index === 3) {
                         for (let cell in row.cells) {
                             row.cells[cell].styles.fontStyle = 'bold';
@@ -387,18 +387,18 @@ export class UtilityService {
                         for (let cell in row.cells) {
                             row.cells[cell].styles.fontStyle = 'bold';
                             row.cells[cell].styles.fontSize = 10;
-                            row.cells[cell].styles.cellPadding =2;
-                            row.cells[cell].styles.columnWidth=5;
+                            row.cells[cell].styles.cellPadding = 2;
+                            row.cells[cell].styles.columnWidth = 5;
                         }
                     }
                 }
                 if (filename == 'Management Report') {
-                    if (row.index === 0 || row.index === 3|| row.index === 11 || row.index === 12) {
+                    if (row.index === 0 || row.index === 3 || row.index === 11 || row.index === 12) {
                         for (let cell in row.cells) {
                             row.cells[cell].styles.fontStyle = 'bold';
                         }
                     }
-                    if (row.index === 2|| row.index === 10|| row.index === data.table.rows.length - 2 ||
+                    if (row.index === 2 || row.index === 10 || row.index === data.table.rows.length - 2 ||
                         row.index === data.table.rows.length - 1) {
                         for (let cell in row.cells) {
                             row.cells[cell].styles.fontStyle = 'bold';
@@ -408,12 +408,12 @@ export class UtilityService {
                         }
                     }
                 }
-                if(filename=='Sales By Item'){
+                if (filename == 'Sales By Item') {
                     for (let cell in row.cells) {
                         row.cells[cell].styles.lineWidth = 0.01;
                         row.cells[cell].styles.lineColor = 20;
                     }
-                    if ( row.index=== 0||row.index === data.table.rows.length - 1) {
+                    if (row.index === 0 || row.index === data.table.rows.length - 1) {
                         for (let cell in row.cells) {
                             row.cells[cell].styles.fontStyle = 'bold';
                         }
@@ -426,32 +426,27 @@ export class UtilityService {
         doc.setTextColor(0, 123, 169);
         doc.setFontStyle('Roboto Mono');
         doc.text(loggedCompany, 75, 40);
-        if(rows.length<15){
+        if (rows.length < 15) {
             doc.text(rows, 82, 50);
             doc.text(rows1, 85, 60);
-        }
-        else if (rows.length>=15&&rows.length < 20) {
+        } else if (rows.length >= 15 && rows.length < 20) {
             doc.text(rows, 77, 50);
             doc.text(rows1, 85, 60);
-        }
-        else if (rows.length >=20 && rows.length <28) {
+        } else if (rows.length >= 20 && rows.length < 28) {
             doc.text(rows, 70, 50);
             doc.text(rows1, 85, 60);
-        }
-        else if (rows.length >=28 && rows.length <35) {
+        } else if (rows.length >= 28 && rows.length < 35) {
             doc.text(rows, 65, 50);
             doc.text(rows1, 85, 60);
-        }
-        else{
+        } else {
             doc.text(rows, 50, 50);
             doc.text(rows1, 85, 60);
         }
         //table
-        if(document.getElementById(id)) {
+        if (document.getElementById(id)) {
             let res = doc.autoTableHtmlToJson(document.getElementById(id));
             doc.autoTable(res.columns, res.data, options);
-        }
-        else{
+        } else {
             //header
             doc.setFontSize(22);
             doc.setTextColor(30);
@@ -480,28 +475,28 @@ export class UtilityService {
         doc.save(loggedCompany + '-' + filename + '.pdf');
     };
 
-   tableToExcel = (function () {
+    tableToExcel = (function() {
         var uri = 'data:application/vnd.ms-excel;base64,',
             template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
-                'xmlns="http://www.w3.org/TR/REC-html40"><head>' +
-                '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>' +
-                '{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>' +
-                '</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
-                '</head><body><table>{table}</table></body></html>'
-            , base64 = function (s) {
+            'xmlns="http://www.w3.org/TR/REC-html40"><head>' +
+            '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>' +
+            '{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>' +
+            '</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
+            '</head><body><table>{table}</table></body></html>',
+            base64 = function(s) {
                 return window.btoa(unescape(encodeURIComponent(s)))
-            }
-            , format = function (s, c) {
-                return s.replace(/{(\w+)}/g, function (m, p) {
+            },
+            format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
                     return c[p];
 
                 })
             };
-        return function (table, name, filename) {
+        return function(table, name, filename) {
             if (!table.nodeType) table = document.getElementById(table);
             jQuery.get('/css/export-excel.css', function(data) {
-                let tableData = '<style>'+ data +'</style>'+table.innerHTML;
-                var ctx = {worksheet: name || 'Worksheet', table: tableData};
+                let tableData = '<style>' + data + '</style>' + table.innerHTML;
+                var ctx = { worksheet: name || 'Worksheet', table: tableData };
                 document.getElementById("dlink").href = uri + base64(format(template, ctx));
                 document.getElementById("dlink").download = filename;
                 document.getElementById("dlink").traget = "_self";
@@ -510,29 +505,29 @@ export class UtilityService {
         }
     })();
 
-   exportTableToExcel = function(tableID, filename){
+    exportTableToExcel = function(tableID, filename) {
         var downloadLink;
         var dataType = 'application/vnd.ms-excel';
         var tableSelect = document.getElementById(tableID);
-        var tobeReplaced =  '<td style="border-bottom:1px solid #000"';
+        var tobeReplaced = '<td style="border-bottom:1px solid #000"';
         tableSelect = tableSelect.outerHTML.replace(/<td/g, tobeReplaced);
         var tableHTML = tableSelect.replace(/ /g, '%20');
         jQuery.get('/css/export-excel.css', function(data) {
             let tableData = '<style>' + data + '</style>' + tableHTML;
             // Specify file name
-            filename = filename?filename+'.xls':'excel_data.xls';
+            filename = filename ? filename + '.xls' : 'excel_data.xls';
 
             // Create download link element
             downloadLink = document.createElement("a");
 
             document.body.appendChild(downloadLink);
 
-            if(navigator.msSaveOrOpenBlob){
+            if (navigator.msSaveOrOpenBlob) {
                 var blob = new Blob(['\ufeff', tableData], {
                     type: dataType
                 });
-                navigator.msSaveOrOpenBlob( blob, filename);
-            }else{
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
                 // Create a link to the file
                 downloadLink.href = 'data:' + dataType + ', ' + tableData;
 
@@ -547,14 +542,14 @@ export class UtilityService {
 
     }
 
-    showUploadedAttachment = function(myFiles){
+    showUploadedAttachment = function(myFiles) {
         let empName = localStorage.getItem('mySession');
         let elementToAdd = '';
-        for(let i=0;i<myFiles.length;i++){
+        for (let i = 0; i < myFiles.length; i++) {
             let myFile = myFiles[i].fields;
-           let elementForItem = '<div class="uploaded-element"  id="attachment-name-'+i+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.AttachmentName + '</span>'
-               +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-'+i+'"></i></div> </div>';
-            elementToAdd =  elementToAdd + elementForItem;
+            let elementForItem = '<div class="uploaded-element"  id="attachment-name-' + i + '"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> ' + myFile.AttachmentName + '</span>' +
+                '<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-' + i + '"></i></div> </div>';
+            elementToAdd = elementToAdd + elementForItem;
         }
         $('#file-display').html(elementToAdd);
         $(".attchment-tooltip").show();
@@ -563,95 +558,95 @@ export class UtilityService {
     customShowUploadedAttachment = function(myFiles, modalId) {
         let empName = localStorage.getItem('mySession');
         let elementToAdd = '';
-        for(let i=0;i<myFiles.length;i++){
+        for (let i = 0; i < myFiles.length; i++) {
             let myFile = myFiles[i].fields;
-           let elementForItem = '<div class="uploaded-element attachment-name-'+i+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.AttachmentName + '</span>'
-               +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-'+i+'"></i></div> </div>';
-            elementToAdd =  elementToAdd + elementForItem;
+            let elementForItem = '<div class="uploaded-element attachment-name-' + i + '"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> ' + myFile.AttachmentName + '</span>' +
+                '<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-' + i + '"></i></div> </div>';
+            elementToAdd = elementToAdd + elementForItem;
         }
-        $('#'+modalId+' .file-display').html(elementToAdd);
+        $('#' + modalId + ' .file-display').html(elementToAdd);
         $(".attchment-tooltip").show();
     }
 
-    showUploadedAttachmentTabs = function(myFiles){
+    showUploadedAttachmentTabs = function(myFiles) {
         let empName = localStorage.getItem('mySession');
         let elementToAdd = '';
-        for(let i=0;i<myFiles.length;i++){
+        for (let i = 0; i < myFiles.length; i++) {
             let myFile = myFiles[i].fields;
-           let elementForItem = '<div class="uploaded-element"  id="attachment-name-'+i+'"><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-'+i+'"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.AttachmentName + '</span>'
-               +'<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
-            elementToAdd =  elementToAdd + elementForItem;
+            let elementForItem = '<div class="uploaded-element"  id="attachment-name-' + i + '"><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-' + i + '"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> ' + myFile.AttachmentName + '</span>' +
+                '<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
+            elementToAdd = elementToAdd + elementForItem;
         }
         $('#file-display').html(elementToAdd);
         $(".attchment-tooltip").show();
     };
 
-    showUploadedAttachmentJob = function(myFiles){
+    showUploadedAttachmentJob = function(myFiles) {
         let empName = localStorage.getItem('mySession');
         let elementToAdd = '';
-        for(let i=0;i<myFiles.length;i++){
+        for (let i = 0; i < myFiles.length; i++) {
             let myFile = myFiles[i].fields;
-           let elementForItem = '<div class="uploaded-elementJobPOP"  id="attachment-nameJobPOP-'+i+'"><div class="caret-down-icon remove-attachmentJobPOP"><i class="fa fa-times" id="remove-attachmentJobPOP-'+i+'"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobPOP"><span> '+ myFile.AttachmentName + '</span>'
-               +'<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
-            elementToAdd =  elementToAdd + elementForItem;
+            let elementForItem = '<div class="uploaded-elementJobPOP"  id="attachment-nameJobPOP-' + i + '"><div class="caret-down-icon remove-attachmentJobPOP"><i class="fa fa-times" id="remove-attachmentJobPOP-' + i + '"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobPOP"><span> ' + myFile.AttachmentName + '</span>' +
+                '<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
+            elementToAdd = elementToAdd + elementForItem;
         }
         $('#file-displayJobPOP').html(elementToAdd);
         $(".attchment-tooltipJobPOP").show();
     };
 
-    showUploadedAttachmentJobNoPOP = function(myFiles){
+    showUploadedAttachmentJobNoPOP = function(myFiles) {
         let empName = localStorage.getItem('mySession');
         let elementToAdd = '';
-        for(let i=0;i<myFiles.length;i++){
+        for (let i = 0; i < myFiles.length; i++) {
             let myFile = myFiles[i].fields;
-           let elementForItem = '<div class="uploaded-elementJobNoPOP"  id="attachment-nameJobNoPOP-'+i+'"><div class="caret-down-icon remove-attachmentJobNoPOP"><i class="fa fa-times" id="remove-attachmentJobNoPOP-'+i+'"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobNoPOP"><span> '+ myFile.AttachmentName + '</span>'
-               +'<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
-            elementToAdd =  elementToAdd + elementForItem;
+            let elementForItem = '<div class="uploaded-elementJobNoPOP"  id="attachment-nameJobNoPOP-' + i + '"><div class="caret-down-icon remove-attachmentJobNoPOP"><i class="fa fa-times" id="remove-attachmentJobNoPOP-' + i + '"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobNoPOP"><span> ' + myFile.AttachmentName + '</span>' +
+                '<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
+            elementToAdd = elementToAdd + elementForItem;
         }
         $('#file-displayJobNoPOP').html(elementToAdd);
         $(".attchment-tooltipJobNoPOP").show();
     };
 
-    customAttachmentUpload = async function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment, modalId){
+    customAttachmentUpload = async function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment, modalId) {
         let empName = localStorage.getItem('mySession');
         let totalAttachments = uploadedFilesArray.length;
-        for(let i=0; i<myFiles.length; i++){
+        for (let i = 0; i < myFiles.length; i++) {
             let myFile = myFiles[i];
             let myFileType = myFile.type;
             const loadAttachment = () => {
-                 return new Promise((resolve) => {
-                     //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
-                     //second parameter must be a BlogPropertyBag object containing MIME property
-                     let myBlob = new Blob([myFile], {type: myFileType});
-                     let myReader = new FileReader();
-                     myReader.readAsDataURL(myBlob);
-                     //handler executed once reading(blob content referenced to a variable) from blob is finished.
-                     myReader.addEventListener("loadend", function (e) {
-                         let base64data = myReader.result.split(',')[1];
-                         let uploadObject = {
-                             type: "TAttachment",
-                             fields: {
-                                 Attachment:  base64data,
-                                 AttachmentName: myFile.name,
-                                 Description: myFile.type
-                             }
-                         };
-                         uploadedFilesArray.push(uploadObject);
-                         if(!saveToTAttachment){
-                             let elementForItem = '<div class="uploaded-element attachment-name-'+totalAttachments+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.name + '</span>'
-                                 +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-'+ totalAttachments +'"></i></div> </div>';
-                             if(!$('.uploaded-element').length){
-                                 $("#"+modalId + ' .file-display').html(elementForItem);
-                             } else {
-                                 $("#"+modalId + ' .file-display').append(elementForItem);
-                             }
-                             $('#new-attachment2-tooltip').show();
-                         }
-                         totalAttachments++;
-                         resolve()
-                     });
-                 })
-             }
+                return new Promise((resolve) => {
+                    //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
+                    //second parameter must be a BlogPropertyBag object containing MIME property
+                    let myBlob = new Blob([myFile], { type: myFileType });
+                    let myReader = new FileReader();
+                    myReader.readAsDataURL(myBlob);
+                    //handler executed once reading(blob content referenced to a variable) from blob is finished.
+                    myReader.addEventListener("loadend", function(e) {
+                        let base64data = myReader.result.split(',')[1];
+                        let uploadObject = {
+                            type: "TAttachment",
+                            fields: {
+                                Attachment: base64data,
+                                AttachmentName: myFile.name,
+                                Description: myFile.type
+                            }
+                        };
+                        uploadedFilesArray.push(uploadObject);
+                        if (!saveToTAttachment) {
+                            let elementForItem = '<div class="uploaded-element attachment-name-' + totalAttachments + '"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> ' + myFile.name + '</span>' +
+                                '<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-' + totalAttachments + '"></i></div> </div>';
+                            if (!$('.uploaded-element').length) {
+                                $("#" + modalId + ' .file-display').html(elementForItem);
+                            } else {
+                                $("#" + modalId + ' .file-display').append(elementForItem);
+                            }
+                            $('#new-attachment2-tooltip').show();
+                        }
+                        totalAttachments++;
+                        resolve()
+                    });
+                })
+            }
             await loadAttachment()
         }
         let dataObj = {
@@ -662,234 +657,234 @@ export class UtilityService {
     };
 
 
-   attachmentUpload = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment){
-       let empName = localStorage.getItem('mySession');
-       let totalAttachments = uploadedFilesArray.length;
-       for(let i=0; i<myFiles.length; i++){
-           let myFile = myFiles[i];
-           let myFileType = myFile.type;
+    attachmentUpload = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment) {
+        let empName = localStorage.getItem('mySession');
+        let totalAttachments = uploadedFilesArray.length;
+        for (let i = 0; i < myFiles.length; i++) {
+            let myFile = myFiles[i];
+            let myFileType = myFile.type;
 
-           //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
-           //second parameter must be a BlogPropertyBag object containing MIME property
-           let myBlob = new Blob([myFile], {type: myFileType});
-           let myReader = new FileReader();
-           myReader.readAsDataURL(myBlob);
-           //handler executed once reading(blob content referenced to a variable) from blob is finished.
-           myReader.addEventListener("loadend", function (e) {
-               let base64data = myReader.result.split(',')[1];
-               let uploadObject = {
-                   type: "TAttachment",
-                   fields: {
-                       Attachment:  base64data,
-                       AttachmentName: myFile.name,
-                       Description: myFile.type
-                   }
-               };
-               uploadedFilesArray.push(uploadObject);
+            //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
+            //second parameter must be a BlogPropertyBag object containing MIME property
+            let myBlob = new Blob([myFile], { type: myFileType });
+            let myReader = new FileReader();
+            myReader.readAsDataURL(myBlob);
+            //handler executed once reading(blob content referenced to a variable) from blob is finished.
+            myReader.addEventListener("loadend", function(e) {
+                let base64data = myReader.result.split(',')[1];
+                let uploadObject = {
+                    type: "TAttachment",
+                    fields: {
+                        Attachment: base64data,
+                        AttachmentName: myFile.name,
+                        Description: myFile.type
+                    }
+                };
+                uploadedFilesArray.push(uploadObject);
 
-           });
-           if(!saveToTAttachment){
-               let elementForItem = '<div class="uploaded-element" id="attachment-name-'+totalAttachments+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.name + '</span>'
-                   +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-'+ totalAttachments +'"></i></div> </div>';
-               if(lineIDForAttachment){
-                   if(!$('#attachment-tooltip-' + lineIDForAttachment + ' .uploaded-element').length){
-                       $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').html(elementForItem);
-                   } else {
-                       $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').append(elementForItem);
-                   }
-                   $('#attachment-tooltip-' + lineIDForAttachment).show();
-               }else {
-                   if(!$('.uploaded-element').length){
-                       $('#file-display').html(elementForItem);
-                   } else {
-                       $('#file-display').append(elementForItem);
-                   }
-                   $('#new-attachment2-tooltip').show();
-               }
-           }
-           totalAttachments++;
-       }
-       let dataObj = {
-           totalAttachments: totalAttachments,
-           uploadedFilesArray: uploadedFilesArray
-       };
-       return dataObj;
-   };
-   attachmentUploadTabs = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment){
-       let empName = localStorage.getItem('mySession');
-       let totalAttachments = uploadedFilesArray.length;
-       for(let i=0; i<myFiles.length; i++){
-           let myFile = myFiles[i];
-           let myFileType = myFile.type;
+            });
+            if (!saveToTAttachment) {
+                let elementForItem = '<div class="uploaded-element" id="attachment-name-' + totalAttachments + '"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> ' + myFile.name + '</span>' +
+                    '<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-' + totalAttachments + '"></i></div> </div>';
+                if (lineIDForAttachment) {
+                    if (!$('#attachment-tooltip-' + lineIDForAttachment + ' .uploaded-element').length) {
+                        $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').html(elementForItem);
+                    } else {
+                        $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').append(elementForItem);
+                    }
+                    $('#attachment-tooltip-' + lineIDForAttachment).show();
+                } else {
+                    if (!$('.uploaded-element').length) {
+                        $('#file-display').html(elementForItem);
+                    } else {
+                        $('#file-display').append(elementForItem);
+                    }
+                    $('#new-attachment2-tooltip').show();
+                }
+            }
+            totalAttachments++;
+        }
+        let dataObj = {
+            totalAttachments: totalAttachments,
+            uploadedFilesArray: uploadedFilesArray
+        };
+        return dataObj;
+    };
+    attachmentUploadTabs = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment) {
+        let empName = localStorage.getItem('mySession');
+        let totalAttachments = uploadedFilesArray.length;
+        for (let i = 0; i < myFiles.length; i++) {
+            let myFile = myFiles[i];
+            let myFileType = myFile.type;
 
-           //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
-           //second parameter must be a BlogPropertyBag object containing MIME property
-           let myBlob = new Blob([myFile], {type: myFileType});
-           let myReader = new FileReader();
-           myReader.readAsDataURL(myBlob);
-           //handler executed once reading(blob content referenced to a variable) from blob is finished.
-           myReader.addEventListener("loadend", function (e) {
-               let base64data = myReader.result.split(',')[1];
-               let uploadObject = {
-                   type: "TAttachment",
-                   fields: {
-                       Attachment:  base64data,
-                       AttachmentName: myFile.name,
-                       Description: myFile.type
-                   }
-               };
-               uploadedFilesArray.push(uploadObject);
+            //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
+            //second parameter must be a BlogPropertyBag object containing MIME property
+            let myBlob = new Blob([myFile], { type: myFileType });
+            let myReader = new FileReader();
+            myReader.readAsDataURL(myBlob);
+            //handler executed once reading(blob content referenced to a variable) from blob is finished.
+            myReader.addEventListener("loadend", function(e) {
+                let base64data = myReader.result.split(',')[1];
+                let uploadObject = {
+                    type: "TAttachment",
+                    fields: {
+                        Attachment: base64data,
+                        AttachmentName: myFile.name,
+                        Description: myFile.type
+                    }
+                };
+                uploadedFilesArray.push(uploadObject);
 
-           });
-           if(!saveToTAttachment){
-               let elementForItem = '<div class="uploaded-element" id="attachment-name-'+totalAttachments+'"><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-'+ totalAttachments +'"></i></div> <div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.name + '</span>'
-                   +'<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
-               if(lineIDForAttachment){
-                   if(!$('#attachment-tooltip-' + lineIDForAttachment + ' .uploaded-element').length){
-                       $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').html(elementForItem);
-                   } else {
-                       $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').append(elementForItem);
-                   }
-                   $('#attachment-tooltip-' + lineIDForAttachment).show();
-               }else {
-                   if(!$('.uploaded-element').length){
-                       $('#file-display').html(elementForItem);
-                   } else {
-                       $('#file-display').append(elementForItem);
-                   }
-                   $('#new-attachment2-tooltip').show();
-               }
-           }
-           totalAttachments++;
-       }
-       let dataObj = {
-           totalAttachments: totalAttachments,
-           uploadedFilesArray: uploadedFilesArray
-       };
-       return dataObj;
-   };
+            });
+            if (!saveToTAttachment) {
+                let elementForItem = '<div class="uploaded-element" id="attachment-name-' + totalAttachments + '"><div class="caret-down-icon remove-attachment"><i class="fa fa-times" id="remove-attachment-' + totalAttachments + '"></i></div> <div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> ' + myFile.name + '</span>' +
+                    '<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
+                if (lineIDForAttachment) {
+                    if (!$('#attachment-tooltip-' + lineIDForAttachment + ' .uploaded-element').length) {
+                        $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').html(elementForItem);
+                    } else {
+                        $('#attachment-tooltip-' + lineIDForAttachment + ' #file-display').append(elementForItem);
+                    }
+                    $('#attachment-tooltip-' + lineIDForAttachment).show();
+                } else {
+                    if (!$('.uploaded-element').length) {
+                        $('#file-display').html(elementForItem);
+                    } else {
+                        $('#file-display').append(elementForItem);
+                    }
+                    $('#new-attachment2-tooltip').show();
+                }
+            }
+            totalAttachments++;
+        }
+        let dataObj = {
+            totalAttachments: totalAttachments,
+            uploadedFilesArray: uploadedFilesArray
+        };
+        return dataObj;
+    };
 
-   attachmentUploadJob = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment){
-       let empName = localStorage.getItem('mySession');
-       let totalAttachments = uploadedFilesArray.length;
-       for(let i=0; i<myFiles.length; i++){
-           let myFile = myFiles[i];
-           let myFileType = myFile.type;
+    attachmentUploadJob = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment) {
+        let empName = localStorage.getItem('mySession');
+        let totalAttachments = uploadedFilesArray.length;
+        for (let i = 0; i < myFiles.length; i++) {
+            let myFile = myFiles[i];
+            let myFileType = myFile.type;
 
-           //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
-           //second parameter must be a BlogPropertyBag object containing MIME property
-           let myBlob = new Blob([myFile], {type: myFileType});
-           let myReader = new FileReader();
-           myReader.readAsDataURL(myBlob);
-           //handler executed once reading(blob content referenced to a variable) from blob is finished.
-           myReader.addEventListener("loadend", function (e) {
-               let base64data = myReader.result.split(',')[1];
-               let uploadObject = {
-                   type: "TAttachment",
-                   fields: {
-                       Attachment:  base64data,
-                       AttachmentName: myFile.name,
-                       Description: myFile.type
-                   }
-               };
-               uploadedFilesArray.push(uploadObject);
+            //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
+            //second parameter must be a BlogPropertyBag object containing MIME property
+            let myBlob = new Blob([myFile], { type: myFileType });
+            let myReader = new FileReader();
+            myReader.readAsDataURL(myBlob);
+            //handler executed once reading(blob content referenced to a variable) from blob is finished.
+            myReader.addEventListener("loadend", function(e) {
+                let base64data = myReader.result.split(',')[1];
+                let uploadObject = {
+                    type: "TAttachment",
+                    fields: {
+                        Attachment: base64data,
+                        AttachmentName: myFile.name,
+                        Description: myFile.type
+                    }
+                };
+                uploadedFilesArray.push(uploadObject);
 
-           });
-           if(!saveToTAttachment){
-               let elementForItem = '<div class="uploaded-elementJobPOP" id="attachment-nameJobPOP-'+totalAttachments+'"><div class="caret-down-icon remove-attachmentJobPOP"><i class="fa fa-times" id="remove-attachmentJobPOP-'+ totalAttachments +'"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobPOP"><span> '+ myFile.name + '</span>'
-                   +'<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
-               if(lineIDForAttachment){
-                   if(!$('#attachment-tooltipJobPOP-' + lineIDForAttachment + ' .uploaded-elementJobPOP').length){
-                       $('#attachment-tooltipJobPOP-' + lineIDForAttachment + ' #file-displayJobPOP').html(elementForItem);
-                   } else {
-                       $('#attachment-tooltipJobPOP-' + lineIDForAttachment + ' #file-displayJobPOP').append(elementForItem);
-                   }
-                   $('#attachment-tooltipJobPOP-' + lineIDForAttachment).show();
-               }else {
-                   if(!$('.uploaded-elementJobPOP').length){
-                       $('#file-displayJobPOP').html(elementForItem);
-                   } else {
-                       $('#file-displayJobPOP').append(elementForItem);
-                   }
-                   $('#new-attachment2-tooltipJobPOP').show();
-               }
-           }
-           totalAttachments++;
-       }
-       let dataObj = {
-           totalAttachments: totalAttachments,
-           uploadedFilesArray: uploadedFilesArray
-       };
-       return dataObj;
-   };
+            });
+            if (!saveToTAttachment) {
+                let elementForItem = '<div class="uploaded-elementJobPOP" id="attachment-nameJobPOP-' + totalAttachments + '"><div class="caret-down-icon remove-attachmentJobPOP"><i class="fa fa-times" id="remove-attachmentJobPOP-' + totalAttachments + '"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobPOP"><span> ' + myFile.name + '</span>' +
+                    '<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
+                if (lineIDForAttachment) {
+                    if (!$('#attachment-tooltipJobPOP-' + lineIDForAttachment + ' .uploaded-elementJobPOP').length) {
+                        $('#attachment-tooltipJobPOP-' + lineIDForAttachment + ' #file-displayJobPOP').html(elementForItem);
+                    } else {
+                        $('#attachment-tooltipJobPOP-' + lineIDForAttachment + ' #file-displayJobPOP').append(elementForItem);
+                    }
+                    $('#attachment-tooltipJobPOP-' + lineIDForAttachment).show();
+                } else {
+                    if (!$('.uploaded-elementJobPOP').length) {
+                        $('#file-displayJobPOP').html(elementForItem);
+                    } else {
+                        $('#file-displayJobPOP').append(elementForItem);
+                    }
+                    $('#new-attachment2-tooltipJobPOP').show();
+                }
+            }
+            totalAttachments++;
+        }
+        let dataObj = {
+            totalAttachments: totalAttachments,
+            uploadedFilesArray: uploadedFilesArray
+        };
+        return dataObj;
+    };
 
-   attachmentUploadJobNoPOP = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment){
-       let empName = localStorage.getItem('mySession');
-       let totalAttachments = uploadedFilesArray.length;
-       for(let i=0; i<myFiles.length; i++){
-           let myFile = myFiles[i];
-           let myFileType = myFile.type;
+    attachmentUploadJobNoPOP = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment) {
+        let empName = localStorage.getItem('mySession');
+        let totalAttachments = uploadedFilesArray.length;
+        for (let i = 0; i < myFiles.length; i++) {
+            let myFile = myFiles[i];
+            let myFileType = myFile.type;
 
-           //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
-           //second parameter must be a BlogPropertyBag object containing MIME property
-           let myBlob = new Blob([myFile], {type: myFileType});
-           let myReader = new FileReader();
-           myReader.readAsDataURL(myBlob);
-           //handler executed once reading(blob content referenced to a variable) from blob is finished.
-           myReader.addEventListener("loadend", function (e) {
-               let base64data = myReader.result.split(',')[1];
-               let uploadObject = {
-                   type: "TAttachment",
-                   fields: {
-                       Attachment:  base64data,
-                       AttachmentName: myFile.name,
-                       Description: myFile.type
-                   }
-               };
-               uploadedFilesArray.push(uploadObject);
+            //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
+            //second parameter must be a BlogPropertyBag object containing MIME property
+            let myBlob = new Blob([myFile], { type: myFileType });
+            let myReader = new FileReader();
+            myReader.readAsDataURL(myBlob);
+            //handler executed once reading(blob content referenced to a variable) from blob is finished.
+            myReader.addEventListener("loadend", function(e) {
+                let base64data = myReader.result.split(',')[1];
+                let uploadObject = {
+                    type: "TAttachment",
+                    fields: {
+                        Attachment: base64data,
+                        AttachmentName: myFile.name,
+                        Description: myFile.type
+                    }
+                };
+                uploadedFilesArray.push(uploadObject);
 
-           });
-           if(!saveToTAttachment){
-               let elementForItem = '<div class="uploaded-elementJobNoPOP" id="attachment-nameJobNoPOP-'+totalAttachments+'"> <div class="caret-down-icon remove-attachmentJobNoPOP"><i class="fa fa-times" id="remove-attachmentJobNoPOP-'+ totalAttachments +'"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobNoPOP"><span> '+ myFile.name + '</span>'
-                   +'<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
-               if(lineIDForAttachment){
-                   if(!$('#attachment-tooltipJobNoPOP-' + lineIDForAttachment + ' .uploaded-elementJobNoPOP').length){
-                       $('#attachment-tooltipJobNoPOP-' + lineIDForAttachment + ' #file-displayJobNoPOP').html(elementForItem);
-                   } else {
-                       $('#attachment-tooltipJobNoPOP-' + lineIDForAttachment + ' #file-displayJobNoPOP').append(elementForItem);
-                   }
-                   $('#attachment-tooltipJobNoPOP-' + lineIDForAttachment).show();
-               }else {
-                   if(!$('.uploaded-elementJobNoPOP').length){
-                       $('#file-displayJobNoPOP').html(elementForItem);
-                   } else {
-                       $('#file-displayJobNoPOP').append(elementForItem);
-                   }
-                   $('#new-attachment2-tooltipJobNoPOP').show();
-               }
-           }
-           totalAttachments++;
-       }
-       let dataObj = {
-           totalAttachments: totalAttachments,
-           uploadedFilesArray: uploadedFilesArray
-       };
-       return dataObj;
-   };
+            });
+            if (!saveToTAttachment) {
+                let elementForItem = '<div class="uploaded-elementJobNoPOP" id="attachment-nameJobNoPOP-' + totalAttachments + '"> <div class="caret-down-icon remove-attachmentJobNoPOP"><i class="fa fa-times" id="remove-attachmentJobNoPOP-' + totalAttachments + '"></i></div><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-nameJobNoPOP"><span> ' + myFile.name + '</span>' +
+                    '<span class="uploaded-on">File upload by ' + empName + ' </span></div> </div>';
+                if (lineIDForAttachment) {
+                    if (!$('#attachment-tooltipJobNoPOP-' + lineIDForAttachment + ' .uploaded-elementJobNoPOP').length) {
+                        $('#attachment-tooltipJobNoPOP-' + lineIDForAttachment + ' #file-displayJobNoPOP').html(elementForItem);
+                    } else {
+                        $('#attachment-tooltipJobNoPOP-' + lineIDForAttachment + ' #file-displayJobNoPOP').append(elementForItem);
+                    }
+                    $('#attachment-tooltipJobNoPOP-' + lineIDForAttachment).show();
+                } else {
+                    if (!$('.uploaded-elementJobNoPOP').length) {
+                        $('#file-displayJobNoPOP').html(elementForItem);
+                    } else {
+                        $('#file-displayJobNoPOP').append(elementForItem);
+                    }
+                    $('#new-attachment2-tooltipJobNoPOP').show();
+                }
+            }
+            totalAttachments++;
+        }
+        let dataObj = {
+            totalAttachments: totalAttachments,
+            uploadedFilesArray: uploadedFilesArray
+        };
+        return dataObj;
+    };
 
     multipleTablesToExcel = (function() {
-        var uri = 'data:application/vnd.ms-excel;base64,'
-            , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
-            + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
-            + '<Styles>'
-            + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
-            + '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>'
-            + '</Styles>'
-            + '{worksheets}</Workbook>'
-            , tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>'
-            , tmplCellXML = '<Cell{attributeStyleID}{attributeFormula}><Data ss:Type="{nameType}">{data}</Data></Cell>'
-            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+        var uri = 'data:application/vnd.ms-excel;base64,',
+            tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">' +
+            '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>' +
+            '<Styles>' +
+            '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>' +
+            '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>' +
+            '</Styles>' +
+            '{worksheets}</Workbook>',
+            tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>',
+            tmplCellXML = '<Cell{attributeStyleID}{attributeFormula}><Data ss:Type="{nameType}">{data}</Data></Cell>',
+            base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) },
+            format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
         return function(tables, wsnames, wbname, appname) {
             var ctx = "";
             var workbookXML = "";
@@ -907,24 +902,25 @@ export class UtilityService {
                         var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
                         var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
                         var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
-                        dataValue = (dataValue)?dataValue:tables[i].rows[j].cells[k].innerHTML;
+                        dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerHTML;
                         var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
-                        dataFormula = (dataFormula)?dataFormula:(appname=='Calc' && dataType=='DateTime')?dataValue:null;
-                        ctx = {  attributeStyleID: (dataStyle=='Currency' || dataStyle=='Date')?' ss:StyleID="'+dataStyle+'"':''
-                            , nameType: (dataType=='Number' || dataType=='DateTime' || dataType=='Boolean' || dataType=='Error')?dataType:'String'
-                            , data: (dataFormula)?'':dataValue
-                            , attributeFormula: (dataFormula)?' ss:Formula="'+dataFormula+'"':''
+                        dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
+                        ctx = {
+                            attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date') ? ' ss:StyleID="' + dataStyle + '"' : '',
+                            nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String',
+                            data: (dataFormula) ? '' : dataValue,
+                            attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''
                         };
                         rowsXML += format(tmplCellXML, ctx);
                     }
                     rowsXML += '</Row>'
                 }
-                ctx = {rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i};
+                ctx = { rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i };
                 worksheetsXML += format(tmplWorksheetXML, ctx);
                 rowsXML = "";
             }
 
-            ctx = {created: (new Date()).getTime(), worksheets: worksheetsXML};
+            ctx = { created: (new Date()).getTime(), worksheets: worksheetsXML };
             workbookXML = format(tmplWorkbookXML, ctx);
 
 
@@ -938,8 +934,8 @@ export class UtilityService {
         }
     })();
 
-    exportToCsvInv = function (rows, filename, type) {
-        let processRow = function (row) {
+    exportToCsvInv = function(rows, filename, type) {
+        let processRow = function(row) {
             let finalVal = '';
             for (let j = 0; j < row.length; j++) {
                 let innerValue = row[j] === null ? '' : row[j];
@@ -967,7 +963,7 @@ export class UtilityService {
             fileType = 'text/xls;charset=utf-8;';
         }
 
-        let blob = new Blob([csvFile], {type: fileType});
+        let blob = new Blob([csvFile], { type: fileType });
         if (navigator.msSaveBlob) { // IE 10+
             navigator.msSaveBlob(blob, filename);
         } else {
@@ -986,223 +982,210 @@ export class UtilityService {
     };
 
 
-    exportToPdfReports = function (data, filename,pageTitle,pageOrientation, type,head) {
+    exportToPdfReports = function(data, filename, pageTitle, pageOrientation, type, head) {
         //try{
-            let currency=Currency;
-            pageOrientation = pageOrientation.split("-");
-            let Xcoordinate = 0;
-            let Ycoordinate = 90;
-            let titleCoordinate = 0;
-            if (head.length >= 10) {
-                if (head.length >= 10 && head.length < 12) {
-                    pageOrientation[2] = [200, 340];
-                    Xcoordinate = 125;
-                    Ycoordinate = 0;
-                    titleCoordinate = 60;
-                }
-                else if (head.length >= 12 && head.length < 15) {
-                    pageOrientation[2] = [200, 380];
-                    Xcoordinate = 165;
-                    Ycoordinate = 0;
-                    titleCoordinate = 80;
+        let currency = Currency;
+        pageOrientation = pageOrientation.split("-");
+        let Xcoordinate = 0;
+        let Ycoordinate = 90;
+        let titleCoordinate = 0;
+        if (head.length >= 10) {
+            if (head.length >= 10 && head.length < 12) {
+                pageOrientation[2] = [200, 340];
+                Xcoordinate = 125;
+                Ycoordinate = 0;
+                titleCoordinate = 60;
+            } else if (head.length >= 12 && head.length < 15) {
+                pageOrientation[2] = [200, 380];
+                Xcoordinate = 165;
+                Ycoordinate = 0;
+                titleCoordinate = 80;
 
-                }
-                else if (head.length >= 15 && head.length <18) {
-                    pageOrientation[2] = [200, 430];
-                    Xcoordinate = 195;
-                    Ycoordinate = 0;
-                    titleCoordinate = 110;
+            } else if (head.length >= 15 && head.length < 18) {
+                pageOrientation[2] = [200, 430];
+                Xcoordinate = 195;
+                Ycoordinate = 0;
+                titleCoordinate = 110;
 
-                }
-                else if (head.length >= 18 && head.length < 21) {
-                    pageOrientation[2] = [200, 470];
-                    Xcoordinate = 225;
-                    Ycoordinate = 0;
-                    titleCoordinate = 130;
+            } else if (head.length >= 18 && head.length < 21) {
+                pageOrientation[2] = [200, 470];
+                Xcoordinate = 225;
+                Ycoordinate = 0;
+                titleCoordinate = 130;
 
-                }
-                else if (head.length >= 21 && head.length < 24) {
-                    pageOrientation[2] = [200, 500];
-                    Xcoordinate = 255;
-                    Ycoordinate = 0;
-                    titleCoordinate = 155;
+            } else if (head.length >= 21 && head.length < 24) {
+                pageOrientation[2] = [200, 500];
+                Xcoordinate = 255;
+                Ycoordinate = 0;
+                titleCoordinate = 155;
 
-                }
-                else if (head.length >= 24 && head.length < 27) {
-                    pageOrientation[2] = [200, 530];
-                    Xcoordinate = 280;
-                    Ycoordinate = 0;
-                    titleCoordinate = 170;
+            } else if (head.length >= 24 && head.length < 27) {
+                pageOrientation[2] = [200, 530];
+                Xcoordinate = 280;
+                Ycoordinate = 0;
+                titleCoordinate = 170;
 
-                }
-                else {
-                    pageOrientation[2] = [200, 560];
-                    Xcoordinate = 305;
-                    Ycoordinate = 0;
-                    titleCoordinate = 195;
-                }
+            } else {
+                pageOrientation[2] = [200, 560];
+                Xcoordinate = 305;
+                Ycoordinate = 0;
+                titleCoordinate = 195;
             }
+        }
 
-            const totalPagesExp = "{total_pages_count_string}";
-            let doc = new jsPDF(pageOrientation[0],pageOrientation[1],pageOrientation[2]);
-            if (pageOrientation[0]==="landscape"&& pageOrientation[2]=="a3"){
-                Xcoordinate=213;
-                Ycoordinate=90;
-                titleCoordinate=100;
-            }else if (pageOrientation[0]==="landscape"&& pageOrientation[2]=="a4"){
-                Xcoordinate=90;
-                Ycoordinate=0;
-                titleCoordinate=40;
-            }
-            const header = function (data) {
-                doc.setFontSize(22);
-                doc.setTextColor(30);
-                doc.setFontStyle('Roboto Mono');
-                doc.text(filename, 16, 20);
-                doc.setDrawColor(0, 123, 169);
-                doc.setLineWidth(1);
-                doc.line(15, 25, 195+Xcoordinate, 25);
-                let footerLeft = filename+' | ' + loggedCompany + ' | ' + moment().format('DD MMM YYYY');
-                let footerRight = "Page " + data.pageCount;
-                if (typeof doc.putTotalPages === 'function') {
-                    footerRight = footerRight + " of " + totalPagesExp;
-                }
-                doc.setDrawColor(0, 123, 169);
-                doc.setLineWidth(1);
-                doc.line(15, 185+Ycoordinate, 195+Xcoordinate, 185+Ycoordinate);
-                doc.setFontSize(10);
-                doc.text(footerLeft, 16, 190+Ycoordinate);
-                doc.text(footerRight, 175+Xcoordinate, 190+Ycoordinate);
-            };
-            const options = {
-                styles: {
-                    lineWidth:0.01,
-                    lineColor: [200, 200, 200],
-                    halign: 'left',
-                    valign: 'middle',
-                    overflow: 'linebreak',
-                    columnWidth: 'auto',
-
-                },
-                addPageContent: header,
-                theme: 'plain',
-                showHeader: 'everyPage',
-                margin: {
-                    top: 33,
-                    bottom:33,
-                },
-                startY: 70,
-                headerStyles: {
-                    halign: 'center',
-                },
-                drawRow: (row, data) => {
-                    if(row.raw.length >0) {
-                        for (let cell in row.cells) {
-                            if(row.cells[cell].raw!=undefined) {
-                                if (row.cells[cell].raw.includes(currency)) {
-                                    row.cells[cell].styles.halign = 'right';
-                                }
-                            }
-                        }
-                    }
-                    if(type==='true'){
-                        if(filename==='Balance Sheet'){
-                            let data=row.cells[0].raw.split(' ');
-                            if (row.cells[1].contentWidth ===3.5277777777777772 &&row.cells[2].contentWidth ===3.5277777777777772) {
-                                for (let cell in row.cells) {
-                                    row.cells[cell].styles.fontStyle = 'bold';
-
-                                    row.cells[cell].styles.fontSize = 10;
-                                }
-                            }
-                            if (data[0]=='Total'||data[0]=='TOTAL') {
-                                for (let cell in row.cells) {
-                                    row.cells[cell].styles.fontStyle = 'bold';
-                                    row.cells[cell].styles.fontSize = 10;
-                                }
-                            }
-                        }
-                        else if(filename=='Sales by Item'){
-                            let dataValue=row.cells[0].raw.split(' ');
-                            if (dataValue[0]=='Total') {
-                                for (let cell in row.cells) {
-                                    row.cells[cell].styles.fontStyle = 'bold';
-                                    row.cells[cell].styles.fontSize = 10;
-                                }
-                            }
-                            if (row.index === data.table.rows.length - 6) {
-                                for (let cell in row.cells) {
-                                    row.cells[cell].styles.fontStyle = 'bold';
-                                    row.cells[cell].styles.fontSize = 13;
-                                }
-                            }
-                        }
-                        else{
-                            if (row.cells[1].contentWidth === 3.5277777777777772) {
-                                for (let cell in row.cells) {
-                                    row.cells[cell].styles.fontStyle = 'bold';
-                                    row.cells[cell].styles.fontSize = 10;
-                                }
-                            }
-                            if(filename != 'Receivable Invoice Summary' && filename != 'Payable Invoice Summary'){
-                                if (row.index === data.table.rows.length - 1) {
-                                    for (let cell in row.cells) {
-                                        row.cells[cell].styles.fillColor = (204, 204, 204);
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                    else{
-                        if(filename!='Chart of Accounts'){
-                            if(filename!='Invoice'){
-                                if (row.index === data.table.rows.length - 1) {
-                                    for (let cell in row.cells) {
-                                        row.cells[cell].styles.fontStyle = 'bold';
-                                        doc.setFillColor(122, 136, 142);
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                },
-
-            };
-            doc.setFontSize(18);
-            doc.setTextColor(0, 123, 169);
+        const totalPagesExp = "{total_pages_count_string}";
+        let doc = new jsPDF(pageOrientation[0], pageOrientation[1], pageOrientation[2]);
+        if (pageOrientation[0] === "landscape" && pageOrientation[2] == "a3") {
+            Xcoordinate = 213;
+            Ycoordinate = 90;
+            titleCoordinate = 100;
+        } else if (pageOrientation[0] === "landscape" && pageOrientation[2] == "a4") {
+            Xcoordinate = 90;
+            Ycoordinate = 0;
+            titleCoordinate = 40;
+        }
+        const header = function(data) {
+            doc.setFontSize(22);
+            doc.setTextColor(30);
             doc.setFontStyle('Roboto Mono');
-            doc.text(pageTitle[0], 72 + titleCoordinate, 40);
-            doc.text(pageTitle[1],75+titleCoordinate, 48);
-            if(pageTitle[2].length<15){
-                doc.text(pageTitle[2], 82+titleCoordinate, 56);
-                doc.text(pageTitle[3], 85+titleCoordinate, 64);
-            }
-            else if (pageTitle[2].length>=15&&pageTitle[2].length <= 20) {
-                doc.text(pageTitle[2], 77+titleCoordinate, 56);
-                doc.text(pageTitle[3], 85+titleCoordinate, 64);
-            }
-            else if (pageTitle[2].length >=20 && pageTitle[2].length <28) {
-                doc.text(pageTitle[2], 70+titleCoordinate, 56);
-                doc.text(pageTitle[3], 85+titleCoordinate, 64);
-            }
-            else if (pageTitle[2].length >=28 && pageTitle[2].length <=35) {
-                doc.text(pageTitle[2], 65+titleCoordinate, 56);
-                doc.text(pageTitle[3], 85+titleCoordinate, 64);
-            }
-            else{
-                doc.text(pageTitle[2], 50+titleCoordinate, 56);
-                doc.text(pageTitle[3], 85+titleCoordinate, 64);
-            }
-            doc.setFontSize(14);
-            doc.autoTable(head, data,options);
-
+            doc.text(filename, 16, 20);
+            doc.setDrawColor(0, 123, 169);
+            doc.setLineWidth(1);
+            doc.line(15, 25, 195 + Xcoordinate, 25);
+            let footerLeft = filename + ' | ' + loggedCompany + ' | ' + moment().format('DD MMM YYYY');
+            let footerRight = "Page " + data.pageCount;
             if (typeof doc.putTotalPages === 'function') {
-                doc.putTotalPages(totalPagesExp);
+                footerRight = footerRight + " of " + totalPagesExp;
             }
-            //save
-            doc.save(loggedCompany+'-'+filename+'.pdf');
+            doc.setDrawColor(0, 123, 169);
+            doc.setLineWidth(1);
+            doc.line(15, 185 + Ycoordinate, 195 + Xcoordinate, 185 + Ycoordinate);
+            doc.setFontSize(10);
+            doc.text(footerLeft, 16, 190 + Ycoordinate);
+            doc.text(footerRight, 175 + Xcoordinate, 190 + Ycoordinate);
+        };
+        const options = {
+            styles: {
+                lineWidth: 0.01,
+                lineColor: [200, 200, 200],
+                halign: 'left',
+                valign: 'middle',
+                overflow: 'linebreak',
+                columnWidth: 'auto',
+
+            },
+            addPageContent: header,
+            theme: 'plain',
+            showHeader: 'everyPage',
+            margin: {
+                top: 33,
+                bottom: 33,
+            },
+            startY: 70,
+            headerStyles: {
+                halign: 'center',
+            },
+            drawRow: (row, data) => {
+                if (row.raw.length > 0) {
+                    for (let cell in row.cells) {
+                        if (row.cells[cell].raw != undefined) {
+                            if (row.cells[cell].raw.includes(currency)) {
+                                row.cells[cell].styles.halign = 'right';
+                            }
+                        }
+                    }
+                }
+                if (type === 'true') {
+                    if (filename === 'Balance Sheet') {
+                        let data = row.cells[0].raw.split(' ');
+                        if (row.cells[1].contentWidth === 3.5277777777777772 && row.cells[2].contentWidth === 3.5277777777777772) {
+                            for (let cell in row.cells) {
+                                row.cells[cell].styles.fontStyle = 'bold';
+
+                                row.cells[cell].styles.fontSize = 10;
+                            }
+                        }
+                        if (data[0] == 'Total' || data[0] == 'TOTAL') {
+                            for (let cell in row.cells) {
+                                row.cells[cell].styles.fontStyle = 'bold';
+                                row.cells[cell].styles.fontSize = 10;
+                            }
+                        }
+                    } else if (filename == 'Sales by Item') {
+                        let dataValue = row.cells[0].raw.split(' ');
+                        if (dataValue[0] == 'Total') {
+                            for (let cell in row.cells) {
+                                row.cells[cell].styles.fontStyle = 'bold';
+                                row.cells[cell].styles.fontSize = 10;
+                            }
+                        }
+                        if (row.index === data.table.rows.length - 6) {
+                            for (let cell in row.cells) {
+                                row.cells[cell].styles.fontStyle = 'bold';
+                                row.cells[cell].styles.fontSize = 13;
+                            }
+                        }
+                    } else {
+                        if (row.cells[1].contentWidth === 3.5277777777777772) {
+                            for (let cell in row.cells) {
+                                row.cells[cell].styles.fontStyle = 'bold';
+                                row.cells[cell].styles.fontSize = 10;
+                            }
+                        }
+                        if (filename != 'Receivable Invoice Summary' && filename != 'Payable Invoice Summary') {
+                            if (row.index === data.table.rows.length - 1) {
+                                for (let cell in row.cells) {
+                                    row.cells[cell].styles.fillColor = (204, 204, 204);
+                                }
+                            }
+                        }
+
+                    }
+                } else {
+                    if (filename != 'Chart of Accounts') {
+                        if (filename != 'Invoice') {
+                            if (row.index === data.table.rows.length - 1) {
+                                for (let cell in row.cells) {
+                                    row.cells[cell].styles.fontStyle = 'bold';
+                                    doc.setFillColor(122, 136, 142);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            },
+
+        };
+        doc.setFontSize(18);
+        doc.setTextColor(0, 123, 169);
+        doc.setFontStyle('Roboto Mono');
+        doc.text(pageTitle[0], 72 + titleCoordinate, 40);
+        doc.text(pageTitle[1], 75 + titleCoordinate, 48);
+        if (pageTitle[2].length < 15) {
+            doc.text(pageTitle[2], 82 + titleCoordinate, 56);
+            doc.text(pageTitle[3], 85 + titleCoordinate, 64);
+        } else if (pageTitle[2].length >= 15 && pageTitle[2].length <= 20) {
+            doc.text(pageTitle[2], 77 + titleCoordinate, 56);
+            doc.text(pageTitle[3], 85 + titleCoordinate, 64);
+        } else if (pageTitle[2].length >= 20 && pageTitle[2].length < 28) {
+            doc.text(pageTitle[2], 70 + titleCoordinate, 56);
+            doc.text(pageTitle[3], 85 + titleCoordinate, 64);
+        } else if (pageTitle[2].length >= 28 && pageTitle[2].length <= 35) {
+            doc.text(pageTitle[2], 65 + titleCoordinate, 56);
+            doc.text(pageTitle[3], 85 + titleCoordinate, 64);
+        } else {
+            doc.text(pageTitle[2], 50 + titleCoordinate, 56);
+            doc.text(pageTitle[3], 85 + titleCoordinate, 64);
+        }
+        doc.setFontSize(14);
+        doc.autoTable(head, data, options);
+
+        if (typeof doc.putTotalPages === 'function') {
+            doc.putTotalPages(totalPagesExp);
+        }
+        //save
+        doc.save(loggedCompany + '-' + filename + '.pdf');
 
         // }
         // catch(e){
@@ -1211,10 +1194,10 @@ export class UtilityService {
 
     };
 
-    addSummaryTinyMCEditor=function (editorId) {
+    addSummaryTinyMCEditor = function(editorId) {
         $(document).ready(function() {
             tinymce.init({
-                selector: "textarea"+editorId,
+                selector: "textarea" + editorId,
                 theme: "modern",
                 paste_data_images: true,
                 plugins: [
@@ -1247,10 +1230,10 @@ export class UtilityService {
         });
     }
 
-    insertContentTinyMCEditor=function (editorId) {
+    insertContentTinyMCEditor = function(editorId) {
         $(document).ready(function() {
             tinymce.init({
-                selector: "textarea"+editorId,
+                selector: "textarea" + editorId,
                 theme: "modern",
                 paste_data_images: true,
                 plugins: [
@@ -1281,50 +1264,50 @@ export class UtilityService {
         });
     }
 
-    modifynegativeCurrencyFormat = function (price) {
-      if (Session.get('ERPLoggedCountry') === "United Arab Emirates"){
-            return ((parseFloat(price).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}))+ ' '+Currency);
-      } else {
-        if (price < 0) {
-            let currency = price.toString().split('-')[1];
-            currency = '-'+Currency+(parseFloat(currency).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}));
-            return currency;
+    modifynegativeCurrencyFormat = function(price) {
+        if (Session.get('ERPLoggedCountry') === "United Arab Emirates") {
+            return ((parseFloat(price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })) + ' ' + Currency);
         } else {
-            return (Currency+(parseFloat(price).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})));
+            if (price < 0) {
+                let currency = price.toString().split('-')[1];
+                currency = '-' + Currency + (parseFloat(currency).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                return currency;
+            } else {
+                return (Currency + (parseFloat(price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));
+            }
         }
-      }
     };
-    negativeNumberFormat = function (value) {
+    negativeNumberFormat = function(value) {
         if (value < 0) {
             let currency = value.toString().split('-')[1];
-            currency = '-'+(parseFloat(currency).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}));
+            currency = '-' + (parseFloat(currency).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
             return currency;
         } else {
-            return parseFloat(value).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            return parseFloat(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
     };
 
-    getStartDateWithSpecificFormat = function (date) {
-      const leaveDate = new Date(date);
-      const yyyy = leaveDate.getFullYear();
-      let mm = ("0" + (leaveDate.getMonth() + 1)).slice(-2);
-      let dd = leaveDate.getDate();
-      return dd + "/" + mm + "/" + yyyy;
+    getStartDateWithSpecificFormat = function(date) {
+        const leaveDate = new Date(date);
+        const yyyy = leaveDate.getFullYear();
+        let mm = ("0" + (leaveDate.getMonth() + 1)).slice(-2);
+        let dd = leaveDate.getDate();
+        return dd + "/" + mm + "/" + yyyy;
     };
 
-    negativeCurrencyRoundFormat = function (price) {
-        if(price < 0) {
+    negativeCurrencyRoundFormat = function(price) {
+        if (price < 0) {
             let currency = price.toString().split('-')[1];
-            currency = '-'+Currency + (Math.round(parseFloat(currency)));
+            currency = '-' + Currency + (Math.round(parseFloat(currency)));
             return currency;
         } else {
-            return (Currency+((Math.round(price))));
+            return (Currency + ((Math.round(price))));
         }
     };
     substringMethod(value) {
-        if(value.includes('-'+Currency)){
-            let price = value.substring(2).replace(",","");
-            price = '-'+price;
+        if (value.includes('-' + Currency)) {
+            let price = value.substring(2).replace(",", "");
+            price = '-' + price;
             return price;
         } else {
             return (value.substring(1).replace(",", ""));
@@ -1332,26 +1315,25 @@ export class UtilityService {
 
     }
     withoutLocaleString(price) {
-        if(price < 0) {
+        if (price < 0) {
             let currency = price.toString().split('-')[1];
-            currency = '-'+Currency+(parseFloat(currency));
+            currency = '-' + Currency + (parseFloat(currency));
             return currency;
         } else {
-            return (Currency+(parseFloat(price)));
+            return (Currency + (parseFloat(price)));
         }
     }
 
     convertSubstringParseFloat(value) {
-        if((value).includes('-')) {
-            let price = value.substring(2).replace(",","");
-            price = '-'+price;
+        if ((value).includes('-')) {
+            let price = value.replace(".", "");
+            price = price.substring(2).replace(",", ".");
+            price = '-' + price;
             return (parseFloat(price));
-
-        }
-        else {
-            value = value.substring(1).replace(",", "");
+        } else {
+            value = value.replace(".", "");
+            value = value.substring(1).replace(",", ".");
             return (parseFloat(value));
-
         }
     }
 
@@ -1365,10 +1347,10 @@ export class UtilityService {
     removeCurrency(stringNumber = "$10.5", _currency = false) {
         stringNumber = stringNumber.replace(',', "");
         const isNegative = stringNumber.includes("-");
-        if(isNegative) {
+        if (isNegative) {
             stringNumber = stringNumber.replace('-', "");
         }
-        if(_currency) {
+        if (_currency) {
             stringNumber = stringNumber.replace(_currency, '');
         } else {
             const currency = stringNumber.split('')[0];
@@ -1386,7 +1368,7 @@ export class UtilityService {
      * @returns
      */
     extractCurrency(stringNumber = "$15.5") {
-        if(!isNaN(stringNumber)) {
+        if (!isNaN(stringNumber)) {
             return '';
         }
         stringNumber = stringNumber.replace('-', ''); // remove the negative sign
@@ -1401,7 +1383,7 @@ export class UtilityService {
      * @returns {boolean}
      */
     isNegative(number = "1235") {
-        if(isNaN(number)) {
+        if (isNaN(number)) {
             return number.includes("-");
         } else {
             return number < 0;

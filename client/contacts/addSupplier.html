@@ -163,14 +163,7 @@
 
                         <div class="card shadow mb-4 cardSizing">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="text-primary font-weight-bold m-0">
-                                    {{#if notEquals record.id ''}}
-                                        SUP-{{record.id}} -
-                                        <!-- SUP-{{record.id}} - -->
-                                    {{/if}}
-                                    {{record.company}} - {{record.firstname}} {{record.lastname}}
-                                    <!-- {{record.company}} - {{record.firstname}} {{record.lastname}} - {{record.phone}} -->
-                                </h6>
+                                {{> vs1_contact_card_header isJob=isJob record=record id="supplierInfo"}}
                                 <div>
                                     <button type="button" class="btn btn-success btnMakeSupplierPayment" style="margin:14px;" id="btnMakeSupplierPayment"><i class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Make Payment</button>
 
@@ -362,26 +355,26 @@
                                                         <input type="text" class="form-control" id="edtSupplierCompanyEmail" name="edtSupplierCompanyEmail" value="{{record.email}}">
                                                     </div>
                                                 </div>
-                                                <div class="col-6 col-md-2" style="padding: 0px 8px;">
+                                                <div class="col-6 col-md-1" style="padding: 0px 8px;">
                                                     <div class="form-group">
                                                         <label for="edtSupplierTitle">Title</label>
                                                         <select type="search" class="form-control" id="edtSupplierTitle" name="edtSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-6 col-md-4" style="padding: 0px 8px;">
+                                                <div class="col-6 col-md-3" style="padding: 0px 8px;">
                                                     <div class="form-group">
                                                         <label class="text-nowrap">First Name</label>
                                                         <input type="text" class="form-control" id="edtSupplierFirstName" name="edtSupplierFirstName" value="{{record.firstname}}">
                                                     </div>
                                                 </div>
-                                                <div class="col-6 col-md-2">
+                                                <div class="col-6 col-md-3">
                                                     <div class="form-group" style="padding: 0px 8px;">
                                                         <label class="text-nowrap">Middle Name</label>
                                                         <input type="text" class="form-control" id="edtSupplierMiddleName" name="edtSupplierMiddleName" value="{{record.middlename}}">
                                                     </div>
                                                 </div>
-                                                <div class="col-6 col-md-4">
+                                                <div class="col-6 col-md-3">
                                                     <div class="form-group" style="padding: 0px 8px;">
                                                         <label class="text-nowrap">Last Name</label>
                                                         <input type="text" class="form-control" id="edtSupplierLastName" name="edtSupplierLastName" value="{{record.lastname}}">
@@ -615,27 +608,34 @@
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-6" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
 
                                                                 <div class="row" style="margin: 6px;">
-                                                                    <div class="col-12 col-md-5">
+                                                                    <div class="col-12 col-md-12">
                                                                         <div class="row">
-                                                                            <div class="col-6">
-                                                                                <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
-                                                                                    <select type="search" class="form-control" id="sltPreferredPayment" name="sltPreferredPayment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-6">
+                                                                            <div class="col-md-3">
                                                                                 <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Terms</label>
                                                                                     <select type="search" class="form-control" id="sltTerms" name="sltTerms" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                                     </select>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-6">
+                                                                            <div class="col-md-3">
+                                                                                <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
+                                                                                    <select type="search" class="form-control" id="sltPreferredPayment" name="sltPreferredPayment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-3">
                                                                                 <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Account No</label>
                                                                                     <input type="text" class="form-control" id="suppAccountNo" name="suppAccountNo" value="{{record.accountnumber}}">
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-6">
-                                                                                <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Contractor 1099</label>
+                                                                            <div class="col-md-3">
+                                                                                <div class="row justify-content-left desktopButtons" style=" margin-left:0px;">
+                                                                                    {{#if equals record.scountry "Unite States"}}
+                                                                                        {{> toggle_button className="chkGlobalSettings" id="contactor-1099" width="131px" for="choosetemplate" displayName="Contractor 1099"}}
+                                                                                    {{else}}
+                                                                                        <!-- {{> toggle_button className="chkGlobalSettings" id="contactor-1099" width="131px" for="choosetemplate" displayName="Contractor 1099"}} -->
+                                                                                    {{/if}}
+                                                                                </div>
+                                                                                <!-- <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Contractor 1099</label>
                                                                                     <div class="custom-control custom-checkbox chkBox" style="text-align: center;">
                                                                                         {{#if equals record.isContractor true}}
                                                                                             <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off" checked><label class="custom-control-label chkBox" for="isformcontractor" style="height: calc(1.5em + 0.75rem );"></label>
@@ -643,7 +643,7 @@
                                                                                             <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off"><label class="custom-control-label chkBox" for="isformcontractor" style="height: calc(1.5em + 0.75rem );"></label>
                                                                                         {{/if}}
                                                                                     </div>
-                                                                                </div>
+                                                                                </div> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -656,7 +656,9 @@
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Bank Name</label>
-                                                                            <input type="text" class="form-control" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                            <!-- <input type="text" class="form-control" id="edtBankName" name="edtBankName" value="{{record.bankName}}"> -->
+                                                                            <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
@@ -698,7 +700,7 @@
                                                                     </div>
                                                                     
                                                                     <div class="col-6 col-md-3">
-                                                                        {{> CurrencyWidget onlyCurrencyField="true"}}
+                                                                        {{> CurrencyWidget onlyCurrencyField="true" CurrentForeignExchangeCode = record.foreignExchangeCode}}
                                                                     </div>
                                                                    
                                                                 </div>
@@ -1033,86 +1035,7 @@
                                                 </div>
 
                                                 <div class="modal fade" role="dialog" tabindex="-1" id="supplierTitlePopModal">
-                                                    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h4>Title List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <input type="hidden" style="width: 100%; display:none;" id="selectTitleLineID" name="selectTitleLineID" readonly>
-                                                                <div class="card-body p-1 rounded">
-                                                                    <div class="table-responsive">
-                                                                        <table id="tblSupplierTitlePopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSupplierTitlePopList">
-                                                                            <thead>
-                                                                                <tr class="dnd-moved">
-                                                                                    <th class="th colSourceName" style="">Title</th>
-                                                                                    <th class="th colActive" style="">Active</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <style>
-                                                                                .colStatusName {
-                                                                                    width: 20% !important;
-                                                                                }
-                                                                                .colActive {
-                                                                                    width: 5% !important;
-                                                                                }
-                                                                            </style>
-                                                                            <tbody>
-                                                                                <tr class="dnd-moved" id="s-0" style="cursor: default;">
-                                                                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Mr</td>
-                                                                                    <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
-                                                                                        <div class="custom-control custom-checkbox chkBox">
-                                                                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-0" checked disabled>
-                                                                                            <label class="custom-control-label chkBox" for="s-active-0"></label>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr class="dnd-moved" id="s-1" style="cursor: default;">
-                                                                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Mrs</td>
-                                                                                    <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
-                                                                                        <div class="custom-control custom-checkbox chkBox">
-                                                                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-1" checked disabled>
-                                                                                            <label class="custom-control-label chkBox" for="s-active-1"></label>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr class="dnd-moved" id="s-2" style="cursor: default;">
-                                                                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">MIss</td>
-                                                                                    <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
-                                                                                        <div class="custom-control custom-checkbox chkBox">
-                                                                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-2" checked disabled>
-                                                                                            <label class="custom-control-label chkBox" for="s-active-2"></label>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr class="dnd-moved" id="s-3" style="cursor: default;">
-                                                                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Ms</td>
-                                                                                    <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
-                                                                                        <div class="custom-control custom-checkbox chkBox">
-                                                                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-3" checked disabled>
-                                                                                            <label class="custom-control-label chkBox" for="s-active-3"></label>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr class="dnd-moved" id="s-4" style="cursor: default;">
-                                                                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Dr</td>
-                                                                                    <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
-                                                                                        <div class="custom-control custom-checkbox chkBox">
-                                                                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-4" checked disabled>
-                                                                                            <label class="custom-control-label chkBox" for="s-active-4"></label>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   {{> title_list_pop}}
                                                 </div>
 
                                                 <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
@@ -1297,63 +1220,7 @@
                                                                 opacity: 1;
                                                             }
                                                         </style>
-                                                        <table id="tblTransactionlist" style="width:100%" class="dataTable table table-striped table-bordered tblTransactionlist">
-                                                            <thead>
-                                                                <tr class="dnd-moved">
-                                                                    <th class="th colSortDate hiddenColumn">id</th>
-                                                                    <th class="th colOrderDate">Order Date</th>
-                                                                    <th class="th colPurchaseNo">P/O No.</th>
-                                                                    <th class="th colSupplier">Supplier</th>
-                                                                    <th class="th colAmountEx">Amount (Ex)</th>
-                                                                    <th class="th colTax">Tax</th>
-                                                                    <th class="th colAmount">Amount</th>
-                                                                    <th class="th colPaid">Paid</th>
-                                                                    <th class="th colBalanceOutstanding">Balance Outstanding</th>
-                                                                    <th class="th colStatus">Type</th>
-                                                                    <th class="th colPurchaseCustField1 hiddenColumn">Custom Field 1</th>
-                                                                    <th class="th colPurchaseCustField2 hiddenColumn">Custom Field 2</th>
-                                                                    <th class="th colEmployee hiddenColumn">Employee</th>
-                                                                    <th class="th colComments">Comments</th>
-
-                                                                    <!--<th class="th colOrderDate" style="width:84px;">Order Date</th>
-<th class="th colPurchaseNo" style="width:80px;">P/O No.</th>
-<th class="th colSupplier" style="width:200px;">Supplier</th>
-<th class="th colAmountEx" style="width:80px;">Amount(Ex)</th>
-<th class="th colTax" style="width:80px;">Tax</th>
-<th class="th colAmount" style="width:80px;">Amount</th>
-<th class="th colPaid" style="width:80px;">Paid</th>
-<th class="th colBalanceOutstanding" style="width:80px;">Balance Outstanding</th>
-<th class="th colStatus hiddenColumn">Status</th>
-<th class="th colPurchaseCustField1 hiddenColumn">Custom Field 1</th>
-<th class="th colPurchaseCustField2 hiddenColumn">Custom Field 2</th>
-<th class="th colEmployee hiddenColumn">Employee</th>
-<th class="th colComments">Comments</th>-->
-
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {{#if datatablerecords}}
-                                                                    {{#each item in datatablerecords}}
-                                                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                            <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                                                            <td contenteditable="false" class="colOrderDate"><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
-                                                                            <td contenteditable="false" class="colPurchaseNo">{{item.id}}</td>
-                                                                            <td contenteditable="false" class="colSupplier">{{item.suppliername}}</td>
-                                                                            <td contenteditable="false" class="colAmountEx" style="text-align: right!important;">{{item.totalamountex}}</td>
-                                                                            <td contenteditable="false" class="colTax" style="text-align: right!important;">{{item.totaltax}}</td>
-                                                                            <td contenteditable="false" class="colAmount" style="text-align: right!important;">{{item.totalamount}}</td>
-                                                                            <td contenteditable="false" class="colPaid" style="text-align: right!important;">{{item.totalpaid}}</td>
-                                                                            <td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                                                            <td contenteditable="false" class="colStatus">{{item.type}}</td>
-                                                                            <td contenteditable="false" class="colPurchaseCustField1 hiddenColumn">{{item.custfield1}}</td>
-                                                                            <td contenteditable="false" class="colPurchaseCustField2 hiddenColumn">{{item.custfield2}}</td>
-                                                                            <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employee}}</td>
-                                                                            <td contenteditable="false" class="colComments">{{item.comments}}</td>
-                                                                        </tr>
-                                                                    {{/each}}
-                                                                {{/if}}
-                                                            </tbody>
-                                                        </table>
+                                                         {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems displayItems=tableHeaderDisplayItems}}   
                                                     </div>
                                                 </div>
                                             </div>
@@ -1663,6 +1530,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
+      {{> bankNameModal}}
     </div>
 
     <!-- End Help Video Modal -->

@@ -402,7 +402,7 @@ Template.leadstatussettings.events({
     'click .btnRefresh': function() {
         $(".fullScreenSpin").css("display", "inline-block");
         sideBarService.getAllLeadStatus().then(function(dataReload) {
-            addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function(datareturn) {
+            addVS1Data('TLeadStatusTypeList', JSON.stringify(dataReload)).then(function(datareturn) {
               sideBarService.getLeadStatusDataList(initialBaseDataLoad, 0, false).then(async function(dataLeadList) {
                   await addVS1Data('TLeadStatusTypeList', JSON.stringify(dataLeadList)).then(function(datareturn) {
                       Meteor._reload.reload();
@@ -490,7 +490,7 @@ Template.leadstatussettings.events({
         }, delayTimeAfterSound);
     },
     'click .btnActivateLeadStatus': function() {
-        playDeleteAudio();
+        playSaveAudio();
         let contactService = new ContactService();
         setTimeout(function() {
             $('.fullScreenSpin').css('display', 'inline-block');

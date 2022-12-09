@@ -161,12 +161,7 @@
                         <div class="card shadow mb-4 cardSizing" style="margin: 8px;">
                             <div class="card-header d-flex justify-content-between align-items-xl-center">
                                 <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
-                                <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 leadInfo" id="leadInfo" style="color: #00A3D3;">
-                                    {{#if notEquals record.id ''}}
-                                        LED-{{record.id}} -
-                                    {{/if}}
-                                    {{#if record}} {{record.employeeName}} - {{record.firstname}} {{record.lastname}} - {{record.phone}}{{/if}}
-                                </h6>
+                                {{> vs1_contact_card_header isJob=isJob record=record id="leadInfo"}}
                                 <!--here-->
                                 <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>

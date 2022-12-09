@@ -1,0 +1,187 @@
+<!-- Invoice header template -->
+<!-- 
+  data
+  uploadedFile
+  isCurrencyEnable
+  custfields
+  showTemplateModals
+  showUploadAttachment
+  showTransactionButtons
+ -->
+<template name="transaction_header">
+  <style>
+    @media (min-width: 1200px) {
+      .row-middle .col-xl-2 {
+        flex: 0 0 24.66667%;
+        max-width: 24.66667%;
+      }
+    }
+
+    @media (min-width: 1300px) {
+      .row-middle .col-xl-2 {
+        flex: 0 0 16.66667%;
+        max-width: 16.66667%;
+      }
+    }
+  </style>
+  <header
+    style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+    <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+      {{data.lid}}
+      {{> helpbutton}}
+      <a 
+        class="btn btnSettings"
+        role="button"
+        data-toggle="modal" 
+        href="#myModal4" 
+        style="float: right;">
+        <i class="icon ion-android-more-horizontal"></i>
+      </a>
+    </h2>
+    <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+  </header>
+
+  {{> help_modal}}
+  {{> customfieldDroppop}}
+  {{> customfieldpop}}
+
+  {{#if showUploadAttachment}}
+  {{> files_viewer_modal }}
+  {{/if}}
+
+  {{#if showTemplateModals}}
+  {{> template_selection_modal}}
+  <div 
+    class="modal fade" 
+    id="templatePreviewModal" 
+    tabindex="2" 
+    role="dialog"
+    aria-labelledby="templatePreviewLabel" 
+    aria-hidden="true">
+    {{> custom_print_template 
+      modalId="templatePreviewModal" 
+      idPrefix="html-2-pdfwrapper"
+      namePrefix="html-2-pdfwrapper" 
+    }}
+  </div>
+  {{/if}}
+  <div class="row" style="background-color: #ededed;">
+    {{#if equals data.ispaid true}}
+    <div class="col-12 colPaid" style="display: none;">
+      <p style="font-size: 25px;font-weight: 700 ;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
+      <input class="form-control form-control ispaidInv" type="hidden" value="true">
+    </div>
+    {{/if}}
+
+    <div class="col-12 col-xl-10">
+      <div class="row" style="margin: 8px 16px 0px 16px;">
+        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+        {{> customer_selector
+          label=getUserLabel
+        }}
+        </div>
+        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+          {{> customer_email_input
+            label=getUserLabel
+          }}
+        </div>
+      </div>
+      
+      <div class="row" style="margin: 16px 16px 0px 16px;">
+        <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+          {{# vs1_textarea 
+            label="Billing Address" 
+            row="5" 
+            id="txabillingAddress"
+            name="txabillingAddress"
+          }}{{data.invoiceToDesc}}{{/vs1_textarea}}
+        </div>
+        <div class="col-12 col-md-6 col-lg-8 col-xl-9 ">
+          <div class="row row-middle">
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+            {{> sale_date_selector
+              label=getDateInputLabel
+              SODdate=data.saledate
+              DueDate=data.duedate
+            }}
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> po_number_input}}
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_select
+                label="Terms"
+                id="sltTerms"
+                type="search"
+                name="sltTerms"
+              }}
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_select
+                label="Status"
+                type="search"
+                id="sltStatus"
+                name="sltStatus"
+              }}
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_input
+                label="Reference"
+                classes=""
+                type="text"
+                id="edtRef"
+                name="edtRef"
+                defaultValue=data.reference
+              }}
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_select
+                label="Department"
+                id="sltDept"
+                name="sltDept"
+              }}
+            </div>
+            {{#if isCurrencyEnable}}
+            {{> CurrencyWidget rate="sell" trans="true"}}
+            {{/if}}
+
+            {{> custom_fields
+              containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
+              salesCloudPreferenceRec=salesCloudPreferenceRec
+              custfields=custfields
+            }}
+
+          </div>
+        </div>
+
+      </div>
+      <div class="row" style="margin: 16px 16px 0px 16px;">
+        <div class="col-12 mb-3">
+          <a class="btn btn-link" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notes"
+            href="#collapse-notes" role="button">+ Shipping Information</a>
+          <div class="row">
+            <div class="col-12 col-md-4">
+              <div class="collapse" id="collapse-notes" style="margin-top: 8px;">
+                {{# vs1_textarea label="Shipping Address" row="3" id="txaShipingInfo"
+                name="txaShipingInfo"}}{{data.shipToDesc}}{{/vs1_textarea}}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-xl-2">
+      <div class="row justify-content-end">
+        {{> transaction_buttons_top 
+          showBalanceDue=true
+          showButtons=showTransactionButtons
+          recorddeleted=data.deleted
+          recordispaid=data.ispaid
+          recordbalanceDue=data.balanceDue
+        }}
+      </div>
+    </div>
+  </div>
+</template>

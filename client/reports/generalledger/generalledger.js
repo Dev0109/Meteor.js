@@ -872,48 +872,122 @@ Template.generalledger.events({
   //   // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
   // },
   "click .btnPrintReport": function (event) {
+    $('.fullScreenSpin').css('display', 'inline-block')
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
-        storage.includes("BasedOnType_")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-      }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("225")) {
-            reportData.FormID = 225;
-            Meteor.call("sendNormalEmail", reportData);
-          }
-        } else {
-          if (reportData.FormID == 225)
-            Meteor.call("sendNormalEmail", reportData);
-        }
-      }
-    });
+    setTimeout(async function(){
 
-    document.title = "General Ledger Report";
-    $(".printReport").print({
-      title: "General Ledger | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+      let targetElement = document.getElementsByClassName('printReport')[0];
+      targetElement.style.width = "210mm";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "20px";
+      targetElement.style.height = "fit-content";
+      targetElement.style.fontSize = "13.33px";
+      targetElement.style.color = "#000000";
+      targetElement.style.overflowX = "visible";
+      let targetTds = $(targetElement).find('.table-responsive #tableExportDetailDiv.table td');
+      let targetThs = $(targetElement).find('.table-responsive #tableExportDetailDiv.table th');
+      for (let k = 0; k< targetTds.length; k++) {
+          $(targetTds[k]).attr('style', 'min-width: 0px !important')
+      }
+      for (let j = 0; j< targetThs.length; j++) {
+          $(targetThs[j]).attr('style', 'min-width: 0px !important')
+      }
+
+      let docTitle = "General Ledger.pdf";
+
+
+      var opt = {
+          margin: 0,
+          filename: docTitle,
+          image: {
+              type: 'jpeg',
+              quality: 0.98
+          },
+          html2canvas: {
+              scale: 2
+          },
+          jsPDF: {
+              unit: 'in',
+              format: 'a4',
+              orientation: 'portrait'
+          }
+      };
+      let source = targetElement;
+
+      async function getAttachments () {
+        return new Promise(async(resolve, reject)=> {
+          html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
+            let pdfObject = "";
+            let base64data = dataObject.split(',')[1];
+            pdfObject = {
+              filename: docTitle,
+              content: base64data,
+              encoding: 'base64'
+            }
+            let attachments = [];
+            attachments.push(pdfObject);
+            resolve(attachments)
+          })
+        })
+      }
+
+      async function checkBasedOnType () {
+        return new Promise(async(resolve, reject)=> {
+          let values = [];
+          let basedOnTypeStorages = Object.keys(localStorage);
+          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split("_")[2];
+            return (
+              // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+              storage.includes("BasedOnType_")
+            );
+          });
+          let i = basedOnTypeStorages.length;
+          if (i > 0) {
+            while (i--) {
+              values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+          }
+          for(let j = 0; j < values.length; j++) {
+            let value = values[j];
+            let reportData = JSON.parse(value);
+            reportData.HostURL = $(location).attr("protocal")
+              ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+              : "http://" + $(location).attr("hostname");
+            if (reportData.BasedOnType.includes("P")) {
+              if (reportData.FormID == 1) {
+                let formIds = reportData.FormIDs.split(",");
+                if (formIds.includes("225")) {
+                  reportData.FormID = 225;
+                  reportData.attachments = await getAttachments()
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              } else {
+                if (reportData.FormID == 225) {
+                  reportData.attachments = await getAttachments();
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              }
+            }
+            if(j == values.length - 1) {resolve()}
+          }
+        })
+      }
+      await checkBasedOnType();
+
+      $('.fullScreenSpin').css('display', 'none');
+      document.title = "General Ledger Report";
+      $(".printReport").print({
+        title: "General Ledger | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+      });
+      targetElement.style.width = "100%";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "0px";
+      targetElement.style.fontSize = "1rem";
+    }, delayTimeAfterSound);
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -1137,6 +1211,11 @@ Template.generalledger.helpers({
     }
     let activeArray = array.filter((c) => c.active == true);
     return activeArray.length;
+  },
+  currencyColumnSize : (count) => {
+    let siz = count > 0 ? count * 130 : 90;
+    //alert(siz);
+    return siz;          //column size auto per 85px
   },
   currencyList: () => {
     return Template.instance().currencyList.get();

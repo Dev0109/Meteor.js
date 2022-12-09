@@ -8,30 +8,36 @@
                 display: none;
             }
         </style> -->
-        <header style="padding: 16px;padding-bottom: 0px;">
-            <h2 class="pageHeader" style="margin: 14px;margin-bottom: 0px;">Receipt Claims
-                <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                {{> helpbutton}}
-
-                <!-- Start Help View Modal -->
-                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                {{> helpadvisor}}
-                                {{> helpgotoforum}}
-                            </div>
-                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+        <header class="row" style="padding: 15px 20px !important;">
+            <div class="col-12 col-md-4">
+                <h2>Receipt Claims {{> helpbutton}}</h2>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                         </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                     </div>
                 </div>
-                <!-- End Help View Modal -->
-            </h2>
+            </div>
+<!--            <h2 class="pageHeader" style="margin: 14px;margin-bottom: 0px;">-->
+<!--                &lt;!&ndash; <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> &ndash;&gt;-->
+<!--                {{> helpbutton}}-->
+
+<!--                &lt;!&ndash; Start Help View Modal &ndash;&gt;-->
+<!--                &lt;!&ndash; End Help View Modal &ndash;&gt;-->
+<!--            </h2>-->
         </header>
         <style>
             .btnOpenSettingsMobile {
@@ -1372,6 +1378,89 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
         {{> addsupplierpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="supplierTitlePopModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Title List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectTitleLineID" name="selectTitleLineID" readonly>
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <table id="tblSupplierTitlePopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSupplierTitlePopList">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="th colSourceName" style="">Title</th>
+                                        <th class="th colActive" style="">Active</th>
+                                    </tr>
+                                </thead>
+                                <style>
+                                    .colStatusName {
+                                        width: 20% !important;
+                                    }
+                                    .colActive {
+                                        width: 5% !important;
+                                    }
+                                </style>
+                                <tbody>
+                                    <tr class="dnd-moved" id="s-0" style="cursor: default;">
+                                        <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Mr</td>
+                                        <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
+                                            <div class="custom-control custom-checkbox chkBox">
+                                                <input class="custom-control-input chkBox" type="checkbox" id="s-active-0" checked disabled>
+                                                <label class="custom-control-label chkBox" for="s-active-0"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="dnd-moved" id="s-1" style="cursor: default;">
+                                        <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Mrs</td>
+                                        <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
+                                            <div class="custom-control custom-checkbox chkBox">
+                                                <input class="custom-control-input chkBox" type="checkbox" id="s-active-1" checked disabled>
+                                                <label class="custom-control-label chkBox" for="s-active-1"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="dnd-moved" id="s-2" style="cursor: default;">
+                                        <td contenteditable="false" class="colTitleName" style="width: 20% !important;">MIss</td>
+                                        <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
+                                            <div class="custom-control custom-checkbox chkBox">
+                                                <input class="custom-control-input chkBox" type="checkbox" id="s-active-2" checked disabled>
+                                                <label class="custom-control-label chkBox" for="s-active-2"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="dnd-moved" id="s-3" style="cursor: default;">
+                                        <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Ms</td>
+                                        <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
+                                            <div class="custom-control custom-checkbox chkBox">
+                                                <input class="custom-control-input chkBox" type="checkbox" id="s-active-3" checked disabled>
+                                                <label class="custom-control-label chkBox" for="s-active-3"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="dnd-moved" id="s-4" style="cursor: default;">
+                                        <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Dr</td>
+                                        <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
+                                            <div class="custom-control custom-checkbox chkBox">
+                                                <input class="custom-control-input chkBox" type="checkbox" id="s-active-4" checked disabled>
+                                                <label class="custom-control-label chkBox" for="s-active-4"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Chart Account Standard Modals -->

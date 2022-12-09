@@ -38,7 +38,7 @@ Template.production_planner.onRendered(async function() {
         return new Promise(async(resolve, reject) => {
             getVS1Data('TProcessStep').then(function(dataObject) {
                 if (dataObject.length == 0) {
-                    manufacturingService.getAllProcessData().then(function(data) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(data) {
                         addVS1Data('TProcessStep', JSON.stringify(data))
                         let useData = data.tprocessstep;
                         let temp = []
@@ -80,13 +80,34 @@ Template.production_planner.onRendered(async function() {
     await templateObject.resources.set(resources);
     let workorders = localStorage.getItem('TWorkorders') ? JSON.parse(localStorage.getItem('TWorkorders')) : []
         // templateObject.workorders.set(workorders);
+    async function getPlanData() {
+        return new Promise(async(resolve, reject)=> {
+            let returnVal = [];
+            getVS1Data('TProductionPlanData').then(function(dataObject) {
+                if(dataObject.length == 0) {
+                    resolve(returnVal)
+                } else {
+                    returnVal = JSON.parse(dataObject[0].data.tproductionplandata[0].fields.events)
+                    if(returnVal == undefined) {
+                        returnVal = [];
+                    }
+                    resolve(returnVal)
+                }
+            }).catch(function(e) {
+                returnVal = [];
+                resolve(returnVal)
+            })
+        })
+    }
     async function getEvents() {
         return new Promise(async function(resolve, reject) {
-            let events = [];
-            let eventsData = localStorage.getItem('TProductionPlan') ? JSON.parse(localStorage.getItem('TProductionPlan')) : [];
+            // let events = [];
+            let planData = await getPlanData();
+            
+            let eventsData = planData;
             if (eventsData.length == 0) {
 
-                let events = [];
+                let tempEvents = [];
                 for (let i = 0; i < workorders.length; i++) {
                     let processName = workorders[i].BOM.process;
                     let productName = workorders[i].BOM.productName;
@@ -127,14 +148,14 @@ Template.production_planner.onRendered(async function() {
                             "fromStocks": stockRaws
                         }
                     }
-                    events.push(event);
+                    tempEvents.push(event);
                 }
-                templateObject.events.set(events)
-                resolve(events);
+                templateObject.events.set(tempEvents)
+                resolve(tempEvents);
             } else {
-                events = eventsData;
-                templateObject.events.set(events)
-                resolve(events)
+                // events = eventsData;
+                templateObject.events.set(eventsData)
+                resolve(eventsData)
             }
         })
     }
@@ -448,17 +469,24 @@ Template.production_planner.events({
         $('.fullScreenSpin').css('display', 'inline-block')
         let templateObject = Template.instance();
         let events = templateObject.events.get();
-        localStorage.setItem('TProductionPlan', JSON.stringify(events));
-        $('.fullScreenSpin').css('display', 'none');
-        swal({
-            title: 'Success',
-            text: 'Production planner has been saved successfully',
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'Continue',
-        }).then((result) => {
-            window.location.reload();
-        });
+        let objectDetail = {
+            type: 'TProductionPlanData',
+            fields: {
+                events: events
+            }
+        }
+        addVS1Data('TProductionPlanData', JSON.stringify(objectDetail)).then(function() {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Success',
+                text: 'Production planner has been saved successfully',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Continue',
+            }).then((result) => {
+                window.location.reload();
+            });
+        })
     },
 
     'click .btn-print-event': function(event) {

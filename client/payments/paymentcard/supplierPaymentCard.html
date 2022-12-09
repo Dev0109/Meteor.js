@@ -1163,22 +1163,7 @@
 
                 <div class="col-12 col-md-6">
                   <div class="row justify-content-center desktopButtons">
-
-                      <button class="btn btn-success btnSave btnFooter vs1ButtonMargin" type="button" style="margin-top: 0px;width: 100px;">
-                          <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                      </button>
-                     <button class="btn btn-primary vs1ButtonMargin" id="open_print_confirm" type="button" style="margin-top: 0px;width: 100px;">
-                          <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-                      </button>
-
-                      <a class="btn btn-primary btn_Attachment btnFooter vs1ButtonMargin" role="button" style="margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                          {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                      </a>
-                      <button class="btn btn-danger btnDeletePayment vs1ButtonMargin" type="button" style="margin-top: 0px;width: 100px;"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
-                      {{> deleteBtn_footers }}
-                      <button class="btn btn-secondary btnBack btnFooter vs1ButtonMargin" type="button" style="margin-top: 0px; width: 100px;">
-                          <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                      </button>
+                      {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount SaveButton="vs1ButtonMargin" PrintButton="vs1ButtonMargin" AttachmentsButton="vs1ButtonMargin" RemoveButton="vs1ButtonMargin" CancelButton="vs1ButtonMargin"}}
                   </div>
                 </div>
               </div>
@@ -1430,14 +1415,12 @@
         </div>
     </div>
 
-    <!-- End Modal Supplier -->
+    <input type="hidden" id="eftNumberUser" name="eftNumberUser">
+    <input type="hidden" id="eftUserName" name="eftUserName">
+    <input type="hidden" id="sltBankAccountName" name="sltBankAccountName">
+    <input type="hidden" id="colAccountID" name="colAccountID">
 
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="eftExportModal">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered generated-id" role="document" style="max-width: 90vw;">
-        {{> eftExportModal}}
-      </div>
-    </div>
+    <!-- End Modal Supplier --> 
 
     <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}

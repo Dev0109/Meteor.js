@@ -1,0 +1,435 @@
+<template name="accountant_header">
+    <div style="margin-top: -24px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <header style="padding: 16px;">
+            <h2 style="margin: 16px;">
+                <div id="accountant_detail" style="display: inline"></div>
+                <a
+                    role="button"
+                    data-toggle="modal"
+                    href="#helpViewModal"
+                    style="font-size: 20px;"
+                >
+                    Help
+                    <i class="fa fa-question-circle-o " style="font-size: 20px;"></i>
+                </a>
+                <!-- <a class="btn btnNav btn-primary float-right btnAddNewAccounts" role="button" data-toggle="modal" href="#addNewAccount" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>DocuSign</a> -->
+                <a
+                    class="btn btnNav btn-primary float-right btnAddNewAccounts"
+                    target="_black"
+                    href="https://www.docusign.com"
+                    style="margin: 12px;"
+                >
+                    <i class="fa fa-plus" style="margin-right: 8px;"></i>DocuSign
+                </a>
+            </h2>
+            <div>
+                <div
+                    class="modal fade"
+                    role="dialog"
+                    tabindex="-1"
+                    id="addNewAccount"
+                >
+                    {{> addAccountModal}}
+                </div>
+                <div
+                    class="modal fade"
+                    role="dialog"
+                    tabindex="-1"
+                    id="taxRateListModal"
+                >
+                    {{> taxratelistpop}}
+                </div>
+                <div
+                    class="modal fade"
+                    role="dialog"
+                    tabindex="-1"
+                    id="newTaxRateModal"
+                >
+                    {{> newtaxratepop}}
+                </div>
+                <div
+                    class="modal fade"
+                    role="dialog"
+                    tabindex="-1"
+                    id="helpViewModalAdd"
+                >
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="padding-bottom: 8px;">
+                                <h4>Help</h4>
+                                <button
+                                    type="button"
+                                    class="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center text-muted">
+                                    <a
+                                        role="button"
+                                        data-toggle="modal"
+                                        href="#helpModalAdd"
+                                        class="btn btn-primary helpModal"
+                                    >View Help Video</a>
+                                </p>
+                                <p class="text-center text-muted">
+                                    <a href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank" class="btn btn-primary">Download Help File</a>
+                                </p>
+                                <p class="text-center text-muted">
+                                    <button class="btn btn-primary" type="button">Employ Advisor</button>
+                                </p>
+                                <p class="text-center text-muted" style="margin: 0;">
+                                    <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
+                                </p>
+                            </div>
+                            <div class="modal-footer" style="padding: 6px;">
+                                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="modal fade"
+                    role="dialog"
+                    tabindex="-1"
+                    id="editReportModal"
+                >
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="padding-bottom: 8px;">
+                                <h4>Edit Report</h4>
+                                <button
+                                    type="button"
+                                    class="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea id="editor"></textarea>
+                                <input type="hidden" id="editorType">
+                            </div>
+                            <div class="modal-footer" style="padding: 6px;">
+                                <button
+                                    class="btn btn-success"
+                                    type="button"
+                                    style="margin: 8px;"
+                                    id="btnSaveEditor"
+                                    name="btnSaveEditor"
+                                    autocomplete="off"
+                                >
+                                    <i class="fa fa-save" style="margin-right: 5px;"></i>Save
+                                </button>
+                                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="modal fade categoryListModal"
+                    role="dialog"
+                    tabindex="-1"
+                    id="categoryListModal"
+                >
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>Category List</h4>
+                                <button
+                                    type="button"
+                                    class="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input
+                                    type="hidden"
+                                    style="width: 100%; display:none;"
+                                    id="selectLineID"
+                                    name="selectLineID"
+                                    readonly
+                                >
+                                <div class="card-body p-1 rounded">
+                                    <div class="table-responsive">
+                                        <style>
+                                            .thCategory {
+                                                width: 20% !important;
+                                            }
+                                            .thAccountName {
+                                                width: 20% !important;
+                                            }
+                                            .thDescription {
+                                                width: 40% !important;
+                                            }
+                                            .thAccountNo {
+                                                width: 10% !important;
+                                            }
+                                            .thTaxRate {
+                                                width: 10% !important;
+                                            }
+                                        </style>
+                                        <table id="tblCategory" style="width:100%" class="table table-striped table-bordered tblCategory">
+                                            <thead>
+                                                <tr class="dnd-moved">
+                                                    <th class="thCategory">Category</th>
+                                                    <th class="thAccountName">Account Name</th>
+                                                    <th class="thDescription">Description</th>
+                                                    <th class="thAccountNo">Account No</th>
+                                                    <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
+                                                    <th class="thAccountID hiddenColumn">Account ID</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+    <div class="row" style="margin-bottom:25px;padding:50px 100px 0 40px;">
+        <div class="col-12 col-md-5"></div>
+        <div class="col-12 col-md-2">
+            <style>
+                #uploadedImage {
+                    margin: 0 auto !important;
+                    width: 100%;
+                }
+            </style>
+            <img class="imageUpload img-fluid mb-3 mt-4" id="uploadedImage" src="assets/img/VS1.png">
+        </div>
+        <div class="col-12 col-md-5">
+            <div class="row no-gutters justify-content-end">
+                <div class="form-group" style="margin: 8px; display: inline-flex;">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="selectedDateRange"
+                        aria-describedby="basic-addon2"
+                        style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;"
+                        readonly
+                    >
+                    <div class="input-group-append">
+                        <button
+                            style="z-index: 1;margin-top:auto"
+                            type=" button"
+                            class="btn btn-link dropdown-toggle"
+                            id="btnSltDateRange"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            <i class="far fa-calendar-alt"></i>
+                        </button>
+                        <style>
+                            .dropdown-toggle::after {
+                                display: none;
+                            }
+                        </style>
+                        <div class="dropdown-menu" id="dropdownDateRang" style="width: 350px;">
+                            <a class="dropdown-item mnuDateRng" href="#" id="thisMonth">
+                                This month
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrMonth"></div>
+                            </a>
+                            <a class="dropdown-item mnuDateRng" href="#" id="thisQuarter">
+                                This quarter
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrQuarter"></div>
+                            </a>
+                            <a class="dropdown-item mnuDateRng" href="#" id="thisFinYear">
+                                This financial year
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYear"></div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item mnuDateRng" href="#" id="lastMonth">
+                                Last month
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevMonth"></div>
+                            </a>
+                            <a class="dropdown-item mnuDateRng" href="#" id="lastQuarter">
+                                Last quarter
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispLastQuarter"></div>
+                            </a>
+                            <a class="dropdown-item mnuDateRng" href="#" id="lastFinYear">
+                                Last financial year
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevFiscYear"></div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item mnuDateRng" href="#" id="monthToDate">
+                                Month to date
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="monthStartDisp"></div>
+                            </a>
+                            <a class="dropdown-item mnuDateRng" href="#" id="quarterToDate">
+                                Quarter to date
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="quarterToDateDisp"></div>
+                            </a>
+                            <a class="dropdown-item mnuDateRng" href="#" id="finYearToDate">
+                                Year to date
+                                <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYearToDate"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin: 8px;">
+                    <label>From</label>
+                    <div class="input-group date" style="width: 145px;">
+                        <input
+                            type="text"
+                            class="form-control edtReportDates"
+                            id="dateFrom"
+                            name="dateFrom"
+                        >
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin: 8px;">
+                    <label>To</label>
+                    <div class="input-group date" style="width: 145px;">
+                        <input
+                            type="text"
+                            class="form-control edtReportDates"
+                            id="dateTo"
+                            name="dateTo"
+                        >
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .selectedDateRangeBtnMod {
+                        border-top-left-radius: 0px !important;
+                        border-bottom-left-radius: 0px !important;
+                    }
+                </style>
+            </div>
+            <div class="row no-gutters justify-content-end">
+                <button class="btn btn-primary btnCopyReport" type="button" onclick="append()" style="margin: 8px;">
+                    <i class="fa fa-copy" style="margin-right: 5px;"></i>
+                    Copy File
+                </button>
+                <button class="btn btn-primary btnImportReport" onclick="importData()" type="button" style="margin: 8px;">
+                    <i class="fas fa-file-import" style="margin-right: 5px;"></i>
+                    Load Copy
+                </button>
+                <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;">
+                    <i class="fas fa-file-export" style="margin-right: 5px;"></i>
+                    Export
+                </button>
+                <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;">
+                    <i class="fa fa-print" style="margin-right: 5px;"></i>
+                    Print
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Reports Accountant Sheet</p>
+            <p class="text-center" style="margin-bottom: 0px;" id="pageTitle">{{ companyname }}</p>
+            <p class="text-center dateAdOf" id="dateAdOf" style="margin-bottom: 8px;"></p>
+        </div>
+    </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li id="prevPage" class="page-item disabled">
+                <a class="page-link" href="javascript:go_page('prev')" tabindex="-1">Previous</a>
+            </li>
+            <li id="pageNum-1" class="page-item active">
+                <a class="page-link" href="javascript:go_page(1)">1</a>
+            </li>
+            <li id="pageNum-2" class="page-item">
+                <a class="page-link" href="javascript:go_page(2)">2</a>
+            </li>
+            <li id="pageNum-3" class="page-item">
+                <a class="page-link" href="javascript:go_page(3)">3</a>
+            </li>
+            <li id="pageNum-4" class="page-item">
+                <a class="page-link" href="javascript:go_page(4)">4</a>
+            </li>
+            <li id="pageNum-5" class="page-item">
+                <a class="page-link" href="javascript:go_page(5)">5</a>
+            </li>
+            <li id="pageNum-6" class="page-item">
+                <a class="page-link" href="javascript:go_page(6)">6</a>
+            </li>
+            <li id="pageNum-7" class="page-item">
+                <a class="page-link" href="javascript:go_page(7)">7</a>
+            </li>
+            <li id="pageNum-8" class="page-item">
+                <a class="page-link" href="javascript:go_page(8)">8</a>
+            </li>
+            <li id="pageNum-9" class="page-item">
+                <a class="page-link" href="javascript:go_page(9)">9</a>
+            </li>
+            <li id="pageNum-10" class="page-item">
+                <a class="page-link" href="javascript:go_page(10)">10</a>
+            </li>
+            <li id="pageNum-11" class="page-item">
+                <a class="page-link" href="javascript:go_page(11)">11</a>
+            </li>
+            <li id="pageNum-12" class="page-item">
+                <a class="page-link" href="javascript:go_page(12)">12</a>
+            </li>
+            <li id="nextPage" class="page-item">
+                <a class="page-link" href="javascript:go_page('next')">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <script>
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();                
+        today = dd + '/' + mm + '/' + yyyy;
+        document.getElementById("dateFrom").value = today;
+        document.getElementById("dateTo").value = today;
+        document.getElementById("accountant_detail").innerHTML = localStorage.getItem("accountant_detail");
+        function append(){
+        var $html = $('#card-body');    
+        var str = $html.prop('outerHTML');
+        const result = encodeURI(str);
+        saveFile(result);
+        }
+        function saveFile(textToWrite)
+        {  
+            // get the textbox data...
+            var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+            var downloadLink = document.createElement("a");
+            downloadLink.download = localStorage.getItem("accountant_detail")+".xml";
+            downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+            downloadLink.click();
+        }
+        function importData() {
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = _ => {
+                let files = input.files[0];
+			    let reader = new FileReader();
+                reader.readAsText(files);
+                reader.onload = function() {
+                const div = document.getElementById("import_File");
+                div.innerHTML = decodeURI(reader.result);
+            };
+        };
+  input.click();
+}
+    </script>
+</template>

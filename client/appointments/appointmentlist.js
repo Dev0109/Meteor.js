@@ -13,7 +13,7 @@ let sideBarService = new SideBarService();
 let smsService = new SMSService();
 let utilityService = new UtilityService();
 let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
-Template.appointmentlist.onCreated(function() {
+Template.appointmentlist.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.productsrecord = new ReactiveVar([]);
@@ -26,7 +26,7 @@ Template.appointmentlist.onCreated(function() {
     templateObject.extraProductFees = new ReactiveVar([]);
 });
 
-Template.appointmentlist.onRendered(async function() {
+Template.appointmentlist.onRendered(async function () {
     localStorage.setItem("appt_historypage", "");
 
     $('.fullScreenSpin').css('display', 'inline-block');
@@ -43,10 +43,12 @@ Template.appointmentlist.onRendered(async function() {
     const clientList = [];
 
     var splashArrayAppointmentList = new Array();
-
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
+
+
+
     var today = moment().format('DD/MM/YYYY');
     var currentDate = new Date();
     var begunDate = moment(currentDate).format("DD/MM/YYYY");
@@ -72,7 +74,7 @@ Template.appointmentlist.onRendered(async function() {
         changeMonth: true,
         changeYear: true,
         yearRange: "-90:+10",
-        onChangeMonthYear: function(year, month, inst) {
+        onChangeMonthYear: function (year, month, inst) {
             // Set date to picker
             $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
             // Hide (close) the picker
@@ -85,7 +87,7 @@ Template.appointmentlist.onRendered(async function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
+    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function (error, result) {
         if (error) {
 
         } else {
@@ -108,23 +110,23 @@ Template.appointmentlist.onRendered(async function() {
     });
 
     function MakeNegative() {
-        $('td').each(function() {
+        $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
         });
-        $('td.colStatus').each(function() {
+        $('td.colStatus').each(function () {
             if ($(this).text() == "Deleted") $(this).addClass('text-deleted');
         });
     };
 
-    templateObject.resetData = function(dataVal) {
-        setTimeout(function() {
+    templateObject.resetData = function (dataVal) {
+        setTimeout(function () {
             window.open('/appointmentlist?page=last', '_self');
         }, 500);
 
     }
 
     // Get SMS settings
-    templateObject.getSMSSettings = function() {
+    templateObject.getSMSSettings = function () {
         return new Promise((resolve, reject) => {
             const smsSettings = {
                 twilioAccountId: "",
@@ -132,7 +134,7 @@ Template.appointmentlist.onRendered(async function() {
                 twilioTelephoneNumber: "",
             }
 
-            getVS1Data('TERPPreference').then(function(dataObject) {
+            getVS1Data('TERPPreference').then(function (dataObject) {
                 if (dataObject.length == 0) {
                     smsService.getSMSSettings().then((result) => {
                         if (result.terppreference.length > 0) {
@@ -178,7 +180,7 @@ Template.appointmentlist.onRendered(async function() {
                     templateObject.smsSettings.set(smsSettings);
                     resolve(true);
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 smsService.getSMSSettings().then((result) => {
                     if (result.terppreference.length > 0) {
                         for (let i = 0; i < result.terppreference.length; i++) {
@@ -203,43 +205,11 @@ Template.appointmentlist.onRendered(async function() {
         });
     }
 
-    templateObject.getAllProductData = function() {
-            productList = [];
-            getVS1Data('TProductVS1').then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    productService.getNewProductListVS1().then(function(data) {
-                        var dataList = {};
-                        for (let i = 0; i < data.tproductvs1.length; i++) {
-                            dataList = {
-                                id: data.tproductvs1[i].Id || '',
-                                productname: data.tproductvs1[i].ProductName || ''
-                            }
-                            productList.push(dataList);
-                        }
-                        templateObject.productsrecord.set(productList);
-
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tproductvs1;
-                    var dataList = {};
-                    for (let i = 0; i < useData.length; i++) {
-                        dataList = {
-                            id: useData[i].fields.ID || '',
-                            productname: useData[i].fields.ProductName || ''
-                        }
-                        if (useData[i].fields.ProductType != 'INV') {
-                            productList.push(dataList);
-                        }
-
-                    }
-                    templateObject.productsrecord.set(productList);
-
-                }
-            }).catch(function(err) {
-
-                productService.getNewProductListVS1().then(function(data) {
-
+    templateObject.getAllProductData = function () {
+        productList = [];
+        getVS1Data('TProductVS1').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getNewProductListVS1().then(function (data) {
                     var dataList = {};
                     for (let i = 0; i < data.tproductvs1.length; i++) {
                         dataList = {
@@ -247,16 +217,48 @@ Template.appointmentlist.onRendered(async function() {
                             productname: data.tproductvs1[i].ProductName || ''
                         }
                         productList.push(dataList);
-
                     }
                     templateObject.productsrecord.set(productList);
 
                 });
-            });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tproductvs1;
+                var dataList = {};
+                for (let i = 0; i < useData.length; i++) {
+                    dataList = {
+                        id: useData[i].fields.ID || '',
+                        productname: useData[i].fields.ProductName || ''
+                    }
+                    if (useData[i].fields.ProductType != 'INV') {
+                        productList.push(dataList);
+                    }
 
-        }
-        //Function to reload and update Indexdb after convert
-    templateObject.getAllAppointmentDataOnConvert = function() {
+                }
+                templateObject.productsrecord.set(productList);
+
+            }
+        }).catch(function (err) {
+
+            productService.getNewProductListVS1().then(function (data) {
+
+                var dataList = {};
+                for (let i = 0; i < data.tproductvs1.length; i++) {
+                    dataList = {
+                        id: data.tproductvs1[i].Id || '',
+                        productname: data.tproductvs1[i].ProductName || ''
+                    }
+                    productList.push(dataList);
+
+                }
+                templateObject.productsrecord.set(productList);
+
+            });
+        });
+
+    }
+    //Function to reload and update Indexdb after convert
+    templateObject.getAllAppointmentDataOnConvert = function () {
         let currentDate = new Date();
         let hours = currentDate.getHours(); //returns 0-23
         let minutes = currentDate.getMinutes(); //returns 0-59
@@ -273,13 +275,13 @@ Template.appointmentlist.onRendered(async function() {
         }
         let currenctTodayDate = currentDate.getFullYear() + "-" + month + "-" + days + " " + hours + ":" + minutes + ":" + seconds;
         let templateObject = Template.instance();
-        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
-            addVS1Data('TAppointment', JSON.stringify(data)).then(function(datareturn) {
+        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
+            addVS1Data('TAppointment', JSON.stringify(data)).then(function (datareturn) {
 
-            }).catch(function(err) {
+            }).catch(function (err) {
 
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
 
         });
     }
@@ -294,7 +296,7 @@ Template.appointmentlist.onRendered(async function() {
         changeMonth: true,
         changeYear: true,
         yearRange: "-90:+10",
-        onChangeMonthYear: function(year, month, inst) {
+        onChangeMonthYear: function (year, month, inst) {
             // Set date to picker
             $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
             // Hide (close) the picker
@@ -303,10 +305,10 @@ Template.appointmentlist.onRendered(async function() {
             $(this).trigger('change');
         }
     });
-    templateObject.getAllClients = function() {
-        getVS1Data('TCustomerVS1').then(function(dataObject) {
+    templateObject.getAllClients = function () {
+        getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                clientsService.getClientVS1().then(function(data) {
+                clientsService.getClientVS1().then(function (data) {
                     for (let i in data.tcustomervs1) {
 
                         let customerrecordObj = {
@@ -328,7 +330,7 @@ Template.appointmentlist.onRendered(async function() {
                         //$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
                     }
                     templateObject.clientrecords.set(clientList);
-                    templateObject.clientrecords.set(clientList.sort(function(a, b) {
+                    templateObject.clientrecords.set(clientList.sort(function (a, b) {
                         if (a.customername == 'NA') {
                             return 1;
                         } else if (b.customername == 'NA') {
@@ -366,7 +368,7 @@ Template.appointmentlist.onRendered(async function() {
                     //$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
                 }
                 templateObject.clientrecords.set(clientList);
-                templateObject.clientrecords.set(clientList.sort(function(a, b) {
+                templateObject.clientrecords.set(clientList.sort(function (a, b) {
                     if (a.customername == 'NA') {
                         return 1;
                     } else if (b.customername == 'NA') {
@@ -380,8 +382,8 @@ Template.appointmentlist.onRendered(async function() {
                 }
 
             }
-        }).catch(function(err) {
-            clientsService.getClientVS1().then(function(data) {
+        }).catch(function (err) {
+            clientsService.getClientVS1().then(function (data) {
                 for (let i in data.tcustomervs1) {
 
                     let customerrecordObj = {
@@ -403,7 +405,7 @@ Template.appointmentlist.onRendered(async function() {
                     //$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
                 }
                 templateObject.clientrecords.set(clientList);
-                templateObject.clientrecords.set(clientList.sort(function(a, b) {
+                templateObject.clientrecords.set(clientList.sort(function (a, b) {
                     if (a.customername == 'NA') {
                         return 1;
                     } else if (b.customername == 'NA') {
@@ -422,7 +424,7 @@ Template.appointmentlist.onRendered(async function() {
     };
 
     templateObject.getAllClients();
-    templateObject.getAllAppointmentListData = async function() {
+    templateObject.getAllAppointmentListData = async function () {
         ///if(!localStorage.getItem('VS1TReconcilationList')){
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
@@ -446,7 +448,7 @@ Template.appointmentlist.onRendered(async function() {
 
         // getVS1Data('TAppointmentList').then(async function(dataObject) {
         //     if (dataObject.length == 0) {
-        sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+        sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (data) {
             // localStorage.setItem('VS1TReconcilationList', JSON.stringify(data)||'');
             addVS1Data('TAppointmentList', JSON.stringify(data));
             let lineItems = [];
@@ -469,7 +471,7 @@ Template.appointmentlist.onRendered(async function() {
 
             sideBarService
                 .getAllAppointmentList(initialDataLoad, 0)
-                .then(function(data_) {
+                .then(function (data_) {
                     addVS1Data("TAppointment", JSON.stringify(data_));
                     for (let i = 0; i < data_.tappointmentex.length; i++) {
                         var appointment = {
@@ -633,8 +635,8 @@ Template.appointmentlist.onRendered(async function() {
                                                                 Id: data.tappointmentlist[i].AppointID,
                                                                 CUSTFLD11: "Yes"
                                                             }
-                                                        }).then(function(data) {
-                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                        }).then(function (data) {
+                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
                                                                 addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                             });
                                                         }).catch(e => {
@@ -649,8 +651,8 @@ Template.appointmentlist.onRendered(async function() {
                                                                 Id: data.tappointmentlist[i].AppointID,
                                                                 CUSTFLD11: "No"
                                                             }
-                                                        }).then(function(data) {
-                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                        }).then(function (data) {
+                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
                                                                 addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                             });
                                                         }).catch(e => {
@@ -706,7 +708,7 @@ Template.appointmentlist.onRendered(async function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
+                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function (error, result) {
                             if (error) {
 
                             } else {
@@ -736,12 +738,12 @@ Template.appointmentlist.onRendered(async function() {
                         });
 
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             MakeNegative();
                         }, 100);
                     }
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.fullScreenSpin').css('display', 'none');
                         //$.fn.dataTable.moment('DD/MM/YY');
                         $('#tblappointmentlist').DataTable({
@@ -749,7 +751,7 @@ Template.appointmentlist.onRendered(async function() {
                             columnDefs: [{
                                 "orderable": false,
                                 targets: 0,
-                                createdCell: function(td, cellData, rowData, row, col) {
+                                createdCell: function (td, cellData, rowData, row, col) {
                                     $(td).closest("tr").attr("id", rowData[2]);
                                 }
                             }, {
@@ -769,7 +771,7 @@ Template.appointmentlist.onRendered(async function() {
                                 className: "colCompany",
                                 contenteditable: "false",
                                 targets: 4,
-                                createdCell: function(td, cellData, rowData, row, col) {
+                                createdCell: function (td, cellData, rowData, row, col) {
                                     $(td).attr("id", 'colCompany' + rowData[2]);
                                 }
                             }, {
@@ -796,7 +798,7 @@ Template.appointmentlist.onRendered(async function() {
                             }, {
                                 className: "colStatus",
                                 targets: 12,
-                                createdCell: function(td, cellData, rowData, row, col) {
+                                createdCell: function (td, cellData, rowData, row, col) {
                                     if (rowData[12] == "Converted" || rowData[12] == "Completed") {
                                         $(td).css('background-color', '#1cc88a');
                                         $(td).css('color', '#fff');
@@ -861,10 +863,10 @@ Template.appointmentlist.onRendered(async function() {
                                 [1, "desc"],
                                 [2, "desc"]
                             ],
-                            action: function() {
+                            action: function () {
                                 //$('#tblappointmentlist').DataTable().ajax.reload();
                             },
-                            "fnDrawCallback": function(oSettings) {
+                            "fnDrawCallback": function (oSettings) {
                                 let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
                                 $('.paginate_button.page-item').removeClass('disabled');
@@ -883,7 +885,7 @@ Template.appointmentlist.onRendered(async function() {
                                 }
 
                                 $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                    .on('click', function() {
+                                    .on('click', function () {
                                         $('.fullScreenSpin').css('display', 'inline-block');
                                         let dataLenght = oSettings._iDisplayLength;
                                         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -894,8 +896,8 @@ Template.appointmentlist.onRendered(async function() {
 
 
                                         if (data.Params.IgnoreDates == true) {
-                                            sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                                getVS1Data('TAppointmentList').then(function(dataObjectold) {
+                                            sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                                getVS1Data('TAppointmentList').then(function (dataObjectold) {
                                                     if (dataObjectold.length == 0) {
 
                                                     } else {
@@ -908,23 +910,23 @@ Template.appointmentlist.onRendered(async function() {
                                                         }
 
 
-                                                        addVS1Data('TAppointmentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        addVS1Data('TAppointmentList', JSON.stringify(objCombineData)).then(function (datareturn) {
 
-                                                        }).catch(function(err) {
+                                                        }).catch(function (err) {
                                                             $('.fullScreenSpin').css('display', 'none');
                                                         });
 
                                                     }
-                                                }).catch(function(err) {
+                                                }).catch(function (err) {
 
                                                 });
 
-                                            }).catch(function(err) {
+                                            }).catch(function (err) {
                                                 $('.fullScreenSpin').css('display', 'none');
                                             });
                                         } else {
-                                            sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                                getVS1Data('TAppointmentList').then(function(dataObjectold) {
+                                            sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                                getVS1Data('TAppointmentList').then(function (dataObjectold) {
                                                     if (dataObjectold.length == 0) {
 
                                                     } else {
@@ -937,72 +939,76 @@ Template.appointmentlist.onRendered(async function() {
                                                         }
 
 
-                                                        addVS1Data('TAppointmentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        addVS1Data('TAppointmentList', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                             //   templateObject.resetData(objCombineData);
                                                             // $('.fullScreenSpin').css('display','none');
-                                                        }).catch(function(err) {
+                                                        }).catch(function (err) {
                                                             $('.fullScreenSpin').css('display', 'none');
                                                         });
 
                                                     }
-                                                }).catch(function(err) {
+                                                }).catch(function (err) {
 
                                                 });
 
-                                            }).catch(function(err) {
+                                            }).catch(function (err) {
                                                 $('.fullScreenSpin').css('display', 'none');
                                             });
                                         }
-                                        sideBarService.getAllAppointmentList(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnewApp) {
-                                            getVS1Data("TAppointment").then(function(dataObjectoldApp) {
-                                                if (dataObjectoldApp.length == 0) {} else {
+                                        sideBarService.getAllAppointmentList(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnewApp) {
+                                            getVS1Data("TAppointment").then(function (dataObjectoldApp) {
+                                                if (dataObjectoldApp.length == 0) { } else {
                                                     let dataOldApp = JSON.parse(dataObjectoldApp[0].data);
 
                                                     var thirdaryDataApp = $.merge($.merge([], dataObjectnewApp.tappointmentex), dataOldApp.tappointmentex);
                                                     let objCombineDataApp = {
                                                         tappointmentex: thirdaryDataApp,
                                                     };
-                                                    addVS1Data("TAppointment", JSON.stringify(objCombineDataApp)).then(function(datareturnApp) {
+                                                    addVS1Data("TAppointment", JSON.stringify(objCombineDataApp)).then(function (datareturnApp) {
                                                         templateObject.resetData(objCombineDataApp);
                                                         $('.fullScreenSpin').css('display', 'none');
-                                                    }).catch(function(err) {
+                                                    }).catch(function (err) {
                                                         $('.fullScreenSpin').css('display', 'none');
                                                     });
                                                 }
-                                            }).catch(function(err) {
+                                            }).catch(function (err) {
                                                 $('.fullScreenSpin').css('display', 'none');
                                             });
-                                        }).catch(function(err) {
+                                        }).catch(function (err) {
                                             $(".fullScreenSpin").css("display", "none");
                                         });
 
                                     });
 
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     MakeNegative();
                                 }, 100);
                             },
                             language: { search: "", searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function() {
+                            "fnInitComplete": function () {
                                 let urlParametersPage = FlowRouter.current().queryParams.page;
                                 //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                                 this.fnPageChange('last');
                                 //}
                                 $("<button class='btn btn-primary btnRefreshAppointment' type='button' id='btnRefreshAppointment' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblappointmentlist_filter");
                                 $('.myvarFilterForm').appendTo(".colDateFilter");
+                                if (FlowRouter.current().queryParams.id) {
+                                    document.getElementById("updateID").value = FlowRouter.current().queryParams.id;
+                                    $("#event-modal").modal("toggle");
+                                }
                             },
-                            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                            "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                                 let countTableData = data.Params.Count || 0; //get count from API data
 
                                 return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                             }
-                        }).on('page', function() {
-                            setTimeout(function() {
+                        }).on('page', function () {
+                            setTimeout(function () {
                                 MakeNegative();
                             }, 100);
                             let draftRecord = templateObject.datatablerecords.get();
                             templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function() {
+                        }).on('column-reorder', function () {
 
                         });
                         $('.fullScreenSpin').css('display', 'none');
@@ -1015,7 +1021,7 @@ Template.appointmentlist.onRendered(async function() {
                     let sVisible = "";
                     let columVisible = false;
                     let sClass = "";
-                    $.each(columns, function(i, v) {
+                    $.each(columns, function (i, v) {
                         if (v.hidden == false) {
                             columVisible = true;
                         }
@@ -1037,10 +1043,10 @@ Template.appointmentlist.onRendered(async function() {
                     templateObject.tableheaderrecords.set(tableHeaderList);
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     $(".fullScreenSpin").css("display", "none");
                 });
-        }).catch(function(err) {
+        }).catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $('.fullScreenSpin').css('display', 'none');
             // Meteor._reload.reload();
@@ -2008,14 +2014,14 @@ Template.appointmentlist.onRendered(async function() {
 
     templateObject.getAllAppointmentListData();
 
-    templateObject.getAllFilterAppointmentListData = function(fromDate, toDate, ignoreDate) {
-        sideBarService.getTAppointmentListData(fromDate, toDate, ignoreDate, initialReportLoad, 0).then(function(data) {
-            addVS1Data('TAppointmentList', JSON.stringify(data)).then(function(datareturn) {
+    templateObject.getAllFilterAppointmentListData = function (fromDate, toDate, ignoreDate) {
+        sideBarService.getTAppointmentListData(fromDate, toDate, ignoreDate, initialReportLoad, 0).then(function (data) {
+            addVS1Data('TAppointmentList', JSON.stringify(data)).then(function (datareturn) {
                 window.open('/appointmentlist?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
-            }).catch(function(err) {
+            }).catch(function (err) {
                 location.reload();
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
             $('.fullScreenSpin').css('display', 'none');
         });
     }
@@ -2033,7 +2039,8 @@ Template.appointmentlist.onRendered(async function() {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
-    $('#tblappointmentlist tbody').on('click', 'tr td:not(:first-child)', function() {
+    
+    $('#tblappointmentlist tbody').on('click', 'tr td:not(:first-child)', function () {
         var id = $(this).closest('tr').attr('id');
         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
         if (checkDeleted == "Deleted") {
@@ -2172,7 +2179,7 @@ Template.appointmentlist.onRendered(async function() {
                     let extraProducts = result[0].extraProducts.split(":");
                     let extraProductFees = [];
                     productService.getNewProductServiceListVS1()
-                        .then(function(products) {
+                        .then(function (products) {
                             extraProducts.forEach((item) => {
                                 $("#productCheck-" + item).prop("checked", true);
                                 products.tproductvs1.forEach((product) => {
@@ -2185,7 +2192,7 @@ Template.appointmentlist.onRendered(async function() {
                             templateObject.extraProductFees.set(extraProductFees);
                             $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                         })
-                        .catch(function(err) {
+                        .catch(function (err) {
                             console.error(err);
                         });
                 }
@@ -2209,7 +2216,7 @@ Template.appointmentlist.onRendered(async function() {
     });
 
     // Get SMS Messaging Logs
-    templateObject.smsMessagingLogs = async function() {
+    templateObject.smsMessagingLogs = async function () {
         return new Promise((resolve, reject) => {
             const smsSettings = templateObject.smsSettings.get();
             $.ajax({
@@ -2217,15 +2224,15 @@ Template.appointmentlist.onRendered(async function() {
                 url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + `/SMS/Messages.json?PageSize=1000`,
                 dataType: 'json',
                 contentType: 'application/json', // !
-                beforeSend: function(xhr) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization",
                         "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
                     );
                 },
-                success: function(data) {
+                success: function (data) {
                     resolve(data);
                 },
-                error: function(e) {
+                error: function (e) {
                     resolve('');
                     //reject(e.message);
                 }
@@ -2233,10 +2240,11 @@ Template.appointmentlist.onRendered(async function() {
         });
     }
     tableResize();
+
 });
 
 Template.appointmentlist.events({
-    'click #btnAppointment': function(event) {
+    'click #btnAppointment': function (event) {
         if (createAppointment == false) {
             swal({
                 title: 'Oops...',
@@ -2245,16 +2253,17 @@ Template.appointmentlist.events({
                 showCancelButton: false,
                 confirmButtonText: 'OK'
             }).then((result) => {
-                if (result.value) {} else if (result.dismiss === 'cancel') {}
+                if (result.value) { } else if (result.dismiss === 'cancel') { }
             });
             return false;
         } else {
-            localStorage.setItem("appt_historypage", "appointmentlist");
-            FlowRouter.go('/appointments');
+            // localStorage.setItem("appt_historypage", "appointmentlist");
+            // FlowRouter.go('/appointments');
+            $("#employeeListModal").modal("toggle");
         };
 
     },
-    'change #hideConverted': function() {
+    'change #hideConverted': function () {
         let templateObject = Template.instance();
         let useData = templateObject.datatablerecords.get();
         var splashArrayAppointmentListDupp = new Array();
@@ -2426,7 +2435,7 @@ Template.appointmentlist.events({
             datatableApp.draw(false);
         }
     },
-    'click .btnRefresh': function() {
+    'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         let isDoneAppointment = false;
         let isDoneInvoice = false;
@@ -2447,91 +2456,91 @@ Template.appointmentlist.events({
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
+        sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataApp) {
 
-            addVS1Data('TAppointmentList', JSON.stringify(dataApp)).then(function(datareturn) {
-                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
+            addVS1Data('TAppointmentList', JSON.stringify(dataApp)).then(function (datareturn) {
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
                     if (data.tappointmentex.length > 0) {
-                        addVS1Data('TAppointment', JSON.stringify(data)).then(function(datareturn) {
+                        addVS1Data('TAppointment', JSON.stringify(data)).then(function (datareturn) {
                             isDoneAppointment = true;
                             window.open('/appointmentlist', '_self');
-                        }).catch(function(err) {
+                        }).catch(function (err) {
                             isDoneAppointment = true;
                             window.open('/appointmentlist', '_self');
                         });
                     }
-                }).catch(function(err) {
+                }).catch(function (err) {
                     isDoneAppointment = true;
                     window.open('/appointmentlist', '_self');
                 });
 
-            }).catch(function(err) {
-                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
+            }).catch(function (err) {
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
                     if (data.tappointmentex.length > 0) {
-                        addVS1Data('TAppointment', JSON.stringify(data)).then(function(datareturn) {
+                        addVS1Data('TAppointment', JSON.stringify(data)).then(function (datareturn) {
                             isDoneAppointment = true;
                             window.open('/appointmentlist', '_self');
-                        }).catch(function(err) {
+                        }).catch(function (err) {
                             isDoneAppointment = true;
                             window.open('/appointmentlist', '_self');
                         });
                     }
-                }).catch(function(err) {
+                }).catch(function (err) {
                     isDoneAppointment = true;
                     window.open('/appointmentlist', '_self');
                 });
 
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
             window.open('/appointmentlist', '_self');
         });
 
 
-        sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function(data) {
-            addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function(datareturn) {
+        sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
+            addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
                 isDoneInvoice = true;
                 if ((isDoneAppointment == true) && (isDoneInvoice == true)) {
 
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 isDoneInvoice = true;
                 if ((isDoneAppointment == true) && (isDoneInvoice == true)) {
 
                 }
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
             isDoneInvoice = true;
             if ((isDoneAppointment == true) && (isDoneInvoice == true)) {
 
             }
         });
 
-        sideBarService.getAllAppointmentPredList().then(function(dataPred) {
-            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function(datareturnPred) {
+        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
 
-            }).catch(function(err) {
+            }).catch(function (err) {
 
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
 
         });
 
-        sideBarService.getGlobalSettings().then(function(dataPrefrences) {
-            addVS1Data('TERPPreference', JSON.stringify(dataPrefrences)).then(function(datareturn) {
+        sideBarService.getGlobalSettings().then(function (dataPrefrences) {
+            addVS1Data('TERPPreference', JSON.stringify(dataPrefrences)).then(function (datareturn) {
 
-            }).catch(function(err) {
+            }).catch(function (err) {
 
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
 
         });
     },
-    'change #dateTo': function() {
+    'change #dateTo': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        setTimeout(function() {
+        setTimeout(function () {
             var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
             var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -2548,12 +2557,12 @@ Template.appointmentlist.events({
             }
         }, 500);
     },
-    'change #dateFrom': function() {
+    'change #dateFrom': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        setTimeout(function() {
+        setTimeout(function () {
             var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
             var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -2570,7 +2579,7 @@ Template.appointmentlist.events({
             }
         }, 500);
     },
-    'click #today': function() {
+    'click #today': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
@@ -2598,7 +2607,7 @@ Template.appointmentlist.events({
         $("#dateTo").val(toDateDisplayTo);
         templateObject.getAllFilterAppointmentListData(toDateERPFrom, toDateERPTo, false);
     },
-    'click #lastweek': function() {
+    'click #lastweek': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
@@ -2626,7 +2635,7 @@ Template.appointmentlist.events({
         $("#dateTo").val(toDateDisplayTo);
         templateObject.getAllFilterAppointmentListData(toDateERPFrom, toDateERPTo, false);
     },
-    'click #lastMonth': function() {
+    'click #lastMonth': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
@@ -2636,15 +2645,15 @@ Template.appointmentlist.events({
         var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
         var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
 
-        var formatDateComponent = function(dateComponent) {
+        var formatDateComponent = function (dateComponent) {
             return (dateComponent < 10 ? '0' : '') + dateComponent;
         };
 
-        var formatDate = function(date) {
+        var formatDate = function (date) {
             return formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
         };
 
-        var formatDateERP = function(date) {
+        var formatDateERP = function (date) {
             return date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
         };
 
@@ -2659,7 +2668,7 @@ Template.appointmentlist.events({
         let getDateFrom = formatDateERP(prevMonthFirstDate);
         templateObject.getAllFilterAppointmentListData(getDateFrom, getLoadDate, false);
     },
-    'click #lastQuarter': function() {
+    'click #lastQuarter': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
@@ -2698,7 +2707,7 @@ Template.appointmentlist.events({
         let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
         templateObject.getAllFilterAppointmentListData(getDateFrom, getLoadDate, false);
     },
-    'click #last12Months': function() {
+    'click #last12Months': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
@@ -2731,18 +2740,18 @@ Template.appointmentlist.events({
         templateObject.getAllFilterAppointmentListData(getDateFrom, getLoadDate, false);
 
     },
-    'click #ignoreDate': function() {
+    'click #ignoreDate': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', true);
         $('#dateTo').attr('readonly', true);
         templateObject.getAllFilterAppointmentListData('', '', true);
     },
-    'click .chkDatatable': function(event) {
+    'click .chkDatatable': function (event) {
         var columns = $('#tblappointmentlist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
-        $.each(columns, function(i, v) {
+        $.each(columns, function (i, v) {
             let className = v.classList;
             let replaceClass = className[1];
 
@@ -2757,7 +2766,7 @@ Template.appointmentlist.events({
             }
         });
     },
-    'keyup #tblappointmentlist_filter input': function(event) {
+    'keyup #tblappointmentlist_filter input': function (event) {
         if ($(event.target).val() != '') {
             $(".btnRefreshAppointment").addClass('btnSearchAlert');
         } else {
@@ -2767,7 +2776,7 @@ Template.appointmentlist.events({
             $(".btnRefreshAppointment").trigger("click");
         }
     },
-    'click .btnRefreshAppointment': async function(event) {
+    'click .btnRefreshAppointment': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         const customerList = [];
@@ -2799,7 +2808,7 @@ Template.appointmentlist.events({
 
         const accessLevel = Session.get('CloudApptSMS');
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getTAppointmentListDataByName(dataSearchName).then(function(data) {
+            sideBarService.getTAppointmentListDataByName(dataSearchName).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 let color = "";
@@ -2890,8 +2899,8 @@ Template.appointmentlist.events({
                                                                 Id: data.tappointmentlist[i].AppointID,
                                                                 CUSTFLD11: "Yes"
                                                             }
-                                                        }).then(function(data) {
-                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                        }).then(function (data) {
+                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
                                                                 addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                             });
                                                         }).catch(e => {
@@ -2906,8 +2915,8 @@ Template.appointmentlist.events({
                                                                 Id: data.tappointmentlist[i].AppointID,
                                                                 CUSTFLD11: "No"
                                                             }
-                                                        }).then(function(data) {
-                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                        }).then(function (data) {
+                                                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
                                                                 addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                             });
                                                         }).catch(e => {
@@ -2982,11 +2991,11 @@ Template.appointmentlist.events({
 
                 }
 
-            }).catch(function(err) {
+            }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-            sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+            sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 let color = "";
@@ -3078,8 +3087,8 @@ Template.appointmentlist.events({
                                                             Id: data.tappointmentlist[i].AppointID,
                                                             CUSTFLD11: "Yes"
                                                         }
-                                                    }).then(function(data) {
-                                                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                    }).then(function (data) {
+                                                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                         });
                                                     }).catch(e => {
@@ -3094,8 +3103,8 @@ Template.appointmentlist.events({
                                                             Id: data.tappointmentlist[i].AppointID,
                                                             CUSTFLD11: "No"
                                                         }
-                                                    }).then(function(data) {
-                                                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                    }).then(function (data) {
+                                                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                         });
                                                     }).catch(e => {
@@ -3152,12 +3161,12 @@ Template.appointmentlist.events({
                 $('.fullScreenSpin').css('display', 'none');
 
 
-            }).catch(function(err) {
+            }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
     },
-    'click .resetTable': function(event) {
+    'click .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -3166,7 +3175,7 @@ Template.appointmentlist.events({
                 var clientEmail = getcurrentCloudDetails.cloudEmail;
                 var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblappointmentlist' });
                 if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
+                    CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
                         if (err) {
 
                         } else {
@@ -3178,9 +3187,9 @@ Template.appointmentlist.events({
             }
         }
     },
-    'click .saveTable': function(event) {
+    'click .saveTable': function (event) {
         let lineItems = [];
-        $('.columnSettings').each(function(index) {
+        $('.columnSettings').each(function (index) {
             var $tblrow = $(this);
             var colTitle = $tblrow.find(".divcolumn").text() || '';
             var colWidth = $tblrow.find(".custom-range").val() || 0;
@@ -3221,7 +3230,7 @@ Template.appointmentlist.events({
                             customFields: lineItems,
                             updatedAt: new Date()
                         }
-                    }, function(err, idTag) {
+                    }, function (err, idTag) {
                         if (err) {
                             $('#myModal2').modal('toggle');
                         } else {
@@ -3239,7 +3248,7 @@ Template.appointmentlist.events({
                         published: true,
                         customFields: lineItems,
                         createdAt: new Date()
-                    }, function(err, idTag) {
+                    }, function (err, idTag) {
                         if (err) {
                             $('#myModal2').modal('toggle');
                         } else {
@@ -3253,7 +3262,7 @@ Template.appointmentlist.events({
         }
         $('#myModal2').modal('toggle');
     },
-    'blur .divcolumn': function(event) {
+    'blur .divcolumn': function (event) {
         let columData = $(event.target).text();
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
         var datable = $('#tblappointmentlist').DataTable();
@@ -3261,11 +3270,11 @@ Template.appointmentlist.events({
         $(title).html(columData);
 
     },
-    'change .rngRange': function(event) {
+    'change .rngRange': function (event) {
         let range = $(event.target).val();
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
         var datable = $('#tblappointmentlist th');
-        $.each(datable, function(i, v) {
+        $.each(datable, function (i, v) {
             if (v.innerText == columnDataValue) {
                 let className = v.className;
                 let replaceClass = className.replace(/ /g, ".");
@@ -3275,7 +3284,7 @@ Template.appointmentlist.events({
         });
 
     },
-    'click .btnOpenSettings': function(event) {
+    'click .btnOpenSettings': function (event) {
         let templateObject = Template.instance();
         var columns = $('#tblappointmentlist th');
         const tableHeaderList = [];
@@ -3285,7 +3294,7 @@ Template.appointmentlist.events({
         let sVisible = "";
         let columVisible = false;
         let sClass = "";
-        $.each(columns, function(i, v) {
+        $.each(columns, function (i, v) {
             if (v.hidden == false) {
                 columVisible = true;
             }
@@ -3306,26 +3315,26 @@ Template.appointmentlist.events({
 
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
-    'click #exportbtn': function() {
+    'click #exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblappointmentlist_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display', 'none');
 
     },
-    'click .printConfirm': function(event) {
+    'click .printConfirm': function (event) {
         playPrintAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblappointmentlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
     },
-    'click #check-all': function(event) {
+    'click #check-all': function (event) {
         if ($(event.target).is(':checked')) {
             $(".chkBox").prop("checked", true);
         } else {
             $(".chkBox").prop("checked", false);
         }
     },
-    'click .chkBox': async function() {
+    'click .chkBox': async function () {
         var listData = $(this).closest('tr').attr('id');
         let appointmentService = new AppointmentService();
         var selectedClient = $(this.target).closest("tr").find(".colAccountName").text();
@@ -3357,122 +3366,121 @@ Template.appointmentlist.events({
         let myStringJSON = '';
         let objectAppData = "";
         let updateAppointment = false;
-        $('.chkBox:checkbox:checked').each(async function() {
-            var chkIdLine = $(this).closest('tr').attr('id');
-            if (selectAppointment.length > 0) {
-                let checkAppointStartEnd = selectAppointment.filter((item) =>
-                    parseInt(item.id) == parseInt(chkIdLine)
-                );
-                let actuatlStartTime = checkAppointStartEnd[0].actual_starttime.split(' ')[0] || '';
-                let actuatlStartTimeSplit = actuatlStartTime.split('-')[0] || '';
+        // $('.chkBox:checkbox:checked').each(async function() {
+        //     var chkIdLine = $(this).closest('tr').attr('id');
+        //     if (selectAppointment.length > 0) {
+        //         let checkAppointStartEnd = selectAppointment.filter((item) =>
+        //             parseInt(item.id) == parseInt(chkIdLine)
+        //         );
+        //         let actuatlStartTime0 = checkAppointStartEnd[0].actual_starttime;
+        //         let actuatlStartTime = actuatlStartTime0 == "" ? '' : actuatlStartTime0.split(' ')[0];
+        //         let actuatlStartTimeSplit = actuatlStartTime.split('-')[0] || '';
+        //         let actuatlEndTime0 = checkAppointStartEnd[0].actual_endtime;
+        //         let actuatlEndTime = actuatlEndTime0 == "" ? '' : actuatlEndTime0.split(' ')[0];
+        //         let actuatlEndTimeSplit = actuatlEndTime.split('-')[0] || '';
 
-                let actuatlEndTime = checkAppointStartEnd[0].actual_starttime.split(' ')[0] || '';
-                let actuatlEndTimeSplit = actuatlEndTime.split('-')[0] || '';
+        //         if ((actuatlStartTimeSplit == '1899' || actuatlStartTimeSplit == '')) {
+        //             swal({
+        //                 title: 'Actual Time is not filled in',
+        //                 text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
+        //                 type: 'warning',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Proceed',
+        //                 cancelButtonText: 'Cancel'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     objectAppData = {
+        //                         type: "TAppointmentEx",
+        //                         fields: {
+        //                             Id: parseInt(chkIdLine),
+        //                             Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
+        //                             Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
+        //                         }
+        //                     };
+
+        //                     appointmentService.saveAppointment(objectAppData).then(async function(data) {
+        //                         updateAppointment = true;
+        //                         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+        //                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+        //                         }).catch(function(err) {
+
+        //                         });
+
+        //                         sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
+        //                             addVS1Data('TAppointmentList', JSON.stringify(dataApp));
+        //                         }).catch(function(err) {
+
+        //                         });
+
+        //                     }).catch(function(err) {
+
+        //                     });
+        //                     updateAppointment = true;
+        //                 } else {
+        //                     $('#f-' + chkIdLine).prop("checked", false);
+        //                     updateAppointment = false;
+        //                 }
+        //             });
+        //         } else if ((actuatlEndTimeSplit == '1899' || actuatlEndTimeSplit == '')) {
+        //             swal({
+        //                 title: 'Actual Time is not filled in',
+        //                 text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
+        //                 type: 'warning',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Proceed',
+        //                 cancelButtonText: 'Cancel'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     objectAppData = {
+        //                         type: "TAppointmentEx",
+        //                         fields: {
+        //                             Id: parseInt(chkIdLine),
+        //                             // Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
+        //                             Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
+        //                         }
+        //                     };
+        //                     appointmentService.saveAppointment(objectAppData).then(async function(data) {
+        //                         updateAppointment = true;
+        //                         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+        //                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+        //                         }).catch(function(err) {
+
+        //                         });
+
+        //                         sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
+        //                             addVS1Data('TAppointmentList', JSON.stringify(dataApp));
+        //                         }).catch(function(err) {
+
+        //                         });
+
+        //                     }).catch(function(err) {
+
+        //                     });
+        //                     updateAppointment = true;
+        //                 } else {
+        //                     $('#f-' + chkIdLine).prop("checked", false);
+        //                     updateAppointment = false;
+        //                 }
+        //             });
+        //         } else {
+        //             updateAppointment = false;
+        //         }
 
 
+        //     };
+        //     //let checkDataSelect = await updateAppointment;
+        //     //  if(checkDataSelect){
+        //     let obj = {
+        //         AppointID: parseInt(chkIdLine)
+        //     };
 
-                if ((actuatlStartTimeSplit == '1899' || actuatlStartTimeSplit == '')) {
-                    swal({
-                        title: 'Actual Time is not filled in',
-                        text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Proceed',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.value) {
-                            objectAppData = {
-                                type: "TAppointmentEx",
-                                fields: {
-                                    Id: parseInt(chkIdLine),
-                                    Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
-                                    Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
-                                }
-                            };
+        //     selectedAppointmentList.push(obj);
 
-                            appointmentService.saveAppointment(objectAppData).then(async function(data) {
-                                updateAppointment = true;
-                                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                    addVS1Data('TAppointment', JSON.stringify(dataUpdate));
-                                }).catch(function(err) {
-
-                                });
-
-                                sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
-                                    addVS1Data('TAppointmentList', JSON.stringify(dataApp));
-                                }).catch(function(err) {
-
-                                });
-
-                            }).catch(function(err) {
-
-                            });
-                            updateAppointment = true;
-                        } else {
-                            $('#f-' + chkIdLine).prop("checked", false);
-                            updateAppointment = false;
-                        }
-                    });
-                } else if ((actuatlEndTimeSplit == '1899' || actuatlEndTimeSplit == '')) {
-                    swal({
-                        title: 'Actual Time is not filled in',
-                        text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Proceed',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.value) {
-                            objectAppData = {
-                                type: "TAppointmentEx",
-                                fields: {
-                                    Id: parseInt(chkIdLine),
-                                    // Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
-                                    Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
-                                }
-                            };
-                            appointmentService.saveAppointment(objectAppData).then(async function(data) {
-                                updateAppointment = true;
-                                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                    addVS1Data('TAppointment', JSON.stringify(dataUpdate));
-                                }).catch(function(err) {
-
-                                });
-
-                                sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
-                                    addVS1Data('TAppointmentList', JSON.stringify(dataApp));
-                                }).catch(function(err) {
-
-                                });
-
-                            }).catch(function(err) {
-
-                            });
-                            updateAppointment = true;
-                        } else {
-                            $('#f-' + chkIdLine).prop("checked", false);
-                            updateAppointment = false;
-                        }
-                    });
-                } else {
-                    updateAppointment = false;
-                }
-
-
-            };
-            //let checkDataSelect = await updateAppointment;
-            //  if(checkDataSelect){
-            let obj = {
-                AppointID: parseInt(chkIdLine)
-            };
-
-            selectedAppointmentList.push(obj);
-
-            templateObject.selectedAppointmentID.set(chkIdLine);
-            //};
-            // selectedAppointmentCheck.push(JsonIn1);
-            // }
-        });
+        //     templateObject.selectedAppointmentID.set(chkIdLine);
+        //     //};
+        //     // selectedAppointmentCheck.push(JsonIn1);
+        //     // }
+        // });
         JsonIn = {
             Name: "VS1_InvoiceAppt",
             Params: {
@@ -3482,7 +3490,7 @@ Template.appointmentlist.events({
 
         templateObject.selectedAppointment.set(JsonIn);
     },
-    'click #btnInvoice': function() {
+    'click #btnInvoice': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         const templateObject = Template.instance();
         let selectClient = templateObject.selectedAppointment.get();
@@ -3504,116 +3512,116 @@ Template.appointmentlist.events({
             // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
             oPost.send(JSON.stringify(selectClient));
 
-            oPost.onreadystatechange = function() {
-                    if (oPost.readyState == 4 && oPost.status == 200) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        var myArrResponse = JSON.parse(oPost.responseText);
-                        if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
-                            localStorage.setItem("convertAppointmentID", selectAppointmentID);
-                            let objectDataConverted = {
-                                type: "TAppointmentEx",
-                                fields: {
-                                    Id: parseInt(selectAppointmentID),
-                                    Status: "Converted"
-                                }
-                            };
-                            appointmentService.saveAppointment(objectDataConverted).then(function(data) {
-                                FlowRouter.go('/invoicelist?success=true&apptId=' + parseInt(selectAppointmentID));
-                            }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-
-                            templateObject.getAllAppointmentDataOnConvert();
-
-
-
-                        } else {
-                            swal({
-                                title: 'Oooops...',
-                                text: myArrResponse.ProcessLog.ResponseStatus,
-                                type: 'warning',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {
-
-                                } else if (result.dismiss === 'cancel') {
-
-                                }
-                            });
-                        }
-
-                    } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: 'Oooops...',
-                            text: oPost.getResponseHeader('errormessage'),
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                        }).then((result) => {
-                            if (result.value) {} else if (result.dismiss === 'cancel') {
-
+            oPost.onreadystatechange = function () {
+                if (oPost.readyState == 4 && oPost.status == 200) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    var myArrResponse = JSON.parse(oPost.responseText);
+                    if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
+                        localStorage.setItem("convertAppointmentID", selectAppointmentID);
+                        let objectDataConverted = {
+                            type: "TAppointmentEx",
+                            fields: {
+                                Id: parseInt(selectAppointmentID),
+                                Status: "Converted"
                             }
+                        };
+                        appointmentService.saveAppointment(objectDataConverted).then(function (data) {
+                            FlowRouter.go('/invoicelist?success=true&apptId=' + parseInt(selectAppointmentID));
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
                         });
-                    } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        var ErrorResponse = oPost.getResponseHeader('errormessage');
-                        var segError = ErrorResponse.split(':');
 
-                        if ((segError[1]) == ' "Unable to lock object') {
+                        templateObject.getAllAppointmentDataOnConvert();
 
-                            swal({
-                                title: 'Oooops...',
-                                text: oPost.getResponseHeader('errormessage'),
-                                type: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {} else if (result.dismiss === 'cancel') {
 
-                                }
-                            });
-                        } else {
-                            swal({
-                                title: 'Oooops...',
-                                text: oPost.getResponseHeader('errormessage'),
-                                type: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {} else if (result.dismiss === 'cancel') {
 
-                                }
-                            });
-                        }
-
-                    } else if (oPost.readyState == '') {
-                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
                         swal({
                             title: 'Oooops...',
-                            text: oPost.getResponseHeader('errormessage'),
-                            type: 'error',
+                            text: myArrResponse.ProcessLog.ResponseStatus,
+                            type: 'warning',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
-                            if (result.value) {} else if (result.dismiss === 'cancel') {
+                            if (result.value) {
+
+                            } else if (result.dismiss === 'cancel') {
 
                             }
                         });
                     }
 
+                } else if (oPost.readyState == 4 && oPost.status == 403) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: oPost.getResponseHeader('errormessage'),
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) { } else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+                } else if (oPost.readyState == 4 && oPost.status == 406) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    var ErrorResponse = oPost.getResponseHeader('errormessage');
+                    var segError = ErrorResponse.split(':');
+
+                    if ((segError[1]) == ' "Unable to lock object') {
+
+                        swal({
+                            title: 'Oooops...',
+                            text: oPost.getResponseHeader('errormessage'),
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) { } else if (result.dismiss === 'cancel') {
+
+                            }
+                        });
+                    } else {
+                        swal({
+                            title: 'Oooops...',
+                            text: oPost.getResponseHeader('errormessage'),
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) { } else if (result.dismiss === 'cancel') {
+
+                            }
+                        });
+                    }
+
+                } else if (oPost.readyState == '') {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: oPost.getResponseHeader('errormessage'),
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) { } else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
                 }
-                // appointmentService.appointmentCreateInv(selectClient).then(function (data) {
-                //   //FlowRouter.go('/appointmentlist');
-                //   //window.open('/appointments', '_self');
-                // }).catch(function (err) {
-                //   $('.fullScreenSpin').css('display', 'none');
-                // });
+
+            }
+            // appointmentService.appointmentCreateInv(selectClient).then(function (data) {
+            //   //FlowRouter.go('/appointmentlist');
+            //   //window.open('/appointments', '_self');
+            // }).catch(function (err) {
+            //   $('.fullScreenSpin').css('display', 'none');
+            // });
         }
 
     },
-    'click #btnInvoiceDisabled': function() {
+    'click #btnInvoiceDisabled': function () {
         swal({
             title: 'Oops...',
             text: "You don't have access to create Invoice",
@@ -3621,7 +3629,7 @@ Template.appointmentlist.events({
             showCancelButton: false,
             confirmButtonText: 'OK'
         }).then((result) => {
-            if (result.value) {} else if (result.dismiss === 'cancel') {}
+            if (result.value) { } else if (result.dismiss === 'cancel') { }
         });
     }
 
@@ -3629,7 +3637,7 @@ Template.appointmentlist.events({
 
 Template.appointmentlist.helpers({
     datatablerecords: () => {
-        return Template.instance().datatablerecords.get().sort(function(a, b) {
+        return Template.instance().datatablerecords.get().sort(function (a, b) {
             if (a.appointmentdate == 'NA') {
                 return 1;
             } else if (b.appointmentdate == 'NA') {
@@ -3645,7 +3653,7 @@ Template.appointmentlist.helpers({
         return Template.instance().clientrecords.get();
     },
     productsrecord: () => {
-        return Template.instance().productsrecord.get().sort(function(a, b) {
+        return Template.instance().productsrecord.get().sort(function (a, b) {
             if (a.productname == 'NA') {
                 return 1;
             } else if (b.productname == 'NA') {

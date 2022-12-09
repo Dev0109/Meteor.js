@@ -581,30 +581,7 @@ Template.allreports.onRendered(() => {
                 // }
             })
             .catch(function(err) {
-                taxRateService.getAccountantCategory().then(function(data) {
-                    for (let i = 0; i < data.tdeptclass.length; i++) {
-                        var dataList = {
-                            id: data.tdeptclass[i].Id || '',
-                            firstname: data.tdeptclass[i].FirstName || '-',
-                            lastname: data.tdeptclass[i].LastName || '-',
-                            companyname: data.tdeptclass[i].CompanyName || '-',
-                            address: data.tdeptclass[i].Address || '-',
-                            docname: data.tdeptclass[i].DocName || '-',
-                            towncity: data.tdeptclass[i].TownCity || '-',
-                            postalzip: data.tdeptclass[i].PostalZip || '-',
-                            stateregion: data.tdeptclass[i].StateRegion || '-',
-                            country: data.tdeptclass[i].Country || '-',
-                            status: data.tdeptclass[i].Active || 'false',
-                        };
-
-                        accountantList.push(dataList);
-                    }
-
-                    templateObject.accountantList.set(accountantList);
-
-                }).catch(function(err) {
-
-                });
+  
             });
     }
     templateObject.getAccountantList();

@@ -198,7 +198,6 @@ Template.dsleadlistchart.onRendered(function() {
     $('#tblDSLeadChartList tbody').on('click', 'tr', function() {
         const listData = $(this).closest('tr').attr('id');
         if (listData) {
-            $('.fullScreenSpin').css('display', 'inline-block');
             contactService.getOneLeadDataEx(listData).then(leadDetail => {
                 if (leadDetail.fields.IsCustomer == true) {
                     $('.fullScreenSpin').css('display', 'none');

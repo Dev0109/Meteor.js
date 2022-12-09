@@ -1,0 +1,24 @@
+<!-- Customer selector -->
+<!-- Params
+  label
+-->
+<template name="customer_selector">
+  <div class="formgoup">
+    <div class="form-group">
+      <label>{{label}}</label>
+      {{> vs1_dropdown}}
+    </div>
+    <div>
+      <span data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied"
+        id="customerType" name="customerType" class="customerType"
+        style="margin-left: 2px;color: #17a673;"></span>
+      <input type="hidden" class="form-control pointer" id="edtCustomerUseType" name="edtCustomerUseType"
+        value="">
+      <span data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied"
+        id="customerDiscount" name="customerDiscount" class="customerDiscount"
+        style="color: #17a673;"></span>
+      <input type="hidden" class="form-control pointer" id="edtCustomerUseDiscount"
+        name="edtCustomerUseDiscount" value="0">
+    </div>
+  </div>
+</template>

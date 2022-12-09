@@ -33,6 +33,7 @@
               <p class="lead" id="subtotal_tax" name="subtotal_tax">{{TotalTax}}</p>
           </div>
       </div>
+      {{#if NetTotal }}
       <div class="row">
           <div class="col-4" style="padding: 0px;">
               <p class="leadLabel">Net</p>
@@ -41,11 +42,13 @@
               <p class="lead" id="subtotal_nett" name="subtotal_nett">{{NetTotal}}</p>
           </div>
       </div>
+      {{/if}}
       <div class="row">
           <div class="col-12" style="padding: 0px;">
               <hr style="border-top: 1px solid #696969;" />
           </div>
       </div>
+      {{#if TotalDiscount}}
       <div class="row">
           <div class="col-4" style="padding: 0px;">
               <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="leadLabel">Discount</p>
@@ -59,6 +62,7 @@
               <hr style="border-top: 1px solid #696969;" />
           </div>
       </div>
+      {{/if}}
       <div class="row">
           <div class="col-4" style="padding: 0px;">
               <p class="leadLabel leadTotal">TOTAL</p>

@@ -479,6 +479,7 @@ Template.alltaskdatatable.onRendered(function () {
           btnFilterName +
           "</span></button>"
         ).insertAfter("#tblAllTaskDatatable_filter");
+        //
       },
     });
 
@@ -720,6 +721,9 @@ Template.alltaskdatatable.onRendered(function () {
           btnFilterName +
           "</span></button>"
         ).insertAfter("#tblTodayTaskDatatable_filter");
+        //Open Detail Modal
+        const id = FlowRouter.current().queryParams.id;
+        openEditTaskModal(id,"")
       },
     });
     $("#tblTodayTaskDatatable_filter input").val(search);
@@ -2077,7 +2081,6 @@ Template.alltaskdatatable.events({
 
       let id = e.target.dataset.id;
       let type = e.target.dataset.ttype;
-
       openEditTaskModal(id, type);
     }
   },

@@ -1,0 +1,11 @@
+<template name="vs1_contact_card_header">
+    <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" id="{{id}}" style="color: #00A3D3; font-size: 28px;">
+    {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}} {{record.joblastname}}-{{record.phone}}
+    {{else}}
+        {{#if notEquals record.id ''}}
+            CUS-{{record.id}} - 
+        {{/if}}
+    {{record.company}}
+    {{/if}}
+</h6>
+</template>

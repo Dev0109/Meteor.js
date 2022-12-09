@@ -191,7 +191,7 @@
                                                                 <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-inout="{{item.isEmpty}}">{{item.basedOnType}}</td> -->
                                                                 <td contenteditable="false">
                                                                     <input id="edtRecipients-{{item.formID}}"
-                                                                        class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}">
+                                                                        class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.recipients}}">
                                                                 </td>
                                                                 {{#if equals item.formID 129}}
                                                                     <div class="d-none print-wrapper print-wrapper-129" id="profitTemp">
@@ -416,7 +416,7 @@
                                                                 <!-- {{/if}} -->
                                                                 <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                                 <td contenteditable="false">
-                                                                    <input id="edtRecipients-{{item.formID}}" class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}">
+                                                                    <input id="edtRecipients-{{item.formID}}" class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.recipients}}">
                                                                 </td>
                                                                 {{#if equals item.formID 6}}
                                                                     <div class="d-none print-wrapper print-wrapper-6" id="agedPayablesTemp">
@@ -1716,10 +1716,11 @@
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="addLetterTemplateLabel">{{#if equals isAdd true}}Create a template{{else}}Edit a template{{/if}}</h5>
                                                 </div>
-                                                <div class="modal-body p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
-                                                    <input type="text" class="p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateLbl" placeholder="Reference Letter Label"/>
-                                                    <input type="text" class="p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateSubject" placeholder="Subject"/>
-                                                    <textarea type="text" class="p-2" style="width: 100%; height: 200px; resize: none; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateContent" placeholder="Enter Message Here"></textarea>
+                                                <div class="modal-body form-group p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
+                                                    <input type="text" class="form-control p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateLbl" placeholder="Reference Letter Label"/>
+                                                    <input type="text" class="form-control p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTamplateRecipient" placeholder="To:" disabled/>
+                                                    <input type="text" class="form-control p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateSubject" placeholder="Subject"/>
+                                                    <textarea type="text" class="form-control p-2" style="width: 100%; height: 200px; resize: none; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateContent" placeholder="Enter Message Here"></textarea>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <div class="d-flex align-items-center justify-content-end">

@@ -12,7 +12,7 @@ Template.statuspop.onCreated(function() {
 });
 
 Template.statuspop.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
+
     let templateObject = Template.instance();
     const dataTableList = [];
     const tableHeaderList = [];

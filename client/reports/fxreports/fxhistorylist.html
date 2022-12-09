@@ -1,232 +1,63 @@
 <template name="fxhistorylist">
-    <div style="margin-top: -24px;">
-        <div class="fullScreenSpin" style="display:none;">
-            <div class="spinner"></div>
-        </div>
-        <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Foreign Exchange History List <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
-        </header>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding-bottom: 8px;">
-                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=39" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                    </div>
-                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-            <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="title-header">Foreign Exchange History List</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                            <source src="https://erphelpes.com/vs1videos/comingsoon.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <style>
-            /* Remove Hyperlinks */
-            @media print {
-                a:link {
-                    text-decoration: none !important;
-                }
-
-                a[href]:after {
-                    content: none !important;
-                }
-            }
-        </style>
-        <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
-            <div class="col-12 col-md-8">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">Foreign Exchange History List</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-md-5">
-                                <div class="row no-gutters">
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>Search:</label>
-                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
-                                    </div>
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
-                                        <div class="modal-dialog modal-sm" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4>Deparment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{#each item in deptrecords}}
-                                                        <div class="custom-control custom-switch" style="margin: 8px;">
-                                                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                                                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-                                                        </div>
-                                                    {{/each}}
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-primary" type="button" data-dismiss="modal"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                    <button class="btn btn-light" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row no-gutters">
-                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-2">
-                                <style>
-                                    #uploadedImage {
-                                        margin: 0 auto !important;
-                                        display: block;
-                                    }
-                                </style>
-                                <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
-                            </div>
-                            <div class="col-12 col-md-5">
-                                <div class="row no-gutters justify-content-end">
-                                    <div class="dropdown" style="margin: 8px;">
-                                        <style>
-                                            .dropdown-toggle::after {
-                                                display: none;
-                                            }
-                                        </style>
-                                        <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
-                                        <div class="dropdown-menu" role="menu">
-                                            <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>From</label>
-                                        <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>To</label>
-                                        <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row no-gutters justify-content-end">
-                                    <button class="btn btn-primary float-left btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="printReport">
-                            <div class="row">
-                                <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Foreign Exchange History List</p>
-                                    <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
-                                    <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
-                                </div>
-                            </div>
-                            <div class="row no-gutters">
-                                <style>
-                                    .totalhr {
-                                        border-top: 2px #858999 solid;
-                                    }
-
-                                    .grandtotal {
-                                        border-top: 2px #858999 solid;
-                                        border-bottom: 2px #858999 solid;
-                                    }
-                                </style>
-                                <div class="table-responsive">
-                                    <table class="table table-sm" id="tableExport" name="tableExport">
-                                        <thead>
-                                            <tr class="table-active">
-                                                <th>Country</th>
-                                                <th>Code</th>
-                                                <th>Date</th>
-                                                <th class="text-right">Buy Rate</th>
-                                                <th class="text-right">Sell Rate</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Australia</td>
-                                                <td>AUD</td>
-                                                <td>22/05/2022</td>
-                                                <td class="text-right">1.00</td>
-                                                <td class="text-right">1.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>United Kingdom</td>
-                                                <td>GBP</td>
-                                                <td>21/05/2022</td>
-                                                <td class="text-right">0.43</td>
-                                                <td class="text-right">0.47</td>
-                                            </tr>
-                                            <tr>
-                                                <td>United States</td>
-                                                <td>USD</td>
-                                                <td>20/05/2022</td>
-                                                <td class="text-right">0.75</td>
-                                                <td class="text-right">0.75</td>
-                                            </tr>
-                                            <tr>
-                                                <td>South African</td>
-                                                <td>ZAR</td>
-                                                <td>19/05/2022</td>
-                                                <td class="text-right">2.35</td>
-                                                <td class="text-right">2.38</td>
-                                            </tr>
-                                            <!-- {{#if records}}
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
-                                                </tr>
-                                            {{/if}} -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        {{> poweredby}}
-                    </div>
-                </div>
-            </div>
-        </div>
+    {{# vs1_report_template tabledisplayname = "Foreign Exchange History List" tablename="fxhistorylist"  dateAsAt=dateAsAt}}
+    <div class="table-responsive">
+        <table class="table table-sm" id="tableExport" name="tableExport">
+            <thead>
+                <tr class="table-active">
+                    <th>Country</th>
+                    <th>Code</th>
+                    <th>Date</th>
+                    <th class="text-right">Buy Rate</th>
+                    <th class="text-right">Sell Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Australia</td>
+                    <td>AUD</td>
+                    <td>22/05/2022</td>
+                    <td class="text-right">1.00</td>
+                    <td class="text-right">1.00</td>
+                </tr>
+                <tr>
+                    <td>United Kingdom</td>
+                    <td>GBP</td>
+                    <td>21/05/2022</td>
+                    <td class="text-right">0.43</td>
+                    <td class="text-right">0.47</td>
+                </tr>
+                <tr>
+                    <td>United States</td>
+                    <td>USD</td>
+                    <td>20/05/2022</td>
+                    <td class="text-right">0.75</td>
+                    <td class="text-right">0.75</td>
+                </tr>
+                <tr>
+                    <td>South African</td>
+                    <td>ZAR</td>
+                    <td>19/05/2022</td>
+                    <td class="text-right">2.35</td>
+                    <td class="text-right">2.38</td>
+                </tr>
+                <!-- {{#if records}}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {{else}}
+                    <tr class="odd" style="text-align: center;">
+                        <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
+                    </tr>
+                {{/if}} -->
+            </tbody>
+        </table>
     </div>
+    {{/vs1_report_template}}
 </template>

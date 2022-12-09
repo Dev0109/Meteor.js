@@ -298,7 +298,7 @@
                 </div>
                 <div class="modal-footer" style="background-color: #ededed;">
                     <button class="btn btn-success btnSavePaymentMethod vs1ButtonMargin" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                    <button class="btn btn-danger btnDeletePaymentMethod vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <span id="view-in-active"></span>
                     <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
                 </div>
             </div>
@@ -306,7 +306,7 @@
     </div>
     <!-- End Payment Method Modal -->
     <!-- Import Modal -->
-    {{> import_template}}
+    {{> import_template ImportformName="Payment Method Settings"}}
     <script>
         modalDraggable();
     </script>

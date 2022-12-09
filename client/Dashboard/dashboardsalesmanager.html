@@ -49,12 +49,15 @@
                 <div class="spinner"></div>
             </div>
             <div class="row mb-2">
-                <div class="col-md-8">
-                    <header class="pt-1 pb-1 d-flex justify-content-center">
+                <div class="col-12 col-md-4">
+                    <header class="pt-1 pb-1 d-flex">
                         <h2>Sales Performance Dashboard</h2>
                     </header>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
+                    {{> loggedcompanyoverview}}
+                </div>
+                <div class="col-12 col-md-4">
                     <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
                         <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
                             <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button">

@@ -35,34 +35,39 @@
             }
         </style>
 
-        <header class="px-0 pt-2 pb-3 d-flex align-items-center salesOverviewMobile">
-            <h2 class="mr-1 pageHeader" >Sales Overview {{> helpbutton}}</h2>
-            {{> loggedcompanyoverview}}
-                <!-- Start Help View Modal -->
-                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
-                                        class="btn btn-primary helpModal">View Help Video</a></p>
-                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=54"
-                                        target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                        {{> helpadvisor}}
-                                        {{> helpgotoforum}}
-                            </div>
-                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
-                                    data-dismiss="modal" type="button">Close</button></div>
+        <header class="row salesOverviewMobile">
+            <div class="col-12 col-md-4">
+                <h2 class="mr-1 pageHeader" >Sales Overview {{> helpbutton}}</h2>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
+            <div class="col-12 col-md-4">
+                <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3"
+                   style="margin-right: 4px;"><i class="icon ion-android-more-horizontal"></i></a>
+            </div>
+            <!-- Start Help View Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close"><span aria-hidden="true">×</span></button>
                         </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                                    class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=54"
+                                    target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                    {{> helpadvisor}}
+                                    {{> helpgotoforum}}
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                                data-dismiss="modal" type="button">Close</button></div>
                     </div>
                 </div>
-                <!-- End Help View Modal -->
-                <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3"
-                    style="margin-right: 4px;"><i class="icon ion-android-more-horizontal"></i></a>
-
+            </div>
+            <!-- End Help View Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="myModal3">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">

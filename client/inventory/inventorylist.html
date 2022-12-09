@@ -11,9 +11,13 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <header class="py-2 d-flex align-items-center">
-            <h2 class="mr-1">Inventory Overview {{> helpbutton}}</h2>
-            {{> loggedcompanyoverview}}
+        <header class="row">
+            <div class="col-12 col-md-4">
+                <h2 class="mr-1">Inventory Overview {{> helpbutton}}</h2>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
 
             <!-- Start Help View Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -145,11 +149,11 @@
                     </div>
                 {{/if}}
             </div>
-            {{#if equals isSetupFinished false}}
+            <!-- {{#if equals isSetupFinished false}} -->
                 <div class="col-2 setupIncompleatedMsg text-danger">
-                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
                 </div>
-            {{/if}}
+            <!-- {{/if}} -->
             <div class="col-md-5">
                 <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#myInventoryModal" ><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btnNav btn-primary float-right printConfirm vs1ButtonMargin" type="button" ><i class="fas fa-print" style="padding-right: 5px;"></i>Print</button>

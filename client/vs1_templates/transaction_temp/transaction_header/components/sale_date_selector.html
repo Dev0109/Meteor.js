@@ -1,0 +1,22 @@
+<!-- Params
+label
+value
+SODdate
+DueDate
+-->
+<template name="sale_date_selector">
+  <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
+    <label>{{label}}</label>
+    <div class="input-group date" style="cursor: pointer;">
+      <input type="text" class="form-control" id="dtSODate" name="dtSODate"
+        value="{{SODate}}">
+      <div class="input-group-addon" style="">
+        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+      </div>
+    </div>
+    <div style="display:none!important;">
+      <input type="text" class="form-control" id="dtDueDate" name="dtDueDate"
+        value="{{invoicerecord.duedate}}">
+    </div>
+  </div>
+</template>

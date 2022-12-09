@@ -36,7 +36,7 @@ Template.timesheet.onCreated(function() {
     templateObject.isAccessLevels = new ReactiveVar();
 
     templateObject.timesheets = new ReactiveVar([]);
-    templateObject.employees  = new ReactiveVar([]);
+    templateObject.employees = new ReactiveVar([]);
     templateObject.payPeriods = new ReactiveVar([]);
 });
 
@@ -217,22 +217,22 @@ Template.timesheet.onRendered(function() {
 
         });
     };
-    templateObject.loadTimeSheet = async (fromDate, toDate, ignoreDate, refresh = false) => {
+    templateObject.loadTimeSheet = async(fromDate, toDate, ignoreDate, refresh = false) => {
         if (ignoreDate == true) {
             $("#dateFrom").attr("readonly", true);
             $("#dateTo").attr("readonly", true);
         } else {
             $("#dateFrom").val(
-            fromDate != ""
-            ? moment(fromDate).format("DD/MM/YYYY")
-            : fromDate);
+                fromDate != "" ?
+                moment(fromDate).format("DD/MM/YYYY") :
+                fromDate);
             $("#dateTo").val(
-            toDate != ""
-            ? moment(toDate).format("DD/MM/YYYY")
-            : toDate);
+                toDate != "" ?
+                moment(toDate).format("DD/MM/YYYY") :
+                toDate);
         }
 
-        let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+        let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
             return await sideBarService.getAllTimeSheetList();
         }, {
             useIndexDb: true,
@@ -251,17 +251,17 @@ Template.timesheet.onRendered(function() {
 
 
 
-    templateObject.loadEmployees = async (refresh = false) => {
-        let data = await CachedHttp.get(erpObject.TEmployee, async () => {
-        return await contactService.getAllEmployees();
+    templateObject.loadEmployees = async(refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TEmployee, async() => {
+            return await contactService.getAllEmployees();
         }, {
-        useIndexDb: true,
-        fallBackToLocal: true,
-        useLocalStorage: false,
-        forceOverride: refresh,
-        validate: (cachedResponse) => {
-            return true;
-        }
+            useIndexDb: true,
+            fallBackToLocal: true,
+            useLocalStorage: false,
+            forceOverride: refresh,
+            validate: (cachedResponse) => {
+                return true;
+            }
         });
         data = data.response;
 
@@ -272,27 +272,27 @@ Template.timesheet.onRendered(function() {
     }
 
 
-  templateObject.loadPayPeriods = async (refresh = false) => {
-    let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
-      return await sideBarService.getCalender(initialBaseDataLoad, 0);
-    }, {
-      useIndexDb: true,
-      useLocalStorage: false,
-      forceOverride: refresh,
-      validate: cachedResponse => {
-        return true;
-      }
-    });
+    templateObject.loadPayPeriods = async(refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TPayrollCalendars, async() => {
+            return await sideBarService.getCalender(initialBaseDataLoad, 0);
+        }, {
+            useIndexDb: true,
+            useLocalStorage: false,
+            forceOverride: refresh,
+            validate: cachedResponse => {
+                return true;
+            }
+        });
 
-    data = data.response;
-    let calendars = data.tpayrollcalendars.map(c => c.fields);
+        data = data.response;
+        let calendars = data.tpayrollcalendars.map(c => c.fields);
 
-    templateObject.payPeriods.set(calendars);
-  }
+        templateObject.payPeriods.set(calendars);
+    }
 
 
 
-    templateObject.loadAllTimeSheetData = async (fromDate, toDate, ignoreDate, refresh = false) => {
+    templateObject.loadAllTimeSheetData = async(fromDate, toDate, ignoreDate, refresh = false) => {
         if (ignoreDate == true) {
             $('#dateFrom').attr('readonly', true);
             $('#dateTo').attr('readonly', true);
@@ -302,7 +302,7 @@ Template.timesheet.onRendered(function() {
             $("#dateTo").val(toDate != '' ? moment(toDate).format("DD/MM/YYYY") : toDate);
         }
 
-        let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+        let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
             return await sideBarService.getAllTimeSheetList();
         }, {
             forceOverride: refresh,
@@ -3258,8 +3258,22 @@ Template.timesheet.onRendered(function() {
                         }
                     }
                 } else {
-                    $(".paused").hide();
-                    $("#btnHoldOne").prop("disabled", false);
+                    clockList = templateObject.datatablerecords.get();
+                    clockList = clockList.filter(clkList => {
+                        return clkList.employee == $('#employee_name').val() && clkList.id == $('#updateID').val();
+                    });
+                    if (clockList.length > 0) {
+                        let startTime = clockList[clockList.length - 1].startTime.split(' ')[1] || '';
+                        let endTime = clockList[clockList.length - 1].endTime.split(' ')[1] || '';
+                        let date = clockList[clockList.length - 1].timesheetdate;
+                        $(".paused").hide();
+                        $("#btnHoldOne").prop("disabled", false);
+
+                        $('#startTime').val(startTime);
+                        $('#dtSODate').val(date);
+                        $('#txtNotesOne').val(clockList[clockList.length - 1].notes);
+                        $('#endTime').val(endTime);
+                    }
                 }
                 $('#settingsModal').modal('show');
                 let getEmpIDFromLine = $(event.target).closest("tr").find('.colName ').text() || '';
@@ -4647,7 +4661,7 @@ Template.timesheet.onRendered(function() {
     }
 
 
-    templateObject.initPage = async (refresh = false) => {
+    templateObject.initPage = async(refresh = false) => {
         LoadingOverlay.show();
         await templateObject.loadEmployees(refresh);
         await templateObject.loadPayPeriods(refresh);
@@ -5943,118 +5957,118 @@ Template.timesheet.events({
         playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let timesheetID = $('#edtTimesheetID').val();
-        var employeeName = $('#sltEmployee').val();
-        var jobName = $('#sltJob').val();
-        // var edthourlyRate = $('.lineEditHourlyRate').val() || 0;
-        var edthour = $('.lineEditHour').val() || 0;
-        var techNotes = $('.lineEditTechNotes').val() || '';
-        var product = $('#product-list').children("option:selected").text() || '';
-        // var taxcode = $('#sltTaxCode').val();
-        // var accountdesc = $('#txaAccountDescription').val();
-        // var bankaccountname = $('#edtBankAccountName').val();
-        // var bankbsb = $('#edtBSB').val();
-        // var bankacountno = $('#edtBankAccountNo').val();
-        // let isBankAccount = templateObject.isBankAccount.get();
-        let data = '';
-        if (timesheetID == "") {
-            data = {
-                type: "TTimeSheetEntry",
-                fields: {
+        setTimeout(function() {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let timesheetID = $('#edtTimesheetID').val();
+            var employeeName = $('#sltEmployee').val();
+            var jobName = $('#sltJob').val();
+            // var edthourlyRate = $('.lineEditHourlyRate').val() || 0;
+            var edthour = $('.lineEditHour').val() || 0;
+            var techNotes = $('.lineEditTechNotes').val() || '';
+            var product = $('#product-list').children("option:selected").text() || '';
+            // var taxcode = $('#sltTaxCode').val();
+            // var accountdesc = $('#txaAccountDescription').val();
+            // var bankaccountname = $('#edtBankAccountName').val();
+            // var bankbsb = $('#edtBSB').val();
+            // var bankacountno = $('#edtBankAccountNo').val();
+            // let isBankAccount = templateObject.isBankAccount.get();
+            let data = '';
+            if (timesheetID == "") {
+                data = {
+                    type: "TTimeSheetEntry",
+                    fields: {
+                        // "EntryDate":"2020-10-12 12:39:14",
+                        TimeSheet: [{
+                            type: "TTimeSheet",
+                            fields: {
+                                EmployeeName: employeeName || '',
+                                // HourlyRate:50,
+                                ServiceName: product,
+                                Allowedit: true,
+                                // ChargeRate: 100,
+                                Hours: parseInt(edthour) || 0,
+                                // OverheadRate: 90,
+                                Job: jobName || '',
+                                // ServiceName: "Test"|| '',
+                                TimeSheetClassName: "Default" || '',
+                                Notes: techNotes || ''
+                                    // EntryDate: accountdesc|| ''
+                            }
+                        }],
+                        "TypeName": "Payroll",
+                        "WhoEntered": Session.get('mySessionEmployee') || ""
+                    }
+                };
+
+                contactService.saveTimeSheet(data).then(function(data) {
+                    sideBarService.getAllTimeSheetList().then(function(data) {
+                        addVS1Data('TTimeSheet', JSON.stringify(data));
+                        setTimeout(function() {
+                            window.open('/timesheet', '_self');
+                        }, 500);
+                    });
+                }).catch(function(err) {
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            // Meteor._reload.reload();
+                        } else if (result.dismiss === 'cancel') {}
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+
+            } else {
+                data = {
+                    type: "TTimeSheet",
+                    //fields:{
                     // "EntryDate":"2020-10-12 12:39:14",
-                    TimeSheet: [{
-                        type: "TTimeSheet",
-                        fields: {
-                            EmployeeName: employeeName || '',
-                            // HourlyRate:50,
-                            ServiceName: product,
-                            Allowedit: true,
-                            // ChargeRate: 100,
-                            Hours: parseInt(edthour) || 0,
-                            // OverheadRate: 90,
-                            Job: jobName || '',
-                            // ServiceName: "Test"|| '',
-                            TimeSheetClassName: "Default" || '',
-                            Notes: techNotes || ''
-                                // EntryDate: accountdesc|| ''
-                        }
-                    }],
-                    "TypeName": "Payroll",
-                    "WhoEntered": Session.get('mySessionEmployee') || ""
-                }
-            };
+                    // TimeSheet:[{
+                    // type: "TTimeSheet",
+                    fields: {
+                        ID: timesheetID,
+                        EmployeeName: employeeName || '',
+                        // HourlyRate:50,
+                        ServiceName: product,
+                        Allowedit: true,
+                        // ChargeRate: 100,
+                        Hours: parseInt(edthour) || 0,
+                        // OverheadRate: 90,
+                        Job: jobName || '',
+                        // ServiceName: "Test"|| '',
+                        TimeSheetClassName: "Default" || '',
+                        Notes: techNotes || ''
+                            // EntryDate: accountdesc|| ''
+                    }
+                    //  }],
+                    // "TypeName":"Payroll",
+                    // "WhoEntered":Session.get('mySessionEmployee')||""
+                    //}
+                };
 
-            contactService.saveTimeSheet(data).then(function(data) {
-                sideBarService.getAllTimeSheetList().then(function(data) {
-                    addVS1Data('TTimeSheet', JSON.stringify(data));
-                    setTimeout(function() {
-                        window.open('/timesheet', '_self');
-                    }, 500);
+                contactService.saveTimeSheetUpdate(data).then(function(data) {
+                    window.open('/timesheet', '_self');
+                }).catch(function(err) {
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            // Meteor._reload.reload();
+                        } else if (result.dismiss === 'cancel') {}
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
                 });
-            }).catch(function(err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                        // Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {}
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
 
-        } else {
-            data = {
-                type: "TTimeSheet",
-                //fields:{
-                // "EntryDate":"2020-10-12 12:39:14",
-                // TimeSheet:[{
-                // type: "TTimeSheet",
-                fields: {
-                    ID: timesheetID,
-                    EmployeeName: employeeName || '',
-                    // HourlyRate:50,
-                    ServiceName: product,
-                    Allowedit: true,
-                    // ChargeRate: 100,
-                    Hours: parseInt(edthour) || 0,
-                    // OverheadRate: 90,
-                    Job: jobName || '',
-                    // ServiceName: "Test"|| '',
-                    TimeSheetClassName: "Default" || '',
-                    Notes: techNotes || ''
-                        // EntryDate: accountdesc|| ''
-                }
-                //  }],
-                // "TypeName":"Payroll",
-                // "WhoEntered":Session.get('mySessionEmployee')||""
-                //}
-            };
-
-            contactService.saveTimeSheetUpdate(data).then(function(data) {
-                window.open('/timesheet', '_self');
-            }).catch(function(err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                        // Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {}
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-
-        }
-    }, delayTimeAfterSound);
+            }
+        }, delayTimeAfterSound);
     },
     'click #btnSaveTimeSheetOne': async function() {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -6830,12 +6844,12 @@ Template.timesheet.events({
         $('#edtBankAccountNo').val('');
     },
     'click .printConfirm': function(event) {
-    playPrintAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
-        $('.fullScreenSpin').css('display', 'none');
-    }, delayTimeAfterSound);
+        playPrintAudio();
+        setTimeout(function() {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
+            $('.fullScreenSpin').css('display', 'none');
+        }, delayTimeAfterSound);
     },
     'click #btnHoldOne': function(event) {
         $('#frmOnHoldModal').modal('show');
@@ -7044,58 +7058,58 @@ Template.timesheet.events({
         playDeleteAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
-        setTimeout(function(){
-        // $('.fullScreenSpin').css('display', 'inline-block');
-        
-        swal({
-            title: 'Delete TimeSheet',
-            text: "Are you sure you want to Delete this TimeSheet?",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.value) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                let timesheetID = $('#updateID').val();
-                if (timesheetID == "") {
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                    data = {
-                        type: "TTimeSheet",
-                        fields: {
-                            ID: timesheetID,
-                            Active: false,
-                        }
-                    };
+        setTimeout(function() {
+            // $('.fullScreenSpin').css('display', 'inline-block');
 
-                    contactService.saveTimeSheetUpdate(data).then(function(data) {
-                        sideBarService.getAllTimeSheetList().then(function(data) {
-                            addVS1Data('TTimeSheet', JSON.stringify(data));
-                            setTimeout(function() {
-                                window.open('/timesheet', '_self');
-                            }, 500);
-                        })
-                    }).catch(function(err) {
-                        swal({
-                            title: 'Oooops...',
-                            text: err,
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                        }).then((result) => {
-                            if (result.value) {
-                                //Meteor._reload.reload();
-                            } else if (result.dismiss === 'cancel') {}
-                        });
+            swal({
+                title: 'Delete TimeSheet',
+                text: "Are you sure you want to Delete this TimeSheet?",
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    let timesheetID = $('#updateID').val();
+                    if (timesheetID == "") {
                         $('.fullScreenSpin').css('display', 'none');
-                    });
-                }
+                    } else {
+                        data = {
+                            type: "TTimeSheet",
+                            fields: {
+                                ID: timesheetID,
+                                Active: false,
+                            }
+                        };
 
-            } else {
-                $('.fullScreenSpin').css('display', 'none');
-            }
-        });
-    }, delayTimeAfterSound);
+                        contactService.saveTimeSheetUpdate(data).then(function(data) {
+                            sideBarService.getAllTimeSheetList().then(function(data) {
+                                addVS1Data('TTimeSheet', JSON.stringify(data));
+                                setTimeout(function() {
+                                    window.open('/timesheet', '_self');
+                                }, 500);
+                            })
+                        }).catch(function(err) {
+                            swal({
+                                title: 'Oooops...',
+                                text: err,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    //Meteor._reload.reload();
+                                } else if (result.dismiss === 'cancel') {}
+                            });
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    }
+
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+        }, delayTimeAfterSound);
     },
     'blur .cashamount': function(event) {
         let inputUnitPrice = parseFloat($(event.target).val()) || 0;

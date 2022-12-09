@@ -68,9 +68,13 @@
             }
         </style>
         <div>
-            <header class="pt-2 pb-3 d-flex align-items-center">
-                <h2 class="mr-1">Payroll Overview</h2>
-                  {{> helpbutton}}
+            <header class="row">
+                <div class="col-12 col-md-4">
+                    <h2 class="mr-1">Payroll Overview{{> helpbutton}}</h2>
+                </div>
+                <div class="col-12 col-md-4">
+                    {{> loggedcompanyoverview}}
+                </div>
 
                     <!-- Start Help View Modal -->
                     <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">

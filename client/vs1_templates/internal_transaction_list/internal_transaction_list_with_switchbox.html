@@ -5,8 +5,11 @@
                 max-width: 98vw !important;
             }
         }
-        .th.colChkBox {
+        .colChkBox {
           width: 2% !important;
+        }
+        .colProductName {
+          width: 20% !important;
         }
       .groove {
           border-style: solid;
@@ -85,10 +88,22 @@
             </div>
         </div>
     </div>
+    <style media="screen">
+        .checkRowSelected{
+            background-color:#e5f2d9!important;
+            <!-- color:black!important; -->
+        }
+    </style>
     <div class="table-responsive">
-        <table id="{{tablename}}" style="width:100%" class="table table-striped table-bordered {{tablename}}">
+        <table id="{{tablename}}" name="{{tablename}}" style="width:100%" class="table table-bordered {{tablename}}">
             <thead>
                 <tr class="dnd-moved">
+                    <th data-col-index="0" data-class="colChkBoxAll pointer" style="width:15px!important;">
+                        <div class="custom-control custom-switch colChkBoxAll pointer" style="width:15px;">
+                            <input name="pointer" class="custom-control-input colChkBoxAll pointer" type="checkbox" id="colChkBoxAll" value="0">
+                            <label class="custom-control-label colChkBoxAll" for="colChkBoxAll"></label>
+                        </div>
+                    </th>
                     {{#each displayfield in int_trans_with_switchbox_displayfields}}
                         {{#if displayfield.display}}
                             <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{displayfield.width}}px">

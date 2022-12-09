@@ -25,6 +25,7 @@ import 'jquery-editable-select';
 import {
     Random
 } from 'meteor/random';
+import {StockTransferService} from "../inventory/stockadjust-service";
 const _ = require('lodash');
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -45,6 +46,11 @@ Template.shippingdocket.onCreated(function() {
     templateObject.record = new ReactiveVar({});
     templateObject.shippingrecord = new ReactiveVar({});
     templateObject.shipviarecords = new ReactiveVar();
+
+    templateObject.availserialrecord = new ReactiveVar([]);
+
+    templateObject.availableserialnumberlist = new ReactiveVar([]);
+    templateObject.availableserialnumberqty = new ReactiveVar();
 });
 
 Template.shippingdocket.onRendered(function() {
@@ -52,6 +58,7 @@ Template.shippingdocket.onRendered(function() {
     var url = window.location.href;
     var getsale_id = url.split('?id=');
     var salesID = FlowRouter.current().queryParams.id;
+    let stockTransferService = new StockTransferService();
     $('.fullScreenSpin').css('display', 'inline-block');
     const templateObject = Template.instance();
     let printDeliveryDocket = Session.get('CloudPrintDeliveryDocket');
@@ -984,11 +991,13 @@ Template.shippingdocket.onRendered(function() {
 
         e.preventDefault();
         $("#serialistclose").trigger("click");
-        $("#serailscanlistdis tbody> tr").detach();
+        //$("#serailscanlistdis tbody> tr").detach();
         var $tblrow = $(this);
         var rowIndex = $(this).index() + 1;
         var prodPQALine = "";
         var dataListRet = "";
+        var targetID = this.id;
+
         //$('table tr').css('background','#ffffff');
         $('table tr').css('background', 'transparent');
         $(this).css('background', 'rgba(0,163,211,0.1)');
@@ -996,11 +1005,14 @@ Template.shippingdocket.onRendered(function() {
         $('input[name="salesLineRow"]').val(rowIndex);
         var $cell = $(e.target).closest('td');
         //($cell.index() != 1) && ($cell.index() != 3) &&
-        if (($cell.index() != 6)) {
+        if (($cell.index() != 9)) {
             $('#serailscanlist').find('tbody').remove();
-            var productDetails = $tblrow.find(".ProdName").val();
+            var productDetails = $tblrow.find(".ProdName").text();
             var SegsProd = productDetails.split(',');
-            var productName = SegsProd[0];
+            var productName = $tblrow.find(".ProdName").text();
+            //SegsProd[0];
+
+            var productID = $tblrow.find(".ProductID").text()||0;
 
             var secondTable = $("#serailscanlistdis");
 
@@ -1011,17 +1023,17 @@ Template.shippingdocket.onRendered(function() {
             secondTable.css('visibility', 'visible');
             $("#allocBarcode").focus();
 
-            $('#serialistclose').click(function() {
-                secondTable.css('visibility', 'hidden');
-            });
+            // $('#serialistclose').click(function() {
+            //     secondTable.css('visibility', 'hidden');
+            // });
             //Get the PQA data from TPQA to load on the second table
-
             dataListRet = prodPQALine;
             var id = '';
             var batchProduct = '';
             var binProduct = '';
             var serialNoProduct = '';
             var obj = $.parseJSON(dataListRet);
+
             $.each(obj, function() {
                 id = this['ID'];
                 serialNoProduct = this['PQASN'];
@@ -1034,11 +1046,13 @@ Template.shippingdocket.onRendered(function() {
             //PQA Serial Number Products
 
             var serialNoproductLine = JSON.stringify(serialNoProduct);
-            var serialNoprodListRet = JSON.parse(serialNoproductLine)
+            var serialNoprodListRet = JSON.parse(serialNoproductLine);
+
             for (var event2 in serialNoprodListRet) {
                 var serialNoproductCopy = serialNoprodListRet[event2];
                 for (var serialNodata in serialNoproductCopy) {
                     var serialNoproductData = serialNoproductCopy[serialNodata];
+
                     if ((serialNoproductData.BinID != null)) {
                         var allocRowIndex = $("#serailscanlist > tbody  > tr").length + 1;
                         htmlAppend3 = '<tr class="dnd-moved"><td class="form_id">' + allocRowIndex + '</td><td>' + '' +
@@ -1049,6 +1063,13 @@ Template.shippingdocket.onRendered(function() {
                     }
                 }
             };
+
+            //Add Code here
+            if (productName != '') {
+              //if (Session.get('CloudShowSerial')) {
+                templateObject.getProductQty(targetID, productName, productID);
+              //}
+            }
         }
 
     });
@@ -1100,6 +1121,11 @@ Template.shippingdocket.onRendered(function() {
         $('#serailscanlist > tbody > tr').each(function() {
             var $tblrowAlloc = $(this);
             let tdSerialNumber = $tblrowAlloc.find("#serialNo").val() || 0;
+            var segsSerial = tdSerialNumber.split('-');
+            if(segsSerial[0] == Barcode_Prefix_PQASN){
+              const lastData = segsSerial[segsSerial.length - 1];
+              tdSerialNumber = lastData;
+            }
             lineItemObjFormAlloc = {
                 type: "TPQASN",
                 fields: {
@@ -1260,7 +1286,7 @@ Template.shippingdocket.onRendered(function() {
                 var segError = ErrorResponse.split(':');
 
                 if ((segError[1]) == ' "Unable to lock object') {
-                    
+
                     Bert.alert('<strong>' + oPost.getResponseHeader('errormessage') + '</strong>. Please close the invoice in ERP!', 'now-error');
                 } else {
                     Bert.alert('<strong>' + oPost.getResponseHeader('errormessage') + '</strong>!', 'now-error');
@@ -1953,6 +1979,63 @@ Template.shippingdocket.onRendered(function() {
         });
     html5QrcodeScannerShipDocket.render(onScanSuccessShipDocket);
 
+    // templateObject.getAllAvailableSerialNumber = function() {
+    //     stockTransferService.getSerialNumberList().then(function(dataSerialNumber) {
+    //         templateObject.availserialrecord.set(dataSerialNumber);
+    //     });
+    // }
+    // if (Session.get('CloudShowSerial')) {
+    //     //templateObject.getAllAvailableSerialNumber();
+    // }
+
+    templateObject.getProductQty = async function(id, productname, productID) {
+        let totalAvailQty = 0;
+        let totalInStockQty = 0;
+        let deptID = $('#deptID').val() || 0;
+        //$('#deptID').val() ||
+        let serialList = [];
+        var splashLineArrayserialList = new Array();
+
+        let dataAvailableValue = await stockTransferService.getSerialNumberListByDeptID(deptID,productID);
+        // templateObject.availserialrecord.get();
+        let countSerial = 0;
+        //setTimeout(function() {
+            if (dataAvailableValue) {
+                serialList = [];
+                for (let s = 0; s < dataAvailableValue.tserialnumberlistcurrentreport.length; s++) {
+
+                    if (dataAvailableValue.tserialnumberlistcurrentreport[s].SerialNumber.replace(/\s/g, '') != '') {
+                        if ((productID == dataAvailableValue.tserialnumberlistcurrentreport[s].PartsID) &&
+                            (deptID == dataAvailableValue.tserialnumberlistcurrentreport[s].DepartmentID) &&
+                            (dataAvailableValue.tserialnumberlistcurrentreport[s].AllocType == "In-Stock")) {
+                            let addshowclass = "";
+                            countSerial++;
+                            if (countSerial > 4) {
+                                addshowclass = "hiddenColumn";
+                            }
+                            templateObject.availableserialnumberqty.set(countSerial);
+                            let serialFormat = dataAvailableValue.tserialnumberlistcurrentreport[s].BOMSerialNumber.toLowerCase();
+                            let dataObject = {
+                                rowid: countSerial,
+                                partid: dataAvailableValue.tserialnumberlistcurrentreport[s].PartsID || ' ',
+                                serialnumber: dataAvailableValue.tserialnumberlistcurrentreport[s].SerialNumber || ' ',
+                                domserialnumber: dataAvailableValue.tserialnumberlistcurrentreport[s].BOMSerialNumber || ' ',
+                                domserialnumberFormat: serialFormat.replace(/\s/g, '') || '',
+                                checkclass: addshowclass
+                            };
+                            serialList.push(dataObject);
+                        }
+
+                    }
+                }
+                templateObject.availableserialnumberlist.set(serialList);
+            } else {
+                templateObject.availableserialnumberlist.set([]);
+            }
+        //}, 400);
+
+
+    };
 });
 
 Template.shippingdocket.events({
@@ -1999,24 +2082,24 @@ Template.shippingdocket.events({
         let templateObject = Template.instance();
         setTimeout(function(){
         let shipID = parseInt($("#SalesId").val()) || '';
-        
+
         let isInvoice = templateObject.includeInvoiceAttachment.get();
         let isShippingDocket = templateObject.includeDocketAttachment.get();
 
         if (shipID != '') {
             if ((isInvoice) && (isShippingDocket)) {
-                
+
                 let printType = "InvoiceANDDeliveryDocket";
                 templateObject.SendShippingDetails(printType);
 
             }
             if ((isInvoice) && !(isShippingDocket)) {
-                
+
                 let printType = "InvoiceOnly";
                 templateObject.SendShippingDetails(printType);
             }
             if ((isShippingDocket) && !(isInvoice)) {
-                
+
                 let printType = "DeliveryDocketsOnly";
                 templateObject.SendShippingDetails(printType);
             }
@@ -2027,7 +2110,7 @@ Template.shippingdocket.events({
         playPrintAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
@@ -2036,13 +2119,25 @@ Template.shippingdocket.events({
         playPrintAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
     },
     'click #printDockets': function(e) {
         const templateObject = Template.instance();
+    },
+    'click .viewMoreSerialNo': function(e) {
+        $('#tblAvailableSerialNo .hiddenColumn').addClass('showHiddenColumn');
+        $('#tblAvailableSerialNo .hiddenColumn').removeClass('hiddenColumn');
+        $('.viewMoreSerialNo').css('display', 'none');
+        $('.viewLessSerialNo').css('display', 'inline-block');
+    },
+    'click .viewLessSerialNo': function(e) {
+        $('#tblAvailableSerialNo .showHiddenColumn').addClass('hiddenColumn');
+        $('#tblAvailableSerialNo .showHiddenColumn').removeClass('showHiddenColumn');
+        $('.viewMoreSerialNo').css('display', 'inline-block');
+        $('.viewLessSerialNo').css('display', 'none');
     },
     'click .btnBack': function(event) {
         playCancelAudio();
@@ -2150,7 +2245,7 @@ Template.shippingdocket.events({
                                 Deleted: true
                             }
                         };
-                        var result = await stockTransferService.saveShippingDocket(objDetails);   
+                        var result = await stockTransferService.saveShippingDocket(objDetails);
                     }
                 }
                 FlowRouter.go('/vs1shipping?success=true');
@@ -2240,5 +2335,18 @@ Template.shippingdocket.helpers({
             }
             return (a.shippingmethod.toUpperCase() > b.shippingmethod.toUpperCase()) ? 1 : -1;
         });
+    },
+    availableserialnumberlist: () => {
+        return Template.instance().availableserialnumberlist.get();
+    },
+    showSerial: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
+    availableserialnumberqty: () => {
+        let availaLegnt = false;
+        if (parseInt(Template.instance().availableserialnumberqty.get()) > 5) {
+            availaLegnt = true;
+        }
+        return availaLegnt;
     }
 });

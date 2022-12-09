@@ -122,6 +122,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                                         "x" +
                                         data.tproductvs1[i].fields.ProductName +
                                         '"></label></div>',
+                                        data.tproductvs1[i].fields.ID || "",
                                         data.tproductvs1[i].fields.ProductName || "-",
                                         data.tproductvs1[i].fields.SalesDescription || "",
                                         data.tproductvs1[i].fields.BARCODE || "",
@@ -149,6 +150,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                                         '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                                         data.tproductvs1[i].fields.ID +
                                         '"></label></div>',
+                                        data.tproductvs1[i].fields.ID || "",
                                         data.tproductvs1[i].fields.ProductName || "-",
                                         data.tproductvs1[i].fields.SalesDescription || "",
                                         data.tproductvs1[i].fields.BARCODE || "",
@@ -305,6 +307,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                                 "x" +
                                 data.tproductvs1[i].fields.ProductName +
                                 '"></label></div>',
+                                data.tproductvs1[i].fields.ID || "",
                                 data.tproductvs1[i].fields.ProductName || "-",
                                 data.tproductvs1[i].fields.SalesDescription || "",
                                 data.tproductvs1[i].fields.BARCODE || "",
@@ -329,6 +332,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                                 '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                                 data.tproductvs1[i].fields.ID +
                                 '"></label></div>',
+                                data.tproductvs1[i].fields.ID || "",
                                 data.tproductvs1[i].fields.ProductName || "-",
                                 data.tproductvs1[i].fields.SalesDescription || "",
                                 data.tproductvs1[i].fields.BARCODE || "",
@@ -645,6 +649,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                                     "x" +
                                     data.tproductvs1[i].fields.ProductName +
                                     '"></label></div>',
+                                    data.tproductvs1[i].fields.ID || "",
                                     data.tproductvs1[i].fields.ProductName || "-",
                                     data.tproductvs1[i].fields.SalesDescription || "",
                                     data.tproductvs1[i].fields.BARCODE || "",
@@ -670,6 +675,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                                     '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                                     data.tproductvs1[i].fields.ID +
                                     '"></label></div>',
+                                    data.tproductvs1[i].fields.ID || "",
                                     data.tproductvs1[i].fields.ProductName || "-",
                                     data.tproductvs1[i].fields.SalesDescription || "",
                                     data.tproductvs1[i].fields.BARCODE || "",
@@ -790,7 +796,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
             });
     };
 
-    tempObj.getAllProducts();
+    //tempObj.getAllProducts();
 
     function onScanSuccessProdModal(decodedText, decodedResult) {
         var barcodeScannerProdModal = decodedText.toUpperCase();
@@ -844,6 +850,12 @@ Template.productlistpopwithcheckboxes.events({
                             var dataList = "";
                             if (currentLoc == "/purchaseordercard") {
                                 dataList = [
+                                    '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
+                                    data.tproductvs1[i].fields.ID +
+                                    '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
+                                    data.tproductvs1[i].fields.ID +
+                                    '"></label></div>',
+                                    data.tproductvs1[i].fields.ID || "",
                                     data.tproductvs1[i].fields.ProductName || "-",
                                     data.tproductvs1[i].fields.SalesDescription || "",
                                     data.tproductvs1[i].fields.BARCODE || "",
@@ -860,10 +872,16 @@ Template.productlistpopwithcheckboxes.events({
                                     data.tproductvs1[i].fields.ID || "",
                                     JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
                                     null,
-                                    linestatus
+                                    linestatus,
                                 ];
                             } else {
                                 dataList = [
+                                    '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
+                                    data.tproductvs1[i].fields.ID +
+                                    '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
+                                    data.tproductvs1[i].fields.ID +
+                                    '"></label></div>',
+                                    data.tproductvs1[i].fields.ID || "",
                                     data.tproductvs1[i].fields.ProductName || "-",
                                     data.tproductvs1[i].fields.SalesDescription || "",
                                     data.tproductvs1[i].fields.BARCODE || "",
@@ -880,7 +898,7 @@ Template.productlistpopwithcheckboxes.events({
                                     data.tproductvs1[i].fields.ID || "",
                                     JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
                                     null,
-                                    linestatus
+                                    linestatus,
                                 ];
                             }
 
@@ -961,6 +979,7 @@ Template.productlistpopwithcheckboxes.events({
                                 "x" +
                                 data.tproductvs1[i].fields.ProductName +
                                 '"></label></div>',
+                                data.tproductvs1[i].fields.ID || "",
                                 data.tproductvs1[i].fields.ProductName || "-",
                                 data.tproductvs1[i].fields.SalesDescription || "",
                                 data.tproductvs1[i].fields.BARCODE || "",
@@ -985,6 +1004,7 @@ Template.productlistpopwithcheckboxes.events({
                                 '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                                 data.tproductvs1[i].fields.ID +
                                 '"></label></div>',
+                                data.tproductvs1[i].fields.ID || "",
                                 data.tproductvs1[i].fields.ProductName || "-",
                                 data.tproductvs1[i].fields.SalesDescription || "",
                                 data.tproductvs1[i].fields.BARCODE || "",

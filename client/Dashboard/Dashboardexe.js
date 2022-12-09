@@ -690,7 +690,7 @@ Template.dashboardexe.onRendered(function () {
   }
 
   templateObject.getDashboardExecutiveData = async (dateAsOf, dateChanged) => {
-    LoadingOverlay.show();
+    //LoadingOverlay.show();
     try {
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {

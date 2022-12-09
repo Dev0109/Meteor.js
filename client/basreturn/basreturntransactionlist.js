@@ -2,8 +2,24 @@ import { ReportService } from "../reports/report-service";
 import { SalesBoardService } from '../js/sales-service';
 import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../utility-service";
+
 let reportService = new ReportService();
 let utilityService = new UtilityService();
+
+const months = [];
+months["January"] = "01";
+months["February"] = "02";
+months["March"] = "03";
+months["April"] = "04";
+months["May"] = "05";
+months["June"] = "06";
+months["July"] = "07";
+months["August"] = "08";
+months["September"] = "09";
+months["October"] = "10";
+months["November"] = "11";
+months["December"] = "12";
+
 Template.basreturntransactionlist.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -11,15 +27,8 @@ Template.basreturntransactionlist.onCreated(function() {
 });
 
 Template.basreturntransactionlist.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
-    // let accountService = new AccountService();
-    // let salesService = new SalesBoardService();
-    const customerList = [];
-    let salesOrderTable;
-    var splashArray = new Array();
     const dataTableList = [];
-    const tableHeaderList = [];
 
     function MakeNegative() {
         $('td').each(function() {
@@ -30,247 +39,132 @@ Template.basreturntransactionlist.onRendered(function() {
         location.reload();
     };
 
-    templateObject.getAccountsSummaryReports = function(dateFrom, dateTo, items = [], description, accountingMethod, datemethod) {
-        reportService.getBalanceSheetRedirectRangeData(dateFrom, dateTo, 5000, 0).then(function(data) {
-
-            let balanceTotal = 0;
-            for (let i = 0; i < data.taccountrunningbalancereport.length; i++) {
-                let childArray = data.taccountrunningbalancereport[i];
-                let accountType = childArray.Type || '';
-                if (items.includes(childArray.AccountID)) {
-                    let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
-                    let closingAmount = utilityService.modifynegativeCurrencyFormat(childArray.ClosingBalanceEx);
-                    let creditAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalCreditEx);
-                    let debitAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalDebitEx);
-                    let balaneAmount = utilityService.modifynegativeCurrencyFormat(childArray.Balance);
-                    balanceTotal += childArray.Balance;
-                    let transactionNo = '';
-                    if ((childArray.Type === "Bill") || (childArray.Type === "Cheque") ||
-                        (childArray.Type === "Credit") || (childArray.Type === "PO") || (childArray.Type === "Un-Invoiced PO")) {
-                        transactionNo = childArray.PurchaseOrderID;
-                    } else if ((childArray.Type === "Cash Sale") || (childArray.Type === "Invoice") ||
-                        (childArray.Type === "Journal Entry") || (childArray.Type === "Manufacturing") ||
-                        (childArray.Type === "Payroll") || (childArray.Type === "POS") ||
-                        (childArray.Type === "Refund") || (childArray.Type === "UnInvoiced SO")) {
-                        transactionNo = childArray.SaleID;
-                    } else if ((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment") ||
-                        (childArray.Type === "Deposit Entry") || (childArray.Type === "Supplier Payment")) {
-                        transactionNo = childArray.PaymentID;
-                    }
-
-                    if (childArray.Type === "Cheque") {
-                        if (Session.get('ERPLoggedCountry') == "Australia") {
-                            accountType = "Cheque";
-                        } else if (Session.get('ERPLoggedCountry') == "United States of America") {
-                            accountType = "Check";
-                        } else {
-                            accountType = "Cheque";
-                        }
-                    };
-
-                    var dataList = {
-                        description: description,
-                        accountingMethod: accountingMethod,
-                        datemethod: (datemethod == "q") ? "quarterly" : "monthly",
-                        dateFrom: dateFrom,
-                        dateTo: dateTo,
-                        date: childArray.Date != '' ? moment(childArray.Date).format("DD/MM/YYYY") : data.taccountrunningbalancereport[i].Date,
-                        sortdate: childArray.Date != '' ? moment(childArray.Date).format("YYYY/MM/DD") : childArray.Date,
-                        accountname: childArray.AccountName || '',
-                        type: accountType || '',
-                        clientname: childArray.clientname || '',
-                        debit: debitAmount || 0.00,
-                        credit: creditAmount || 0.00,
-                        balance: balaneAmount || 0.00,
-                        accounttype: childArray.AccountType,
-                        transactionno: transactionNo || '',
-                        openingbalance: openingAmount || 0.00,
-                        closingbalance: closingAmount || 0.00
-                    };
-
-                    dataTableList.push(dataList);
-                }
-            }
-
-            templateObject.datatablerecords.set(dataTableList);
-
-            if (templateObject.datatablerecords.get()) {
-
-                function MakeNegative() {
-                    $('td').each(function() {
-                        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                    });
+    templateObject.getAccountsSummaryReports = function(data, transactionitem) {
+        let datemethod = "Accrual";
+        var startDate = "";
+        var endDate = "";
+        if (transactionitem == "G1" || transactionitem == "G2" || transactionitem == "G3" || transactionitem == "G4" ||
+            transactionitem == "G7" || transactionitem == "G10" || transactionitem == "G11" || transactionitem == "G13" ||
+            transactionitem == "G14" || transactionitem == "G15" || transactionitem == "G18") {
+            datemethod = data.Tab1_Type;
+            startDate = data.Tab1_Year + "-" + months[data.Tab1_Month] + "-01";
+            var endMonth = (data.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.Tab1_Month]) / 3) * 3) : (months[data.Tab1_Month]);
+            endDate = new Date(data.Tab1_Year, (parseInt(endMonth)), 0);
+            endDate = moment(endDate).format("YYYY-MM-DD");
+        }
+        if (transactionitem == "W1" || transactionitem == "W2" || transactionitem == "W3" || transactionitem == "W4") {
+            datemethod = data.Tab2_Type;
+            startDate = data.Tab2_Year + "-" + months[data.Tab2_Month] + "-01";
+            var endMonth = (data.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.Tab2_Month]) / 3) * 3) : (months[data.Tab2_Month]);
+            endDate = new Date(data.Tab2_Year, (parseInt(endMonth)), 0);
+            endDate = moment(endDate).format("YYYY-MM-DD");
+        }
+        if (transactionitem == "T1") {
+            datemethod = data.Tab3_Type;
+            startDate = data.Tab3_Year + "-" + months[data.Tab3_Month] + "-01";
+            var endMonth = (data.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.Tab3_Month]) / 3) * 3) : (months[data.Tab3_Month]);
+            endDate = new Date(data.Tab3_Year, (parseInt(endMonth)), 0);
+            endDate = moment(endDate).format("YYYY-MM-DD");
+        }
+        if (transactionitem == "1C" || transactionitem == "1E" || transactionitem == "1D" ||
+            transactionitem == "1F" || transactionitem == "1G" || transactionitem == "7D") {
+            datemethod = data.Tab4_Type;
+            startDate = data.Tab4_Year + "-" + months[data.Tab4_Month] + "-01";
+            var endMonth = (data.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.Tab4_Month]) / 3) * 3) : (months[data.Tab4_Month]);
+            endDate = new Date(data.Tab4_Year, (parseInt(endMonth)), 0);
+            endDate = moment(endDate).format("YYYY-MM-DD");
+        }
+        for (let i = 0; i < data.Lines.length; i++) {
+            if (data.Lines[i].fields.ReportCode == transactionitem) {
+                var dataList = {
+                    description: data.BasSheetDesc,
+                    accountingMethod: data.AccMethod,
+                    datemethod: datemethod,
+                    dateFrom: startDate,
+                    dateTo: endDate,
+                    globalref: data.Lines[i].fields.TransGlobalref,
+                    transtype: data.Lines[i].fields.Transtype,
+                    transdate: moment(data.Lines[i].fields.TransDate).format("YYYY-MM-DD"),
+                    amount: data.Lines[i].fields.Amount,
                 };
+
+                dataTableList.push(dataList);
+            }
+        }
+
+        templateObject.datatablerecords.set(dataTableList);
+        setTimeout(function() {
+            $('#tblBasReturnTransactionList').DataTable({
+                // dom: 'lBfrtip',
+                columnDefs: [
+                    { type: 'basnumber', targets: 0 }
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '',
+                    title: 'BAS Return Details',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "basreturndetails_" + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'BAS Return List',
+                    filename: "basreturndetails_" + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                // bStateSave: true,
+                // rowId: 0,
+                pageLength: initialDatatableLoad,
+                "bLengthChange": false,
+                info: true,
+                responsive: true,
+                "order": [
+                    [0, "desc"],
+                    // [2, "desc"]
+                ],
+                // "aaSorting": [[1,'desc']],
+                action: function() {
+                    $('#tblBasReturnTransactionList').DataTable().ajax.reload();
+                },
+                "fnInitComplete": function() {
+                    // this.fnPageChange('last');
+                    // if (data.Params.Search.replace(/\s/g, "") == "") {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                    // }
+                    $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBASReturnList_filter");
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
                 setTimeout(function() {
                     MakeNegative();
                 }, 100);
-            }
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+            }).on('column-reorder', function() {
 
-            setTimeout(function() {
-                $('#tblBasReturnTransactionList').DataTable({
-                    columnDefs: [
-                        { type: 'date', targets: 0 }
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [{
-                        extend: 'excelHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Balance Transaction List - " + moment().format(),
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible',
-                            format: {
-                                body: function(data, row, column) {
-                                    if (data.includes("</span>")) {
-                                        var res = data.split("</span>");
-                                        data = res[1];
-                                    }
-
-                                    return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-                                }
-                            }
-                        }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Balance Transaction',
-                        filename: "Balance Transaction List - " + moment().format(),
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    }],
-
-                    // bStateSave: true,
-                    // rowId: 0,
-                    pageLength: initialReportDatatableLoad,
-                    lengthMenu: [
-                        [initialReportDatatableLoad, -1],
-                        [initialReportDatatableLoad, "All"]
-                    ],
-                    info: true,
-                    responsive: true,
-                    "order": [
-                        [0, "desc"]
-                    ],
-                    action: function() {
-                        $('#tblBasReturnTransactionList').DataTable().ajax.reload();
-                    },
-                    fnDrawCallback: function(oSettings) {
-                        $(".paginate_button.page-item").removeClass("disabled");
-                        $("#tblBasReturnTransactionList_ellipsis").addClass("disabled");
-
-                        if (oSettings._iDisplayLength == -1) {
-                            if (oSettings.fnRecordsDisplay() > 150) {
-                                $(".paginate_button.page-item.previous").addClass("disabled");
-                                $(".paginate_button.page-item.next").addClass("disabled");
-                            }
-                        } else {}
-                        if (data.Params.Count < oSettings.fnRecordsDisplay()) {
-                            $(".paginate_button.page-item.next").addClass("disabled");
-                        }
-                        $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function() {
-                            $(".fullScreenSpin").css("display", "inline-block");
-                            let dataLenght = oSettings._iDisplayLength;
-                            reportService.getBalanceSheetRedirectClientData(urlParameters, initialDatatableLoad, oSettings.fnRecordsDisplay(), urlParametersDateFrom, urlParametersDateTo).then(function(dataObjectnew) {
-                                getVS1Data("TAccountRunningBalanceReport").then(function(dataObjectold) {
-                                    if (dataObjectold.length == 0) {} else {
-                                        let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                        var thirdaryData = $.merge($.merge([], dataObjectnew.taccountrunningbalancereport), dataOld.taccountrunningbalancereport);
-                                        let objCombineData = {
-                                            Params: dataOld.Params,
-                                            taccountrunningbalancereport: thirdaryData,
-                                        };
-
-                                        addVS1Data("TAccountRunningBalanceReport", JSON.stringify(objCombineData)).then(function(datareturn) {
-                                            templateObject.resetData(objCombineData);
-                                            $(".fullScreenSpin").css("display", "none");
-                                        }).catch(function(err) {
-                                            $(".fullScreenSpin").css("display", "none");
-                                        });
-                                    }
-                                }).catch(function(err) {});
-                            }).catch(function(err) {
-                                $(".fullScreenSpin").css("display", "none");
-                            });
-                        });
-
-                        function MakeNegative() {
-                            $('td').each(function() {
-                                if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                            });
-                        };
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    },
-                    fnInitComplete: function() {
-                        // this.fnPageChange("last");
-                        $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnTransactionList_filter");
-                    },
-                    "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                        let countTableData = data.Params.Count || 0; //get count from API data
-
-                        return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                    }
-
-                }).on('page', function() {
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
-                }).on('column-reorder', function() {
-
-                });
-
-                $('.fullScreenSpin').css('display', 'none');
-
-                /* Add count functionality to table */
-                let countTableData = data.Params.Count || 1; //get count from API data
-                if (data.taccountrunningbalancereport.length > countTableData) {
-                    //Check if what is on the list is more than API count
-                    countTableData = data.taccountrunningbalancereport.length || 1;
-                }
-                /* End Add count functionality to table */
-            }, 0);
-
-            var columns = $('#tblBasReturnTransactionList th');
-            let sTible = "";
-            let sWidth = "";
-            let sIndex = "";
-            let sVisible = "";
-            let columVisible = false;
-            let sClass = "";
-            $.each(columns, function(i, v) {
-                if (v.hidden == false) {
-                    columVisible = true;
-                }
-                if ((v.className.includes("hiddenColumn"))) {
-                    columVisible = false;
-                }
-                sWidth = v.style.width.replace('px', "");
-
-                let datatablerecordObj = {
-                    sTitle: v.innerText || '',
-                    sWidth: sWidth || '',
-                    sIndex: v.id || '',
-                    sVisible: columVisible || false,
-                    sClass: v.className || ''
-                };
-                tableHeaderList.push(datatablerecordObj);
             });
-            templateObject.tableheaderrecords.set(tableHeaderList);
-            $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-            $('.fullScreenSpin').css('display', 'none');
-        });
+        }, 1000);
     }
 
     setTimeout(function() {
@@ -282,57 +176,39 @@ Template.basreturntransactionlist.onRendered(function() {
                 getVS1Data('TBASReturn').then(function(dataObject) {
                     if (dataObject.length > 0) {
                         let data = JSON.parse(dataObject[0].data);
-                        for (let i = 0; i < data.length; i++) {
-                            if (basreturnid == data[i].basNumber) {
-                                fromDate = new Date(data[i].basReturnTab2.startDate);
-                                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                                toDate = new Date(data[i].basReturnTab2.endDate);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
-
-                                if (transactionitem == "W1") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W1.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
-                                } else if (transactionitem == "W2") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W2.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
-                                } else if (transactionitem == "W3") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W3.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
-                                } else if (transactionitem == "W4") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W4.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
-                                } else if (transactionitem == "T1") {
-                                    fromDate = new Date(data[i].basReturnTab2.startDate_2);
-                                    fromDate = moment(fromDate).format("YYYY-MM-DD");
-                                    toDate = new Date(data[i].basReturnTab2.endDate_2);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2T1.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod_2);
-                                } else if (transactionitem == "7D") {
-                                    fromDate = new Date(data[i].basReturnTab3.startDate);
-                                    fromDate = moment(fromDate).format("YYYY-MM-DD");
-                                    toDate = new Date(data[i].basReturnTab3.endDate);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab37D.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab3.datemethod);
-                                }
+                        for (let i = 0; i < data.tbasreturn.length; i++) {
+                            if (basreturnid == data.tbasreturn[i].fields.ID && transactionitem != "") {
+                                templateObject.getAccountsSummaryReports(data.tbasreturn[i].fields, transactionitem);
                             }
                         }
+                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        reportService.getOneBASReturn(basreturnid).then(function(data) {
+                            if (data.tbasreturn.length > 0 && transactionitem != "") {
+                                templateObject.getAccountsSummaryReports(data.tbasreturn[i].fields, transactionitem);
+                            }
+                            $('.fullScreenSpin').css('display', 'none');
+                        })
                     }
                 }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    reportService.getOneBASReturn(basreturnid).then(function(data) {
+                        if (data.tbasreturn.length > 0 && transactionitem != "") {
+                            templateObject.getAccountsSummaryReports(data.tbasreturn[i].fields, transactionitem);
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                    })
                 });
-
             }
         });
     }, 500);
 
+    // $('#tblBasReturnTransactionList tbody').on('click', 'tr', function() {
+    //     var listData = $(this).closest('tr').attr('id');
+    //     if (listData) {
+    //         // window.open('/invoicecard?id=' + listData,'_self');
+    //     }
 
-
-
-
-    $('#tblBasReturnTransactionList tbody').on('click', 'tr', function() {
-        var listData = $(this).closest('tr').attr('id');
-        if (listData) {
-            // window.open('/invoicecard?id=' + listData,'_self');
-        }
-
-    });
-
+    // });
 
     // $('#tblBasReturnTransactionList tbody').on('click', 'tr', function() {
     //     var listData = $(this).closest('tr').attr('id');

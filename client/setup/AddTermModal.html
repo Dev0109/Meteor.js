@@ -62,15 +62,15 @@
                             <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip"
                                     data-bs-tooltip="" data-placement="bottom">EOM</label>
                                 {{#if equals includeEOM true}}
-                                <div class="custom-control custom-checkbox chkBox"
+                                <div class="custom-control custom-switch chkBox"
                                     style="height: 38px; text-align: center; padding-top: 7px;"><input
-                                        class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM"
+                                        class="custom-control-input chkBox chkTerms" type="radio" id="isEOM"
                                         name="group1[]" checked><label class="custom-control-label chkBox"
                                         for="isEOM"></label></div>
                                 {{else}}
-                                <div class="custom-control custom-checkbox chkBox"
+                                <div class="custom-control custom-switch chkBox"
                                     style="height: 38px; text-align: center; padding-top: 7px;"><input
-                                        class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM"
+                                        class="custom-control-input chkBox chkTerms" type="radio" id="isEOM"
                                         name="group1[]"><label class="custom-control-label chkBox" for="isEOM"></label>
                                 </div>
                                 {{/if}}
@@ -78,15 +78,15 @@
                             <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip"
                                     data-bs-tooltip="" data-placement="bottom">EOM+</label>
                                 {{#if equals includeEOMPlus true}}
-                                <div class="custom-control custom-checkbox chkBox"
+                                <div class="custom-control custom-switch chkBox"
                                     style="height: 38px; text-align: center; padding-top: 7px;"><input
-                                        class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus"
+                                        class="custom-control-input chkBox chkTerms" type="radio" id="isEOMPlus"
                                         name="group1[]" checked><label class="custom-control-label chkBox"
                                         for="isEOMPlus"></label></div>
                                 {{else}}
-                                <div class="custom-control custom-checkbox chkBox"
+                                <div class="custom-control custom-switch chkBox"
                                     style="height: 38px; text-align: center; padding-top: 7px;"><input
-                                        class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus"
+                                        class="custom-control-input chkBox chkTerms" type="radio" id="isEOMPlus"
                                         name="group1[]"><label class="custom-control-label chkBox"
                                         for="isEOMPlus"></label></div>
                                 {{/if}}
@@ -96,13 +96,13 @@
                     <div class="row no-gutters">
                         <div class="col-12">
                             <div class="form-group" style="margin: 4px 8px;">
-                                <div class="custom-control custom-checkbox chkBox"
+                                <div class="custom-control custom-switch chkBox"
                                     style="height: 38px; padding-top: 7px;">
                                     {{#if equals includeSalesDefault true}}
-                                    <input class="custom-control-input chkBox chkCustomerDef" type="checkbox"
+                                    <input class="custom-control-input chkBox chkCustomerDef" type="radio"
                                         id="chkCustomerDef" name="group1[]" checked>
                                     {{else}}
-                                    <input class="custom-control-input chkBox chkCustomerDef" type="checkbox"
+                                    <input class="custom-control-input chkBox chkCustomerDef" type="radio"
                                         id="chkCustomerDef" name="group1[]">
                                     {{/if}}
                                     <label class="custom-control-label chkBox" for="chkCustomerDef">Customer
@@ -112,13 +112,13 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group" style="margin: 4px 8px;">
-                                <div class="custom-control custom-checkbox chkBox"
+                                <div class="custom-control custom-switch chkBox"
                                     style="height: 38px; padding-top: 7px;">
                                     {{#if equals includePurchaseDefault true}}
-                                    <input class="custom-control-input chkBox chkSupplierDef" type="checkbox"
+                                    <input class="custom-control-input chkBox chkSupplierDef" type="radio"
                                         id="chkSupplierDef" name="group1[]" checked>
                                     {{else}}
-                                    <input class="custom-control-input chkBox chkSupplierDef" type="checkbox"
+                                    <input class="custom-control-input chkBox chkSupplierDef" type="radio"
                                         id="chkSupplierDef" name="group1[]">
                                     {{/if}}
                                     <label class="custom-control-label chkBox" for="chkSupplierDef">Supplier

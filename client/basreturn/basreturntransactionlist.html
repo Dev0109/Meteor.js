@@ -184,10 +184,10 @@
                                 {{#each item in datatablerecords}}
                                     <tr class="dnd-moved" id="{{item.accountname}}">
                                         <td contenteditable="false" class="colAccountingMethod">{{item.accountingMethod}}</td>
-                                        <td contenteditable="false" class="colRef">{{item.accountname}}</td>
-                                        <td contenteditable="false" class="colType">{{item.type}}</td>
-                                        <td contenteditable="false" class="colDate">{{item.date}}</td>
-                                        <td contenteditable="false" class="colAmount">{{item.balance}}</td>
+                                        <td contenteditable="false" class="colRef">{{item.globalref}}</td>
+                                        <td contenteditable="false" class="colType">{{item.transtype}}</td>
+                                        <td contenteditable="false" class="colDate">{{item.transdate}}</td>
+                                        <td contenteditable="false" class="colAmount">{{item.amount}}</td>
                                         <td contenteditable="false" class="colDescription">{{item.description}}</td>
                                         <td contenteditable="false" class="colPeriod">{{item.datemethod}}</td>
                                         <td contenteditable="false" class="colFrom">{{item.dateFrom}}</td>

@@ -4,20 +4,24 @@
             <div class="spinner"></div>
         </div>
         <div style="margin-top: 24px">
-            <header style="padding: 16px; padding-bottom: 1px; background-color: #ededed;">
-                <h2 style="margin: 16px 16px 0;">Bill Of Materials {{> helpbutton}}
-                </h2>
+            <header class="row">
+                <div class="col-12 col-md-4">
+                    <h2>Bill Of Materials {{> helpbutton}}</h2>
+                </div>
+                <div class="col-12 col-md-4">
+                    {{> loggedcompanyoverview}}
+                </div>
             </header>
             <div class="row d-xl-flex flex-row justify-content-between" style="padding: 0px 20px; background-color: #ededed;">
                  <div class="col-6 col-md-8 d-xl-flex flex-grow-1 align-items-xl-start">
                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                     <button id="btnNewBOM" name="btnNewBOM" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New BOM</button>
                 </div>
-                {{#if equals isSetupFinished false}}
+                <!-- {{#if equals isSetupFinished false}} -->
                     <div class="col-2 setupIncompleatedMsg text-danger">
-                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
                     </div>
-                {{/if}}
+                <!-- {{/if}} -->
                 <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-xl-start">
                     {{> export_import_print_display_button tablename="tblBOMList"}}
                 </div>

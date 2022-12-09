@@ -11,7 +11,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 let productService = new ProductService();
-Template.internal_transaction_list_with_switchbox.inheritsHooksFrom('export_import_print_display_button');
+// Template.internal_transaction_list_with_switchbox.inheritsHooksFrom('export_import_print_display_button');
 
 Template.internal_transaction_list_with_switchbox.onCreated(function(){
     const templateObject = Template.instance();
@@ -22,6 +22,7 @@ Template.internal_transaction_list_with_switchbox.onCreated(function(){
     templateObject.int_trans_with_switchbox_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.tablename = new ReactiveVar();
+    templateObject.selectedAwaitingProduct = new ReactiveVar([]);
 });
 
 Template.internal_transaction_list_with_switchbox.onRendered(function() {
@@ -56,7 +57,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
       });
   };
 
-    var url = FlowRouter.current().path;
     let currenttablename = templateObject.data.tablename||"";
 
     templateObject.tablename.set(currenttablename);
@@ -66,8 +66,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
           let reset_data = [];
           if(currenttablename == "tblInventoryCheckbox") {
               reset_data = [
-                { index: 0, label: '#ID', class: 'colID', active: false, display: true, width: "10" },
-                { index: 1, label: '', class: 'colChkBox pointer', active: true, display: true, width: "30" },
+                { index: 1, label: '#ID', class: 'colID', active: false, display: true, width: "10" },
                 { index: 2, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "200" },
                 { index: 3, label: 'Sales Description', class: 'colSalesDescription', active: true, display: true, width: "" },
                 { index: 4, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "100" },
@@ -92,25 +91,26 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
-      // getVS1Data("VS1_Customize").then(function (dataObject) {
-      //   if (dataObject.length == 0) {
-      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-      //         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-      //         templateObject.showCustomFieldDisplaySettings(reset_data);
-      //     }).catch(function (err) {
-      //     });
-      //   } else {
-      //     let data = JSON.parse(dataObject[0].data);
-      //     if(data.ProcessLog.Obj.CustomLayout.length > 0){
-      //      for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-      //        if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-      //          reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-      //          templateObject.showCustomFieldDisplaySettings(reset_data);
-      //        }
-      //      }
-      //    };
-      //   }
-      // });
+        /*
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              templateObject.showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               templateObject.showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
+        }
+    });*/
 
     } catch (error) {
 
@@ -178,6 +178,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItemObj = {};
         let deleteFilter = false;
         let chkBox;
+        let costprice = 0.00;
+        let sellrate = 0.00;
+        let linestatus = '';
         // if(data.Params.Search.replace(/\s/g, "") == ""){
         //   deleteFilter = true;
         // }else{
@@ -185,9 +188,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         // };
 
         for (let i = 0; i < data.tproductvs1.length; i++) {
-          let buyrate = 0.00;
-          let sellrate = 0.00;
-          let linestatus = '';
           if (data.tproductvs1[i].fields.Active == true) {
               linestatus = "";
           } else if (data.tproductvs1[i].fields.Active == false) {
@@ -204,8 +204,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
               Math.floor(data.tproductvs1[i].fields.SellQty1Price* 100) / 100); //Sell Price
 
           var dataList = [
-              data.tproductvs1[i].fields.ID || "",
               chkBox,
+              data.tproductvs1[i].fields.ID || "",
               data.tproductvs1[i].fields.ProductName || "",
               data.tproductvs1[i].fields.SalesDescription || "",
               data.tproductvs1[i].fields.BARCODE || "",
@@ -234,20 +234,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             $('#'+currenttablename).DataTable({
                 data: splashArrayProductList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [
-                    {
-                    targets: 0,
-                    className: "colID colID hiddenColumn",
-                    width: "10px",
-                    createdCell: function (td, cellData, rowData, row, col) {
-                      $(td).closest("tr").attr("id", rowData[0]);
-                    }},
-                    {
-                      targets: 1,
+                columnDefs: [{
+                      targets: 0,
                       className: "colChkBox pointer",
                       orderable: false,
-                      width: "30px",
+                      width: "15px",
                     },
+                    {
+                        targets: 1,
+                        className: "colID colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function (td, cellData, rowData, row, col) {
+                          $(td).closest("tr").attr("id", rowData[1]);
+                        }},
                     {
                       targets: 2,
                       className: "colProductName",
@@ -345,6 +344,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 action: function () {
                     $('#'+currenttablename).DataTable().ajax.reload();
                 },
+
                 "fnDrawCallback": function (oSettings) {
                     $('.paginate_button.page-item').removeClass('disabled');
                     $('#'+currenttablename+'_ellipsis').addClass('disabled');
@@ -367,8 +367,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
                     sideBarService.getNewProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
                     for (let j = 0; j < dataObjectnew.tproductvs1.length; j++) {
-                        let buyrate = "";
-                        let sellrate = "";
+                        let chkBox;
+                        let costprice = 0.00;
+                        let sellrate = 0.00;
                         let linestatus = '';
                         if (dataObjectnew.tproductvs1[j].fields.Active == true) {
                             linestatus = "";
@@ -386,8 +387,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                             Math.floor(dataObjectnew.tproductvs1[j].fields.SellQty1Price* 100) / 100); //Sell Price
 
                         var dataListDupp = [
-                            dataObjectnew.tproductvs1[j].fields.ID || "",
                             chkBox,
+                            dataObjectnew.tproductvs1[j].fields.ID || "",
                             dataObjectnew.tproductvs1[j].fields.ProductName || "",
                             dataObjectnew.tproductvs1[j].fields.SalesDescription || "",
                             dataObjectnew.tproductvs1[j].fields.BARCODE || "",
@@ -401,7 +402,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         ];
 
                         splashArrayProductList.push(dataListDupp);
-                        //}
                     }
                     let uniqueChars = [...new Set(splashArrayProductList)];
                     templateObject.transactiondatatablerecords.set(uniqueChars);
@@ -426,15 +426,15 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
-                      if(deleteFilter){
-                        $("<button class='btn btn-danger btnHideDeleted vs1ButtonMargin' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                        $("<a class='btn btn-primary scanProdBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryCheckbox_filter");
+                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryCheckbox_filter");
+                        if(deleteFilter){
+                          $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
 
-                      }else{
-                        $("<button class='btn btn-primary btnViewDeleted vs1ButtonMargin' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
-                      }
-                        $("<a class='btn btn-primary scanProdBarcodePOP vs1ButtonMargin' href='' id='scanProdBarcodePOP' role='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryCheckbox_filter");
-                        $("<button class='btn btn-primary vs1ButtonMargin' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryCheckbox_filter");
-                        $("<button class='btn btn-primary btnRefreshList vs1ButtonMargin' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+                        }else{
+                          $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                        }
+                        $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     // let countTableData = data.Params.Count || 0; //get count from API data
@@ -466,6 +466,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 }, 100);
             });
             $(".fullScreenSpin").css("display", "none");
+
         }, 0);
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
@@ -479,7 +480,55 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     });
 
 Template.internal_transaction_list_with_switchbox.events({
-  "click .btnViewDeleted": async function (e) {
+    //Check all and add bgcolor on data switchboxes when switched header
+    'click .colChkBoxAll': async function (event) {
+        const templateObject = Template.instance();
+        let currenttablename = await templateObject.tablename.get()||'';
+        if ($(event.target).is(':checked')) {
+            $(".chkBox").prop("checked", true);
+            $(`.${currenttablename} .colChkBox`).closest('tr').addClass('checkRowSelected');
+        } else {
+            $(".chkBox").prop("checked", false);
+            $(`.${currenttablename} .colChkBox`).closest('tr').removeClass('checkRowSelected');
+        }
+
+    },
+    'click .chkBox': async function (event) {
+        const templateObject = Template.instance();
+        let currenttablename = await templateObject.tablename.get()||'';
+        if($(event.target).is(':checked')){
+            $(event.target).closest('tr').addClass('checkRowSelected');
+            var chkID = $('.chkBox').prop("checked") ? 1 : 0;
+              dataTableList = dataTableList.filter((value, index) => {
+                if (chkID == 1) {
+                  return true;
+                }
+                return false;
+              });
+
+            // Sort by created at
+            dataTableList = dataTableList.sort(chkID);
+            dataTableList.reverse();
+
+            await templateInstance.datatablerecords.set(dataTableList);
+        } else {
+            $(event.target).closest('tr').removeClass('checkRowSelected');
+            var chkID = $('.chkBox').prop("checked") ? 0 : 1;
+            dataTableList = dataTableList.filter((value, index) => {
+              if (chkID == 1) {
+                return true;
+              }
+              return false;
+            });
+
+          // Sort by created at
+          dataTableList = dataTableList.sort(chkID);
+          dataTableList.reverse();
+
+          await templateInstance.datatablerecords.set(dataTableList);
+        }
+    },
+    "click .btnViewDeleted": async function (e) {
       $(".fullScreenSpin").css("display", "inline-block");
       e.stopImmediatePropagation();
       const templateObject = Template.instance();
@@ -493,7 +542,7 @@ Template.internal_transaction_list_with_switchbox.events({
       }
 
     },
-  "click .btnHideDeleted": async function (e) {
+    "click .btnHideDeleted": async function (e) {
       $(".fullScreenSpin").css("display", "inline-block");
       e.stopImmediatePropagation();
       let templateObject = Template.instance();
@@ -511,117 +560,117 @@ Template.internal_transaction_list_with_switchbox.events({
       }
 
     },
-      'change .custom-range': async function(event) {
-        const tableHandler = new TableHandler();
-        let range = $(event.target).val()||0;
-        let colClassName = $(event.target).attr("valueclass");
-        await $('.' + colClassName).css('width', range);
-        $('.dataTable').resizable();
-      },
-      'click .chkDatatable': function(event) {
-          let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-          if ($(event.target).is(':checked')) {
-            $('.'+columnDataValue).addClass('showColumn');
-            $('.'+columnDataValue).removeClass('hiddenColumn');
-          } else {
-            $('.'+columnDataValue).addClass('hiddenColumn');
-            $('.'+columnDataValue).removeClass('showColumn');
-          }
-      },
-      "blur .divcolumn": async function (event) {
-        const templateObject = Template.instance();
-        let columData = $(event.target).text();
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("custid");
-        let currenttablename = await templateObject.tablename.get()||'';
-        var datable = $('#'+currenttablename).DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-      },
-      'click .resetTable' : async function(event){
-        let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
-        let currenttablename = await templateObject.tablename.get()||'';
-          //reset_data[9].display = false;
-          reset_data = reset_data.filter(redata => redata.display);
-        $(".displaySettings").each(function (index) {
-          let $tblrow = $(this);
-          $tblrow.find(".divcolumn").text(reset_data[index].label);
-          $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
+    'change .custom-range': async function(event) {
+    const tableHandler = new TableHandler();
+    let range = $(event.target).val()||0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    $('.dataTable').resizable();
+  },
+    'click .chkDatatable': function(event) {
+      let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+      if ($(event.target).is(':checked')) {
+        $('.'+columnDataValue).addClass('showColumn');
+        $('.'+columnDataValue).removeClass('hiddenColumn');
+      } else {
+        $('.'+columnDataValue).addClass('hiddenColumn');
+        $('.'+columnDataValue).removeClass('showColumn');
+      }
+  },
+    "blur .divcolumn": async function (event) {
+    const templateObject = Template.instance();
+    let columData = $(event.target).text();
+    let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("custid");
+    let currenttablename = await templateObject.tablename.get()||'';
+    var datable = $('#'+currenttablename).DataTable();
+    var title = datable.column(columnDatanIndex).header();
+    $(title).html(columData);
+  },
+    'click .resetTable' : async function(event){
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    let currenttablename = await templateObject.tablename.get()||'';
+      //reset_data[9].display = false;
+      reset_data = reset_data.filter(redata => redata.display);
+    $(".displaySettings").each(function (index) {
+      let $tblrow = $(this);
+      $tblrow.find(".divcolumn").text(reset_data[index].label);
+      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
 
-          let title = $('#'+currenttablename).find("th").eq(index);
-            $(title).html(reset_data[index].label);
+      let title = $('#'+currenttablename).find("th").eq(index);
+        $(title).html(reset_data[index].label);
 
-          if (reset_data[index].active) {
-            $('.' + reset_data[index].class).addClass('showColumn');
-            $('.' + reset_data[index].class).removeClass('hiddenColumn');
-          } else {
-            $('.' + reset_data[index].class).addClass('hiddenColumn');
-            $('.' + reset_data[index].class).removeClass('showColumn');
-          }
-          $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-          $("." + reset_data[index].class).css('width', reset_data[index].width);
+      if (reset_data[index].active) {
+        $('.' + reset_data[index].class).addClass('showColumn');
+        $('.' + reset_data[index].class).removeClass('hiddenColumn');
+      } else {
+        $('.' + reset_data[index].class).addClass('hiddenColumn');
+        $('.' + reset_data[index].class).removeClass('showColumn');
+      }
+      $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
+      $("." + reset_data[index].class).css('width', reset_data[index].width);
+    });
+  },
+    "click .saveTable": async function(event) {
+    let lineItems = [];
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    $(".displaySettings").each(function (index) {
+      var $tblrow = $(this);
+      var fieldID = $tblrow.attr("custid") || 0;
+      var colTitle = $tblrow.find(".divcolumn").text() || "";
+      var colWidth = $tblrow.find(".custom-range").val() || 0;
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+      var colHidden = false;
+      if ($tblrow.find(".custom-control-input").is(":checked")) {
+        colHidden = true;
+      } else {
+        colHidden = false;
+      }
+      let lineItemObj = {
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
+      };
+
+      lineItems.push(lineItemObj);
+    });
+
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    reset_data = reset_data.filter(redata => redata.display == false);
+    lineItems.push(...reset_data);
+    lineItems.sort((a,b) => a.index - b.index);
+      let erpGet = erpDb();
+      let tableName = await templateObject.tablename.get()||'';
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+
+      if(added){
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        }).catch(function (err) {
         });
-      },
-      "click .saveTable": async function(event) {
-        let lineItems = [];
-        $(".fullScreenSpin").css("display", "inline-block");
-
-        $(".displaySettings").each(function (index) {
-          var $tblrow = $(this);
-          var fieldID = $tblrow.attr("custid") || 0;
-          var colTitle = $tblrow.find(".divcolumn").text() || "";
-          var colWidth = $tblrow.find(".custom-range").val() || 0;
-          var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-          var colHidden = false;
-          if ($tblrow.find(".custom-control-input").is(":checked")) {
-            colHidden = true;
-          } else {
-            colHidden = false;
-          }
-          let lineItemObj = {
-            index: parseInt(fieldID),
-            label: colTitle,
-            active: colHidden,
-            width: parseInt(colWidth),
-            class: colthClass,
-            display: true
-          };
-
-          lineItems.push(lineItemObj);
+        $(".fullScreenSpin").css("display", "none");
+        swal({
+          title: 'SUCCESS',
+          text: "Display settings is updated!",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+                $('#'+tableName+'_Modal').modal('hide');
+            }
         });
+      }else{
+        $(".fullScreenSpin").css("display", "none");
+      }
 
-        let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
-        reset_data = reset_data.filter(redata => redata.display == false);
-        lineItems.push(...reset_data);
-        lineItems.sort((a,b) => a.index - b.index);
-          let erpGet = erpDb();
-          let tableName = await templateObject.tablename.get()||'';
-          let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-          let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-
-          if(added){
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-                addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-            }).catch(function (err) {
-            });
-            $(".fullScreenSpin").css("display", "none");
-            swal({
-              title: 'SUCCESS',
-              text: "Display settings is updated!",
-              type: 'success',
-              showCancelButton: false,
-              confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                    $('#'+tableName+'_Modal').modal('hide');
-                }
-            });
-          }else{
-            $(".fullScreenSpin").css("display", "none");
-          }
-
-        },
+    },
       // "click .exportbtn": async function () {
       //     $(".fullScreenSpin").css("display", "inline-block");
       //     let currenttablename = await templateObject.tablename.get()||'';
@@ -634,7 +683,7 @@ Template.internal_transaction_list_with_switchbox.events({
       //     jQuery('#'+currenttablename+'_wrapper .dt-buttons .btntabletopdf').click();
       //     $(".fullScreenSpin").css("display", "none");
       //   },
-    });
+});
 
 Template.internal_transaction_list_with_switchbox.helpers({
   transactiondatatablerecords: () => {

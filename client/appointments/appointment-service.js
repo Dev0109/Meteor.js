@@ -83,6 +83,15 @@ export class AppointmentService extends BaseService {
         return this.getList(this.ERPObjects.TAppointment, options);
     }
 
+    getAllAppointmentListCount2(){
+        let options = {
+            PropertyList: "ID",
+            orderby:'"AppointID desc"',
+            LimitCount:100,
+        };
+        return this.getList(this.ERPObjects.TAppointment, options);
+    }
+
     getOneAppointmentdataEx(id) {
 
         return this.getOneById(this.ERPObjects.TAppointment, id);

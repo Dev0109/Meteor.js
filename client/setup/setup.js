@@ -26,6 +26,7 @@ const utilityService = new UtilityService();
 
 const refreshTableTimout = 300;
 
+let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
 /**
  * This will get the TCompanyInfo
  * @returns {Object}
@@ -56,7 +57,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
     let ERPPassword = localStorage.getItem('EPassword');
     let ERPDatabase = localStorage.getItem('EDatabase');
     let ERPPort = localStorage.getItem('EPort');
-    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`;
+    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID`; //,IsSetUpWizard
     const _headers = {
         database: ERPDatabase,
         username: ERPUsername,
@@ -69,8 +70,10 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
           if(result.data != undefined) {
             if( result.data.tcompanyinfo.length > 0 ){
               let data = result.data.tcompanyinfo[0];
-              localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-              if(data.IsSetUpWizard == true) {
+              let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+              let bSetupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
+              localStorage.setItem("IS_SETUP_FINISHED", bSetupFinished); //data.IsSetUpWizard
+              if(bSetupFinished == true) { // data.IsSetUpWizard
                 window.open(onSetupFinished, '_self');
               } else {
                 window.open(onSetupUnFinished, '_self');
@@ -122,7 +125,7 @@ function MakeNegative() {
   });
 }
 
-const numberOfSteps = 10;
+const numberOfSteps = confirmStepCount + 1;
 
 
 function setAlreadyLoaded(step, bool = false) {
@@ -154,10 +157,7 @@ function getConfirmedSteps() {
 }
 
 function setConfirmedSteps(steps = []) {
-  return localStorage.setItem(
-    "VS1Cloud_SETUP_CONFIRMED_STEPS",
-    JSON.stringify(steps)
-  );
+  return localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", JSON.stringify(steps));
 }
 
 function addConfirmedStep(step) {
@@ -198,10 +198,7 @@ function addSkippedStep(step) {
 }
 
 function setSkippedSteps(steps = []) {
-  return localStorage.setItem(
-    "VS1Cloud_SETUP_SKIPPED_STEP",
-    JSON.stringify(steps)
-  );
+  return localStorage.setItem("VS1Cloud_SETUP_SKIPPED_STEP", JSON.stringify(steps));
 }
 
 /**
@@ -393,17 +390,19 @@ Template.setup.onRendered(function () {
         clickable: !isClickableStep(i),
         isConfirmed: isStepConfirm,
         skippedSteps: isStepSkipped(i),
+        title: stepTitles[i - 1]
       });
 
       setAlreadyLoaded(i, false);
     }
     _steps.push({
-      id: 10,
-      index: 10,
-      active: ( getCurrentStep() == 10 ) ? true : false,
-      clickable: !isClickableStep(10),
+      id: numberOfSteps,
+      index: numberOfSteps,
+      active: ( getCurrentStep() == numberOfSteps) ? true : false,
+      clickable: !isClickableStep(numberOfSteps),
       isConfirmed: ( remainingSteps == 0 ) ? true : false,
-      skippedSteps: isStepSkipped(10),
+      skippedSteps: isStepSkipped(numberOfSteps),
+      title: stepTitles[numberOfSteps - 1]
     });
     templateObject.steps.set(_steps);
   };
@@ -455,26 +454,32 @@ Template.setup.onRendered(function () {
     let data = await organisationService.getOrganisationDetail();
     let companyInfo = data.tcompanyinfo[0];
 
-    companyInfo.IsSetUpWizard = true;
-    getVS1Data('vscloudlogininfo').then(function (dataObject) {
-      if(dataObject.length == 0){
-      }else{
-        dashboardArray = dataObject[0].data;
-        dashboardArray.ProcessLog.ClientDetails.ProcessLog.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard = true;
-        addLoginData(dashboardArray).then(function (datareturnCheck) {
+    let allStepsConfirmed = false;
+    let confirmedSteps = getConfirmedSteps();
+    let arrConfirmedSteps = JSON.parse(confirmedSteps);
+    let cntConfirmedSteps = arrConfirmedSteps.length;
+    if (cntConfirmedSteps == confirmStepCount)
+      allStepsConfirmed = true;
+    companyInfo.Address3 = cntConfirmedSteps.toString();
+    // getVS1Data('vscloudlogininfo').then(function (dataObject) {
+    //   if(dataObject.length == 0){
+    //   }else{
+    //     dashboardArray = dataObject[0].data;
+    //     dashboardArray.ProcessLog.ClientDetails.ProcessLog.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard = true;
+    //     addLoginData(dashboardArray).then(function (datareturnCheck) {
 
-        }).catch(function (err) {
+    //     }).catch(function (err) {
 
-        });
-      };
-    });
+    //     });
+    //   };
+    // });
 
     await organisationService.saveOrganisationSetting({
       type: "TCompanyInfo",
       fields: companyInfo,
     });
 
-    localStorage.setItem("IS_SETUP_FINISHED", true);
+    localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
     // window.location.href = "/";
     FlowRouter.go("dashboard");
@@ -505,11 +510,14 @@ Template.setup.onRendered(function () {
     let companyName = mainData.CompanyName;
     let postalAddress =
       mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
+    // let physicalAddress =
+    //   mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
     let physicalAddress =
-      mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
+      mainData.Address + "\n" + mainData.Address2;
     templateObject.samePhysicalAddress1.set(mainData.Address);
     templateObject.samePhysicalAddress2.set(mainData.Address2);
-    templateObject.samePhysicalAddress3.set(mainData.Address3);
+    // templateObject.samePhysicalAddress3.set(mainData.Address3);
+    templateObject.samePhysicalAddress3.set("");
 
     $("#displayname").val(mainData.CompanyName);
     $("#tradingname").val(mainData.TradingName);
@@ -4326,6 +4334,8 @@ Template.setup.onRendered(function () {
         case 9:
           templateObject.loadInventory();
           break;
+        case 10:
+          break;
         default:
         // code block
       }
@@ -4442,7 +4452,6 @@ Template.setup.events({
   },
   "click .gotToStepID": (event, templateObj) => {
     const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
-
     $(".setup-step").removeClass("show");
     $(`.setup-step-${stepId}`).addClass("show");
 
@@ -5119,6 +5128,8 @@ Template.setup.events({
     let taxName = $("#edtTaxName").val();
     let taxDesc = $("#edtTaxDesc").val();
     let taxRate = parseFloat($("#edtTaxRate").val() / 100);
+    let regionName = Session.get('vs1companyCountry');
+    
     let objDetails = "";
     if (taxName === "") {
       Bert.alert(
@@ -5143,6 +5154,7 @@ Template.setup.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
+              RegionName: regionName,
             },
           };
           taxRateService
@@ -5189,6 +5201,7 @@ Template.setup.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
+              RegionName: regionName,
             },
           };
 

@@ -15,7 +15,7 @@
                     </style>
                 </h2>
             </header>
-            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+            <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                 <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">
                     <div class="modal-content">
@@ -126,9 +126,7 @@
                 </div>
 
                 <div class="col">
-                    <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
-                    <button class="btn btn-primary printConfirm float-right" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                    {{> export_import_print_display_button tablename="tblProcessList"}}
                 </div>
             </div>
 
@@ -169,14 +167,12 @@
                               background-color: #e74a3b !important; color:#fff;
                             }
 
-
-
                             .table-responsive .table-bordered {
                                 border: 1px solid #e3e6f0;
                             }
 
                         </style>
-                        <table id="tblProcessList" name="tblProcessList" style="width: 100%" class="dataTable table table-hover table-striped table-bordered tblProcessList">
+                        <!-- <table id="tblProcessList" name="tblProcessList" style="width: 100%" class="dataTable table table-hover table-striped table-bordered tblProcessList">
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th colName">Name</th>
@@ -211,7 +207,8 @@
                                 {{/each}}
                                 {{/if}}
                             </tbody>
-                        </table>
+                        </table> -->
+                        {{> non_transactional_list tablename="tblProcessList"}}
                     </div>
                 </div>
             </div>

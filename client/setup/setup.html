@@ -54,7 +54,7 @@
         .addEmployeeModalNew .row.no-gutters .chkaddress {
             width: auto !important;
         }
-        #btnAddPaymentMethod .custom-control.custom-checkbox.chkBox .custom-control-label,
+        #btnAddPaymentMethod .custom-control.custom-switch.chkBox .custom-control-label,
         .addEmployeeModalNew .row.no-gutters .chkaddress .custom-control-label {
             position: relative;
         }
@@ -174,17 +174,6 @@
             content: " (closed)";
         }
 
-        #phoneUSA {
-            display: none;
-        }
-
-        #phoneAUS {
-            display: none;
-        }
-
-        #phoneSA {
-            display: none;
-        }
 
         #iconAUS {
             display: none;
@@ -237,7 +226,7 @@
                                 {{#if step.isConfirmed}} completed {{/if}}
                                 {{#if step.isSkipStep}} skipped {{/if}}">
 
-                                <div class="content"><a class="gotToStepID {{#if step.clickable}} clickDisabled {{/if}}" data-step-id="{{step.id}}" href="">Step {{step.index}}</a></div></li>
+                                <div class="content"><a class="gotToStepID {{#if step.clickable}} clickDisabled {{/if}}" data-step-id="{{step.id}}" href=""><!--Step -->{{step.title}}</a></div></li>
                             {{/each}}
                         {{/if}}
 
@@ -479,7 +468,7 @@
 
                                                                             <div class="custom-control custom-control-inline custom-switch" style="margin-right: -6px; height: 24px !important;">
                                                                                 <div class="form-group" style="margin-bottom: 7px;">
-                                                                                    <input class="custom-control-input" type="checkbox" id="chkIsDefailtEmail" name="chkIsDefailtEmail">
+                                                                                    <input class="custom-control-input" type="radio" id="chkIsDefailtEmail" name="chkIsDefailtEmail">
                                                                                     <label class="custom-control-label" for="chkIsDefailtEmail"></label>
                                                                                 </div>
                                                                             </div>
@@ -571,7 +560,7 @@
                                                         <h4 class="text-left" style="margin-top: 20px;">Postal Address</h4>
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch d-xl-flex justify-content-xl-start">
-                                                                <input class="custom-control-input" type="checkbox" id="chksameaddress" name="chksameaddress" style="cursor: pointer;" checked>
+                                                                <input class="custom-control-input" type="radio" id="chksameaddress" name="chksameaddress" style="cursor: pointer;" checked>
                                                                 <label class="custom-control-label" for="chksameaddress" style="cursor: pointer;">Same As Physical Address</label>
                                                             </div>
 
@@ -902,7 +891,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <table id="taxRatesTable" style="width:100%" class="dataTable table table-hover table-striped table-bordered taxRatesTable">
                                                             <thead>
                                                                 <tr class="dnd-moved">
@@ -1124,9 +1112,9 @@
                                                                                 <div class="col d-xl-flex align-items-xl-end">
                                                                                     <div class="form-group flex-grow-1" style="margin: 8px;">
                                                                                         {{#if equals includeCreditCard true}}
-                                                                                        <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="isformcreditcard" name="isformcreditcard" checked><label class="custom-control-label chkBox" for="isformcreditcard">Is Credit card?</label></div>
+                                                                                        <div class="custom-control custom-switch chkBox"><input class="custom-control-input chkBox" type="radio" id="isformcreditcard" name="isformcreditcard" checked><label class="custom-control-label chkBox" for="isformcreditcard">Is Credit card?</label></div>
                                                                                         {{else}}
-                                                                                        <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="isformcreditcard" name="isformcreditcard"><label class="custom-control-label chkBox" for="isformcreditcard">Is Credit card?</label></div>
+                                                                                        <div class="custom-control custom-switch chkBox"><input class="custom-control-input chkBox" type="radio" id="isformcreditcard" name="isformcreditcard"><label class="custom-control-label chkBox" for="isformcreditcard">Is Credit card?</label></div>
                                                                                         {{/if}}
                                                                                     </div>
                                                                                 </div>
@@ -1213,9 +1201,9 @@
                                                                     <!-- <td contenteditable="false" class="colIsCreditCard">{{item.iscreditcard}}</td> -->
                                                                     <td contenteditable="false" class="colIsCreditCard text-center" >
                                                                         {{#if equals item.iscreditcard true}}
-                                                                        <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-{{item.id}}" checked><label class="custom-control-label chkBox" for="iscreditcard-{{item.id}}"></label></div>
+                                                                        <div class="custom-control custom-switch chkBox"><input class="custom-control-input chkBox" type="radio" id="iscreditcard-{{item.id}}" checked><label class="custom-control-label chkBox" for="iscreditcard-{{item.id}}"></label></div>
                                                                         {{else}}
-                                                                        <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-{{item.id}}"><label class="custom-control-label chkBox" for="iscreditcard-{{item.id}}"></label></div>
+                                                                        <div class="custom-control custom-switch chkBox"><input class="custom-control-input chkBox" type="radio" id="iscreditcard-{{item.id}}"><label class="custom-control-label chkBox" for="iscreditcard-{{item.id}}"></label></div>
                                                                         {{/if}}
                                                                     </td>
                                                                     <td contenteditable="false" class="colDelete"><span class="table-remove-payment-method"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
@@ -1279,7 +1267,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <input type="checkbox" class="custom-control-input feeOnTopInput chargeCheckBox" id="feeOnTopInput" checked/>
+                                                                <input type="radio" class="custom-control-input feeOnTopInput chargeCheckBox" id="feeOnTopInput" checked/>
                                                                 <label style="width: 275px;" class="custom-control-label" for="feeOnTopInput">Apply online payment fee to total.</label>
                                                             </div>
                                                         </div>
@@ -1303,7 +1291,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <input type="checkbox" class="custom-control-input feeInPriceInput chargeCheckBox" id="feeInPriceInput" />
+                                                                <input type="radio" class="custom-control-input feeInPriceInput chargeCheckBox" id="feeInPriceInput" />
                                                                 <label style="width: 275px;" class="custom-control-label" for="feeInPriceInput">Include online payment fee in total.</label>
                                                             </div>
                                                         </div>
@@ -1478,7 +1466,7 @@
                                                     margin: 16px 0px;
                                                 }
                                                 @media only screen and (max-width: 480px) {
-                                                    #myModal .custom-checkbox{
+                                                    #myModal .custom-switch{
                                                         text-align: left!important;
                                                     }
                                                 }
@@ -1540,11 +1528,11 @@
                                                             <td contenteditable="false" class="colIsDays clickable">{{item.termdays}}</td>
                                                             <td contenteditable="false" class="colIsEOM text-center" >
 
-                                                                <div class="custom-control custom-checkbox chkBox">
+                                                                <div class="custom-control custom-switch chkBox">
                                                                     {{#if equals item.iseom true}}
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="iseom-{{item.id}}" checked disabled>
+                                                                        <input class="custom-control-input chkBox" type="radio" id="iseom-{{item.id}}" checked disabled>
                                                                     {{else}}
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="iseom-{{item.id}}" disabled>
+                                                                        <input class="custom-control-input chkBox" type="radio" id="iseom-{{item.id}}" disabled>
                                                                     {{/if}}
                                                                     <label class="custom-control-label chkBox" for="iseom-{{item.id}}"></label>
                                                                 </div>
@@ -1552,13 +1540,13 @@
                                                             </td>
                                                             <td contenteditable="false" class="colIsEOMPlus text-center" >
                                                                 {{#if equals item.iseomplus true}}
-                                                                    <div class="custom-control custom-checkbox chkBox">
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="iseomplus-{{item.id}}" checked disabled>
+                                                                    <div class="custom-control custom-switch chkBox">
+                                                                        <input class="custom-control-input chkBox" type="radio" id="iseomplus-{{item.id}}" checked disabled>
                                                                         <label class="custom-control-label chkBox" for="iseomplus-{{item.id}}"></label>
                                                                     </div>
                                                                 {{else}}
-                                                                    <div class="custom-control custom-checkbox chkBox">
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="iseomplus-{{item.id}}" disabled>
+                                                                    <div class="custom-control custom-switch chkBox">
+                                                                        <input class="custom-control-input chkBox" type="radio" id="iseomplus-{{item.id}}" disabled>
                                                                         <label class="custom-control-label chkBox" for="iseomplus-{{item.id}}"></label>
                                                                     </div>
                                                                 {{/if}}
@@ -1566,31 +1554,31 @@
                                                             <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                             <td contenteditable="false" class="colCustomerDef text-center" >
                                                                 {{#if equals item.isSalesdefault true}}
-                                                                    <div class="custom-control custom-checkbox chkBox">
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-{{item.id}}" checked disabled>
+                                                                    <div class="custom-control custom-switch chkBox">
+                                                                        <input class="custom-control-input chkBox" type="radio" id="isSalesdefault-{{item.id}}" checked disabled>
                                                                         <label class="custom-control-label chkBox" for="isSalesdefault-{{item.id}}"></label>
                                                                     </div>
                                                                 {{else}}
-                                                                    <div class="custom-control custom-checkbox chkBox">
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-{{item.id}}" disabled>
+                                                                    <div class="custom-control custom-switch chkBox">
+                                                                        <input class="custom-control-input chkBox" type="radio" id="isSalesdefault-{{item.id}}" disabled>
                                                                         <label class="custom-control-label chkBox" for="isSalesdefault-{{item.id}}"></label>
                                                                     </div>
                                                                 {{/if}}
-                                                                <!-- <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="colCustomerDef-{{item.id}}"><label class="custom-control-label chkBox" for="colCustomerDef-{{item.id}}"></label></div> -->
+                                                                <!-- <div class="custom-control custom-switch chkBox"><input class="custom-control-input chkBox" type="radio" id="colCustomerDef-{{item.id}}"><label class="custom-control-label chkBox" for="colCustomerDef-{{item.id}}"></label></div> -->
                                                             </td>
                                                             <td contenteditable="false" class="colSupplierDef text-center" >
                                                                 {{#if equals item.isPurchasedefault true}}
-                                                                    <div class="custom-control custom-checkbox chkBox">
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="isPurchasedefault-{{item.id}}" checked disabled>
+                                                                    <div class="custom-control custom-switch chkBox">
+                                                                        <input class="custom-control-input chkBox" type="radio" id="isPurchasedefault-{{item.id}}" checked disabled>
                                                                         <label class="custom-control-label chkBox" for="isPurchasedefault-{{item.id}}"></label>
                                                                     </div>
                                                                 {{else}}
-                                                                    <div class="custom-control custom-checkbox chkBox">
-                                                                        <input class="custom-control-input chkBox" type="checkbox" id="isPurchasedefault-{{item.id}}" disabled>
+                                                                    <div class="custom-control custom-switch chkBox">
+                                                                        <input class="custom-control-input chkBox" type="radio" id="isPurchasedefault-{{item.id}}" disabled>
                                                                         <label class="custom-control-label chkBox" for="isPurchasedefault-{{item.id}}"></label>
                                                                     </div>
                                                                 {{/if}}
-                                                                <!-- <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="colSupplierDef-{{item.id}}"><label class="custom-control-label chkBox" for="colSupplierDef-{{item.id}}"></label></div> -->
+                                                                <!-- <div class="custom-control custom-switch chkBox"><input class="custom-control-input chkBox" type="radio" id="colSupplierDef-{{item.id}}"><label class="custom-control-label chkBox" for="colSupplierDef-{{item.id}}"></label></div> -->
                                                             </td>
                                                             <td contenteditable="false" class="colDelete"><span class="table-remove-term"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
                                                         </tr>
@@ -3261,6 +3249,23 @@
                     </div>
                 </div>
                 <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}" >
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card shadow" style="padding-top: 30px; padding-left: 20%; padding-bottom: 30px;">
+                                    {{> dashboardoptionspopup}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="10">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
+                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="10">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setup-step setup-step-11 {{#if isActive currentStep '11'}} show {{/if}}" >
                    <!-- {{#if setupFinished }}
                         <div class="first-page-container" style="margin: auto;">
                             <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png"/></div>

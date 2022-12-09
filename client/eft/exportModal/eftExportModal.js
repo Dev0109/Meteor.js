@@ -488,7 +488,7 @@ Template.eftExportModal.events({
     playSaveAudio();
     setTimeout(function () {
       let sltAccountType = $('#sltAccountType').val();
-      let sltBankName = $('#sltBankName').val();
+      let sltBankName = $('#sltBankAccountName').val();
       let eftProcessingDate = $('#eftProcessingDate').val();
       let eftUserName = $('#eftUserName').val();
       let eftNumberUser = $('#eftNumberUser').val();

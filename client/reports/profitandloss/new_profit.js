@@ -1,5 +1,4 @@
 import { ReportService } from "../report-service";
-import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import layoutEditor from "./layoutEditor";
 import ApiService from "../../js/Api/Module/ApiService";
@@ -15,6 +14,10 @@ import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import TemplateInjector from "../../TemplateInjector";
+import 'jquery-ui-dist/external/jquery/jquery';
+import 'jquery-ui-dist/jquery-ui';
+import "jQuery.print/jQuery.print.js";
+import { jsPDF } from "jspdf";
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -1012,51 +1015,148 @@ Template.newprofitandloss.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_")
-        // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+    setTimeout( async function(){
+      let targetElement = document.getElementsByClassName('printReport')[0];
+    
+      targetElement.style.display = "block";
+      targetElement.style.width = "210mm";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "20px";
+      targetElement.style.height = "fit-content";
+      targetElement.style.fontSize = "13.33px";
+      targetElement.style.color = "#000000";
+      targetElement.style.overflowX = "visible";
+      let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
+      let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
+      for (let k = 0; k< targetTds.length; k++) {
+          $(targetTds[k]).attr('style', 'min-width: 0px !important')
       }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("129")) {
-            reportData.FormID = 129;
-            Meteor.call("sendNormalEmail", reportData);
+      for (let j = 0; j< targetThs.length; j++) {
+          $(targetThs[j]).attr('style', 'min-width: 0px !important')
+      }
+      let trs = $(targetElement).find('.customProfitLossTable #tableExport.table.textCenterAlign tr')
+      for(let m = 0; m< trs.length; m++) {
+          let tds = $(trs[m]).find('td');
+          for(let n = 0; n< tds.length; n++ ) {
+              if($(tds[n]).is(':first-child') == true) {
+                  $(tds[n]).attr('style', 'min-width: 10px !important; width: 60px !important; padding: 0px 5px !important; white-space: unset')
+              }else {
+                  $(tds[n]).attr('style', 'min-width: 10px !important; padding: 0px 5px !important; white-space: unset')
+              }
           }
-        } else {
-          if (reportData.FormID == 129)
-            Meteor.call("sendNormalEmail", reportData);
-        }
+          let ths = $(trs[m]).find('th');
+          for(let n = 0; n< ths.length; n++ ) {
+              if($(ths[n]).hasClass('textLeftTxt') == true) {
+                  $(ths[n]).attr('style', 'min-width: 10px !important; width: 60px !important; padding: 0px 5px !important; white-space: unset')
+              }else {
+                  $(ths[n]).attr('style', 'min-width: 10px !important; padding: 0px 5px !important; white-space: unset')
+              }
+          }
       }
-    });
 
-    document.title = "Profit and Loss Report";
-    $(".printReport").print({
-      title: document.title + " | Profit and Loss | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor, .excludeButton",
-      exportOptions: {
-        stripHtml: false,
-      },
-    });
-  }, delayTimeAfterSound);
+
+      var opt = {
+        margin: 0,
+        filename: "Profit and Loss Report.pdf",
+        image: {
+            type: 'jpeg',
+            quality: 0.98
+        },
+        html2canvas: {
+            scale: 2
+        },
+        jsPDF: {
+            unit: 'in',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+      };
+      let source = targetElement;
+
+      async function getAttachments () {
+        return new Promise(async(resolve, reject)=> {
+          html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
+            let pdfObject = "";
+            let base64data = dataObject.split(',')[1];
+            pdfObject = {
+              filename: "profit and loss report.pdf",
+              content: base64data,
+              encoding: 'base64'
+            }
+            let attachments = [];
+            attachments.push(pdfObject);
+            resolve(attachments)
+          })
+        })
+      }
+
+      async function checkBasedOnType() {
+        return new Promise(async(resolve, reject)=>{
+          
+          let values = [];
+          let basedOnTypeStorages = Object.keys(localStorage);
+          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split("_")[2];
+            return (
+              storage.includes("BasedOnType_")
+              // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+            );
+          });
+          let i = basedOnTypeStorages.length;
+          if (i > 0) {
+            while (i--) {
+              values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+          }
+          for (let j = 0; j<values.length; j++) {
+            let value = values[j]
+            let reportData = JSON.parse(value);
+            reportData.HostURL = $(location).attr("protocal")
+              ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+              : "http://" + $(location).attr("hostname");
+            if (reportData.BasedOnType.includes("P")) {
+              if (reportData.FormID == 1) {
+                let formIds = reportData.FormIDs.split(",");
+                if (formIds.includes("129")) {
+                  reportData.FormID = 129;
+                  reportData.attachments = await getAttachments();
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              } else {
+                if (reportData.FormID == 129) {
+                  reportData.attachments = await getAttachments();
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+
+                }
+              }
+            }
+            if(j == values.length -1) {resolve()}
+          }
+          
+        })
+      }
+      await checkBasedOnType();
+      $('.fullScreenSpin').css('display', 'none')
+      document.title = "Profit and Loss Report";
+      $(".printReport").print({
+        title: document.title + " | Profit and Loss | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor, .excludeButton",
+        exportOptions: {
+          stripHtml: false,
+        },
+      });
+      targetElement.style.width = "100%";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "0px";
+      targetElement.style.fontSize = "1rem";
+
+    
+    }, delayTimeAfterSound);
   },
   "click .btnExportReportProfit": function () {
     $(".fullScreenSpin").css("display", "inline-block");

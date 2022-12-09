@@ -30,7 +30,6 @@ Template.customfieldformpop.onCreated(function () {
 });
 
 Template.customfieldformpop.onRendered(function () {
-  $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
   const dataTableList = [];

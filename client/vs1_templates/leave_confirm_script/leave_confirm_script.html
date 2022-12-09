@@ -1,0 +1,30 @@
+<template name="leave_confirm_script">
+    <script>
+        window.addEventListener("beforeunload", function (e) {
+            // if you want to make leave or no leave
+            const current_link_splits = window.location.href.split("/");
+            const current_link = current_link_splits[current_link_splits.length - 1];
+            const allowed_links = ["basreturn", "depositcard", "chequecard", "newbankrule", "fixedassetcard",
+                "customerscard", "employeescard", "leadscard", "supplierscard", "journalentrycard",
+                "bomsetupcard", "workordercard", "servicelogcard", "processcard", "stockadjustmentcard",
+                "paymentcard", "supplierpaymentcard", "purchaseordercard", "billcard", "creditcard", "allreports",
+                "quotecard", "salesordercard", "invoicecard", "refundcard"
+            ];
+
+            if (allowed_links.every((allowed_link) => !current_link.includes(allowed_link))) {
+                window.removeEventListener("beforeunload");
+            }
+            const confirmationMessage = 'It looks like you have been editing something. '
+                    + 'If you leave before saving, your changes will be lost.';
+
+            (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+            return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+        });
+
+            window.onunload = function(event) {
+                //TODO when page close make log out
+                // window.open('/', '_self');
+                // localStorage.clear();
+            }
+    </script>
+</template>

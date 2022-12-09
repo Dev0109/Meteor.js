@@ -414,16 +414,10 @@ Template.allChartLists.onRendered(function() {
             // the goal here is to get the right names so it can be used for preferences
             setTimeout(() => {
                 chartList.forEach((chart) => {
-                    chart.fields._chartSlug =
-                        chart.fields.ChartGroup.toLowerCase() +
-                        "__" +
-                        chart.fields.ChartName.toLowerCase().split(" ").join("_");
+                    chart.fields._chartSlug = chart.fields.ChartGroup.toLowerCase() + "__" + chart.fields.ChartName.toLowerCase().split(" ").join("_");
                     $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
                     $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-id",
-                        chart.fields.ID
-                    );
+                    $(`[key='${chart.fields._chartSlug}']`).attr("chart-id",chart.fields.ID);
                     // Default charts
                     let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
                     let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');

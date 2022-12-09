@@ -1289,7 +1289,11 @@ Template.accountsoverview.onRendered(function() {
                     if (showTrans == "true") {
                         $(".showOnTransactions").prop("checked", true);
                     } else {
-                        $(".showOnTransactions").prop("checked", false);
+                        if (accountname == "Bank" || accountname == "BANK" || accounttype == "Bank" || accounttype == "BANK") {
+                            $(".showOnTransactions").prop("checked", true);
+                        } else {
+                            $(".showOnTransactions").prop("checked", false);
+                        }
                     }
                     let useReceiptClaim = $(event.target).closest("tr").find(".colUseReceiptClaim").attr("checkheader") || false;
                     if (useReceiptClaim == "true") {
@@ -1443,20 +1447,21 @@ Template.accountsoverview.onRendered(function() {
     //     $("#taxRateListModal").modal("toggle");
     //   });
     // });
-    templateObject.checkSetupWizardFinished = async function () {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
-        if( setupFinished === null || setupFinished ===  "" ){
-            let setupInfo = await organisationService.getSetupInfo();
-            if( setupInfo.tcompanyinfo.length > 0 ){
-                let data = setupInfo.tcompanyinfo[0];
-                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-                templateObject.setupFinished.set(data.IsSetUpWizard)
-            }
-        }else{
-            templateObject.setupFinished.set(setupFinished)
-        }
-    }
-    templateObject.checkSetupWizardFinished();
+    // templateObject.checkSetupWizardFinished = async function () {
+    //     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+    //     if( setupFinished === null || setupFinished ===  "" ){
+    //         let setupInfo = await organisationService.getSetupInfo();
+    //         if( setupInfo.tcompanyinfo.length > 0 ){
+    //             let data = setupInfo.tcompanyinfo[0];
+    //             localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+    //             templateObject.setupFinished.set(data.IsSetUpWizard)
+    //         }
+    //     }else{
+    //         templateObject.setupFinished.set(setupFinished)
+    //     }
+    // }
+    // templateObject.checkSetupWizardFinished();
+    checkSetupFinished();
     tableResize();
 });
 

@@ -653,10 +653,28 @@ Template.new_workorder.events({
                 for(let k = 0; k< bomStructure.subs.length; k++) {
                     let subs = bomStructure.subs[k];
                     if(subs.isBuild == true) {
+                        async function getProductionPlanData() {
+                            return new Promise(async(resolve, reject)=>{
+                                let returnVal = [];
+                                getVS1Data('TProductionPlanData').then(function(dataObject) {
+                                    if(dataObject.length == 0) {
+                                        resolve(returnVal)
+                                    }else {
+                                        returnVal = JSON.parse(dataObject[0].data.tproductionplandata[0].fields.events);
+                                        if(returnVal == undefined) {
+                                            returnVal = [];
+                                        }
+                                        resolve(returnVal)
+                                    }
+                                }).catch(function(e) {
+                                    resolve(returnVal)
+                                })
+                            }) 
+                        }
                         async function saveOneSubOrder() {
                             return new Promise(async(resolve, reject)=>{
                                 let subProductName = subs.productName;
-                                let plans = localStorage.getItem('TProductionPlan')?JSON.parse(localStorage.getItem('TProductionPlan')):[];
+                                let plans = await getProductionPlanData();
                                 let tempPlans = JSON.parse(JSON.stringify(plans));
                                 tempPlans = tempPlans.filter(plan=>plan.resourceName == subs.process);
                                 let subStart = new Date();
@@ -1521,8 +1539,9 @@ Template.new_workorder.events({
                             }).then(function(){
                                 $('.fullScreenSpin').css('display', 'none')
                                 sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                    addVS1Data('TProductVS1',JSON.stringify(data));
-                                    swal('Process Completed', '', 'success');
+                                    addVS1Data('TProductVS1',JSON.stringify(data)).then(function() {
+                                        swal('Process Completed', '', 'success');
+                                    });
                                 })
                             })
                         })
@@ -1541,8 +1560,9 @@ Template.new_workorder.events({
                                 }).then(function(){
                                     $('.fullScreenSpin').css('display', 'none')
                                     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                        addVS1Data('TProductVS1',JSON.stringify(data));
-                                        swal('Process Completed', '', 'success');
+                                        addVS1Data('TProductVS1',JSON.stringify(data)).then(function(){
+                                            swal('Process Completed', '', 'success');
+                                        });
                                     })
                                 })
                             }
@@ -1561,8 +1581,9 @@ Template.new_workorder.events({
                         }).then(function(){
                             $('.fullScreenSpin').css('display', 'none')
                             sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                addVS1Data('TProductVS1',JSON.stringify(data));
-                                swal('Process Completed', '', 'success');
+                                addVS1Data('TProductVS1',JSON.stringify(data)).then(function() {
+                                    swal('Process Completed', '', 'success');
+                                });
                             })
                         })
                     })

@@ -14,6 +14,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
+import { EftService } from "../../eft/eft-service"
 
 
 let sideBarService = new SideBarService();
@@ -97,6 +98,115 @@ Template.supplierpaymentcard.onRendered(() => {
     yearRange: "-90:+10",
   });
 
+  templateObject.saveAddToEft = function (data) { 
+    let paymentAmt = $("#edtPaymentAmount").val(); 
+
+    let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
+    let reference = $("#edtReference").val(); 
+
+    let colAccountID = $("#colAccountID").val(); 
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    let employeeName = Session.get("mySessionEmployee");
+
+    let lines = templateObject.outstandingExpenses.get();
+    let eftService = new EftService();
+
+    let descRecord = {
+      type: "TABADescriptiveRecord",
+      fields: {
+        "AccountID": data.ID, 
+        "DirectEntryUserID": employeeID.toString(),
+        "DirectEntryUserName": employeeName, 
+        // "TransactionDescription": "Payroll",
+        "UserBankName": bankAccount
+      }
+    }
+    eftService.saveTABADescriptiveRecord(descRecord).then(function (data) {
+    })
+    .catch(function (err) {
+    });
+
+    for (let index = 0; index < lines.length; index++) {
+      const line = lines[index];
+      let detailRecord = {
+        type: "TABADetailRecord",
+        fields: {
+          "AccountID": data.ID,
+          "AccountName": bankAccount,
+          "Amount": parseFloat(line.paymentAmount.replace(/[^0-9.-]+/g, "")) || 0, 
+          "BSB": data.BSB,
+          "CreditDebitAccountNumber": line.receiptNo, 
+          "LodgementReferences": reference,  
+          "TransactionCode": "53",
+          "TransCodeDesc": "Pay",
+          "TransID": line.awaitingId,
+          "TransType": line.type,
+          "UsersAccountNumber": "",
+          "UsersBSB": ""
+        }
+      }
+      eftService.saveTABADetailRecord(detailRecord).then(function (data) {
+      })
+      .catch(function (err) {
+      });
+    }
+  }
+
+  templateObject.prepareSaveAddToEft = function (accountDataName) {
+    let accountService = new AccountService();
+
+    getVS1Data("TAccountVS1")
+    .then(function (dataObject) {
+      if (dataObject.length == 0) {
+        accountService
+          .getOneAccountByName(accountDataName)
+          .then(function (data) {
+            templateObject.saveAddToEft(data.taccountvs1[0].fields);
+          })
+          .catch(function (err) {
+          });
+      } else {
+        let data = JSON.parse(dataObject[0].data); 
+        let filterdata = data.taccountvs1.filter(item => item.fields.AccountName === accountDataName);
+        if (filterdata.length) {
+          templateObject.saveAddToEft(filterdata[0].fields);
+        } else {
+          accountService
+            .getOneAccountByName(accountDataName)
+            .then(function (data) {
+              templateObject.saveAddToEft(data.taccountvs1[0].fields);
+            })
+            .catch(function (err) {
+            });
+        }
+      }
+    })
+    .catch(function (err) {
+    });
+  }
+
+  templateObject.fillBankInfoFromUrl = function () {
+    var queryParams = FlowRouter.current().queryParams;
+    if(queryParams.bank) {
+      let edtBankName = queryParams.edtBankName;
+      let edtBankAccountName = queryParams.edtBankAccountName;
+      let edtBSB = queryParams.edtBSB;
+      let edtBankAccountNo = queryParams.edtBankAccountNo;
+      let swiftCode = queryParams.swiftCode;
+      let apcaNo = queryParams.apcaNo;
+      let routingNo = queryParams.routingNo;
+      let sltBankCodes = queryParams.sltBankCodes;
+      $('#tab-6').click();
+      $('#edtBankName').val(edtBankName)
+      $('#edtBankAccountName').val(edtBankAccountName)
+      $('#edtBsb').val(edtBSB)
+      $('#edtBankAccountNumber').val(edtBankAccountNo)
+      $('#edtSwiftCode').val(swiftCode)
+      $('#edtRoutingNumber').val(routingNo)
+      // $('#sltCurrency').val()
+    }
+  }
+  templateObject.fillBankInfoFromUrl();
 
   // /**
   //  * Lets load the default currency
@@ -122,10 +232,24 @@ Template.supplierpaymentcard.onRendered(() => {
   templateObject.fetchSupplierPayment = async function () {
       let supplierPaymentData = await getVS1Data('TSupplierPayment');
       if( supplierPaymentData.length > 0 ){
-        var getsale_id = url.split("?id=");
+
+        var getsale_id = url.split("?billid=");
         var currentSalesID = getsale_id[getsale_id.length - 1];
         let paymentID = parseInt(currentSalesID);
         let useData = JSON.parse( supplierPaymentData[0].data );
+
+        if(paymentID > 0) {
+            curcode = Session.get("tempCurrencyState");
+            currate = Session.get("tempExchangeRateState");
+            $("#sltCurrency").val(curcode);
+            $("#exchange_rate").val(currate);
+
+            curcode = convertToForeignAmount($("#edtPaymentAmount").val(), currate, Currency);
+            $("#edtForeignAmount").val(curcode);
+            $("#sltCurrency").trigger("change");
+            //FxGlobalFunctions.handleChangedCurrency(Session.get("tempCurrencyState"), defaultCurrencyCode);
+        }
+
         if( useData.tsupplierpayment.length > 0 ){
           let suppPayment =  useData.tsupplierpayment.filter(function( item ){
               if( item.fields.ID == paymentID ){
@@ -134,7 +258,6 @@ Template.supplierpaymentcard.onRendered(() => {
           });
           if( suppPayment.length > 0 ){
             $('#sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
-
             $('#exchange_rate').val(suppPayment[0].fields.ForeignExchangeRate);
           }
         }
@@ -2090,21 +2213,16 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#paymentMethodModal").modal("toggle");
   });
 
-  $(document).on("click", "#tblAccount tbody tr", function (e) {
-    //$(".colProductName").removeClass('boldtablealertsborder');
-    let selectLineID = $("#selectLineID").val();
-    var table = $(this);
-    let utilityService = new UtilityService();
-    let $tblrows = $("#tblStockAdjustmentLine tbody tr");
+  $(document).on("click", "#tblAccount tbody tr", function (e) { 
+    var table = $(this); 
 
+    let colAccountID = table.find(".colAccountID").text();
     let accountname = table.find(".productName").text();
     $("#accountListModal").modal("toggle");
+
     $("#edtSelectBankAccountName").val(accountname);
     $("#sltBankAccountName").val(accountname);
-    
-    if ($tblrows.find(".lineProductName").val() == "") {
-      //$tblrows.find(".colProductName").addClass('boldtablealertsborder');
-    }
+    $("#colAccountID").val(colAccountID); 
 
     $("#tblAccount_filter .form-control-sm").val("");
     setTimeout(function () {
@@ -3573,7 +3691,6 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(data.fields.DeptClassName);
                 $("#sltPaymentMethod").val(data.fields.PaymentMethodName);
                 $("#edtSupplierName").val(data.fields.CompanyName);
-
                 $("#eftUserName").val(data.fields.CompanyName);
                 $("#eftNumberUser").val(data.fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
@@ -8385,40 +8502,39 @@ Template.supplierpaymentcard.events({
 
   "click  #open_print_confirm": function (event) {
     playPrintAudio();
-    setTimeout(function(){
+    setTimeout(async function(){
     if ($("#choosetemplate").is(":checked")) {
         $('#templateselection').modal('show');
     } else {
       LoadingOverlay.show();
-      $("#html-2-pdfwrapper").css("display", "block");
-      if ($(".edtCustomerEmail").val() != "") {
-        $(".pdfCustomerName").html($("#edtCustomerName").val());
-        $(".pdfCustomerAddress").html(
-          $("#txabillingAddress")
-            .val()
-            .replace(/[\r\n]/g, "<br />")
-        );
-        // $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-        var ponumber = $("#ponumber").val() || ".";
-        $(".po").text(ponumber);
-        var rowCount = $(".tblInvoiceLine tbody tr").length;
-
-        exportSalesToPdf1();
-      } else {
-        swal({
-          title: "Customer Email Required",
-          text: "Please enter customer email",
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "OK",
-        }).then((result) => {
-          if (result.value) {
-          } else if (result.dismiss === "cancel") {
-          }
-        });
-      }
-
-      $("#confirmprint").modal("hide");
+      // $("#html-2-pdfwrapper").css("display", "block");
+      let result = await exportSalesToPdf(template_list[0], 1);      
+      // if ($(".edtCustomerEmail").val() != "") {
+      //   $(".pdfCustomerName").html($("#edtCustomerName").val());
+      //   $(".pdfCustomerAddress").html(
+      //     $("#txabillingAddress")
+      //       .val()
+      //       .replace(/[\r\n]/g, "<br />")
+      //   );
+      //   $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+      //   var ponumber = $("#ponumber").val() || ".";
+      //   $(".po").text(ponumber);
+      //   var rowCount = $(".tblInvoiceLine tbody tr").length;
+      //   exportSalesToPdf1();
+      // } else {
+      //   swal({
+      //     title: "Customer Email Required",
+      //     text: "Please enter customer email",
+      //     type: "error",
+      //     showCancelButton: false,
+      //     confirmButtonText: "OK",
+      //   }).then((result) => {
+      //     if (result.value) {
+      //     } else if (result.dismiss === "cancel") {
+      //     }
+      //   });
+      // }
+      // $("#confirmprint").modal("hide");
     }
   }, delayTimeAfterSound);
   },
@@ -8455,7 +8571,6 @@ Template.supplierpaymentcard.events({
     // $("#edtForeignAmount").val("$" + foreignAmount);
 
     // calulateApplied();
-
     setTimeout(() => {
       calculateApplied();
     }, 300);
@@ -8475,6 +8590,8 @@ Template.supplierpaymentcard.events({
   "click .btnSave": (e, ui) => {
   playSaveAudio();
   let templateObject = Template.instance();
+
+
   let paymentService = new PaymentsService();
   setTimeout(function(){
     LoadingOverlay.show();
@@ -8484,6 +8601,7 @@ Template.supplierpaymentcard.events({
     let paymentDate = paymentDateTime.getFullYear() + "-" + (paymentDateTime.getMonth() + 1) + "-" + paymentDateTime.getDate();
 
     let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
+
     let reference = $("#edtReference").val();
     let payMethod = $("#sltPaymentMethod").val();
     let notes = $("#txaNotes").val();
@@ -12034,6 +12152,10 @@ Template.supplierpaymentcard.events({
           LoadingOverlay.hide();
         });
     }
+    if ($("#chkEFT").is(":checked")) {
+      templateObject.prepareSaveAddToEft(bankAccount);
+    }
+
     LoadingOverlay.hide();
   }, delayTimeAfterSound);
   },
@@ -12504,51 +12626,77 @@ Template.supplierpaymentcard.events({
     }
     }, delayTimeAfterSound);
   },
-  "click .btnRemove": function (event) {
+  "click .btnRemove": async function (event) {
     $(".btnDeleteLine").show();
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
     var clicktimes = 0;
     var targetID = $(event.target).closest("tr").attr("id") || 0; // table row ID
+    
     $("#selectDeleteLineID").val(targetID);
-
-    times++;
-    if (times == 1) {
-      if (targetID == 0) {
-        $(event.target).closest("tr").remove();
-      } else {
-        $("#deleteLineModal").modal("toggle");
-      }
-    } else {
-      if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
-        this.click;
-        let total = 0;
-        $(event.target).closest("tr").remove();
-        event.preventDefault();
-        let $tblrows = $("#tblSupplierPaymentcard tbody tr");
-        $tblrows.each(function (index) {
-          var $tblrow = $(this);
-          total +=
-            parseFloat(
-              $tblrow
-                .find(".linePaymentamount ")
-                .val()
-                .replace(/[^0-9.-]+/g, "")
-            ) || 0;
-        });
-        $(".appliedAmount").text(
-          utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+    var currentDate = new Date();
+    let paymentService = new PaymentsService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split('?id=');
+    var currentInvoice = getso_id[getso_id.length - 1];
+    var paymentList = [];
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
+        var paymentDate = paymentData.fields.PaymentDate;
+        var fromDate = paymentDate.substring(0, 10);
+        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+        var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
+            fromDate,
+            toDate,
+            false,
+            initialReportLoad,
+            0
         );
-      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
-
-        return false;
-      } else {
+        paymentList = followingPayments.tsupplierpaymentlist;
+    }
+    if(targetID != undefined){
+      times++;
+      if (times == 1) {
         if (targetID == 0) {
           $(event.target).closest("tr").remove();
         } else {
           $("#deleteLineModal").modal("toggle");
         }
+      } else {
+        if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
+          this.click;
+          let total = 0;
+          $(event.target).closest("tr").remove();
+          event.preventDefault();
+          let $tblrows = $("#tblSupplierPaymentcard tbody tr");
+          $tblrows.each(function (index) {
+            var $tblrow = $(this);
+            total +=
+              parseFloat(
+                $tblrow
+                  .find(".linePaymentamount ")
+                  .val()
+                  .replace(/[^0-9.-]+/g, "")
+              ) || 0;
+          });
+          $(".appliedAmount").text(
+            utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+          );
+        localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
+
+          return false;
+        } else {
+          if (targetID == 0) {
+            $(event.target).closest("tr").remove();
+          } else {
+            $("#deleteLineModal").modal("toggle");
+          }
+        }
       }
+    } else {
+      if(paymentList.length > 1) $("#footerDeleteModal2").modal("toggle");
+      else $("#footerDeleteModal1").modal("toggle");
     }
   },
   "click .btnRecoverPayment": function (event) {
@@ -12622,8 +12770,8 @@ Template.supplierpaymentcard.events({
   "click .btnDeleteFollowingPayments": async function (event) {
     playDeleteAudio();
     var currentDate = new Date();
-    let templateObject = Template.instance();
     let paymentService = new PaymentsService();
+    let templateObject = Template.instance();
     setTimeout(async function(){
 
     swal({
@@ -13042,6 +13190,10 @@ Template.supplierpaymentcard.events({
     onExchangeRateChange(e);
   },
   "change #exchange_rate": (e) => {
+      let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
+      let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
+
+      $(".linePaymentamount.convert-to").text(dstamount);
     onExchangeRateChange(e);
   },
   "change #edtForeignAmount": (e) => {
@@ -13101,6 +13253,7 @@ Template.supplierpaymentcard.events({
 
 
   },
+
   // "change #tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to": (e, ui) => {
   //  setTimeout(() => {
   //   const calculatedAppliedAmount = onForeignTableInputChange();
@@ -13115,13 +13268,13 @@ Template.supplierpaymentcard.events({
   // },
 
 
-  "click #chkEFT": function (event) {
-    if ($("#chkEFT").is(":checked")) {
-      $("#eftExportModal").modal("show");
-    } else {
-      $("#eftExportModal").modal("hide");
-    }
-  },
+  // "click #chkEFT": function (event) {
+  //   if ($("#chkEFT").is(":checked")) {
+  //     $("#eftExportModal").modal("show");
+  //   } else {
+  //     $("#eftExportModal").modal("hide");
+  //   }
+  // },
 });
 
 

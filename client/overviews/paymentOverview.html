@@ -8,9 +8,13 @@
                 display: none;
             }
         </style> -->
-        <header class="d-flex align-items-center">
-            <h2 class="mr-1 pageHeader">Payment Overview {{> helpbutton}}</h2>
-            {{> loggedcompanyoverview}}
+        <header class="row">
+            <div class="col-12 col-md-4">
+                <h2 class="mr-1 pageHeader">Payment Overview {{> helpbutton}}</h2>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
             <!-- Start Help View Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">
@@ -29,7 +33,9 @@
                 </div>
             </div>
             <!-- End Help View Modal -->
-            <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3" style="margin-right: 0px;"><i class="icon ion-android-more-horizontal"></i></a>
+            <div class="col-12 col-md-4">
+                <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3" style="margin-right: 0px;"><i class="icon ion-android-more-horizontal"></i></a>
+            </div>
 
             <div class="modal fade" role="dialog" tabindex="-1" id="myModal3">
                 <div class="modal-dialog modal-dialog-centered" role="document">

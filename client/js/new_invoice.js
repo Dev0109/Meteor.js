@@ -153,58 +153,88 @@ Template.new_invoice.onRendered(function() {
         }
     }
     templateObject.getMonths = function(startDate, endDate) {
-            let dateone = "";
-            let datetwo = "";
-            if (startDate != "") {
-                dateone = moment(startDate).format('M');
-            }
-            if (endDate != "") {
-                datetwo = parseInt(moment(endDate).format('M')) + 1;
-            }
-            if (dateone != "" && datetwo != "") {
-                for (let x = dateone; x < datetwo; x++) {
-                    if (x == 1) {
-                        $("#formCheck-january").prop('checked', true);
-                    }
-                    if (x == 2) {
-                        $("#formCheck-february").prop('checked', true);
-                    }
-                    if (x == 3) {
-                        $("#formCheck-march").prop('checked', true);
-                    }
-                    if (x == 4) {
-                        $("#formCheck-april").prop('checked', true);
-                    }
-                    if (x == 5) {
-                        $("#formCheck-may").prop('checked', true);
-                    }
-                    if (x == 6) {
-                        $("#formCheck-june").prop('checked', true);
-                    }
-                    if (x == 7) {
-                        $("#formCheck-july").prop('checked', true);
-                    }
-                    if (x == 8) {
-                        $("#formCheck-august").prop('checked', true);
-                    }
-                    if (x == 9) {
-                        $("#formCheck-september").prop('checked', true);
-                    }
-                    if (x == 10) {
-                        $("#formCheck-october").prop('checked', true);
-                    }
-                    if (x == 11) {
-                        $("#formCheck-november").prop('checked', true);
-                    }
-                    if (x == 12) {
-                        $("#formCheck-december").prop('checked', true);
-                    }
+        let dateone = "";
+        let datetwo = "";
+        if (startDate != "") {
+            dateone = moment(startDate).format('M');
+        }
+        if (endDate != "") {
+            datetwo = parseInt(moment(endDate).format('M')) + 1;
+        }
+        if (dateone != "" && datetwo != "") {
+            for (let x = dateone; x < datetwo; x++) {
+                if (x == 1) {
+                    $("#formCheck-january").prop('checked', true);
+                }
+                if (x == 2) {
+                    $("#formCheck-february").prop('checked', true);
+                }
+                if (x == 3) {
+                    $("#formCheck-march").prop('checked', true);
+                }
+                if (x == 4) {
+                    $("#formCheck-april").prop('checked', true);
+                }
+                if (x == 5) {
+                    $("#formCheck-may").prop('checked', true);
+                }
+                if (x == 6) {
+                    $("#formCheck-june").prop('checked', true);
+                }
+                if (x == 7) {
+                    $("#formCheck-july").prop('checked', true);
+                }
+                if (x == 8) {
+                    $("#formCheck-august").prop('checked', true);
+                }
+                if (x == 9) {
+                    $("#formCheck-september").prop('checked', true);
+                }
+                if (x == 10) {
+                    $("#formCheck-october").prop('checked', true);
+                }
+                if (x == 11) {
+                    $("#formCheck-november").prop('checked', true);
+                }
+                if (x == 12) {
+                    $("#formCheck-december").prop('checked', true);
                 }
             }
-            if (dateone == "") {
-                $("#formCheck-january").prop('checked', true);
+        }
+        if (dateone == "") {
+            $("#formCheck-january").prop('checked', true);
+        }
+    }
+
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = "";
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+            var saleDate = invData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingInvoices = await sideBarService.getAllTInvoiceListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var invList = followingInvoices.tinvoicelist;
+            if (invList.length > 1) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
             }
         }
+    }
+    
     templateObject.insertItemWithLabel = (x, a, b) => {
         var data = [...x];
         var aPos = data.findIndex((x) => x.label === a);
@@ -6619,11 +6649,11 @@ Template.new_invoice.onRendered(function() {
 
         if (number == 1) {
             await updateTemplate1(object_invoce, bprint);
-          } else if (number == 2) {
+        } else if (number == 2) {
             await updateTemplate2(object_invoce, bprint);
-          } else {
+        } else {
             await updateTemplate3(object_invoce, bprint);
-          }
+        }
 
         await saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
     }
@@ -6948,11 +6978,11 @@ Template.new_invoice.onRendered(function() {
 
         if (number == 1) {
             await updateTemplate1(object_invoce, bprint);
-          } else if (number == 2) {
+        } else if (number == 2) {
             await updateTemplate2(object_invoce, bprint);
-          } else {
+        } else {
             await updateTemplate3(object_invoce, bprint);
-          }
+        }
 
         await saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
         return;
@@ -7251,11 +7281,11 @@ Template.new_invoice.onRendered(function() {
 
         if (number == 1) {
             await updateTemplate1(object_invoce, bprint);
-          } else if (number == 2) {
+        } else if (number == 2) {
             await updateTemplate2(object_invoce, bprint);
-          } else {
+        } else {
             await updateTemplate3(object_invoce, bprint);
-          }
+        }
 
         await saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
     }
@@ -11167,93 +11197,93 @@ Template.new_invoice.onRendered(function() {
     }
 
     exportSalesToPdf = async function(template_title, number) {
+        if (template_title == "Invoices") {
+            await showInvoice1(template_title, number, true);
+        } else if (template_title == "Delivery Docket") {
+            await showDeliveryDocket1(template_title, number, true);
+        } else if (template_title == "Invoice Back Orders") {
+            await showInvoiceBack1(template_title, number, true);
+        } else {}
+
+        let margins = {
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: 100,
+        };
+
+        let invoice_data_info = templateObject.invoicerecord.get();
+        // document.getElementById("html-2-pdfwrapper_new").style.display = "block";
+        // var source = document.getElementById("html-2-pdfwrapper_new");
+        var source;
+        if (number == 1) {
+            $("#html-2-pdfwrapper").show();
+            $("#html-2-pdfwrapper2").hide();
+            $("#html-2-pdfwrapper3").hide();
+            source = document.getElementById("html-2-pdfwrapper");
+        } else if (number == 2) {
+            $("#html-2-pdfwrapper").hide();
+            $("#html-2-pdfwrapper2").show();
+            $("#html-2-pdfwrapper3").hide();
+            source = document.getElementById("html-2-pdfwrapper2");
+        } else {
+            $("#html-2-pdfwrapper").hide();
+            $("#html-2-pdfwrapper2").hide();
+            $("#html-2-pdfwrapper3").show();
+            source = document.getElementById("html-2-pdfwrapper3");
+        }
+
+        let file = "Invoice.pdf";
+        if (
+            $(".printID").attr("id") != undefined ||
+            $(".printID").attr("id") != ""
+        ) {
             if (template_title == "Invoices") {
-                await showInvoice1(template_title, number, true);
-            } else if (template_title == "Delivery Docket") {
-                await showDeliveryDocket1(template_title, number, true);
+                file = "Invoice-" + invoice_data_info.id + ".pdf";
             } else if (template_title == "Invoice Back Orders") {
-                await showInvoiceBack1(template_title, number, true);
+                file = "Invoice Back Orders-" + invoice_data_info.id + ".pdf";
+            } else if (template_title == "Delivery Docket") {
+                file = "Delivery Docket-" + invoice_data_info.id + ".pdf";
             } else {}
+        }
 
-            let margins = {
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: 100,
-            };
+        var opt = {
+            margin: 0,
+            filename: file,
+            image: {
+                type: "jpeg",
+                quality: 0.98,
+            },
+            html2canvas: {
+                scale: 2,
+            },
+            jsPDF: {
+                unit: "in",
+                format: "a4",
+                orientation: "portrait",
+            },
+        };
 
-            let invoice_data_info = templateObject.invoicerecord.get();
-            // document.getElementById("html-2-pdfwrapper_new").style.display = "block";
-            // var source = document.getElementById("html-2-pdfwrapper_new");
-            var source;
-            if (number == 1) {
-                $("#html-2-pdfwrapper").show();
-                $("#html-2-pdfwrapper2").hide();
-                $("#html-2-pdfwrapper3").hide();
-                source = document.getElementById("html-2-pdfwrapper");
-            } else if (number == 2) {
-                $("#html-2-pdfwrapper").hide();
-                $("#html-2-pdfwrapper2").show();
-                $("#html-2-pdfwrapper3").hide();
-                source = document.getElementById("html-2-pdfwrapper2");
-            } else {
-                $("#html-2-pdfwrapper").hide();
-                $("#html-2-pdfwrapper2").hide();
-                $("#html-2-pdfwrapper3").show();
-                source = document.getElementById("html-2-pdfwrapper3");
-            }
+        html2pdf()
+            .set(opt)
+            .from(source)
+            .save()
+            .then(function(dataObject) {
+                if (
+                    $(".printID").attr("id") == undefined ||
+                    $(".printID").attr("id") == ""
+                ) {
+                    // $(".btnSave").trigger("click");
+                } else {
+                }
+                $("#html-2-pdfwrapper_new").css("display", "none");
+                $("#html-2-pdfwrapper").css("display", "none");
+                $("#html-2-pdfwrapper2").css("display", "none");
+                $("#html-2-pdfwrapper3").css("display", "none");
+                $(".fullScreenSpin").css("display", "none");
+            });
 
-            let file = "Invoice.pdf";
-            if (
-                $(".printID").attr("id") != undefined ||
-                $(".printID").attr("id") != ""
-            ) {
-                if (template_title == "Invoices") {
-                    file = "Invoice-" + invoice_data_info.id + ".pdf";
-                } else if (template_title == "Invoice Back Orders") {
-                    file = "Invoice Back Orders-" + invoice_data_info.id + ".pdf";
-                } else if (template_title == "Delivery Docket") {
-                    file = "Delivery Docket-" + invoice_data_info.id + ".pdf";
-                } else {}
-            }
-
-            var opt = {
-                margin: 0,
-                filename: file,
-                image: {
-                    type: "jpeg",
-                    quality: 0.98,
-                },
-                html2canvas: {
-                    scale: 2,
-                },
-                jsPDF: {
-                    unit: "in",
-                    format: "a4",
-                    orientation: "portrait",
-                },
-            };
-
-            html2pdf()
-                .set(opt)
-                .from(source)
-                .save()
-                .then(function(dataObject) {
-                    if (
-                        $(".printID").attr("id") == undefined ||
-                        $(".printID").attr("id") == ""
-                    ) {
-                        // $(".btnSave").trigger("click");
-                    } else {
-                    }
-                    $("#html-2-pdfwrapper_new").css("display", "none");
-                    $("#html-2-pdfwrapper").css("display", "none");
-                    $("#html-2-pdfwrapper2").css("display", "none");
-                    $("#html-2-pdfwrapper3").css("display", "none");
-                    $(".fullScreenSpin").css("display", "none");
-                });
-
-            return true;
+        return true;
     };
 
     exportSalesToPdf1 = function() {
@@ -11644,6 +11674,7 @@ Template.new_invoice.onRendered(function() {
             }
         }
     }
+
     function initTemplateHeaderFooter0(object_invoce) {
         // $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
         // $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
@@ -11836,7 +11867,7 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -11916,7 +11947,7 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -11984,7 +12015,7 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -12350,7 +12381,7 @@ Template.new_invoice.onRendered(function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
         }
 
         // table content
@@ -13968,7 +13999,7 @@ Template.new_invoice.events({
     },
     "click  #open_print_confirm": function(event) {
         playPrintAudio();
-        setTimeout(function() {
+        setTimeout(async function() {
             if ($("#choosetemplate").is(":checked")) {
                 let invoice_type = FlowRouter.current().queryParams.type;
 
@@ -13986,37 +14017,37 @@ Template.new_invoice.events({
                 $("#templateselection").modal("show");
             } else {
                 $(".fullScreenSpin").css("display", "inline-block");
-                $("#html-2-pdfwrapper").css("display", "block");
-                if ($(".edtCustomerEmail").val() != "") {
-                    $(".pdfCustomerName").html($("#edtCustomerName").val());
-                    $(".pdfCustomerAddress").html(
-                        $("#txabillingAddress")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    $("#printcomment").html(
-                        $("#txaComment")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    var ponumber = $("#ponumber").val() || ".";
-                    $(".po").text(ponumber);
-                    var rowCount = $(".tblInvoiceLine tbody tr").length;
+                // $("#html-2-pdfwrapper").css("display", "block");
+                let result = await exportSalesToPdf(template_list[0], 1);
+                // if ($(".edtCustomerEmail").val() != "") {
+                //     $(".pdfCustomerName").html($("#edtCustomerName").val());
+                //     $(".pdfCustomerAddress").html(
+                //         $("#txabillingAddress")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     $("#printcomment").html(
+                //         $("#txaComment")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     var ponumber = $("#ponumber").val() || ".";
+                //     $(".po").text(ponumber);
+                //     var rowCount = $(".tblInvoiceLine tbody tr").length;
 
-                    exportSalesToPdf1();
-                } else {
-                    swal({
-                        title: "Customer Email Required",
-                        text: "Please enter customer email",
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                    }).then((result) => {
-                        if (result.value) {} else if (result.dismiss === "cancel") {}
-                    });
-                }
-
-                $("#confirmprint").modal("hide");
+                //     exportSalesToPdf1();
+                // } else {
+                //     swal({
+                //         title: "Customer Email Required",
+                //         text: "Please enter customer email",
+                //         type: "error",
+                //         showCancelButton: false,
+                //         confirmButtonText: "OK",
+                //     }).then((result) => {
+                //         if (result.value) {} else if (result.dismiss === "cancel") {}
+                //     });
+                // }
+                // $("#confirmprint").modal("hide");
             }
         }, delayTimeAfterSound);
     },
@@ -15904,355 +15935,354 @@ Template.new_invoice.events({
                 // var productDataID = $(event.target).attr('prodid').replace(/\s/g, '') || '';
                 if (productDataName.replace(/\s/g, "") != "") {
                     var itemId = $(event.target).attr("itemid");
-                    window.open("/productview?id=" + itemId, "_self");
+                    // window.open("/productview?id=" + itemId, "_self");
                     //FlowRouter.go('/productview?prodname=' + $(event.target).text());
-                    // let lineExtaSellItems = [];
-                    // let lineExtaSellObj = {};
-                    // $(".fullScreenSpin").css("display", "inline-block");
-                    // getVS1Data("TProductVS1")
-                    //   .then(function (dataObject) {
-                    //     if (dataObject.length == 0) {
-                    //       sideBarService
-                    //         .getOneProductdatavs1byname(productDataName)
-                    //         .then(function (data) {
-                    //           $(".fullScreenSpin").css("display", "none");
-                    //           let lineItems = [];
-                    //           let lineItemObj = {};
-                    //           let currencySymbol = Currency;
-                    //           let totalquantity = 0;
-                    //           let productname = data.tproduct[0].fields.ProductName || "";
-                    //           let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
-                    //           let productprintName =
-                    //             data.tproduct[0].fields.ProductPrintName || "";
-                    //           let assetaccount =
-                    //             data.tproduct[0].fields.AssetAccount || "";
-                    //           let buyqty1cost =
-                    //             utilityService.modifynegativeCurrencyFormat(
-                    //               data.tproduct[0].fields.BuyQty1Cost
-                    //             ) || 0;
-                    //           let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
-                    //           let taxcodepurchase =
-                    //             data.tproduct[0].fields.TaxCodePurchase || "";
-                    //           let purchasedescription =
-                    //             data.tproduct[0].fields.PurchaseDescription || "";
-                    //           let sellqty1price =
-                    //             utilityService.modifynegativeCurrencyFormat(
-                    //               data.tproduct[0].fields.SellQty1Price
-                    //             ) || 0;
-                    //           let incomeaccount =
-                    //             data.tproduct[0].fields.IncomeAccount || "";
-                    //           let taxcodesales =
-                    //             data.tproduct[0].fields.TaxCodeSales || "";
-                    //           let salesdescription =
-                    //             data.tproduct[0].fields.SalesDescription || "";
-                    //           let active = data.tproduct[0].fields.Active;
-                    //           let lockextrasell =
-                    //             data.tproduct[0].fields.LockExtraSell || "";
-                    //           let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
-                    //           let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
-                    //           let barcode = data.tproduct[0].fields.BARCODE || "";
-                    //           $("#selectProductID")
-                    //             .val(data.tproduct[0].fields.ID)
-                    //             .trigger("change");
-                    //           $("#add-product-title").text("Edit Product");
-                    //           $("#edtproductname").val(productname);
-                    //           $("#edtsellqty1price").val(sellqty1price);
-                    //           $("#txasalesdescription").val(salesdescription);
-                    //           $("#sltsalesacount").val(incomeaccount);
-                    //           $("#slttaxcodesales").val(taxcodesales);
-                    //           $("#edtbarcode").val(barcode);
-                    //           $("#txapurchasedescription").val(purchasedescription);
-                    //           $("#sltcogsaccount").val(cogsaccount);
-                    //           $("#slttaxcodepurchase").val(taxcodepurchase);
-                    //           $("#edtbuyqty1cost").val(buyqty1cost);
+                    let lineExtaSellItems = [];
+                    let lineExtaSellObj = {};
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    getVS1Data("TProductVS1")
+                        .then(function(dataObject) {
+                            if (dataObject.length == 0) {
+                                sideBarService
+                                    .getOneProductdatavs1byname(productDataName)
+                                    .then(function(data) {
+                                        $(".fullScreenSpin").css("display", "none");
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        let currencySymbol = Currency;
+                                        let totalquantity = 0;
+                                        let productname = data.tproduct[0].fields.ProductName || "";
+                                        let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
+                                        let productprintName =
+                                            data.tproduct[0].fields.ProductPrintName || "";
+                                        let assetaccount =
+                                            data.tproduct[0].fields.AssetAccount || "";
+                                        let buyqty1cost =
+                                            utilityService.modifynegativeCurrencyFormat(
+                                                data.tproduct[0].fields.BuyQty1Cost
+                                            ) || 0;
+                                        let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                                        let taxcodepurchase =
+                                            data.tproduct[0].fields.TaxCodePurchase || "";
+                                        let purchasedescription =
+                                            data.tproduct[0].fields.PurchaseDescription || "";
+                                        let sellqty1price =
+                                            utilityService.modifynegativeCurrencyFormat(
+                                                data.tproduct[0].fields.SellQty1Price
+                                            ) || 0;
+                                        let incomeaccount =
+                                            data.tproduct[0].fields.IncomeAccount || "";
+                                        let taxcodesales =
+                                            data.tproduct[0].fields.TaxCodeSales || "";
+                                        let salesdescription =
+                                            data.tproduct[0].fields.SalesDescription || "";
+                                        let active = data.tproduct[0].fields.Active;
+                                        let lockextrasell =
+                                            data.tproduct[0].fields.LockExtraSell || "";
+                                        let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
+                                        let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
+                                        let barcode = data.tproduct[0].fields.BARCODE || "";
+                                        $("#selectProductID")
+                                            .val(data.tproduct[0].fields.ID)
+                                            .trigger("change");
+                                        $("#add-product-title").text("Edit Product");
+                                        $("#edtproductname").val(productname);
+                                        $("#edtsellqty1price").val(sellqty1price);
+                                        $("#txasalesdescription").val(salesdescription);
+                                        $("#sltsalesacount").val(incomeaccount);
+                                        $("#slttaxcodesales").val(taxcodesales);
+                                        $("#edtbarcode").val(barcode);
+                                        $("#txapurchasedescription").val(purchasedescription);
+                                        $("#sltcogsaccount").val(cogsaccount);
+                                        $("#slttaxcodepurchase").val(taxcodepurchase);
+                                        $("#edtbuyqty1cost").val(buyqty1cost);
 
-                    //           setTimeout(function () {
-                    //             $("#newProductModal").modal("show");
-                    //           }, 500);
-                    //         })
-                    //         .catch(function (err) {
-                    //           $(".fullScreenSpin").css("display", "none");
-                    //         });
-                    //     } else {
-                    //       let data = JSON.parse(dataObject[0].data);
-                    //       let useData = data.tproductvs1;
-                    //       var added = false;
+                                        setTimeout(function() {
+                                            $("#newProductModal").modal("show");
+                                        }, 500);
+                                    })
+                                    .catch(function(err) {
+                                        $(".fullScreenSpin").css("display", "none");
+                                    });
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                let useData = data.tproductvs1;
+                                var added = false;
 
-                    //       for (let i = 0; i < data.tproductvs1.length; i++) {
-                    //         if (
-                    //           data.tproductvs1[i].fields.ProductName === productDataName
-                    //         ) {
-                    //           added = true;
-                    //           $(".fullScreenSpin").css("display", "none");
-                    //           let lineItems = [];
-                    //           let lineItemObj = {};
-                    //           let currencySymbol = Currency;
-                    //           let totalquantity = 0;
+                                for (let i = 0; i < data.tproductvs1.length; i++) {
+                                    if (
+                                        data.tproductvs1[i].fields.ProductName === productDataName
+                                    ) {
+                                        added = true;
+                                        $(".fullScreenSpin").css("display", "none");
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        let currencySymbol = Currency;
+                                        let totalquantity = 0;
 
-                    //           let productname =
-                    //             data.tproductvs1[i].fields.ProductName || "";
-                    //           let productcode =
-                    //             data.tproductvs1[i].fields.PRODUCTCODE || "";
-                    //           let productprintName =
-                    //             data.tproductvs1[i].fields.ProductPrintName || "";
-                    //           let assetaccount =
-                    //             data.tproductvs1[i].fields.AssetAccount || "";
-                    //           let buyqty1cost =
-                    //             utilityService.modifynegativeCurrencyFormat(
-                    //               data.tproductvs1[i].fields.BuyQty1Cost
-                    //             ) || 0;
-                    //           let cogsaccount =
-                    //             data.tproductvs1[i].fields.CogsAccount || "";
-                    //           let taxcodepurchase =
-                    //             data.tproductvs1[i].fields.TaxCodePurchase || "";
-                    //           let purchasedescription =
-                    //             data.tproductvs1[i].fields.PurchaseDescription || "";
-                    //           let sellqty1price =
-                    //             utilityService.modifynegativeCurrencyFormat(
-                    //               data.tproductvs1[i].fields.SellQty1Price
-                    //             ) || 0;
-                    //           let incomeaccount =
-                    //             data.tproductvs1[i].fields.IncomeAccount || "";
-                    //           let taxcodesales =
-                    //             data.tproductvs1[i].fields.TaxCodeSales || "";
-                    //           let salesdescription =
-                    //             data.tproductvs1[i].fields.SalesDescription || "";
-                    //           let active = data.tproductvs1[i].fields.Active;
-                    //           let lockextrasell =
-                    //             data.tproductvs1[i].fields.LockExtraSell || "";
-                    //           let customfield1 =
-                    //             data.tproductvs1[i].fields.CUSTFLD1 || "";
-                    //           let customfield2 =
-                    //             data.tproductvs1[i].fields.CUSTFLD2 || "";
-                    //           let barcode = data.tproductvs1[i].fields.BARCODE || "";
-                    //           $("#selectProductID")
-                    //             .val(data.tproductvs1[i].fields.ID)
-                    //             .trigger("change");
-                    //           $("#add-product-title").text("Edit Product");
-                    //           $("#edtproductname").val(productname);
-                    //           $("#edtsellqty1price").val(sellqty1price);
-                    //           $("#txasalesdescription").val(salesdescription);
-                    //           $("#sltsalesacount").val(incomeaccount);
-                    //           $("#slttaxcodesales").val(taxcodesales);
-                    //           $("#edtbarcode").val(barcode);
-                    //           $("#txapurchasedescription").val(purchasedescription);
-                    //           $("#sltcogsaccount").val(cogsaccount);
-                    //           $("#slttaxcodepurchase").val(taxcodepurchase);
-                    //           $("#edtbuyqty1cost").val(buyqty1cost);
+                                        let productname =
+                                            data.tproductvs1[i].fields.ProductName || "";
+                                        let productcode =
+                                            data.tproductvs1[i].fields.PRODUCTCODE || "";
+                                        let productprintName =
+                                            data.tproductvs1[i].fields.ProductPrintName || "";
+                                        let assetaccount =
+                                            data.tproductvs1[i].fields.AssetAccount || "";
+                                        let buyqty1cost =
+                                            utilityService.modifynegativeCurrencyFormat(
+                                                data.tproductvs1[i].fields.BuyQty1Cost
+                                            ) || 0;
+                                        let cogsaccount =
+                                            data.tproductvs1[i].fields.CogsAccount || "";
+                                        let taxcodepurchase =
+                                            data.tproductvs1[i].fields.TaxCodePurchase || "";
+                                        let purchasedescription =
+                                            data.tproductvs1[i].fields.PurchaseDescription || "";
+                                        let sellqty1price =
+                                            utilityService.modifynegativeCurrencyFormat(
+                                                data.tproductvs1[i].fields.SellQty1Price
+                                            ) || 0;
+                                        let incomeaccount =
+                                            data.tproductvs1[i].fields.IncomeAccount || "";
+                                        let taxcodesales =
+                                            data.tproductvs1[i].fields.TaxCodeSales || "";
+                                        let salesdescription =
+                                            data.tproductvs1[i].fields.SalesDescription || "";
+                                        let active = data.tproductvs1[i].fields.Active;
+                                        let lockextrasell =
+                                            data.tproductvs1[i].fields.LockExtraSell || "";
+                                        let customfield1 =
+                                            data.tproductvs1[i].fields.CUSTFLD1 || "";
+                                        let customfield2 =
+                                            data.tproductvs1[i].fields.CUSTFLD2 || "";
+                                        let barcode = data.tproductvs1[i].fields.BARCODE || "";
+                                        $("#selectProductID")
+                                            .val(data.tproductvs1[i].fields.ID)
+                                            .trigger("change");
+                                        $("#add-product-title").text("Edit Product");
+                                        $("#edtproductname").val(productname);
+                                        $("#edtsellqty1price").val(sellqty1price);
+                                        $("#txasalesdescription").val(salesdescription);
+                                        $("#sltsalesacount").val(incomeaccount);
+                                        $("#slttaxcodesales").val(taxcodesales);
+                                        $("#edtbarcode").val(barcode);
+                                        $("#txapurchasedescription").val(purchasedescription);
+                                        $("#sltcogsaccount").val(cogsaccount);
+                                        $("#slttaxcodepurchase").val(taxcodepurchase);
+                                        $("#edtbuyqty1cost").val(buyqty1cost);
 
-                    //           setTimeout(function () {
-                    //             $("#newProductModal").modal("show");
-                    //           }, 500);
-                    //         }
-                    //       }
-                    //       if (!added) {
-                    //         sideBarService
-                    //           .getOneProductdatavs1byname(productDataName)
-                    //           .then(function (data) {
-                    //             $(".fullScreenSpin").css("display", "none");
-                    //             let lineItems = [];
-                    //             let lineItemObj = {};
-                    //             let currencySymbol = Currency;
-                    //             let totalquantity = 0;
-                    //             let productname =
-                    //               data.tproduct[0].fields.ProductName || "";
-                    //             let productcode =
-                    //               data.tproduct[0].fields.PRODUCTCODE || "";
-                    //             let productprintName =
-                    //               data.tproduct[0].fields.ProductPrintName || "";
-                    //             let assetaccount =
-                    //               data.tproduct[0].fields.AssetAccount || "";
-                    //             let buyqty1cost =
-                    //               utilityService.modifynegativeCurrencyFormat(
-                    //                 data.tproduct[0].fields.BuyQty1Cost
-                    //               ) || 0;
-                    //             let cogsaccount =
-                    //               data.tproduct[0].fields.CogsAccount || "";
-                    //             let taxcodepurchase =
-                    //               data.tproduct[0].fields.TaxCodePurchase || "";
-                    //             let purchasedescription =
-                    //               data.tproduct[0].fields.PurchaseDescription || "";
-                    //             let sellqty1price =
-                    //               utilityService.modifynegativeCurrencyFormat(
-                    //                 data.tproduct[0].fields.SellQty1Price
-                    //               ) || 0;
-                    //             let incomeaccount =
-                    //               data.tproduct[0].fields.IncomeAccount || "";
-                    //             let taxcodesales =
-                    //               data.tproduct[0].fields.TaxCodeSales || "";
-                    //             let salesdescription =
-                    //               data.tproduct[0].fields.SalesDescription || "";
-                    //             let active = data.tproduct[0].fields.Active;
-                    //             let lockextrasell =
-                    //               data.tproduct[0].fields.LockExtraSell || "";
-                    //             let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
-                    //             let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
-                    //             let barcode = data.tproduct[0].fields.BARCODE || "";
-                    //             $("#selectProductID")
-                    //               .val(data.tproduct[0].fields.ID)
-                    //               .trigger("change");
-                    //             $("#add-product-title").text("Edit Product");
-                    //             $("#edtproductname").val(productname);
-                    //             $("#edtsellqty1price").val(sellqty1price);
-                    //             $("#txasalesdescription").val(salesdescription);
-                    //             $("#sltsalesacount").val(incomeaccount);
-                    //             $("#slttaxcodesales").val(taxcodesales);
-                    //             $("#edtbarcode").val(barcode);
-                    //             $("#txapurchasedescription").val(purchasedescription);
-                    //             $("#sltcogsaccount").val(cogsaccount);
-                    //             $("#slttaxcodepurchase").val(taxcodepurchase);
-                    //             $("#edtbuyqty1cost").val(buyqty1cost);
+                                        setTimeout(function() {
+                                            $("#newProductModal").modal("show");
+                                        }, 500);
+                                    }
+                                }
+                                if (!added) {
+                                    sideBarService
+                                        .getOneProductdatavs1byname(productDataName)
+                                        .then(function(data) {
+                                            $(".fullScreenSpin").css("display", "none");
+                                            let lineItems = [];
+                                            let lineItemObj = {};
+                                            let currencySymbol = Currency;
+                                            let totalquantity = 0;
+                                            let productname =
+                                                data.tproduct[0].fields.ProductName || "";
+                                            let productcode =
+                                                data.tproduct[0].fields.PRODUCTCODE || "";
+                                            let productprintName =
+                                                data.tproduct[0].fields.ProductPrintName || "";
+                                            let assetaccount =
+                                                data.tproduct[0].fields.AssetAccount || "";
+                                            let buyqty1cost =
+                                                utilityService.modifynegativeCurrencyFormat(
+                                                    data.tproduct[0].fields.BuyQty1Cost
+                                                ) || 0;
+                                            let cogsaccount =
+                                                data.tproduct[0].fields.CogsAccount || "";
+                                            let taxcodepurchase =
+                                                data.tproduct[0].fields.TaxCodePurchase || "";
+                                            let purchasedescription =
+                                                data.tproduct[0].fields.PurchaseDescription || "";
+                                            let sellqty1price =
+                                                utilityService.modifynegativeCurrencyFormat(
+                                                    data.tproduct[0].fields.SellQty1Price
+                                                ) || 0;
+                                            let incomeaccount =
+                                                data.tproduct[0].fields.IncomeAccount || "";
+                                            let taxcodesales =
+                                                data.tproduct[0].fields.TaxCodeSales || "";
+                                            let salesdescription =
+                                                data.tproduct[0].fields.SalesDescription || "";
+                                            let active = data.tproduct[0].fields.Active;
+                                            let lockextrasell =
+                                                data.tproduct[0].fields.LockExtraSell || "";
+                                            let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
+                                            let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
+                                            let barcode = data.tproduct[0].fields.BARCODE || "";
+                                            $("#selectProductID")
+                                                .val(data.tproduct[0].fields.ID)
+                                                .trigger("change");
+                                            $("#add-product-title").text("Edit Product");
+                                            $("#edtproductname").val(productname);
+                                            $("#edtsellqty1price").val(sellqty1price);
+                                            $("#txasalesdescription").val(salesdescription);
+                                            $("#sltsalesacount").val(incomeaccount);
+                                            $("#slttaxcodesales").val(taxcodesales);
+                                            $("#edtbarcode").val(barcode);
+                                            $("#txapurchasedescription").val(purchasedescription);
+                                            $("#sltcogsaccount").val(cogsaccount);
+                                            $("#slttaxcodepurchase").val(taxcodepurchase);
+                                            $("#edtbuyqty1cost").val(buyqty1cost);
 
-                    //             setTimeout(function () {
-                    //               $("#newProductModal").modal("show");
-                    //             }, 500);
-                    //           })
-                    //           .catch(function (err) {
-                    //             $(".fullScreenSpin").css("display", "none");
-                    //           });
-                    //       }
-                    //     }
-                    //   })
-                    //   .catch(function (err) {
-                    //     sideBarService
-                    //       .getOneProductdatavs1byname(productDataName)
-                    //       .then(function (data) {
-                    //         $(".fullScreenSpin").css("display", "none");
-                    //         let lineItems = [];
-                    //         let lineItemObj = {};
-                    //         let currencySymbol = Currency;
-                    //         let totalquantity = 0;
-                    //         let productname = data.tproduct[0].fields.ProductName || "";
-                    //         let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
-                    //         let productprintName =
-                    //           data.tproduct[0].fields.ProductPrintName || "";
-                    //         let assetaccount = data.tproduct[0].fields.AssetAccount || "";
-                    //         let buyqty1cost =
-                    //           utilityService.modifynegativeCurrencyFormat(
-                    //             data.tproduct[0].fields.BuyQty1Cost
-                    //           ) || 0;
-                    //         let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
-                    //         let taxcodepurchase =
-                    //           data.tproduct[0].fields.TaxCodePurchase || "";
-                    //         let purchasedescription =
-                    //           data.tproduct[0].fields.PurchaseDescription || "";
-                    //         let sellqty1price =
-                    //           utilityService.modifynegativeCurrencyFormat(
-                    //             data.tproduct[0].fields.SellQty1Price
-                    //           ) || 0;
-                    //         let incomeaccount =
-                    //           data.tproduct[0].fields.IncomeAccount || "";
-                    //         let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
-                    //         let salesdescription =
-                    //           data.tproduct[0].fields.SalesDescription || "";
-                    //         let active = data.tproduct[0].fields.Active;
-                    //         let lockextrasell =
-                    //           data.tproduct[0].fields.LockExtraSell || "";
-                    //         let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
-                    //         let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
-                    //         let barcode = data.tproduct[0].fields.BARCODE || "";
-                    //         $("#selectProductID")
-                    //           .val(data.tproduct[0].fields.ID)
-                    //           .trigger("change");
-                    //         $("#add-product-title").text("Edit Product");
-                    //         $("#edtproductname").val(productname);
-                    //         $("#edtsellqty1price").val(sellqty1price);
-                    //         $("#txasalesdescription").val(salesdescription);
-                    //         $("#sltsalesacount").val(incomeaccount);
-                    //         $("#slttaxcodesales").val(taxcodesales);
-                    //         $("#edtbarcode").val(barcode);
-                    //         $("#txapurchasedescription").val(purchasedescription);
-                    //         $("#sltcogsaccount").val(cogsaccount);
-                    //         $("#slttaxcodepurchase").val(taxcodepurchase);
-                    //         $("#edtbuyqty1cost").val(buyqty1cost);
+                                            setTimeout(function() {
+                                                $("#newProductModal").modal("show");
+                                            }, 500);
+                                        })
+                                        .catch(function(err) {
+                                            $(".fullScreenSpin").css("display", "none");
+                                        });
+                                }
+                            }
+                        })
+                        .catch(function(err) {
+                            sideBarService
+                                .getOneProductdatavs1byname(productDataName)
+                                .then(function(data) {
+                                    $(".fullScreenSpin").css("display", "none");
+                                    let lineItems = [];
+                                    let lineItemObj = {};
+                                    let currencySymbol = Currency;
+                                    let totalquantity = 0;
+                                    let productname = data.tproduct[0].fields.ProductName || "";
+                                    let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
+                                    let productprintName =
+                                        data.tproduct[0].fields.ProductPrintName || "";
+                                    let assetaccount = data.tproduct[0].fields.AssetAccount || "";
+                                    let buyqty1cost =
+                                        utilityService.modifynegativeCurrencyFormat(
+                                            data.tproduct[0].fields.BuyQty1Cost
+                                        ) || 0;
+                                    let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                                    let taxcodepurchase =
+                                        data.tproduct[0].fields.TaxCodePurchase || "";
+                                    let purchasedescription =
+                                        data.tproduct[0].fields.PurchaseDescription || "";
+                                    let sellqty1price =
+                                        utilityService.modifynegativeCurrencyFormat(
+                                            data.tproduct[0].fields.SellQty1Price
+                                        ) || 0;
+                                    let incomeaccount =
+                                        data.tproduct[0].fields.IncomeAccount || "";
+                                    let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
+                                    let salesdescription =
+                                        data.tproduct[0].fields.SalesDescription || "";
+                                    let active = data.tproduct[0].fields.Active;
+                                    let lockextrasell =
+                                        data.tproduct[0].fields.LockExtraSell || "";
+                                    let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
+                                    let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
+                                    let barcode = data.tproduct[0].fields.BARCODE || "";
+                                    $("#selectProductID")
+                                        .val(data.tproduct[0].fields.ID)
+                                        .trigger("change");
+                                    $("#add-product-title").text("Edit Product");
+                                    $("#edtproductname").val(productname);
+                                    $("#edtsellqty1price").val(sellqty1price);
+                                    $("#txasalesdescription").val(salesdescription);
+                                    $("#sltsalesacount").val(incomeaccount);
+                                    $("#slttaxcodesales").val(taxcodesales);
+                                    $("#edtbarcode").val(barcode);
+                                    $("#txapurchasedescription").val(purchasedescription);
+                                    $("#sltcogsaccount").val(cogsaccount);
+                                    $("#slttaxcodepurchase").val(taxcodepurchase);
+                                    $("#edtbuyqty1cost").val(buyqty1cost);
 
-                    //         setTimeout(function () {
-                    //           $("#newProductModal").modal("show");
-                    //         }, 500);
-                    //       })
-                    //       .catch(function (err) {
-                    //         $(".fullScreenSpin").css("display", "none");
-                    //       });
-                    //   });
+                                    setTimeout(function() {
+                                        $("#newProductModal").modal("show");
+                                    }, 500);
+                                })
+                                .catch(function(err) {
+                                    $(".fullScreenSpin").css("display", "none");
+                                });
+                        });
 
-                    // setTimeout(function () {
-                    //   var begin_day_value = $("#event_begin_day").attr("value");
-                    //   $("#dtDateTo")
-                    //     .datepicker({
-                    //       showOn: "button",
-                    //       buttonText: "Show Date",
-                    //       buttonImageOnly: true,
-                    //       buttonImage: "/img/imgCal2.png",
-                    //       constrainInput: false,
-                    //       dateFormat: "d/mm/yy",
-                    //       showOtherMonths: true,
-                    //       selectOtherMonths: true,
-                    //       changeMonth: true,
-                    //       changeYear: true,
-                    //       yearRange: "-90:+10",
-                    //     })
-                    //     .keyup(function (e) {
-                    //       if (e.keyCode == 8 || e.keyCode == 46) {
-                    //         $("#dtDateTo,#dtDateFrom").val("");
-                    //       }
-                    //     });
+                    setTimeout(function() {
+                        var begin_day_value = $("#event_begin_day").attr("value");
+                        $("#dtDateTo")
+                            .datepicker({
+                                showOn: "button",
+                                buttonText: "Show Date",
+                                buttonImageOnly: true,
+                                buttonImage: "/img/imgCal2.png",
+                                constrainInput: false,
+                                dateFormat: "d/mm/yy",
+                                showOtherMonths: true,
+                                selectOtherMonths: true,
+                                changeMonth: true,
+                                changeYear: true,
+                                yearRange: "-90:+10",
+                            })
+                            .keyup(function(e) {
+                                if (e.keyCode == 8 || e.keyCode == 46) {
+                                    $("#dtDateTo,#dtDateFrom").val("");
+                                }
+                            });
 
-                    //   $("#dtDateFrom")
-                    //     .datepicker({
-                    //       showOn: "button",
-                    //       buttonText: "Show Date",
-                    //       altField: "#dtDateFrom",
-                    //       buttonImageOnly: true,
-                    //       buttonImage: "/img/imgCal2.png",
-                    //       constrainInput: false,
-                    //       dateFormat: "d/mm/yy",
-                    //       showOtherMonths: true,
-                    //       selectOtherMonths: true,
-                    //       changeMonth: true,
-                    //       changeYear: true,
-                    //       yearRange: "-90:+10",
-                    //     })
-                    //     .keyup(function (e) {
-                    //       if (e.keyCode == 8 || e.keyCode == 46) {
-                    //         $("#dtDateTo,#dtDateFrom").val("");
-                    //       }
-                    //     });
+                        $("#dtDateFrom")
+                            .datepicker({
+                                showOn: "button",
+                                buttonText: "Show Date",
+                                altField: "#dtDateFrom",
+                                buttonImageOnly: true,
+                                buttonImage: "/img/imgCal2.png",
+                                constrainInput: false,
+                                dateFormat: "d/mm/yy",
+                                showOtherMonths: true,
+                                selectOtherMonths: true,
+                                changeMonth: true,
+                                changeYear: true,
+                                yearRange: "-90:+10",
+                            })
+                            .keyup(function(e) {
+                                if (e.keyCode == 8 || e.keyCode == 46) {
+                                    $("#dtDateTo,#dtDateFrom").val("");
+                                }
+                            });
 
-                    //   $(".ui-datepicker .ui-state-hihglight").removeClass(
-                    //     "ui-state-highlight"
-                    //   );
-                    // }, 1000);
-                    // //}
+                        $(".ui-datepicker .ui-state-hihglight").removeClass(
+                            "ui-state-highlight"
+                        );
+                    }, 1000);
+                    //}
 
-                    // templateObject.getProductClassQtyData = function () {
-                    //   productService
-                    //     .getOneProductClassQtyData(currentProductID)
-                    //     .then(function (data) {
-                    //       $(".fullScreenSpin").css("display", "none");
-                    //       let qtylineItems = [];
-                    //       let qtylineItemObj = {};
-                    //       let currencySymbol = Currency;
-                    //       let totaldeptquantity = 0;
+                    templateObject.getProductClassQtyData = function() {
+                        productService
+                            .getOneProductClassQtyData(currentProductID)
+                            .then(function(data) {
+                                $(".fullScreenSpin").css("display", "none");
+                                let qtylineItems = [];
+                                let qtylineItemObj = {};
+                                let currencySymbol = Currency;
+                                let totaldeptquantity = 0;
 
-                    //       for (let j in data.tproductclassquantity) {
-                    //         qtylineItemObj = {
-                    //           department:
-                    //             data.tproductclassquantity[j].DepartmentName || "",
-                    //           quantity: data.tproductclassquantity[j].InStockQty || 0,
-                    //         };
-                    //         totaldeptquantity += data.tproductclassquantity[j].InStockQty;
-                    //         qtylineItems.push(qtylineItemObj);
-                    //       }
-                    //       // $('#edttotalqtyinstock').val(totaldeptquantity);
-                    //       templateObject.productqtyrecords.set(qtylineItems);
-                    //       templateObject.totaldeptquantity.set(totaldeptquantity);
-                    //     })
-                    //     .catch(function (err) {
-                    //       $(".fullScreenSpin").css("display", "none");
-                    //     });
-                    // };
+                                for (let j in data.tproductclassquantity) {
+                                    qtylineItemObj = {
+                                        department: data.tproductclassquantity[j].DepartmentName || "",
+                                        quantity: data.tproductclassquantity[j].InStockQty || 0,
+                                    };
+                                    totaldeptquantity += data.tproductclassquantity[j].InStockQty;
+                                    qtylineItems.push(qtylineItemObj);
+                                }
+                                // $('#edttotalqtyinstock').val(totaldeptquantity);
+                                templateObject.productqtyrecords.set(qtylineItems);
+                                templateObject.totaldeptquantity.set(totaldeptquantity);
+                            })
+                            .catch(function(err) {
+                                $(".fullScreenSpin").css("display", "none");
+                            });
+                    };
 
-                    //templateObject.getProductData();
+                    // templateObject.getProductData();
 
 
                 } else {
@@ -17387,8 +17417,11 @@ Template.new_invoice.events({
     },
     "click .btnRemove": async function(event) {
         let templateObject = Template.instance();
+        await templateObject.hasFollowings();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        let salesService = new SalesBoardService();
+        var currentDate = new Date();
         var clicktimes = 0;
         var targetID = $(event.target).closest("tr").attr("id");
         $("#selectDeleteLineID").val(targetID);
@@ -17397,6 +17430,7 @@ Template.new_invoice.events({
         var getso_id = url.split("?id=");
         var currentInvoice = getso_id[getso_id.length - 1];
         var objDetails = "";
+        var invList = [];
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var invData = await salesService.getOneInvoicedataEx(currentInvoice);
@@ -17410,192 +17444,191 @@ Template.new_invoice.events({
                 initialReportLoad,
                 0
             );
-            var invList = followingInvoices.tinvoicelist;
-            if (invList.length > 0) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
+            invList = followingInvoices.tinvoicelist;
         }
-
-        times++;
-        if (times == 1) {
-            $("#deleteLineModal").modal("toggle");
-        } else {
-            if ($("#tblInvoiceLine tbody>tr").length > 1) {
-                this.click;
-                $(event.target).closest("tr").remove();
-                $(".invoice_print #" + targetID).remove();
-                event.preventDefault();
-                let $tblrows = $("#tblInvoiceLine tbody tr");
-                let $printrows = $(".invoice_print tbody tr");
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-                let subDiscountTotal = 0; // New Discount
-                let taxGrandTotalPrint = 0;
-
-                let subGrandTotalNet = 0;
-                let taxGrandTotalNet = 0;
-                $tblrows.each(function(index) {
-                    var $tblrow = $(this);
-                    var qty = $tblrow.find(".lineQty").val() || 0;
-                    var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                    var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                    var taxrateamount = 0;
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxRate) {
-                                taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-                            }
-                        }
-                    }
-
-                    var subTotal =
-                        parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal =
-                        parseFloat(qty, 10) *
-                        Number(price.replace(/[^0-9.-]+/g, "")) *
-                        parseFloat(taxrateamount);
-                    var lineDiscountPerc =
-                        parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
-                    let lineTotalAmount = subTotal + taxTotal;
-
-                    let lineDiscountTotal = lineDiscountPerc / 100;
-
-                    var discountTotal = lineTotalAmount * lineDiscountTotal;
-                    var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                    var subTotalWithDiscountTotalLine =
-                        subTotal - subTotalWithDiscount || 0;
-                    var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                    var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                    if (!isNaN(discountTotal)) {
-                        subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-                        document.getElementById("subtotal_discount").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                    }
-                    $tblrow
-                        .find(".lineTaxAmount")
-                        .text(
-                            utilityService.modifynegativeCurrencyFormat(
-                                taxTotalWithDiscountTotalLine
-                            )
-                        );
-
-                    let unitPriceIncCalc =
-                        Number(price.replace(/[^0-9.-]+/g, "")) *
-                        parseFloat(taxrateamount) || 0;
-                    let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
-                    $tblrow
-                        .find(".colUnitPriceExChange")
-                        .val(
-                            utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
-                        );
-                    $tblrow
-                        .find(".colUnitPriceIncChange")
-                        .val(
-                            utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-                        );
-
-                    if (!isNaN(subTotal)) {
-                        $tblrow
-                            .find(".colAmountEx")
-                            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                        $tblrow
-                            .find(".colAmountInc")
-                            .text(
-                                utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
-                            );
-                        subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-                            0 :
-                            subTotalWithDiscountTotalLine;
-                        subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_total").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                    }
-
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-                            0 :
-                            taxTotalWithDiscountTotalLine;
-                        taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("subtotal_tax").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                    }
-
-                    if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-                        let GrandTotal =
-                            parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-                        let GrandTotalNet =
-                            parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
-                        document.getElementById("subtotal_nett").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                        document.getElementById("grandTotal").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("balanceDue").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDue").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    }
-                });
-
-                //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-                $printrows.each(function(index) {
-                    var $printrows = $(this);
-                    var qty = $printrows.find("#lineQty").text() || 0;
-                    var price = $printrows.find("#lineUnitPrice").text() || "0";
-                    var taxrateamount = 0;
-                    var taxRate = $printrows.find("#lineTaxCode").text();
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxRate) {
-                                taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-                            }
-                        }
-                    }
-                    var subTotal =
-                        parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal =
-                        parseFloat(qty, 10) *
-                        Number(price.replace(/[^0-9.-]+/g, "")) *
-                        parseFloat(taxrateamount);
-                    $printrows
-                        .find("#lineTaxAmount")
-                        .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-                    if (!isNaN(subTotal)) {
-                        $printrows
-                            .find("#lineAmt")
-                            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                        subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_totalPrint").innerHTML =
-                            $("#subtotal_total").text();
-                    }
-
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("totalTax_totalPrint").innerHTML =
-                            utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-                    }
-                    if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-                        let GrandTotal =
-                            parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-                        document.getElementById("grandTotalPrint").innerHTML =
-                            $("#grandTotal").text();
-                        //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
-                        //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDuePrint").innerHTML =
-                            $("#totalBalanceDue").text();
-                    }
-                });
-                //}
-                return false;
-            } else {
+        if(targetID != undefined){
+            times++;
+            if (times == 1) {
                 $("#deleteLineModal").modal("toggle");
+            } else {
+                if ($("#tblInvoiceLine tbody>tr").length > 1) {
+                    this.click;
+                    $(event.target).closest("tr").remove();
+                    $(".invoice_print #" + targetID).remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblInvoiceLine tbody tr");
+                    let $printrows = $(".invoice_print tbody tr");
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+                    let subDiscountTotal = 0; // New Discount
+                    let taxGrandTotalPrint = 0;
+
+                    let subGrandTotalNet = 0;
+                    let taxGrandTotalNet = 0;
+                    $tblrows.each(function(index) {
+                        var $tblrow = $(this);
+                        var qty = $tblrow.find(".lineQty").val() || 0;
+                        var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+                        var taxRate = $tblrow.find(".lineTaxCode").val();
+
+                        var taxrateamount = 0;
+                        if (taxcodeList) {
+                            for (var i = 0; i < taxcodeList.length; i++) {
+                                if (taxcodeList[i].codename == taxRate) {
+                                    taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+                                }
+                            }
+                        }
+
+                        var subTotal =
+                            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                        var taxTotal =
+                            parseFloat(qty, 10) *
+                            Number(price.replace(/[^0-9.-]+/g, "")) *
+                            parseFloat(taxrateamount);
+                        var lineDiscountPerc =
+                            parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+                        let lineTotalAmount = subTotal + taxTotal;
+
+                        let lineDiscountTotal = lineDiscountPerc / 100;
+
+                        var discountTotal = lineTotalAmount * lineDiscountTotal;
+                        var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+                        var subTotalWithDiscountTotalLine =
+                            subTotal - subTotalWithDiscount || 0;
+                        var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+                        var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+                        if (!isNaN(discountTotal)) {
+                            subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+                            document.getElementById("subtotal_discount").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+                        }
+                        $tblrow
+                            .find(".lineTaxAmount")
+                            .text(
+                                utilityService.modifynegativeCurrencyFormat(
+                                    taxTotalWithDiscountTotalLine
+                                )
+                            );
+
+                        let unitPriceIncCalc =
+                            Number(price.replace(/[^0-9.-]+/g, "")) *
+                            parseFloat(taxrateamount) || 0;
+                        let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                        let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
+                        $tblrow
+                            .find(".colUnitPriceExChange")
+                            .val(
+                                utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
+                            );
+                        $tblrow
+                            .find(".colUnitPriceIncChange")
+                            .val(
+                                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+                            );
+
+                        if (!isNaN(subTotal)) {
+                            $tblrow
+                                .find(".colAmountEx")
+                                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                            $tblrow
+                                .find(".colAmountInc")
+                                .text(
+                                    utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
+                                );
+                            subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
+                                0 :
+                                subTotalWithDiscountTotalLine;
+                            subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+                            document.getElementById("subtotal_total").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+                        }
+
+                        if (!isNaN(taxTotal)) {
+                            taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
+                                0 :
+                                taxTotalWithDiscountTotalLine;
+                            taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+                            document.getElementById("subtotal_tax").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+                        }
+
+                        if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+                            let GrandTotal =
+                                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+                            let GrandTotalNet =
+                                parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+                            document.getElementById("subtotal_nett").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+                            document.getElementById("grandTotal").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("balanceDue").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("totalBalanceDue").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                        }
+                    });
+
+                    //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                    $printrows.each(function(index) {
+                        var $printrows = $(this);
+                        var qty = $printrows.find("#lineQty").text() || 0;
+                        var price = $printrows.find("#lineUnitPrice").text() || "0";
+                        var taxrateamount = 0;
+                        var taxRate = $printrows.find("#lineTaxCode").text();
+                        if (taxcodeList) {
+                            for (var i = 0; i < taxcodeList.length; i++) {
+                                if (taxcodeList[i].codename == taxRate) {
+                                    taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+                                }
+                            }
+                        }
+                        var subTotal =
+                            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                        var taxTotal =
+                            parseFloat(qty, 10) *
+                            Number(price.replace(/[^0-9.-]+/g, "")) *
+                            parseFloat(taxrateamount);
+                        $printrows
+                            .find("#lineTaxAmount")
+                            .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+                        if (!isNaN(subTotal)) {
+                            $printrows
+                                .find("#lineAmt")
+                                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                            subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                            document.getElementById("subtotal_totalPrint").innerHTML =
+                                $("#subtotal_total").text();
+                        }
+
+                        if (!isNaN(taxTotal)) {
+                            taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+                            document.getElementById("totalTax_totalPrint").innerHTML =
+                                utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+                        }
+                        if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+                            let GrandTotal =
+                                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+                            document.getElementById("grandTotalPrint").innerHTML =
+                                $("#grandTotal").text();
+                            //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
+                            //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("totalBalanceDuePrint").innerHTML =
+                                $("#totalBalanceDue").text();
+                        }
+                    });
+                    //}
+                    return false;
+                } else {
+                    $("#deleteLineModal").modal("toggle");
+                }
             }
-        }
+        } else {
+            if(invList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
+        } 
     },
     "click .btnDeleteFollowingInvoices": async function(event) {
         playDeleteAudio();
@@ -17725,7 +17758,6 @@ Template.new_invoice.events({
                     FlowRouter.go("/invoicelist?success=true");
                 }
             }
-            $("#deleteLineModal").modal("toggle");
         }, delayTimeAfterSound);
     },
     "click .btnDeleteInvoice": function(event) {
@@ -17790,6 +17822,7 @@ Template.new_invoice.events({
                 }
             }
             $("#deleteLineModal").modal("toggle");
+            $('.modal-backdrop').css('display', 'none');
         }, delayTimeAfterSound);
     },
     "click .btnDeleteLine": function(event) {
@@ -20461,106 +20494,87 @@ Template.new_invoice.events({
             $(".selectDays input[type=checkbox]").each(function() {
                 $(this).prop('checked', false);
             });
-            var url = FlowRouter.current().path;
-            var getso_id = url.split("?id=");
-            var currentInvoice = getso_id[getso_id.length - 1];
-            if (getso_id[1]) {
-                currentInvoice = parseInt(currentInvoice);
-                var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-                var selectedType = invData.fields.SaleCustField7;
-                var frequencyVal = invData.fields.SaleCustField8;
-                var startDate = invData.fields.SaleCustField9;
-                var finishDate = invData.fields.SaleCustField10;
-                var subStartDate = startDate.substring(0, 10);
-                var subFinishDate = finishDate.substring(0, 10);
-                var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
-                var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
-                // if (selectedType == "basedOnEvent") {
-                //   $("#basedOnEvent").prop('checked', true);
-                //   $('#onEventSettings').css('display', 'block');
-                //   $('#settingsOnEvents').prop('checked', true);
-                // } else {
-                //   $("#basedOnEvent").prop('checked', false);
-                //   $('#onEventSettings').css('display', 'none');
-                //   $('#settingsOnEvents').prop('checked', false);
-                //   $('#settingsOnLogout').prop('checked', false);
-                // }
-                // if (selectedType == 'basedOnFrequency') {
-                //   $("#basedOnFrequency").prop('checked', true);
-                //   $('#edtFrequencyDetail').css('display', 'flex');
-                //   $('#basedOnSettingsTitle').css('border-top-width', '1px');
-                // } else {
-                //   $("#basedOnFrequency").prop('checked', false);
-                //   $('#edtFrequencyDetail').css('display', 'none');
-                //   $('#basedOnSettingsTitle').css('border-top-width', '0px');
-                // }
-                var arrFrequencyVal = frequencyVal.split("@");
-                var radioFrequency = arrFrequencyVal[0];
-                $("#" + radioFrequency).prop('checked', true);
-                if (radioFrequency == "frequencyMonthly") {
-                    document.getElementById("monthlySettings").style.display = "block";
-                    document.getElementById("weeklySettings").style.display = "none";
-                    document.getElementById("dailySettings").style.display = "none";
-                    document.getElementById("oneTimeOnlySettings").style.display = "none";
-                    var monthDate = arrFrequencyVal[1];
-                    $("#sltDay").val('day' + monthDate);
-                    var ofMonths = arrFrequencyVal[2];
-                    var arrOfMonths = [];
-                    if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
-                      arrOfMonths = ofMonths.split(",");
-                    for (i = 0; i < arrOfMonths.length; i++) {
-                        $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
-                    }
-                    $('#edtMonthlyStartDate').val(convertedStartDate);
-                    $('#edtMonthlyFinishDate').val(convertedFinishDate);
-                } else if (radioFrequency == "frequencyWeekly") {
-                    document.getElementById("weeklySettings").style.display = "block";
-                    document.getElementById("monthlySettings").style.display = "none";
-                    document.getElementById("dailySettings").style.display = "none";
-                    document.getElementById("oneTimeOnlySettings").style.display = "none";
-                    var everyWeeks = arrFrequencyVal[1];
-                    $("#weeklyEveryXWeeks").val(everyWeeks);
-                    var selectDays = arrFrequencyVal[2];
-                    var arrSelectDays = selectDays.split(",");
-                    for (i = 0; i < arrSelectDays.length; i++) {
-                        if (parseInt(arrSelectDays[i]) == 0)
-                            $("#formCheck-sunday").prop('checked', true);
-                        if (parseInt(arrSelectDays[i]) == 1)
-                            $("#formCheck-monday").prop('checked', true);
-                        if (parseInt(arrSelectDays[i]) == 2)
-                            $("#formCheck-tuesday").prop('checked', true);
-                        if (parseInt(arrSelectDays[i]) == 3)
-                            $("#formCheck-wednesday").prop('checked', true);
-                        if (parseInt(arrSelectDays[i]) == 4)
-                            $("#formCheck-thursday").prop('checked', true);
-                        if (parseInt(arrSelectDays[i]) == 5)
-                            $("#formCheck-friday").prop('checked', true);
-                        if (parseInt(arrSelectDays[i]) == 6)
-                            $("#formCheck-saturday").prop('checked', true);
-                    }
-                    $('#edtWeeklyStartDate').val(convertedStartDate);
-                    $('#edtWeeklyFinishDate').val(convertedFinishDate);
-                } else if (radioFrequency == "frequencyDaily") {
-                    document.getElementById("dailySettings").style.display = "block";
-                    document.getElementById("monthlySettings").style.display = "none";
-                    document.getElementById("weeklySettings").style.display = "none";
-                    document.getElementById("oneTimeOnlySettings").style.display = "none";
-                    var dailyRadioOption = arrFrequencyVal[1];
-                    $("#" + dailyRadioOption).prop('checked', true);
-                    var everyDays = arrFrequencyVal[2];
-                    $("#dailyEveryXDays").val(everyDays);
-                    $('#edtDailyStartDate').val(convertedStartDate);
-                    $('#edtDailyFinishDate').val(convertedFinishDate);
-                } else if (radioFrequency == "frequencyOnetimeonly") {
-                    document.getElementById("oneTimeOnlySettings").style.display = "block";
-                    document.getElementById("monthlySettings").style.display = "none";
-                    document.getElementById("weeklySettings").style.display = "none";
-                    document.getElementById("dailySettings").style.display = "none";
-                    $('#edtOneTimeOnlyDate').val(convertedStartDate);
-                    $('#edtOneTimeOnlyTimeError').css('display', 'none');
-                    $('#edtOneTimeOnlyDateError').css('display', 'none');
-                }
-            }
+            // var url = FlowRouter.current().path;
+            // var getso_id = url.split("?id=");
+            // var currentInvoice = getso_id[getso_id.length - 1];
+            // if (getso_id[1]) {
+            //     currentInvoice = parseInt(currentInvoice);
+            //     var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+            //     var selectedType = invData.fields.SaleTypeOfBasedOn;
+            //     var frequencyVal = invData.fields.SaleFrequenctyValues;
+            //     var startDate = invData.fields.CopyStartDate;
+            //     var finishDate = invData.fields.CopyFinishDate;
+            //     var subStartDate = startDate.substring(0, 10);
+            //     var subFinishDate = finishDate.substring(0, 10);
+            //     var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
+            //     var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
+            //     var arrFrequencyVal = frequencyVal.split("@");
+            //     var radioFrequency = arrFrequencyVal[0];
+            //     $("#" + radioFrequency).prop('checked', true);
+            //     if (radioFrequency == "frequencyMonthly") {
+            //         document.getElementById("monthlySettings").style.display = "block";
+            //         document.getElementById("weeklySettings").style.display = "none";
+            //         document.getElementById("dailySettings").style.display = "none";
+            //         document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //         var monthDate = arrFrequencyVal[1];
+            //         $("#sltDay").val('day' + monthDate);
+            //         var ofMonths = arrFrequencyVal[2];
+            //         var arrOfMonths = [];
+            //         if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+            //             arrOfMonths = ofMonths.split(",");
+            //         for (i = 0; i < arrOfMonths.length; i++) {
+            //             $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
+            //         }
+            //         $('#edtMonthlyStartDate').val(convertedStartDate);
+            //         $('#edtMonthlyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyWeekly") {
+            //         document.getElementById("weeklySettings").style.display = "block";
+            //         document.getElementById("monthlySettings").style.display = "none";
+            //         document.getElementById("dailySettings").style.display = "none";
+            //         document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //         var everyWeeks = arrFrequencyVal[1];
+            //         $("#weeklyEveryXWeeks").val(everyWeeks);
+            //         var selectDays = arrFrequencyVal[2];
+            //         var arrSelectDays = selectDays.split(",");
+            //         for (i = 0; i < arrSelectDays.length; i++) {
+            //             if (parseInt(arrSelectDays[i]) == 0)
+            //                 $("#formCheck-sunday").prop('checked', true);
+            //             if (parseInt(arrSelectDays[i]) == 1)
+            //                 $("#formCheck-monday").prop('checked', true);
+            //             if (parseInt(arrSelectDays[i]) == 2)
+            //                 $("#formCheck-tuesday").prop('checked', true);
+            //             if (parseInt(arrSelectDays[i]) == 3)
+            //                 $("#formCheck-wednesday").prop('checked', true);
+            //             if (parseInt(arrSelectDays[i]) == 4)
+            //                 $("#formCheck-thursday").prop('checked', true);
+            //             if (parseInt(arrSelectDays[i]) == 5)
+            //                 $("#formCheck-friday").prop('checked', true);
+            //             if (parseInt(arrSelectDays[i]) == 6)
+            //                 $("#formCheck-saturday").prop('checked', true);
+            //         }
+            //         $('#edtWeeklyStartDate').val(convertedStartDate);
+            //         $('#edtWeeklyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyDaily") {
+            //         document.getElementById("dailySettings").style.display = "block";
+            //         document.getElementById("monthlySettings").style.display = "none";
+            //         document.getElementById("weeklySettings").style.display = "none";
+            //         document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //         var dailyRadioOption = arrFrequencyVal[1];
+            //         $("#" + dailyRadioOption).prop('checked', true);
+            //         var everyDays = arrFrequencyVal[2];
+            //         $("#dailyEveryXDays").val(everyDays);
+            //         $('#edtDailyStartDate').val(convertedStartDate);
+            //         $('#edtDailyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyOnetimeonly") {
+            //         document.getElementById("oneTimeOnlySettings").style.display = "block";
+            //         document.getElementById("monthlySettings").style.display = "none";
+            //         document.getElementById("weeklySettings").style.display = "none";
+            //         document.getElementById("dailySettings").style.display = "none";
+            //         $('#edtOneTimeOnlyDate').val(convertedStartDate);
+            //         $('#edtOneTimeOnlyTimeError').css('display', 'none');
+            //         $('#edtOneTimeOnlyDateError').css('display', 'none');
+            //     }
+            // }
             $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
         //       let uploadedItems = templateObject.uploadedFiles.get();
@@ -20943,7 +20957,7 @@ Template.new_invoice.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';       
+        let fDate2 = '';
         setTimeout(async function() {
             // basedOnTypes.each(function () {
             //   if ($(this).prop('checked')) {
@@ -21022,17 +21036,17 @@ Template.new_invoice.events({
                 var currentInvoice = getso_id[getso_id.length - 1];
                 if (getso_id[1]) {
                     currentInvoice = parseInt(currentInvoice);
-                    objDetails = {
-                        type: "TInvoiceEx",
-                        fields: {
-                            ID: currentInvoice,
-                            SaleCustField7: selectedType,
-                            SaleCustField8: frequencyVal,
-                            SaleCustField9: sDate,
-                            SaleCustField10: fDate,
-                        }
-                    };
-                    var result = await salesService.saveInvoiceEx(objDetails);
+                    // objDetails = {
+                    //     type: "TInvoiceEx",
+                    //     fields: {
+                    //         ID: currentInvoice,
+                    //         SaleTypeOfBasedOn: selectedType,
+                    //         SaleFrequenctyValues: frequencyVal,
+                    //         CopyStartDate: sDate2,
+                    //         CopyFinishDate: fDate2,
+                    //     }
+                    // };
+                    // var result = await salesService.saveInvoiceEx(objDetails);
                     let period = ""; // 0
                     let days = [];
                     let i = 0;
@@ -21063,7 +21077,7 @@ Template.new_invoice.events({
                                 }
                             }
                             if (dailyRadioOption == "dailyEvery") {
-                    
+
                             }
                         } else {
                             repeatDates.push({
@@ -21108,7 +21122,7 @@ Template.new_invoice.events({
                                     CloudUserName: erpGet.ERPUsername,
                                     CloudPassword: erpGet.ERPPassword,
                                     TransID: currentInvoice,
-                                    TransType: "Cheque",
+                                    TransType: "Invoice",
                                     Repeat_Frequency: frequency2,
                                     Repeat_Period: period,
                                     Repeat_BaseDate: sDate2,
@@ -21144,17 +21158,17 @@ Template.new_invoice.events({
                             oPost.setRequestHeader("Accept", "application/html");
                             oPost.setRequestHeader("Content-type", "application/json");
                             oPost.send(myString);
-                    
+
                             oPost.onreadystatechange = function() {
                                 if (oPost.readyState == 4 && oPost.status == 200) {
                                     var myArrResponse = JSON.parse(oPost.responseText);
                                     var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                                 } else if (oPost.readyState == 4 && oPost.status == 403) {
-                                    
+
                                 } else if (oPost.readyState == 4 && oPost.status == 406) {
-                                    
+
                                 } else if (oPost.readyState == "") {
-                                    
+
                                 }
                                 $(".fullScreenSpin").css("display", "none");
                             };
@@ -21168,7 +21182,7 @@ Template.new_invoice.events({
                                     CloudUserName: erpGet.ERPUsername,
                                     CloudPassword: erpGet.ERPPassword,
                                     TransID: currentInvoice,
-                                    TransType: "Cheque",
+                                    TransType: "Invoice",
                                     Repeat_Dates: repeatDates,
                                     Repeat_Frequency: frequency2,
                                     Repeat_Period: period,
@@ -21193,7 +21207,7 @@ Template.new_invoice.events({
                                     CloudUserName: erpGet.ERPUsername,
                                     CloudPassword: erpGet.ERPPassword,
                                     TransID: currentInvoice,
-                                    TransType: "Cheque",
+                                    TransType: "Invoice",
                                     Repeat_Frequency: frequency2,
                                     Repeat_Period: period,
                                     Repeat_BaseDate: sDate2,
@@ -21231,21 +21245,21 @@ Template.new_invoice.events({
                         oPost.setRequestHeader("Content-type", "application/json");
                         // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                         oPost.send(myString);
-                    
+
                         oPost.onreadystatechange = function() {
-                          if (oPost.readyState == 4 && oPost.status == 200) {
-                              var myArrResponse = JSON.parse(oPost.responseText);
-                              var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
-                          } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
-                          } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
-                          } else if (oPost.readyState == "") {
-                              
-                          }
-                          $(".fullScreenSpin").css("display", "none");
-                      };
-                    }                    
+                            if (oPost.readyState == 4 && oPost.status == 200) {
+                                var myArrResponse = JSON.parse(oPost.responseText);
+                                var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
+                            } else if (oPost.readyState == 4 && oPost.status == 403) {
+
+                            } else if (oPost.readyState == 4 && oPost.status == 406) {
+
+                            } else if (oPost.readyState == "") {
+
+                            }
+                            $(".fullScreenSpin").css("display", "none");
+                        };
+                    }
                 }
             } else {
                 window.open("/invoicecard", "_self");

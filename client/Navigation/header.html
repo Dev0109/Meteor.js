@@ -245,9 +245,9 @@
                     </li>
                 {{/if}} -->
 
-                <!-- {{#if isSetupWizardComplete }}
+                <!-- {{#if isAllStepsConfirmed }}
 
-                    {{else}} -->
+                {{else}} -->
                     <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
                         <a class="nav-link" href="setup" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
                             <i class="fas fa-link" style="margin-right: 5px;"></i> Setup Wizard
@@ -449,7 +449,11 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title"><span class="headerprogressLabel">Loading Your Information To Your Device</span></h5>
+                        <h5 class="modal-title"><span class="headerprogressLabel">Hi <span class="first-name-label"></span>, just loading your company information on your device.</span></h5>
+                        <script>
+                            let loggedEmployeedName = localStorage.getItem('vs1LoggedEmployeeName').split(" ");
+                            $(".first-name-label").html(loggedEmployeedName[0] || '');
+                        </script>
                         <i class="fas fa-spinner fa-pulse" style="font-size: 16px; margin-top: 6px;"></i>
                     </div>
                     <div class="modal-body" style="padding-top: 0px;">

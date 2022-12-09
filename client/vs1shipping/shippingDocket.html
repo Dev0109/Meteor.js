@@ -302,6 +302,20 @@
                         margin: 0 !important;
                     }
 
+                    .highlightSerial {
+                        border: 0px solid transparent !important;
+                        background-color: rgba(0, 0, 0, 0) !important;
+                        padding: 0px !important;
+                        width: 100% !important;
+                        color: #858796 !important;
+                    }
+
+                    .highlightSerial::-webkit-outer-spin-button,
+                    .highlightSerial::-webkit-inner-spin-button {
+                        -webkit-appearance: none !important;
+                        margin: 0 !important;
+                    }
+
                     /* Firefox */
                     .highlightInput[type=number] {
                         -moz-appearance: textfield !important;
@@ -342,6 +356,45 @@
                                 border-radius: .35rem !important;
                                 transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
                             }
+
+                            .highlight {
+                                background: yellow;
+                            }
+
+                            .highlightInput {
+                                border: 0px solid transparent !important;
+                                background-color: rgba(0, 0, 0, 0) !important;
+                                padding: 0px !important;
+                                width: 100% !important;
+                                text-align: right !important;
+                                color: #858796 !important;
+                            }
+
+                            .highlightInput::-webkit-outer-spin-button,
+                            .highlightInput::-webkit-inner-spin-button {
+                                -webkit-appearance: none !important;
+                                margin: 0 !important;
+                            }
+
+
+                            .highlightSerial {
+                                border: 0px solid transparent !important;
+                                background-color: rgba(0, 0, 0, 0) !important;
+                                padding: 0px !important;
+                                width: 100% !important;
+                                color: #858796 !important;
+                            }
+
+                            .highlightSerial::-webkit-outer-spin-button,
+                            .highlightSerial::-webkit-inner-spin-button {
+                                -webkit-appearance: none !important;
+                                margin: 0 !important;
+                            }
+
+                            /* Firefox */
+                            .highlightInput[type=number] {
+                                -moz-appearance: textfield !important;
+                            }
                         </style>
                         <!-- <div id="reader" style="width: 100%"></div> -->
                         <div id="qr-reader-shippingdocket" style="width:100%"></div>
@@ -379,7 +432,67 @@
                    <input type="text" id="deptID" name="deptID" style="display: none;" readonly>
                    <input type="text" id="pqaID" name="pqaID" style="display: none;" readonly>
                    <input type="text" id="salesLineRow" name="salesLineRow" style="display: none;" readonly>
+                   {{#if showSerial 'true'}}
+                       <div class="row">
+                           <div class="col-12 col-lg-6">
+                               <table id="serailscanlist" style="width:100%" class="table table-bordered serailscanlist">
+                                   <thead>
+                                       <tr class="dnd-moved">
+                                           <th class="th colSltNo" style="width: 1%;">No.</th>
+                                           <th class="th colSltBAtch">Batch</th>
+                                           <th class="th colSltBin">Bin</th>
+                                           <th class="th colSltSerialNoBOM">Serial No.</th>
+                                           <th class="th colSltSerialNo hiddenColumn">Serial No.</th>
+                                           <th class="th" style="width: 1%;"></th>
+                                       </tr>
+                                   </thead>
+                                   <tbody>
+                                       <tr class="dnd-moved" id="">
+                                           <td contenteditable="true" class=""></td>
+                                           <td contenteditable="true" class=""></td>
+                                           <td contenteditable="true" class=""></td>
+                                           <td contenteditable="true" class=""></td>
+                                           <td contenteditable="true" class="hiddenColumn"></td>
+                                           <td style="width: 1%;"><span class="btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
+                                       </tr>
+                                   </tbody>
+                               </table>
+                           </div>
 
+                           <div class="col-12 col-lg-6" style="max-height: 500px; overflow: auto;">
+                               <table id="tblAvailableSerialNo" style="width:100%" class="table table-bordered tblAvailableSerialNo">
+                                   <thead>
+                                       <tr class="dnd-moved">
+                                           <th class="th" style="width: 1%;"></th>
+                                           <th class="th colSltNo" style="width: 1%;">No.</th>
+                                           <th class="th colSltSerialNo">Available Serial No.</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody>
+                                       {{#each itemavail in availableserialnumberlist}}
+                                           <tr class="dnd-moved {{itemavail.checkclass}} {{itemavail.domserialnumberFormat}}" id="{{itemavail.rowid}}">
+                                               <td style="width: 1%;"><span class="btnMove"><button type="button" class="btn btn-success btn-rounded btn-sm my-0 "><i class="fas fa-caret-left mx-1"></i></button></span></td>
+                                               <td contenteditable="true" class="availrow_id">{{itemavail.rowid}}</td>
+                                               <td contenteditable="true" class=""><input class="lineSerialNumber highlightSerial" id="lineSerialNumber" type="text" value="{{itemavail.domserialnumber}}"></td>
+                                           </tr>
+                                       {{/each}}
+                                   </tbody>
+                                   {{#if availableserialnumberqty 'true'}}
+                                       <tfoot>
+                                           <tr>
+                                               <td colspan="3">
+                                                   <a class="btn btn-link float-left viewMoreSerialNo" type="button" id="viewMoreSerialNo" style="color: #00a3d3;">View More</a>
+                                                   <a class="btn btn-link float-left viewLessSerialNo" type="button" id="viewLessSerialNo" style="color: #00a3d3; display:none;">View Less</a>
+                                               </td>
+                                           </tr>
+                                       </tfoot>
+                                   {{/if}}
+                               </table>
+                           </div>
+                       </div>
+                   {{else}}
+                   <div class="row">
+                       <div class="col-12">
                     <table id="serailscanlist" style="width:100%" class="table table-bordered serailscanlist">
                         <thead>
                             <tr class="dnd-moved">
@@ -400,6 +513,9 @@
                             </tr>
                         </tbody>
                     </table>
+                  </div>
+              </div>
+              {{/if}}
                 </div>
             </div>
         </div>

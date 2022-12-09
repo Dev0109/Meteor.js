@@ -796,7 +796,7 @@ setTimeout(function () {
                   lengthMenu: [ [initialBaseDataLoad, -1], [initialBaseDataLoad, "All"] ],
                   info: true,
                   responsive: true,
-                  "order": [[ 0, "asc" ]],
+                  "order": [[ 1, "asc" ]],
                   action: function () {
                       $('#tblInventory').DataTable().ajax.reload();
                       let draftRecord = templateObject.datatablerecords.get();

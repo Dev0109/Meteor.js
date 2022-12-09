@@ -6,37 +6,13 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
-                <div class="card-body p-1 rounded">
-                    <div class="table-responsive">
-                        <style>
-                            .table-responsive .table-bordered {
-                                border: 1px solid #e3e6f0;
-                            }
-                        </style>
-                        <table id="tblProcessPopList" style="width: 100%;" class="dataTable table table-hover table-striped table-bordered tblProcessPopList">
-                            <thead>
-                                <tr class="dnd-moved">
-                                    <th class="th colProcessName">Process Name</th>
-                                    <th class="th colDescription">Description</th>
-                                    <th class="th colDailyHours">Daily Hours</th>
-                                    <th class="th colTotalHourlyCosts">Total Hourly Costs</th>
-                                    <th class="th colWastage">Inventory Asset Wastage</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- {{#if datatablerecords}}
-                                    {{#each record in datatablerecords}}
-                                        <tr class="dnd-moved"  style="cursor: pointer;">
-                                            <td contenteditable="false" class="colProcessName">{{record.fields.name}}</td>
-                                            <td contenteditable="false" class="colDescription">{{record.fields.description}}</td>
-                                            <td contenteditable="false" class="colDailyHours">{{record.fields.dailyHours}}</td>
-                                            <td contenteditable="false" class="colTotalHourlyCosts">{{record.fields.totalHourlyCost}}</td>
-                                            <td contenteditable="false" class="colWastage">{{record.fields.wastage}}</td>
-                                        </tr>
-                                    {{/each}}
-                                {{/if}} -->
-                            </tbody>
-                        </table>
+                <div class="row">
+
+                    <div class="col-12 d-flex align-items-center mb-4 justify-content-end">
+                        {{> export_import_print_display_button tablename="tblProcessList"}}
+                    </div>
+                    <div class="col-12">
+                        {{> non_transactional_list tablename="tblProcessList"}}
                     </div>
                 </div>
             </div>

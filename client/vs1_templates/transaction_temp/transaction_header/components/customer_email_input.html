@@ -1,0 +1,43 @@
+<!-- Customer Email input -->
+<!-- Params
+label
+-->
+<template name="customer_email_input">
+  <div class="formgoup">
+    <div class="form-group">
+      <label>{{label}} Email</label>
+      <input 
+        class="form-control form-control" 
+        type="text" 
+        id="{{#if equals label 'Customer'}}edtCustomerEmail{{else}}edtSupplierEmail{{/if}}" 
+        name="{{#if equals label 'Customer'}}edtCustomerEmail{{else}}edtSupplierEmail{{/if}}"
+        customerid=" " 
+        customerfirstname=" " 
+        customerlastname=" ">
+    </div>
+    <div 
+      class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center divEmailSelect"
+      style="margin: 0px 16px;padding: -2px;padding-left: 24px;width: 110%;">
+      <div class="form-group" style="margin-right: 35px; Width:50%; font-size: 15px;">
+        <input 
+          class="custom-control-input chkEmailCopy" 
+          type="checkbox" 
+          id="formCheck-1"
+          style="font-size: 22px;">
+        <label class="custom-control-label" for="formCheck-1">
+          Email {{label}}
+        </label>
+      </div>
+      <div class="form-group" style="margin-left: 35px; Width:50%; font-size: 15px;">
+        <input 
+          class="custom-control-input chkEmailRep" 
+          type="checkbox" 
+          id="formCheck-2"
+          style="font-size: 22px;">
+        <label class="custom-control-label" for="formCheck-2">
+          Email User
+        </label>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,102 @@
+<template name="title_list_pop">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Title List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                {{> non_transactional_list tablename="tblTitleList"}}
+                <!-- <input type="hidden" style="width: 100%; display:none;" id="selectTitleLineID" name="selectTitleLineID"
+                    readonly>
+                <div class="card-body p-1 rounded">
+                    <div class="table-responsive">
+                        <table id="tblSupplierTitlePopList" style="width:100%"
+                            class="dataTable table table-hover table-striped table-bordered tblSupplierTitlePopList">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colSourceName" style="">Title</th>
+                                    <th class="th colActive" style="">Active</th>
+                                </tr>
+                            </thead>
+                            <style>
+                                .colStatusName {
+                                    width: 20% !important;
+                                }
+
+                                .colActive {
+                                    width: 5% !important;
+                                }
+                            </style>
+                            <tbody>
+                                <tr class="dnd-moved" id="s-0" style="cursor: default;">
+                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Mr
+                                    </td>
+                                    <td contenteditable="false" class="colActive text-center"
+                                        style="width: 5% !important;">
+                                        <div class="custom-control custom-checkbox chkBox">
+                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-0"
+                                                checked disabled>
+                                            <label class="custom-control-label chkBox" for="s-active-0"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="dnd-moved" id="s-1" style="cursor: default;">
+                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Mrs
+                                    </td>
+                                    <td contenteditable="false" class="colActive text-center"
+                                        style="width: 5% !important;">
+                                        <div class="custom-control custom-checkbox chkBox">
+                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-1"
+                                                checked disabled>
+                                            <label class="custom-control-label chkBox" for="s-active-1"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="dnd-moved" id="s-2" style="cursor: default;">
+                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">MIss
+                                    </td>
+                                    <td contenteditable="false" class="colActive text-center"
+                                        style="width: 5% !important;">
+                                        <div class="custom-control custom-checkbox chkBox">
+                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-2"
+                                                checked disabled>
+                                            <label class="custom-control-label chkBox" for="s-active-2"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="dnd-moved" id="s-3" style="cursor: default;">
+                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Ms
+                                    </td>
+                                    <td contenteditable="false" class="colActive text-center"
+                                        style="width: 5% !important;">
+                                        <div class="custom-control custom-checkbox chkBox">
+                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-3"
+                                                checked disabled>
+                                            <label class="custom-control-label chkBox" for="s-active-3"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="dnd-moved" id="s-4" style="cursor: default;">
+                                    <td contenteditable="false" class="colTitleName" style="width: 20% !important;">Dr
+                                    </td>
+                                    <td contenteditable="false" class="colActive text-center"
+                                        style="width: 5% !important;">
+                                        <div class="custom-control custom-checkbox chkBox">
+                                            <input class="custom-control-input chkBox" type="checkbox" id="s-active-4"
+                                                checked disabled>
+                                            <label class="custom-control-label chkBox" for="s-active-4"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</template>

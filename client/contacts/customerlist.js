@@ -46,21 +46,28 @@ Template.customerlist.onRendered(function() {
         }
 
     });
-    templateObject.checkSetupWizardFinished = async function () {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
-        if( setupFinished === null || setupFinished ===  "" ){
-            let setupInfo = await organisationService.getSetupInfo();
-            if( setupInfo.tcompanyinfo.length > 0 ){
-                let data = setupInfo.tcompanyinfo[0];
-                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-                templateObject.setupFinished.set(data.IsSetUpWizard)
-            }
-        }else{
-            templateObject.setupFinished.set(setupFinished)
-        }
-    }
-    templateObject.checkSetupWizardFinished();
-
+    // templateObject.checkSetupWizardFinished = async function () {
+    //     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+    //     if( setupFinished === null || setupFinished ===  "" ){
+    //         let setupInfo = await organisationService.getSetupInfo();
+    //         if( setupInfo.tcompanyinfo.length > 0 ){
+    //             let data = setupInfo.tcompanyinfo[0];
+    //             let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+    //             setupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
+    //             localStorage.setItem("IS_SETUP_FINISHED", setupFinished); //data.IsSetUpWizard
+    //             templateObject.setupFinished.set(setupFinished); //data.IsSetUpWizard
+    //             if (setupFinished) {
+    //                 $('.setupIncompleatedMsg').hide();
+    //             } else {
+    //                 $('.setupIncompleatedMsg').show();
+    //             }
+    //         }
+    //     }else{
+    //         templateObject.setupFinished.set(setupFinished);
+    //     }
+    // }
+    // templateObject.checkSetupWizardFinished();
+    checkSetupFinished();
 });
 
 

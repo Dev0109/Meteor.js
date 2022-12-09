@@ -233,22 +233,7 @@
                     <div class="card shadow mb-4 cardSizing">
                         <div class="card-header d-flex justify-content-between align-items-xl-center">
                             <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
-
-                            <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo"
-                                id="customerInfo" style="color: #00A3D3;">
-
-                                {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
-                                {{record.joblastname}}-{{record.phone}}
-                                <!-- {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
-                                     {{record.joblastname}}-{{record.phone}} -->
-                                <!-- {{record.joblastname}} - {{record.jobphone}} -->
-                                {{else}}
-                                <!-- {{record.company}} - {{record.firstname}} {{record.lastname}} -->
-                                {{#if notEquals record.id ''}}
-                                CUS-{{record.id}} - 
-                                {{/if}}{{record.company}}
-                                {{/if}}
-                            </h6>
+                            {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
                             <!--here-->
                             <div>
                                 <!-- <span class="font-weight-bold m-0" style="color: #00A3D3;margin-right:14px;">
@@ -257,10 +242,10 @@
                               {{/if}}
                              </span> -->
                                 <button type="button" class="btn btn-success btnReceiveCustomerPayment"
-                                    style="margin:14px;" id="btnReceiveCustomerPayment"><i
+                                    style="margin:7px;" id="btnReceiveCustomerPayment"><i
                                         class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Receive
                                     Payment</button>
-                                <a class="btn btnOpenSettings" role="button" style="margin:14px;margin-right:0px;"
+                                <a class="btn btnOpenSettings" role="button" style="margin:7px;margin-right:0px;"
                                     data-toggle="modal" href="#myModal4"><i
                                         class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>
@@ -468,7 +453,8 @@
                                                         <div class="form-group" style="margin: 4px;">
                                                             <label>Email</label><input type="text" class="form-control"
                                                                 id="edtJobCustomerEmail" name="edtJobCustomerEmail"
-                                                                value="{{record.jobemail}}"></div>
+                                                                value="{{record.jobemail}}">
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -688,7 +674,8 @@
                                                                                     </option>
                                                                                     {{/if}}
                                                                                     {{/each}}
-                                                                                </select></div>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -817,7 +804,8 @@
                                                                                                 {{item}}</option>
                                                                                             {{/if}}
                                                                                             {{/each}}
-                                                                                        </select></div>
+                                                                                        </select>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -852,6 +840,7 @@
 
                                                                         <select type="search" class="form-control"
                                                                             id="sltJobCustomerType"
+                                                                            value="{{record.clienttype}}"
                                                                             name="sltJobCustomerType"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
@@ -874,6 +863,7 @@
                                                                         <select type="search" class="form-control"
                                                                             id="sltJobPreferredPayment"
                                                                             name="sltJobPreferredPayment"
+                                                                            value="{{record.preferedpayment}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
@@ -891,6 +881,7 @@
                                                                                                 </select> -->
                                                                         <select type="search" class="form-control"
                                                                             id="sltJobTerms" name="sltJobTerms"
+                                                                            value="{{record.jobterms}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
@@ -1165,7 +1156,7 @@
                                                                             style="margin: 4px;"><label
                                                                                 class="text-nowrap">Tax
                                                                                 Code</label>
-                                                                            <select type="search" class="form-control"
+                                                                            <select type="search" class="form-control" value="{{record.jobtaxcode}}"
                                                                                 style="width: 260px; background-color:rgb(255, 255, 255); cursor: pointer;"
                                                                                 id="sltJobTaxCode" name="sltJobTaxCode">
                                                                                 <!-- {{#each item in taxCodeList}}
@@ -1706,7 +1697,7 @@
                                                                             class="text-nowrap">Customer Type</label>
 
                                                                         <select type="search" class="form-control"
-                                                                            id="sltCustomerType" name="sltCustomerType"
+                                                                            id="sltCustomerType" name="sltCustomerType" value="{{record.clienttype}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
 
@@ -1722,6 +1713,7 @@
                                                                             class="form-control preferredPaymentMethodSelect"
                                                                             id="sltPreferredPayment"
                                                                             name="sltPreferredPayment"
+                                                                            value="{{record.preferedpayment}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
@@ -1732,6 +1724,7 @@
                                                                         <label>Terms</label>
                                                                         <select type="search" class="form-control"
                                                                             id="sltTerms" name="sltTerms"
+                                                                            value="{{record.terms}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
@@ -1747,9 +1740,20 @@
                                                                             value="{{record.discount}}">
                                                                     </div>
                                                                 </div>
+                                                                <!-- I need to talk with Josef for this part-->
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start"
+                                                                        style="margin: 4px;padding-left:4px;"><label
+                                                                            class="text-nowrap">Credit Limit</label>
+                                                                        <input type="text" class="form-control pointer"
+                                                                            id="edtCustomerCardDiscount"
+                                                                            name="edtCustomerCardDiscount"
+                                                                            value="{{record.discount}}">
+                                                                    </div>
+                                                                </div>
 
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
-                                                                    {{> CurrencyWidget onlyCurrencyField="true"}}
+                                                                    {{> CurrencyWidget onlyCurrencyField="true"     }}
                                                                 </div>
 
 
@@ -2075,7 +2079,7 @@
                                                                                 class="text-nowrap">Tax
                                                                                 Code</label>
                                                                             <select type="search"
-                                                                                class="form-control taxCodeSelect"
+                                                                                class="form-control taxCodeSelect" value="{{record.taxcode}}"
                                                                                 style="width: 260px; background-color:rgb(255, 255, 255); cursor: pointer;"
                                                                                 id="sltTaxCode" name="sltTaxCode">
                                                                                 <!-- {{#each item in taxCodeList}}
@@ -2481,7 +2485,8 @@
                                                                                 class="form-control"
                                                                                 id="edtJobCustomerEmail"
                                                                                 name="edtJobCustomerEmail"
-                                                                                value="{{record.jobemail}}"></div>
+                                                                                value="{{record.jobemail}}">
+                                                                        </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col d-xl-flex align-items-xl-start"
@@ -2941,6 +2946,7 @@
                                                                                                 class="form-control"
                                                                                                 id="sltJobCustomerType"
                                                                                                 name="sltJobCustomerType"
+                                                                                                value="{{record.jobclienttype}}"
                                                                                                 style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                                             </select>
                                                                                         </div>
@@ -3462,6 +3468,12 @@
                                                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                             </div>
                                         </div>
+                                        <div class="row" style="justify-content:space-around;">
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
+                                        </div>
                                         <div class="row rowB" style="margin: 14px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
                                                 <div class="d-xl-flex justify-content-xl-end">
@@ -3633,82 +3645,79 @@
                                                             opacity: 1;
                                                         }
                                                     </style>
-
-                                                    <table id="tblTransactionlist" style="width:100%"
-                                                        class="dataTable table table-striped table-bordered tblTransactionlist">
+                                                        <!-- {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems}}    -->
+                                                        <table id="tblJoblist" name="tblJoblist" style="width:100%"
+                                                        class="dataTable table table-striped table-bordered tblJoblist">
                                                         <thead>
                                                             <tr class="dnd-moved">
-                                                                <th class="th colSortDate hiddenColumn">id</th>
-                                                                <th class="th colSaleDate" style="width:80px;">Sale Date
+                                                                <th class="th colCompany" style="width:200px;">Company
                                                                 </th>
-                                                                <th class="th colSalesNo" style="width:80px;">Sales No.
+                                                                <th class="th colPhone" style="width:95px;">Phone</th>                                                                                                       
+                                                                <th class="th colARBalance" style="width:80px;">AR
+                                                                    Balance</th>
+                                                                <th class="th colCreditBalance" style="width:80px;">
+                                                                    Credit Balance</th>
+                                                                <th class="th colBalance" style="width:80px;">Balance
                                                                 </th>
-                                                                <th class="th colCustomer" style="width:200px;">Customer
+                                                                <th class="th colCreditLimit" style="width:80px;">Credit
+                                                                    Limit</th>
+                                                                <th class="th colSalesOrderBalance" style="width:80px;">
+                                                                    Order Balance</th>
+                                                                <th class="th colCountry" style="width:100px;">Country
                                                                 </th>
-                                                                <th class="th colAmountEx" style="width:80px;">Amount
-                                                                    (Ex)</th>
-                                                                <!-- <th class="th colTax" style="width:80px;">Tax</th> -->
-                                                                <th class="th colAmount" style="width:80px;">Amount</th>
-                                                                <th class="th colPaid" style="width:80px;">Paid</th>
-                                                                <th class="th colBalanceOutstanding"
-                                                                    style="width:80px;">Balance Outstanding</th>
-                                                                <th class="th colType">Type</th>
-                                                                <th class="th colSaleCustField1 hiddenColumn">Custom
-                                                                    Field 1</th>
-                                                                <th class="th colSaleCustField2 hiddenColumn">Custom
-                                                                    Field 2</th>
-                                                                <th class="th colEmployee hiddenColumn">Employee</th>
-                                                                <th class="th colComments">Comments</th>
+                                                                <th class="th colEmail hiddenColumn">Email</th>
+                                                                <th class="th colAccountNo hiddenColumn">Account No</th>
+                                                                <th class="th colClientNo hiddenColumn">Custom Field 1
+                                                                </th>
+                                                                <th class="th colJobTitle hiddenColumn">Custom Field 2
+                                                                </th>
+                                                                <th class="th colNotes">Notes</th>
 
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {{#if datatablerecords}}
-                                                            {{#each item in datatablerecords}}
-                                                            <tr class="dnd-moved" id="{{item.id}}"
+                                                            {{#if datatablerecordsjob}}
+                                                            {{#each itemjob in datatablerecordsjob}}
+                                                            <tr class="dnd-moved" id="{{itemjob.id}}"
                                                                 style="cursor: pointer;">
-                                                                <td contenteditable="false"
-                                                                    class="colSortDate hiddenColumn">{{item.sortdate}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colSaleDate"><span
-                                                                        style="display:none;">{{item.sortdate}}</span>{{item.saledate}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colSalesNo">
-                                                                    {{item.transid}}</td>
-                                                                <td contenteditable="false" class="colCustomer">
-                                                                    {{item.customername}}</td>
-                                                                <td contenteditable="false" class="colAmountEx"
+                                                                <td contenteditable="false" class="colCompany">
+                                                                    {{itemjob.company}}</td>
+
+                                                                <td contenteditable="false" class="colPhone">
+                                                                    {{itemjob.phone}}</td>
+                                                                <td contenteditable="false" class="colARBalance"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totalamountex}}
+                                                                    {{itemjob.arbalance}}
                                                                 </td>
-                                                                <!-- <td contenteditable="false" class="colTax" style="text-align: right!important;">{{item.totaltax}}</td> -->
-                                                                <td contenteditable="false" class="colAmount"
+                                                                <td contenteditable="false" class="colCreditBalance"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totalamount}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colPaid"
+                                                                    {{itemjob.creditbalance}}</td>
+                                                                <td contenteditable="false" class="colBalance"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totalpaid}}
+                                                                    {{itemjob.balance}}
                                                                 </td>
-                                                                <td contenteditable="false"
-                                                                    class="colBalanceOutstanding"
+                                                                <td contenteditable="false" class="colCreditLimit"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totaloustanding}}</td>
-                                                                <td contenteditable="false" class="colType">
-                                                                    {{item.type}}</td>
-                                                                <td contenteditable="false"
-                                                                    class="colSaleCustField1 hiddenColumn">
-                                                                    {{item.custfield1}}
+                                                                    {{itemjob.creditlimit}}
                                                                 </td>
+                                                                <td contenteditable="false" class="colSalesOrderBalance"
+                                                                    style="text-align: right!important;">
+                                                                    {{itemjob.salesorderbalance}}</td>
+                                                                <td contenteditable="false" class="colCountry">
+                                                                    {{itemjob.country}}</td>
                                                                 <td contenteditable="false"
-                                                                    class="colSaleCustField2 hiddenColumn">
-                                                                    {{item.custfield2}}
-                                                                </td>
+                                                                    class="colEmail hiddenColumn">{{itemjob.email}}</td>
                                                                 <td contenteditable="false"
-                                                                    class="colEmployee hiddenColumn">{{item.employee}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colComments">
-                                                                    {{item.comments}}</td>
+                                                                    class="colAccountNo hiddenColumn">
+                                                                    {{itemjob.accountno}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colClientNo hiddenColumn">
+                                                                    {{itemjob.clientno}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colJobTitle hiddenColumn">
+                                                                    {{itemjob.jobtitle}}</td>
+                                                                <td contenteditable="false" class="colNotes">
+                                                                    {{itemjob.notes}}</td>
                                                             </tr>
                                                             {{/each}}
                                                             {{/if}}

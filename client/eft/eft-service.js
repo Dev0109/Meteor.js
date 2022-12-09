@@ -45,4 +45,12 @@ export class EftService extends BaseService {
   updateTFixedAsset(data) {
     return this.POST(this.ERPObjects.TFixedAssets, data);
   } 
+
+  saveTABADescriptiveRecord(data) {
+    return this.POST(this.ERPObjects.TABADescriptiveRecord, data);
+  }
+
+  saveTABADetailRecord(data) {
+      return this.POST(this.ERPObjects.TABADetailRecord, data);
+  }
 }

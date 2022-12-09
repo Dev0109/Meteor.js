@@ -22,21 +22,23 @@
     </div>
 </div>
 {{/if}}
-{{#if equals recordispaid false }}
+{{#if showButtons}}
+    {{#if equals recordispaid false }}
+        <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+            <button class="btn btn-success float-right payNow btnTransaction" type="button" style="margin: 12px 24px; width: 140px;">
+                <i class="fas fa-dollar-sign" style="padding-right: 8px;"></i>Pay Now
+            </button>
+        </div>
+        <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+            <button class="btn btn-primary float-right btnTransaction btnMakePayment" type="button" style="margin: 12px 24px; width: 140px;" id="btnPayment" name="btnPayment">Payment</button>
+        </div>
+    {{else}}
+        <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+            <button class="btn btn-primary float-right btnTransaction" type="button" style="margin: 12px 24px; width: 140px;" id="btnViewPayment" name="btnViewPayment">View Payment</button>
+        </div>
+    {{/if}}
     <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
-        <button class="btn btn-success float-right payNow btnTransaction" type="button" style="margin: 12px 24px; width: 140px;">
-            <i class="fas fa-dollar-sign" style="padding-right: 8px;"></i>Pay Now
-        </button>
-    </div>
-    <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
-        <button class="btn btn-primary float-right btnTransaction btnMakePayment" type="button" style="margin: 12px 24px; width: 140px;" id="btnPayment" name="btnPayment">Payment</button>
-    </div>
-{{else}}
-    <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
-        <button class="btn btn-primary float-right btnTransaction" type="button" style="margin: 12px 24px; width: 140px;" id="btnViewPayment" name="btnViewPayment">View Payment</button>
+        <button class="btn btn-primary float-right btnTransaction" type="button" style="margin: 12px 24px; width: 140px;" id="btnCopyInvoice" name="btnCopyInvoice">Copy Invoice</button>
     </div>
 {{/if}}
-<div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
-    <button class="btn btn-primary float-right btnTransaction" type="button" style="margin: 12px 24px; width: 140px;" id="btnCopyInvoice" name="btnCopyInvoice">Copy Invoice</button>
-</div>
 </template>

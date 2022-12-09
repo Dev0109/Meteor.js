@@ -36,14 +36,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        //select: "[Active]=true",
+          Search: "PublishOnVS1 == true",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
         ListType: "Detail",
-        //select: "[Active]=true",
+        Search: "PublishOnVS1 = true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -916,6 +916,8 @@ export class SideBarService extends BaseService {
           IgnoreDates:true,
           orderby: '"name asc"',
           search: 'name="' + dataSearchName + '"',
+          // search: 'name='+ dataSearchName+ ' OR email=' + dataSearchName + '',
+          // search: 'name="' + dataSearchName + '" OR email="' +  dataSearchName + '"',
           //search: 'name="' + dataSearchName + '" OR street="' + dataSearchName + '" OR suburb="' + dataSearchName + '" OR state="' + dataSearchName + '" OR postcode="' + dataSearchName + '"',
         };
       }
@@ -2677,13 +2679,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             //orderby: '"UOMName asc"',
-            select: "[Active]=true",
+            Search: "Active = true",
         };
       } else {
         options = {
           //orderby: '"UOMName asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2704,7 +2706,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TUnitOfMeasure, options);
+    return this.getList(this.ERPObjects.TUnitOfMeasureList, options);
   }
 
   getTaxRateVS1() {
@@ -2872,13 +2874,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             orderby: '"Description asc"',
-            select: "[Active]=true",
+            Search: "Active = true",
         };
       } else {
         options = {
           orderby: '"Description asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2899,7 +2901,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TTermsVS1, options);
+    return this.getList(this.ERPObjects.TTermsVS1List, options);
   }
 
   getDefaultCustomerTerms() {
@@ -3019,7 +3021,7 @@ export class SideBarService extends BaseService {
 
   getAllLeadStatus() {
     let options = {
-      PropertyList: "ID,TypeCode,Name,Description,IsDefault,EQPM",
+      PropertyList: "ID,TypeCode,TypeName,Name,Description,IsDefault,EQPM",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TLeadStatusType, options);
@@ -3089,7 +3091,7 @@ export class SideBarService extends BaseService {
   getCurrencies() {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true",
+      Search: "Active = true",
     };
     return this.getList(this.ERPObjects.TCurrency, options);
   }
@@ -3128,7 +3130,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TCurrency, options);
+    return this.getList(this.ERPObjects.TCurrencyList, options);
   }
 
   getAccountTypesToAddNew() {
@@ -3518,14 +3520,14 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
-            select: "[Active]=true",
+            orderby: '"Name asc"',
+            Search: "Active = true",
         };
       } else {
         options = {
-          orderby: '"Description asc"',
+          orderby: '"Name asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3534,11 +3536,11 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
         };
       } else {
         options = {
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
             ListType: "Detail",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
@@ -3546,7 +3548,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TPaymentMethodVS1, options);
+    return this.getList(this.ERPObjects.TPaymentMethodList, options);
   }
 
   getPaymentMethodVS1() {

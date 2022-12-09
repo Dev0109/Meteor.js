@@ -675,14 +675,14 @@ playSaveAudio = function () {
   audioElement.play();
 }
 checkSetupFinished = function () {
-  let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+  let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   if( setupFinished === null || setupFinished ===  "" ){
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
     let ERPPassword = localStorage.getItem('EPassword');
     let ERPDatabase = localStorage.getItem('EDatabase');
     let ERPPort = localStorage.getItem('EPort');
-    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`;
+    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID`; //,IsSetUpWizard
     const _headers = {
         database: ERPDatabase,
         username: ERPUsername,
@@ -695,14 +695,66 @@ checkSetupFinished = function () {
           if(result.data != undefined) {
             if( result.data.tcompanyinfo.length > 0 ){
               let data = result.data.tcompanyinfo[0];
-              localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-              return data.IsSetUpWizard;
+              let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+              setupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
+              localStorage.setItem("IS_SETUP_FINISHED", setupFinished);
+              if (setupFinished) {
+                  $('.setupIncompleatedMsg').hide();
+              } else {
+                  $('.setupIncompleatedMsg').show();
+              }
             }
           }     
         }
     });
   }else{
-    return setupFinished;
+    if (setupFinished == true || setupFinished == "true") {
+      $('.setupIncompleatedMsg').hide();
+    } else {
+      $('.setupIncompleatedMsg').show();
+    } 
+  }
+}
+
+checkSetupFinished2 = function () {
+  let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+  if( setupFinished === null || setupFinished ===  "" ){
+    let ERPIPAddress = localStorage.getItem('EIPAddress');
+    let ERPUsername = localStorage.getItem('EUserName');
+    let ERPPassword = localStorage.getItem('EPassword');
+    let ERPDatabase = localStorage.getItem('EDatabase');
+    let ERPPort = localStorage.getItem('EPort');
+    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID`; //,IsSetUpWizard
+    const _headers = {
+        database: ERPDatabase,
+        username: ERPUsername,
+        password: ERPPassword
+    };
+    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+        if (error) {
+          // handle error here
+        } else {
+          if(result.data != undefined) {
+            if( result.data.tcompanyinfo.length > 0 ){
+              let data = result.data.tcompanyinfo[0];
+              let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+              setupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
+              localStorage.setItem("IS_SETUP_FINISHED", setupFinished);
+              if (setupFinished) {
+                  $('.trueERPConnection').hide();
+              } else {
+                  $('.trueERPConnection').show();
+              }
+            }
+          }     
+        }
+    });
+  }else{
+    if (setupFinished == true || setupFinished == "true") {
+      $('.trueERPConnection').hide();
+    } else {
+      $('.trueERPConnection').show();
+    }
   }
 }
 
@@ -732,18 +784,20 @@ getRepeatDates = function(startFrom, endBy, months, repdate) {
   let endDate = arrEndBy[2];
   let i=0, j=0, k=0;
   let mm = "";
+  let repdate2 = "";
+  repdate2 = ("0" + repdate).toString().slice(-2);
   for (j=parseInt(startMonth); j<=12; j++) {
       mm = ("0" + j).toString().slice(-2);
       if (months.includes(mm) && parseInt(repdate) >= parseInt(startDate)) {
           ret.push({
-              "Dates": startYear + "-" + mm + "-" + repdate
+              "Dates": startYear + "-" + mm + "-" + repdate2
           });
       }
   }
   for (i=parseInt(startYear)+1; i<parseInt(endYear); i++) {
       for (j=0; j<months.length; j++) {
           ret.push({
-              "Dates": i + "-" + months[j] + "-" + repdate
+              "Dates": i + "-" + months[j] + "-" + repdate2
           });
       }
   }
@@ -752,13 +806,13 @@ getRepeatDates = function(startFrom, endBy, months, repdate) {
       if (j < parseInt(endMonth)) {
           if (months.includes(mm)) {
               ret.push({
-                  "Dates": endYear + "-" + mm + "-" + repdate
+                  "Dates": endYear + "-" + mm + "-" + repdate2
               });
           }
       } else {
           if (months.includes(mm) && parseInt(repdate) <= parseInt(endDate)) {
               ret.push({
-                  "Dates": endYear + "-" + mm + "-" + repdate
+                  "Dates": endYear + "-" + mm + "-" + repdate2
               });
           }
       }

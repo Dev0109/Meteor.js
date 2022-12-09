@@ -1,0 +1,99 @@
+<template name="newLeaveRequestModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="newLeaveRequestModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <style>
+                        .modal-title.hide {
+                            display: none;
+                        }
+                    </style>
+                    <h5 class="modal-title new-leave-title" id="newLeaveRequestLabel">New Leave Request</h5>
+                    <h5 class="modal-title edit-leave-title hide" id="newLeaveRequestLabel">Edit Leave Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="row" id="leaveRequestForm">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Type of Request</label>
+                                <input type="hidden" id="edtEmpID" value="0">
+                                <input type="hidden" id="edtLeaveRequestID" value="0">
+                                <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
+                                <!-- <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
+                                </select>  -->
+                                <input type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;" />
+                                
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="form-control" id="edtLeaveDescription" name="edtLeaveDescription">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <div class="input-group date" style="cursor: pointer;">
+                                    <input type="text" class="form-control formClassDate edtLeaveStartDate" id="edtLeaveStartDate" name="edtLeaveStartDate" value="">
+                                    <div class="input-group-addon" style="">
+                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <div class="input-group date" style="cursor: pointer;">
+                                    <input type="text" class="form-control formClassDate edtLeaveEndDate" id="edtLeaveEndDate" name="edtLeaveEndDate" value="">
+                                    <div class="input-group-addon" style="">
+                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label>Pay Period</label>
+                                <input type="search" class="form-control"  style="cursor: pointer;" id="edtLeavePayPeriod" name="edtLeavePayPeriod" placeholder="How often will you pay your employees?">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Hours</label>
+                                <input type="text" class="form-control" id="edtLeaveHours" name="edtLeaveHours">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="justify-content: space-between;">
+                    <div class="col-4 pl-0">
+                        <div class="dropdown float-left">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <input type="search" class="form-control"  style="cursor: pointer;" id="edtLeavePayStatus" name="edtLeavePayStatus" />
+                            </div>
+                            <!-- <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Status
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item pointer noneModal" data-toggle="modal" >Awaiting</a>
+                                <a class="dropdown-item pointer workplaceGivingModal" data-toggle="modal" >Approved</a>
+                                <a class="dropdown-item pointer unionAssociationFeesModal" data-toggle="modal" >Denied</a>
+                            </div> -->
+                        </div>
+                    </div>
+                    <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
+                    <button type="button " id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button type="button" class="btn btn-secondary mt-3 close-modal" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    {{> assignLeaveTypePop}}
+</template>

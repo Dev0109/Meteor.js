@@ -32,11 +32,16 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <header class="pt-2 pb-3 d-flex align-items-center">
-            <h2 class="mr-1 pageHeader">Purchases Overview {{> helpbutton}}</h2>
+        <header class="row">
+            <div class="col-12 col-md-4">
+                <h2 class="mr-1 pageHeader">Purchases Overview {{> helpbutton}}</h2>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
             <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
 
-            {{> loggedcompanyoverview}}
+<!--            {{> loggedcompanyoverview}}-->
             <!-- Start Help View Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">

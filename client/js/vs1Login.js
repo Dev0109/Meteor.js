@@ -1583,8 +1583,6 @@ Template.vs1login.onRendered(function () {
                 return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1;
             });
 
-            var vid = document.getElementById('myVS1Video');
-            //vid.addEventListener('ended', function(e) {
             setTimeout(function(){
               if(isSetupWizard == true){
                 if (isAppointmentScheduling == true) {
@@ -1607,12 +1605,11 @@ Template.vs1login.onRendered(function () {
                 handleSetupRedirection();
               };
               }, delayTimeAfterSound);
-             //}, false);
 
 
         } else {
             pausevideo();
-            $('.myVS1Video').css('display', 'none');
+            //$('.myVS1Video').css('display', 'none');
             $('.myVS1VideoLogin').css('display', 'none');
             $('.loginSpinner').css('display', 'none');
             $('.fullScreenSpin').css('display', 'none');
@@ -2019,7 +2016,7 @@ Template.vs1login.onRendered(function () {
 
             $('.loginSpinner').css('display', 'inline-block');
             if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                $('.fullScreenSpin').css('display', 'inline-block');
+                //$('.fullScreenSpin').css('display', 'inline-block');
             }
 
             let test = "";

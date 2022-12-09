@@ -5,10 +5,19 @@
 
   <div style="margin-top: -24px;">
 
-    <header style="padding: 16px;padding-bottom: 24px;">
-      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">Fixed Assets Overview</span>
-        {{> crm_help_modal}}
-      </h2>
+    <header class="row">
+        <div class="col-12 col-md-4">
+            <div class="col-12 com-md-4">
+                <h2><span id="crm_header_title">Fixed Assets Overview</span>{{> crm_help_modal}}</h2>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            {{> loggedcompanyoverview}}
+        </div>
+
+<!--      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">Fixed Assets Overview</span>-->
+<!--        {{> crm_help_modal}}-->
+<!--      </h2>-->
     </header> 
 
     {{> fixedassetchart}}

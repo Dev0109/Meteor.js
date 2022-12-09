@@ -19,9 +19,9 @@
                     <th style="width: 192px;" class="colClientName">Client Name</th>
                     <th style="width: 137px;" class="colType">Type</th>
                     <!-- <th>Department</th> -->
-                    <th style="width: 85px;" class="colDebits text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
-                    <th style="width: 85px;" class="colCredit text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
-                    <th style="width: 85px;" class="colAmount text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th>
+                    <th style="width: {{currencyColumnSize (countActive currencyList)}}px; max-width: {{currencyColumnSize (countActive currencyList)}}px !important; min-width: 100px !important;" class="colDebits text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
+                    <th style="width: {{currencyColumnSize (countActive currencyList)}}px; max-width: {{currencyColumnSize (countActive currencyList)}}px !important; min-width: 100px !important;" class="colCredit text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
+                    <th style="width: {{currencyColumnSize (countActive currencyList)}}px; max-width: {{currencyColumnSize (countActive currencyList)}}px !important; min-width: 100px !important;" class="colAmount text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th>
                 </tr>
 
                 {{#if isOnlyDefaultActive equal "false" }}
@@ -59,6 +59,7 @@
                     </tr>
                 {{/if}}
             </thead>
+            <!-- ====================== tbody start ========================= -->
             <tbody>
                 {{#if records}}
                     {{#each record in records}}
@@ -89,7 +90,8 @@
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
 
-                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="-- Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
+<!--                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" style="min-width: 100px !important;" class="Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">-->
+                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft Indent1 text-nowrap rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
                                                                 <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
                                                             </td>
 
@@ -98,7 +100,7 @@
                                                 {{/if}}
                                             {{else}}
                                                 <td class="--1 Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-                                                    <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{subItem}}</a>
+                                                    <a href="{{redirectionType item}}" style="text-decoration:none!important; ">{{subItem}}</a>
                                                 </td>
 
                                             {{/if}}
@@ -110,7 +112,7 @@
                                                 </td>
                                             {{else}}
                                                 <td class="----3 Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-                                                    <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{subItem}}</a>
+                                                    <a href="{{redirectionType item}}" style="text-decoration:none!important; ">{{subItem}}</a>
                                                 </td>
                                             {{/if}}
 
@@ -220,6 +222,7 @@
                     </tr>
                 {{/if}}
             </tbody>
+            <!-- ====================== tbody end ========================= -->
         </table>
     </div>
   {{/vs1_report_template}}

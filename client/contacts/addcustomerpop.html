@@ -82,8 +82,8 @@
                     }
 
                 </style>
-                <!-- {{> customerscard isModal=true }} -->
-                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                {{> customerscard isModal=true record=customerRecord isJob=isJob}}
+                <!-- <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                     <div class="col">
                         <div class="row">
                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>Company Name</label><input type="text" class="form-control" id="edtCustomerCompany" name="edtCustomerCompany" value="{{record.company}}"></div>
@@ -152,9 +152,9 @@
                             <ul class="nav nav-tabs nav-justified">
                                 <li class="nav-item" style="cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-customer-4">Address</a></li>
                                 <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-customer-5">Notes</a></li>
-                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-customer-6">Billing</a></li>
+                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-customer-6">Billing</a></li> -->
                                 <!-- <li class="nav-item attachmentTab" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-customer-8">{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li> -->
-                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-customer-9">Custom Fields</a></li>
+                                <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-customer-9">Custom Fields</a></li>
                                 <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-customer-10">Tax</a></li>
                             </ul>
                             <script>
@@ -521,9 +521,9 @@
                                                     text-align: center;
                                                     margin-top: 20px;
                                                 }
-                                            </style>
+                                            </style> -->
                                             <!-- Start Attachemt -->
-                                            <div class="divTable" id="file-display">
+                                            <!-- <div class="divTable" id="file-display">
                                                 <div class="col inboxcol1">
                                                     <img src="/icons/nofiles_icon.png" class="attachementsImage1">
                                                 </div>
@@ -550,12 +550,12 @@
 
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- View File Attachemt -->
-                                <div id="files_view" class="modal fade" role="dialog">
-                                    <div class="modal-dialog">
+                                <!-- <div id="files_view" class="modal fade" role="dialog">
+                                    <div class="modal-dialog"> -->
                                         <!-- Modal content-->
-                                        <div class="modal-content">
+                                        <!-- <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal">x</button>
                                                 <h4 class="modal-title">{{uploadedFile.name}}</h4>
@@ -576,9 +576,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- End View File attachment -->
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-customer-9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                <!-- <div class="tab-pane border rounded-0" role="tabpanel" id="tab-customer-9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                     <div class="row no-gutters" style="margin: 12px;">
                                         <div class="col d-xl-flex align-items-xl-center">
                                             <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;">
@@ -636,15 +636,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div> -->
+                            <!-- </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success btnSaveCustPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
+                <!-- <button class="btn btn-success btnSaveCustPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button> -->
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>

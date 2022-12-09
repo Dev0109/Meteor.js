@@ -168,6 +168,35 @@ Template.chequecard.onRendered(() => {
         $("#formCheck-january").prop('checked', true);
     }
   }
+  templateObject.hasFollowings = async function() {
+    var currentDate = new Date();
+    let purchaseService = new PurchaseBoardService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split("?id=");
+    var currentInvoice = getso_id[getso_id.length - 1];
+    var objDetails = "";
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
+      var orderDate = chequeData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingCheques = await sideBarService.getAllChequeListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var chequeList = followingCheques.tchequelist;
+      if (chequeList.length > 1) {
+        $("#btn_follow2").css("display", "inline-block");
+      } else {
+        $("#btn_follow2").css("display", "none");
+      }
+    }    
+  }
+
   $(window).on("load", function () {
     var win = $(this); //this = window
     if (win.width() <= 1024 && win.width() >= 450) {
@@ -4946,106 +4975,87 @@ Template.chequecard.events({
       $(".selectDays input[type=checkbox]").each(function (){
         $(this).prop('checked', false);
       });
-      var url = FlowRouter.current().path;
-      var getso_id = url.split("?id=");
-      var currentInvoice = getso_id[getso_id.length - 1];
-      if (getso_id[1]) {
-        currentInvoice = parseInt(currentInvoice);
-        var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-        var selectedType = chequeData.fields.CustField7;
-        var frequencyVal = chequeData.fields.CustField8;
-        var startDate = chequeData.fields.CustField9;
-        var finishDate = chequeData.fields.CustField10;
-        var subStartDate = startDate.substring(0, 10);
-        var subFinishDate = finishDate.substring(0, 10);
-        var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
-        var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
-        // if (selectedType == "basedOnEvent") {
-        //   $("#basedOnEvent").prop('checked', true);
-        //   $('#onEventSettings').css('display', 'block');
-        //   $('#settingsOnEvents').prop('checked', true);
-        // } else {
-        //   $("#basedOnEvent").prop('checked', false);
-        //   $('#onEventSettings').css('display', 'none');
-        //   $('#settingsOnEvents').prop('checked', false);
-        //   $('#settingsOnLogout').prop('checked', false);
-        // }
-        // if (selectedType == 'basedOnFrequency') {
-        //   $("#basedOnFrequency").prop('checked', true);
-        //   $('#edtFrequencyDetail').css('display', 'flex');
-        //   $('#basedOnSettingsTitle').css('border-top-width', '1px');
-        // } else {
-        //   $("#basedOnFrequency").prop('checked', false);
-        //   $('#edtFrequencyDetail').css('display', 'none');
-        //   $('#basedOnSettingsTitle').css('border-top-width', '0px');
-        // }
-        var arrFrequencyVal = frequencyVal.split("@");
-        var radioFrequency = arrFrequencyVal[0];
-        $("#" + radioFrequency).prop('checked', true);
-        if (radioFrequency == "frequencyMonthly") {
-          document.getElementById("monthlySettings").style.display = "block";
-          document.getElementById("weeklySettings").style.display = "none";
-          document.getElementById("dailySettings").style.display = "none";
-          document.getElementById("oneTimeOnlySettings").style.display = "none";
-          var monthDate = arrFrequencyVal[1];
-          $("#sltDay").val('day' + monthDate);
-          var ofMonths = arrFrequencyVal[2];
-          var arrOfMonths = [];
-          if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
-            arrOfMonths = ofMonths.split(",");
-          for (i=0; i<arrOfMonths.length; i++) {
-            $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
-          }
-          $('#edtMonthlyStartDate').val(convertedStartDate);
-          $('#edtMonthlyFinishDate').val(convertedFinishDate);
-        } else if (radioFrequency == "frequencyWeekly") {
-          document.getElementById("weeklySettings").style.display = "block";
-          document.getElementById("monthlySettings").style.display = "none";
-          document.getElementById("dailySettings").style.display = "none";
-          document.getElementById("oneTimeOnlySettings").style.display = "none";
-          var everyWeeks = arrFrequencyVal[1];
-          $("#weeklyEveryXWeeks").val(everyWeeks);
-          var selectDays = arrFrequencyVal[2];
-          var arrSelectDays = selectDays.split(",");
-          for (i=0; i<arrSelectDays.length; i++) {
-            if (parseInt(arrSelectDays[i]) == 0)
-              $("#formCheck-sunday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 1)
-              $("#formCheck-monday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 2)
-              $("#formCheck-tuesday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 3)
-              $("#formCheck-wednesday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 4)
-              $("#formCheck-thursday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 5)
-              $("#formCheck-friday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 6)
-              $("#formCheck-saturday").prop('checked', true);
-          }
-          $('#edtWeeklyStartDate').val(convertedStartDate);
-          $('#edtWeeklyFinishDate').val(convertedFinishDate);
-        } else if (radioFrequency == "frequencyDaily") {
-          document.getElementById("dailySettings").style.display = "block";
-          document.getElementById("monthlySettings").style.display = "none";
-          document.getElementById("weeklySettings").style.display = "none";
-          document.getElementById("oneTimeOnlySettings").style.display = "none";
-          var dailyRadioOption = arrFrequencyVal[1];
-          $("#" + dailyRadioOption).prop('checked', true);
-          var everyDays = arrFrequencyVal[2];
-          $("#dailyEveryXDays").val(everyDays);
-          $('#edtDailyStartDate').val(convertedStartDate);
-          $('#edtDailyFinishDate').val(convertedFinishDate);
-        } else if (radioFrequency == "frequencyOnetimeonly") {
-          document.getElementById("oneTimeOnlySettings").style.display = "block";
-          document.getElementById("monthlySettings").style.display = "none";
-          document.getElementById("weeklySettings").style.display = "none";
-          document.getElementById("dailySettings").style.display = "none";
-          $('#edtOneTimeOnlyDate').val(convertedStartDate);
-          $('#edtOneTimeOnlyTimeError').css('display', 'none');
-          $('#edtOneTimeOnlyDateError').css('display', 'none');
-        }
-      }
+      // var url = FlowRouter.current().path;
+      // var getso_id = url.split("?id=");
+      // var currentInvoice = getso_id[getso_id.length - 1];
+      // if (getso_id[1]) {
+      //   currentInvoice = parseInt(currentInvoice);
+      //   var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
+      //   var selectedType = chequeData.fields.TypeOfBasedOn;
+      //   var frequencyVal = chequeData.fields.FrequenctyValues;
+      //   var startDate = chequeData.fields.CopyStartDate;
+      //   var finishDate = chequeData.fields.CopyFinishDate;
+      //   var subStartDate = startDate.substring(0, 10);
+      //   var subFinishDate = finishDate.substring(0, 10);
+      //   var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
+      //   var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
+      //   var arrFrequencyVal = frequencyVal.split("@");
+      //   var radioFrequency = arrFrequencyVal[0];
+      //   $("#" + radioFrequency).prop('checked', true);
+      //   if (radioFrequency == "frequencyMonthly") {
+      //     document.getElementById("monthlySettings").style.display = "block";
+      //     document.getElementById("weeklySettings").style.display = "none";
+      //     document.getElementById("dailySettings").style.display = "none";
+      //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+      //     var monthDate = arrFrequencyVal[1];
+      //     $("#sltDay").val('day' + monthDate);
+      //     var ofMonths = arrFrequencyVal[2];
+      //     var arrOfMonths = [];
+      //     if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+      //       arrOfMonths = ofMonths.split(",");
+      //     for (i=0; i<arrOfMonths.length; i++) {
+      //       $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
+      //     }
+      //     $('#edtMonthlyStartDate').val(convertedStartDate);
+      //     $('#edtMonthlyFinishDate').val(convertedFinishDate);
+      //   } else if (radioFrequency == "frequencyWeekly") {
+      //     document.getElementById("weeklySettings").style.display = "block";
+      //     document.getElementById("monthlySettings").style.display = "none";
+      //     document.getElementById("dailySettings").style.display = "none";
+      //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+      //     var everyWeeks = arrFrequencyVal[1];
+      //     $("#weeklyEveryXWeeks").val(everyWeeks);
+      //     var selectDays = arrFrequencyVal[2];
+      //     var arrSelectDays = selectDays.split(",");
+      //     for (i=0; i<arrSelectDays.length; i++) {
+      //       if (parseInt(arrSelectDays[i]) == 0)
+      //         $("#formCheck-sunday").prop('checked', true);
+      //       if (parseInt(arrSelectDays[i]) == 1)
+      //         $("#formCheck-monday").prop('checked', true);
+      //       if (parseInt(arrSelectDays[i]) == 2)
+      //         $("#formCheck-tuesday").prop('checked', true);
+      //       if (parseInt(arrSelectDays[i]) == 3)
+      //         $("#formCheck-wednesday").prop('checked', true);
+      //       if (parseInt(arrSelectDays[i]) == 4)
+      //         $("#formCheck-thursday").prop('checked', true);
+      //       if (parseInt(arrSelectDays[i]) == 5)
+      //         $("#formCheck-friday").prop('checked', true);
+      //       if (parseInt(arrSelectDays[i]) == 6)
+      //         $("#formCheck-saturday").prop('checked', true);
+      //     }
+      //     $('#edtWeeklyStartDate').val(convertedStartDate);
+      //     $('#edtWeeklyFinishDate').val(convertedFinishDate);
+      //   } else if (radioFrequency == "frequencyDaily") {
+      //     document.getElementById("dailySettings").style.display = "block";
+      //     document.getElementById("monthlySettings").style.display = "none";
+      //     document.getElementById("weeklySettings").style.display = "none";
+      //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+      //     var dailyRadioOption = arrFrequencyVal[1];
+      //     $("#" + dailyRadioOption).prop('checked', true);
+      //     var everyDays = arrFrequencyVal[2];
+      //     $("#dailyEveryXDays").val(everyDays);
+      //     $('#edtDailyStartDate').val(convertedStartDate);
+      //     $('#edtDailyFinishDate').val(convertedFinishDate);
+      //   } else if (radioFrequency == "frequencyOnetimeonly") {
+      //     document.getElementById("oneTimeOnlySettings").style.display = "block";
+      //     document.getElementById("monthlySettings").style.display = "none";
+      //     document.getElementById("weeklySettings").style.display = "none";
+      //     document.getElementById("dailySettings").style.display = "none";
+      //     $('#edtOneTimeOnlyDate').val(convertedStartDate);
+      //     $('#edtOneTimeOnlyTimeError').css('display', 'none');
+      //     $('#edtOneTimeOnlyDateError').css('display', 'none');
+      //   }
+      // }
       $("#copyFrequencyModal").modal("toggle");
     }, delayTimeAfterSound);
   },
@@ -5154,18 +5164,17 @@ Template.chequecard.events({
         var currentInvoice = getso_id[getso_id.length - 1];
         if (getso_id[1]) {
           currentInvoice = parseInt(currentInvoice);
-          objDetails = {
-            type: "TChequeEx",
-            fields: {
-              ID: currentInvoice,
-              CustField7: selectedType,
-              CustField8: frequencyVal,
-              CustField9: sDate,
-              CustField10: fDate,
-            }
-          };
-          var result = await purchaseService.saveChequeEx(objDetails);
-
+          // objDetails = {
+          //   type: "TChequeEx",
+          //   fields: {
+          //     ID: currentInvoice,
+          //     TypeOfBasedOn: selectedType,
+          //     FrequenctyValues: frequencyVal,
+          //     CopyStartDate: sDate2,
+          //     CopyFinishDate: fDate2,
+          //   }
+          // };
+          // var result = await purchaseService.saveChequeEx(objDetails);
           let period = ""; // 0
           let days = [];
           let i = 0;
@@ -5235,29 +5244,29 @@ Template.chequecard.events({
           }
           if (days.length > 0) {
               for (let x = 0; x < days.length; x++) {
-                  let dayObj = {
-                      Name: "VS1_RepeatTrans",
-                      Params: {
-                          CloudUserName: erpGet.ERPUsername,
-                          CloudPassword: erpGet.ERPPassword,
-                          TransID: currentInvoice,
-                          TransType: "Cheque",
-                          Repeat_Frequency: frequency2,
-                          Repeat_Period: period,
-                          Repeat_BaseDate: sDate2,
-                          Repeat_finalDateDate: fDate2,
-                          Repeat_Saturday: weekdayObj.saturday,
-                          Repeat_Sunday: weekdayObj.sunday,
-                          Repeat_Monday: weekdayObj.monday,
-                          Repeat_Tuesday: weekdayObj.tuesday,
-                          Repeat_Wednesday: weekdayObj.wednesday,
-                          Repeat_Thursday: weekdayObj.thursday,
-                          Repeat_Friday: weekdayObj.friday,
-                          Repeat_Holiday: 0,
-                          Repeat_Weekday: parseInt(days[x].toString()),
-                          Repeat_MonthOffset: 0,
-                      },
-                  };
+                let dayObj = {
+                  Name: "VS1_RepeatTrans",
+                  Params: {
+                      CloudUserName: erpGet.ERPUsername,
+                      CloudPassword: erpGet.ERPPassword,
+                      TransID: currentInvoice,
+                      TransType: "Cheque",
+                      Repeat_Frequency: frequency2,
+                      Repeat_Period: period,
+                      Repeat_BaseDate: sDate2,
+                      Repeat_finalDateDate: fDate2,
+                      Repeat_Saturday: weekdayObj.saturday,
+                      Repeat_Sunday: weekdayObj.sunday,
+                      Repeat_Monday: weekdayObj.monday,
+                      Repeat_Tuesday: weekdayObj.tuesday,
+                      Repeat_Wednesday: weekdayObj.wednesday,
+                      Repeat_Thursday: weekdayObj.thursday,
+                      Repeat_Friday: weekdayObj.friday,
+                      Repeat_Holiday: 0,
+                      Repeat_Weekday: parseInt(days[x].toString()),
+                      Repeat_MonthOffset: 0,
+                  },
+                };
                   var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                   var oPost = new XMLHttpRequest();
                   oPost.open(
@@ -5295,54 +5304,54 @@ Template.chequecard.events({
           } else {
               let dayObj = {};
               if (radioFrequency == "frequencyOnetimeonly" || radioFrequency == "frequencyMonthly") {
-                  dayObj = {
-                      Name: "VS1_RepeatTrans",
-                      Params: {
-                          CloudUserName: erpGet.ERPUsername,
-                          CloudPassword: erpGet.ERPPassword,
-                          TransID: currentInvoice,
-                          TransType: "Cheque",
-                          Repeat_Dates: repeatDates,
-                          Repeat_Frequency: frequency2,
-                          Repeat_Period: period,
-                          Repeat_BaseDate: sDate2,
-                          Repeat_finalDateDate: fDate2,
-                          Repeat_Saturday: weekdayObj.saturday,
-                          Repeat_Sunday: weekdayObj.sunday,
-                          Repeat_Monday: weekdayObj.monday,
-                          Repeat_Tuesday: weekdayObj.tuesday,
-                          Repeat_Wednesday: weekdayObj.wednesday,
-                          Repeat_Thursday: weekdayObj.thursday,
-                          Repeat_Friday: weekdayObj.friday,
-                          Repeat_Holiday: 0,
-                          Repeat_Weekday: 0,
-                          Repeat_MonthOffset: 0,
-                      },
-                  };
+                dayObj = {
+                  Name: "VS1_RepeatTrans",
+                  Params: {
+                      CloudUserName: erpGet.ERPUsername,
+                      CloudPassword: erpGet.ERPPassword,
+                      TransID: currentInvoice,
+                      TransType: "Cheque",
+                      Repeat_Dates: repeatDates,
+                      Repeat_Frequency: frequency2,
+                      Repeat_Period: period,
+                      Repeat_BaseDate: sDate2,
+                      Repeat_finalDateDate: fDate2,
+                      Repeat_Saturday: weekdayObj.saturday,
+                      Repeat_Sunday: weekdayObj.sunday,
+                      Repeat_Monday: weekdayObj.monday,
+                      Repeat_Tuesday: weekdayObj.tuesday,
+                      Repeat_Wednesday: weekdayObj.wednesday,
+                      Repeat_Thursday: weekdayObj.thursday,
+                      Repeat_Friday: weekdayObj.friday,
+                      Repeat_Holiday: 0,
+                      Repeat_Weekday: 0,
+                      Repeat_MonthOffset: 0,
+                  },
+                };
               } else {
-                  dayObj = {
-                      Name: "VS1_RepeatTrans",
-                      Params: {
-                          CloudUserName: erpGet.ERPUsername,
-                          CloudPassword: erpGet.ERPPassword,
-                          TransID: currentInvoice,
-                          TransType: "Cheque",
-                          Repeat_Frequency: frequency2,
-                          Repeat_Period: period,
-                          Repeat_BaseDate: sDate2,
-                          Repeat_finalDateDate: fDate2,
-                          Repeat_Saturday: weekdayObj.saturday,
-                          Repeat_Sunday: weekdayObj.sunday,
-                          Repeat_Monday: weekdayObj.monday,
-                          Repeat_Tuesday: weekdayObj.tuesday,
-                          Repeat_Wednesday: weekdayObj.wednesday,
-                          Repeat_Thursday: weekdayObj.thursday,
-                          Repeat_Friday: weekdayObj.friday,
-                          Repeat_Holiday: 0,
-                          Repeat_Weekday: 0,
-                          Repeat_MonthOffset: 0,
-                      },
-                  };
+                dayObj = {
+                  Name: "VS1_RepeatTrans",
+                  Params: {
+                      CloudUserName: erpGet.ERPUsername,
+                      CloudPassword: erpGet.ERPPassword,
+                      TransID: currentInvoice,
+                      TransType: "Cheque",
+                      Repeat_Frequency: frequency2,
+                      Repeat_Period: period,
+                      Repeat_BaseDate: sDate2,
+                      Repeat_finalDateDate: fDate2,
+                      Repeat_Saturday: weekdayObj.saturday,
+                      Repeat_Sunday: weekdayObj.sunday,
+                      Repeat_Monday: weekdayObj.monday,
+                      Repeat_Tuesday: weekdayObj.tuesday,
+                      Repeat_Wednesday: weekdayObj.wednesday,
+                      Repeat_Thursday: weekdayObj.thursday,
+                      Repeat_Friday: weekdayObj.friday,
+                      Repeat_Holiday: 0,
+                      Repeat_Weekday: 0,
+                      Repeat_MonthOffset: 0,
+                  },
+                };
               }
               var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
               var oPost = new XMLHttpRequest();
@@ -6388,15 +6397,15 @@ Template.chequecard.events({
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
-
+    var currentDate = new Date();
+    let purchaseService = new PurchaseBoardService();
     var clicktimes = 0;
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectDeleteLineID").val(targetID);
-
     var url = FlowRouter.current().path;
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = "";
+    var chequeList = [];
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
@@ -6410,86 +6419,36 @@ Template.chequecard.events({
         initialReportLoad,
         0
       );
-      var chequeList = followingCheques.tchequelist;
-      if (chequeList.length > 0) {
-        $("#btn_follow2").css("display", "inline-block");
-      } else {
-        $("#btn_follow2").css("display", "none");
-      }
+      chequeList = followingCheques.tchequelist;
     }
-    times++;
+    if(targetID != undefined){
+      times++;
+      if (times == 1) {
+        $("#deleteLineModal").modal("toggle");
+      } else {
+        if ($("#tblChequeLine tbody>tr").length > 1) {
+          this.click;
+          $(event.target).closest("tr").remove();
+          $(".cheque_print #" + targetID).remove();
+          event.preventDefault();
+          let $tblrows = $("#tblChequeLine tbody tr");
+          let $printrows = $(".cheque_print tbody tr");
 
-    if (times == 1) {
-      $("#deleteLineModal").modal("toggle");
-    } else {
-      if ($("#tblChequeLine tbody>tr").length > 1) {
-        this.click;
-        $(event.target).closest("tr").remove();
-        $(".cheque_print #" + targetID).remove();
-        event.preventDefault();
-        let $tblrows = $("#tblChequeLine tbody tr");
-        let $printrows = $(".cheque_print tbody tr");
+          let lineAmount = 0;
+          let subGrandTotal = 0;
+          let taxGrandTotal = 0;
+          let taxGrandTotalPrint = 0;
 
-        let lineAmount = 0;
-        let subGrandTotal = 0;
-        let taxGrandTotal = 0;
-        let taxGrandTotalPrint = 0;
-
-        $tblrows.each(function (index) {
-          var $tblrow = $(this);
-          var amount = $tblrow.find(".colAmountExChange").val() || 0;
-          var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
-
-          var taxrateamount = 0;
-          if (taxcodeList) {
-            for (var i = 0; i < taxcodeList.length; i++) {
-              if (taxcodeList[i].codename == taxcode) {
-                taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-              }
-            }
-          }
-
-          var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
-          var taxTotal =
-            parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
-          $tblrow
-            .find(".lineTaxAmount")
-            .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-          if (!isNaN(subTotal)) {
-            subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-            document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotal);
-          }
-
-          if (!isNaN(taxTotal)) {
-            taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
-            document.getElementById("subtotal_tax").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
-          }
-
-          if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-            let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-            document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            //document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-          }
-        });
-
-        if ($(".printID").val() == "") {
-          $printrows.each(function (index) {
-            var $printrows = $(this);
-            var amount = $printrows.find("#lineAmount").text() || "0";
-            var taxcode = $printrows.find("#lineTaxCode").text() || 0;
+          $tblrows.each(function (index) {
+            var $tblrow = $(this);
+            var amount = $tblrow.find(".colAmountExChange").val() || 0;
+            var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
 
             var taxrateamount = 0;
             if (taxcodeList) {
               for (var i = 0; i < taxcodeList.length; i++) {
                 if (taxcodeList[i].codename == taxcode) {
-                  taxrateamount =
-                    taxcodeList[i].coderate.replace("%", "") / 100 || 0;
+                  taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
                 }
               }
             }
@@ -6498,45 +6457,94 @@ Template.chequecard.events({
             var taxTotal =
               parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
               parseFloat(taxrateamount);
-            $printrows
-              .find("#lineTaxAmount")
+            $tblrow
+              .find(".lineTaxAmount")
               .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-
             if (!isNaN(subTotal)) {
-              $printrows
-                .find("#lineAmt")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
               subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-              document.getElementById("subtotal_totalPrint").innerHTML =
-                $("#subtotal_total").text();
+              document.getElementById("subtotal_total").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(subGrandTotal);
             }
 
             if (!isNaN(taxTotal)) {
-              taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+              taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
+              document.getElementById("subtotal_tax").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
             }
+
             if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
               let GrandTotal =
                 parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-              document.getElementById("grandTotalPrint").innerHTML =
-                $("#grandTotal").text();
+              document.getElementById("grandTotal").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
               //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-              document.getElementById("totalBalanceDuePrint").innerHTML =
-                $("#totalBalanceDue").text();
+              //document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
             }
           });
+
+          if ($(".printID").val() == "") {
+            $printrows.each(function (index) {
+              var $printrows = $(this);
+              var amount = $printrows.find("#lineAmount").text() || "0";
+              var taxcode = $printrows.find("#lineTaxCode").text() || 0;
+
+              var taxrateamount = 0;
+              if (taxcodeList) {
+                for (var i = 0; i < taxcodeList.length; i++) {
+                  if (taxcodeList[i].codename == taxcode) {
+                    taxrateamount =
+                      taxcodeList[i].coderate.replace("%", "") / 100 || 0;
+                  }
+                }
+              }
+
+              var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
+              var taxTotal =
+                parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
+                parseFloat(taxrateamount);
+              $printrows
+                .find("#lineTaxAmount")
+                .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+
+              if (!isNaN(subTotal)) {
+                $printrows
+                  .find("#lineAmt")
+                  .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                document.getElementById("subtotal_totalPrint").innerHTML =
+                  $("#subtotal_total").text();
+              }
+
+              if (!isNaN(taxTotal)) {
+                taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+              }
+              if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+                let GrandTotal =
+                  parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+                document.getElementById("grandTotalPrint").innerHTML =
+                  $("#grandTotal").text();
+                //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                document.getElementById("totalBalanceDuePrint").innerHTML =
+                  $("#totalBalanceDue").text();
+              }
+            });
+          }
+          return false;
+        } else {
+          $("#deleteLineModal").modal("toggle");
         }
-        return false;
-      } else {
-        $("#deleteLineModal").modal("toggle");
       }
+    } else {
+      if(chequeList.length > 1) $("#footerDeleteModal2").modal("toggle");
+      else $("#footerDeleteModal1").modal("toggle");
     }
   },
   "click .btnDeleteFollowingCheques": async function (event) {
     playDeleteAudio();
     setTimeout(async function(){
     var currentDate = new Date();
-    let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
+    let templateObject = Template.instance();
     swal({
       title: 'Delete Cheque',
       text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -6586,9 +6594,10 @@ Template.chequecard.events({
     });
   }, delayTimeAfterSound);
   },
-  "click .btnDeleteCheque": function (event) {
+  "click .btnDeleteCheque": async function (event) {
     playDeleteAudio();
     let templateObject = Template.instance();
+    await templateObject.hasFollowings();
     let purchaseService = new PurchaseBoardService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
@@ -6638,6 +6647,7 @@ Template.chequecard.events({
       };
     }
     $("#deleteLineModal").modal("toggle");
+    $('.modal-backdrop').css('display', 'none');
   }, delayTimeAfterSound);
   },
   "click .btnDeleteLine": function (event) {

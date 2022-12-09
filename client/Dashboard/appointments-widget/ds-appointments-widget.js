@@ -960,7 +960,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
                 if (info.event._def.publicId != "") {
-                    $('.fullScreenSpin').css('display', 'inline-block');
+
                     let appointmentData = templateObject.appointmentrecords.get();
                     let resourceData = templateObject.resourceAllocation.get();
                     let eventDropID = info.event._def.publicId || '0';
@@ -1609,7 +1609,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
                     $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
                 }
             }).on('length.dt', function(e, settings, len) {
-                $('.fullScreenSpin').css('display', 'inline-block');
+
                 let dataLenght = settings._iDisplayLength;
                 // splashArrayProductList = [];
                 if (dataLenght == -1) {
@@ -1680,7 +1680,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
         let jobs;
         let dataList;
         addVS1Data('TAppointment', JSON.stringify(data));
-        $('.fullScreenSpin').css('display', 'inline-block');
+
         let appColor = '#00a3d3';
         let dataColor = '';
         let allEmp = templateObject.employeerecords.get();
@@ -2376,7 +2376,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
             },
             eventDrop: function(info) {
                 if (info.event._def.publicId != "") {
-                    $('.fullScreenSpin').css('display', 'inline-block');
+
                     let appointmentData = templateObject.appointmentrecords.get();
                     let resourceData = templateObject.resourceAllocation.get();
                     let eventDropID = info.event._def.publicId || '0';
@@ -2640,7 +2640,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
                 $('#edtCustomerPOPID').val('');
                 getVS1Data('TCustomerVS1').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+
                         sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                             setOneCustomerData(data.tcustomer[0]);
                         }).catch(function(err) {
@@ -2656,7 +2656,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
                             }
                         }
                         if (!added) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+
                             sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                                 setOneCustomerData(data.tcustomer[0]);
                             }).catch(function(err) {
@@ -2826,7 +2826,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
                 //FlowRouter.go('/productview?prodname=' + $(event.target).text());
                 let lineExtaSellItems = [];
                 let lineExtaSellObj = {};
-                $('.fullScreenSpin').css('display', 'inline-block');
+
                 getVS1Data('TProductWeb').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
@@ -3444,7 +3444,7 @@ Template.dsAppointmentsWidget.onRendered(function() {
                     //Triggers modal once event is moved to another date within the calendar.
                     eventDrop: function(info) {
                         if (info.event._def.publicId != "") {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+
                             let appointmentData = templateObject.appointmentrecords.get();
                             let resourceData = templateObject.resourceAllocation.get();
                             let eventDropID = info.event._def.publicId || '0';
@@ -6033,7 +6033,7 @@ Template.dsAppointmentsWidget.events({
             }
             date = new Date();
             if ($('#tActualStartTime').val() != "" && result[0].isPaused == "Paused") {
-                $('.fullScreenSpin').css('display', 'inline-block');
+
                 $(".paused").hide();
                 $("#btnHold").prop("disabled", false);
                 let startTime = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2) + ' ' + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
@@ -6313,7 +6313,7 @@ Template.dsAppointmentsWidget.events({
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (result[0].aStartTime == "") {
-                $('.fullScreenSpin').css('display', 'inline-block');
+
                 document.getElementById("tActualStartTime").value = moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm');
                 $(".paused").hide();
                 $("#btnHold").prop("disabled", false);

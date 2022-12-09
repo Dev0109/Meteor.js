@@ -1048,21 +1048,7 @@
                             </div>
                             <div class="col-12 col-md-12">
                                 <div class="row justify-content-center desktopButtons">
-                                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                                    </button>
-
-                                    <button class="btn btn-primary" id="open_print_confirm" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                                        <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-                                    </button>
-
-                                    <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 12px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                                        {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                                    </a>
-{{> deleteBtn_footers }}
-                                    <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                                        <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                                    </button>
+                                    {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}
                                 </div>
 
                             </div>
@@ -1448,104 +1434,19 @@
 
                       </div>
 
-
-
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Subtotal</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_total" name="subtotal_total">{{salesorderrecord.SubTotal}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Tax</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_tax" name="subtotal_tax">{{salesorderrecord.TotalTax}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Net</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_nett" name="subtotal_nett">{{salesorderrecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead">Discount</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead" id="subtotal_discount" name="subtotal_discount">{{salesorderrecord.TotalDiscount}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead leadTotal">TOTAL</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{salesorderrecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Paid</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{salesorderrecord.totalPaid}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Due</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{salesorderrecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                                <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{salesorderrecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                    </div>
+                      {{> transaction_calculation
+                        isPartialPaid=salesorderrecord.isPartialPaid
+                        SubTotal=salesorderrecord.SubTotal
+                        TotalTax=salesorderrecord.TotalTax
+                        NetTotal=salesorderrecord.Total
+                        TotalDiscount=salesorderrecord.TotalDiscount
+                        Total=salesorderrecord.Total
+                        TotalPaid=salesorderrecord.totalPaid
+                        BalanceDue=salesorderrecord.balanceDue
+                        }}
                 </div>
                 <div class="row justify-content-center mobileButtons" style="display: none;">
-                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                    </button>
-
-                    <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                        <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-                    </button>
-
-                    <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 12px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                        {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                    </a>
-                    {{> deleteBtn_footers }}
-                    <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                        <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                    </button>
+                    {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}
                 </div>
                 <style>
                     @media screen and (max-width: 450px) {
@@ -2002,105 +1903,7 @@
             </div>
             <!-- END PDF -->
         {{/if}}
-        <div class="modal fade" role="dialog" tabindex="-1" id="statusModal">
-            <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
-                <div class="modal-content">
-                    <form id="newstatus" name="newstatus">
-                        <div class="modal-header">
-                            <h4>Add New Lead Status</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body" style="padding: 24px;">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                        <label>Status</label>
-                                        <input type="text" id="status" name="status" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-success btnSaveStatus" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                            <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Start Serial/lot numbers Modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
-            {{> serialnumberpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
-            {{> lotnumberpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="availableSerialNumberModal">
-            {{> availableserialnumberpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="availableLotNumberModal">
-            {{> availablelotnumberpop}}
-        </div>
-        <!-- End Modal -->
-
-        <!-- Modal print-button -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-            {{> productlistpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
-            {{> statuspop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
-            {{> newstatuspop}}
-        </div>
-
-
-
-
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
-            {{> departmentpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
-            {{> newdepartmentpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
-            {{> termlistpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
-            {{> newtermspop}}
-        </div>
-
-        <!-- End Modal Product -->
-        <!-- Modal Tax Rate -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-            {{> taxratelistpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-            {{> newtaxratepop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="taxDetailModal">
-          {{> taxdetailpop}}
-        </div>
-        <!-- End Modal Tax Rate -->
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-            {{> newproductpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-            {{> addcustomerpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-            {{> copyfrequencypop}}
-        </div>
+        {{> all_transaction_modals}}
     </div>
 
     <!-- Start Help Video Modal -->

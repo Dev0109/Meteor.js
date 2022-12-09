@@ -26,7 +26,62 @@
                     <button class="btn btn-danger {{button1}}" type="button" style="margin-right: 5px;">
                         <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{itemName1}}
                     </button>
-                    <button class="btn btn-danger {{button2}}" type="button" id="btn_follow2">
+                    <button class="btn btn-danger {{button2}}" type="button" id="btn_follow2" style="display: none;">
+                        <i class="fa fa-close" style="display: none; margin-right: 5px;"></i>Delete {{itemName1}} and Following {{itemName3}}s
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="footerDeleteModal1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: max-content; left: -80px;">
+                <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
+                <div class="modal-header">
+                    <h4>Delete</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="justify-content: center;">
+                    {{#if equals itemName1 "Appointment"}}
+                    <p>Please select "Delete {{itemName1}}" to delete the {{itemName2}} or "Delete {{itemName1}} 
+                        <br>and Following {{itemName3}}s" to delete {{itemName2}} and following {{itemName2}}s</p>
+                    {{else}}
+                    <p>Please select "Delete Line" to remove row or "Delete {{itemName1}}" to delete the entire {{itemName2}}</p>
+                    {{/if}}
+                    <div align="center">
+                    <button class="btn btn-danger {{button1}}" type="button" style="margin-right: 5px;">
+                        <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{itemName1}}
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="footerDeleteModal2">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: max-content; left: -80px;">
+                <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
+                <div class="modal-header">
+                    <h4>Delete</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="justify-content: center;">
+                    {{#if equals itemName1 "Appointment"}}
+                    <p>Please select "Delete {{itemName1}}" to delete the {{itemName2}} or "Delete {{itemName1}} 
+                        <br>and Following {{itemName3}}s" to delete {{itemName2}} and following {{itemName2}}s</p>
+                    {{else}}
+                    <p>Please select "Delete Line" to remove row or "Delete {{itemName1}}" to delete the entire {{itemName2}}</p>
+                    {{/if}}
+                    <div align="center">
+                    <button class="btn btn-danger {{button1}}" type="button" style="margin-right: 5px;">
+                        <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{itemName1}}
+                    </button>
+                    <button class="btn btn-danger {{button2}}" type="button" id="btn_follow2" style="display: inline-block;">
                         <i class="fa fa-close" style="display: none; margin-right: 5px;"></i>Delete {{itemName1}} and Following {{itemName3}}s
                     </button>
                     </div>

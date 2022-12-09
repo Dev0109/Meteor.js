@@ -1,6 +1,7 @@
 import { ReportService } from "../report-service";
 import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../../utility-service";
+import GlobalFunctions from "../../GlobalFunctions";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -8,37 +9,41 @@ let utilityService = new UtilityService();
 Template.fxhistorylist.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.dateAsAt = new ReactiveVar();
+
 });
 
 Template.fxhistorylist.onRendered(() => {
-
+    const templateObject = Template.instance();
     let imageData = (localStorage.getItem("Image"));
+    let begunDate = moment().format("DD/MM/YYYY");
     if (imageData) {
         $('#uploadedImage').attr('src', imageData);
         $('#uploadedImage').attr('width', '50%');
     }
 
-    templateObject.dateAsAt.set(begunDate);
+    templateObject.setDateAs = ( dateFrom = null ) => {
+        templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+    };
+    templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
 
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-        showOn: 'button',
-        buttonText: 'Show Date',
-        buttonImageOnly: true,
-        buttonImage: '/img/imgCal2.png',
-        dateFormat: 'dd/mm/yy',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-        onChangeMonthYear: function(year, month, inst) {
-            $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-        }
-    });
+    // $("#date-input,#dateTo,#dateFrom").datepicker({
+    //     showOn: 'button',
+    //     buttonText: 'Show Date',
+    //     buttonImageOnly: true,
+    //     buttonImage: '/img/imgCal2.png',
+    //     dateFormat: 'dd/mm/yy',
+    //     showOtherMonths: true,
+    //     selectOtherMonths: true,
+    //     changeMonth: true,
+    //     changeYear: true,
+    //     yearRange: "-90:+10",
+    //     onChangeMonthYear: function(year, month, inst) {
+    //         $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+    //     }
+    // });
 
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
+    // $("#dateFrom").val(fromDate);
+    // $("#dateTo").val(begunDate);
 });
 
 Template.fxhistorylist.events({

@@ -727,14 +727,24 @@
 
   <div style="margin-top: -24px;">
 
-    <header style="padding: 16px;padding-bottom: 24px; display: flex; justify-content: space-between;">
-      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">CRM Overview</span>
-        {{> crm_help_modal }}
-      </h2>
-      <div>
-        <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#settingsModal"
-          style="margin: 14px 14px 0 0;"><i class="icon ion-android-more-horizontal"></i></a>
-      </div>
+    <header class="row">
+        <div class="col-12 col-md-4">
+            <header class="pt-2 pb-3 d-flex">
+                <h3 class="mr-1">CRM Overview {{> crm_help_modal }}</h3>
+            </header>
+        </div>
+        <div class="col-12 col-md-4 divLogged">
+            {{> loggedcompanyoverview}}
+        </div>
+        <div class="col-12 col-md-4">
+            <div>
+                <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#settingsModal"
+                   style="margin: 14px 14px 0 0;"><i class="icon ion-android-more-horizontal"></i></a>
+            </div>
+        </div>
+<!--      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">CRM Overview</span>-->
+<!--        {{> crm_help_modal }}-->
+<!--      </h2>-->
     </header>
 
     {{> leadbarchart}}

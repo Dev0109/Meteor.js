@@ -35,7 +35,6 @@ Template.newtermspop.onCreated(function() {
 });
 
 Template.newtermspop.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -695,7 +694,7 @@ Template.newtermspop.events({
         playDeleteAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
-        
+
         let termsId = $('#selectDeleteLineID').val();
 
         let objDetails = {
@@ -739,7 +738,7 @@ Template.newtermspop.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         let termsID = $('#edtTermsID').val();
         let termsName = $('#edtName').val();
         let description = $('#edtDesc').val();

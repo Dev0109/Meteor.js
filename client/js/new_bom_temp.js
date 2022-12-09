@@ -536,62 +536,23 @@ Template.bom_template.events({
         event.stopPropagation();
         if(!inputElement || inputElement.hasClass('edtProductName') != true) {
             let productName = $(event.target).closest('tr').find('td.productName').text();
-            getVS1Data('TProductVS1').then(function(dataObject) {
-                if(dataObject.length == 0) {
-                    productService.getOneProductdatavs1byname(productName).then(function(data){
-                        let description = data.tproduct[0].fields.SalesDescription;
-                        let stockQty = data.tproduct[0].fields.TotalQtyInStock;
-                        let objectDetail = {
-                            productName: productName,
-                            qty: 1,
-                            process: '',
-                            processNote: '',
-                            productDescription: description,
-                            totalQtyInStock: stockQty,
-                            attachments: []
-                        }
-                        templateObject.initialRecord.set(objectDetail);
-                        $('#productListModal').modal('toggle')
-                    })
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tproductvs1;
-                    for(let i=0 ; i< useData.length; i++) {
-                        if(useData[i].fields.ProductName == productName) {
-                            let description = useData[i].fields.SalesDescription;
-                            let stockQty = useData[i].fields.TotalQtyInStock;
-                            let objectDetail = {
-                                productName: productName,
-                                qty: 1,
-                                process: '',
-                                processNote: '',
-                                productDescription: description,
-                                totalQtyInStock: stockQty,
-                                attachments: []
-                            }
-                            templateObject.initialRecord.set(objectDetail);
-                            $('#edtMainProductName').val(objectDetail.productName)
-                            $('#productListModal').modal('toggle')
-                        }
-                    }
-                }
-            }).catch(function(error){
-                productService.getOneProductdatavs1byname(productName).then(function(data){
-                    let description = data.tproduct[0].fields.SalesDescription;
-                    let stockQty = data.tproduct[0].fields.TotalQtyInStock;
-                    let objectDetail = {
-                        productName: productName,
-                        qty: 1,
-                        process: '',
-                        processNote: '',
-                        productDescription: description,
-                        totalQtyInStock: stockQty,
-                        attachments: []
-                    }
-                    templateObject.initialRecord.set(objectDetail);
-                    $('#productListModal').modal('toggle')
-                })
-            })
+            let description = $(event.target).closest('tr').find('td.productDesc').text();
+            let stockQty = $(event.target).closest('tr').find('td.prdQty').text();
+
+            let objectDetail = {
+                productName: productName,
+                qty: 1,
+                process: '',
+                processNote: '',
+                productDescription: description,
+                totalQtyInStock: stockQty,
+                attachments: []
+            }
+
+            templateObject.initialRecord.set(objectDetail);
+            $('#edtMainProductName').val(objectDetail.productName)
+            $('#productListModal').modal('toggle')
+           
         } else {
             let productName = $(event.target).closest('tr').find('.productName').text();
             let selEle = templateObject.selectedProductField.get();
@@ -660,7 +621,7 @@ Template.bom_template.events({
         event.preventDefault();
         event.stopPropagation();
         let templateObject = Template.instance()
-        let processName = $(event.target).closest('tr').find('.colProcessName').text();
+        let processName = $(event.target).closest('tr').find('.colName').text();
         let selEle = templateObject.selectedProcessField.get();
         selEle.val(processName);
         $('#processListModal').modal('toggle')

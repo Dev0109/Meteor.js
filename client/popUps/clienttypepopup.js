@@ -21,7 +21,6 @@ Template.clienttypepopup.onCreated(function() {
 });
 
 Template.clienttypepopup.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];

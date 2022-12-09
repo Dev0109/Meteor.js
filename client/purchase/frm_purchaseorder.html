@@ -1452,21 +1452,7 @@
                           </div>
                           <div class="col-12 col-md-11">
                               <div class="row justify-content-center desktopButtons">
-                                  <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
-                                      <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                                  </button>
-
-                                  <button class="btn btn-primary" id="open_print_confirm" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
-                                      <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-                                  </button>
-
-                                  <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 14px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                                      {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                                  </a>
-                                    {{> deleteBtn_footers }}
-                                  <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
-                                      <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                                  </button>
+                                  {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
                               </div>
 
                           </div>
@@ -1533,86 +1519,18 @@
                           <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
                       </div>
                   </div> -->
-                  <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead">Subtotal</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="subtotal_total" name="subtotal_total">{{purchaseorderrecord.SubTotal}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead">Tax</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="subtotal_tax" name="subtotal_tax">{{purchaseorderrecord.TotalTax}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-12" style="padding: 0px;">
-                              <hr style="border-top: 1px solid #696969;" />
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead leadTotal">TOTAL</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{purchaseorderrecord.Total}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-12" style="padding: 0px;">
-                              <hr style="border-top: 3px solid #696969;" />
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              {{#if equals purchaseorderrecord.isPartialPaid true}}
-                                  <p class="lead text-success pointer btnTransactionPaid" id=""><i class="fas fa-comments-dollar paidIcon"></i> Paid</p>
-                              {{else}}
-                                  <p class="lead">Paid</p>
-                              {{/if}}
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{purchaseorderrecord.totalPaid}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead">Due</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{purchaseorderrecord.balanceDue}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-12" style="padding: 0px;">
-                              <hr style="border-top: 3px solid #696969;" />
-                              <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{purchaseorderrecord.balanceDue}}</p>
-                          </div>
-                      </div>
-                  </div>
+                  {{> transaction_calculation
+                    isPartialPaid=purchaseorderrecord.isPartialPaid
+                    SubTotal=purchaseorderrecord.SubTotal
+                    TotalTax=purchaseorderrecord.TotalTax
+                    Total=purchaseorderrecord.Total
+                    TotalPaid=purchaseorderrecord.totalPaid
+                    BalanceDue=purchaseorderrecord.balanceDue
+                    }}
               </div>
 
               <div class="row justify-content-center mobileButtons" style="display: none;">
-                  <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                      <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                  </button>
-
-                  <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                      <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-                  </button>
-
-                  <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 12px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                      {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                  </a>
-                    {{> deleteBtn_footers }}
-                  <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                      <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                  </button>
+                  {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
               </div>
 
               <div class="printID" style="display: none;"></div>
@@ -1887,150 +1805,7 @@
           </div>
           <!-- END PDF -->
       {{/if}}
-          <div class="modal fade" role="dialog" tabindex="-1" id="statusModal">
-              <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
-                  <div class="modal-content">
-                      <form id="newstatus" name="newstatus">
-                          <div class="modal-header">
-                              <h4>Add New Lead Status</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                          </div>
-                          <div class="modal-body" style="padding: 24px;">
-                              <div class="row">
-                                  <div class="col-12">
-                                      <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                          <label>Status</label>
-                                          <input type="text" id="status" name="status" class="form-control">
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                              <button class="btn btn-success btnSaveStatus" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                              <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                              <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-      <!-- Start Serial/Lot numbers modal -->
-          <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
-              {{> serialnumberpop}}
-          </div>
-          <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
-              {{> lotnumberpop}}
-          </div>
-          <div class="modal fade" role="dialog" tabindex="-1" id="availableSerialNumberModal">
-              {{> availableserialnumberpop}}
-          </div>
-          <div class="modal fade" role="dialog" tabindex="-1" id="availableLotNumberModal">
-              {{> availablelotnumberpop}}
-          </div>
-      <!-- End Modal -->
-      <!-- Modal print-button -modal -->
-          <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-              {{> productlistpop}}
-          </div>
-
-      <!-- End Modal Product -->
-      <!-- Modal Tax Rate -modal -->
-          <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-              {{> taxratelistpop}}
-          </div>
-          <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-              {{> newtaxratepop}}
-          </div>
-          <div class="modal fade" role="dialog" tabindex="-1" id="taxDetailModal">
-              {{> taxdetailpop}}
-          </div>
-      <!-- End Modal Tax Rate -->
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-              {{> addcustomerpop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-              {{> newproductpop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
-              {{> termlistpop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
-              {{> newtermspop}}
-          </div>
-
-
-
-
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
-              {{> departmentpop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
-              {{> newdepartmentpop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
-              {{> statuspop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
-              {{> newstatuspop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="shipViaModal">
-              {{> shipviapop}}
-          </div>
-
-          <div class="modal fade" role="dialog" tabindex="-1" id="newShipViaModal">
-              {{> newshipvia}}
-          </div>
-          
-            <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-                {{> copyfrequencypop}}
-            </div>
-
-      <!-- ModalCustomer -->
-          <div class="modal fade" role="dialog" tabindex="-1" id="customerListModal">
-              <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h4>Customer List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                      </div>
-                      <div class="modal-body" style="padding: 0px;">
-                          <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
-                          {{> customerlistpop}}
-                      </div>
-                      <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                  </div>
-              </div>
-          </div>
-      <!-- End Modal Customer -->
-      <!-- ModalSupplier -->
-          <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">
-              <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
-                  <div class="modal-content supplierListContent">
-                      <div class="modal-header">
-                          <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                      </div>
-                      <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
-                          <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
-                          {{> supplierlistpop}}
-
-                      </div>
-                      <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-      <!-- End Modal Supplier -->
-          <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
-              {{> addsupplierpop}}
-          </div>
+      {{> all_transaction_modals}}    
   </div>
   <!-- Start Help Video Modal -->
           <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">

@@ -117,7 +117,9 @@
                             </div>
                             <div class="col-6 col-md-4">
                                 <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
-                                    <input type="text" class="form-control" id="edtBankName" name="edtBankName">
+                                    <!-- <input type="text" class="form-control" id="edtBankName" name="edtBankName"> -->
+                                    <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName">
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">
@@ -302,8 +304,8 @@
         </div>
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="bankCodeModal">
-      {{> bankCodeModal}}
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
+      {{> bankNameModal}}
     </div>
     {{> eftOptionsModal}}
     {{> eftBankCodesModal}}

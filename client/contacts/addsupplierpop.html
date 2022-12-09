@@ -102,8 +102,11 @@
                         </div>
                         <div class="row">
                             <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;">
-                                <div class="form-group" style="margin: 4px;"><label class="text-nowrap">Title</label><input type="text" class="form-control" style="width: 50px;min-width: 50px;max-width: 50px;" id="edtSupplierTitle"
-                                        name="edtSupplierTitle" value="{{record.title}}"></div>
+                                <div class="form-group flex-grow-1" style="margin: 4px;">
+                                    <label class="text-nowrap">Title</label>
+                                    <select type="search" class="form-control" id="edtSupplierTitle" name="edtSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
+                                    </select>
+                                </div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">First Name</label><input type="text" class="form-control" id="edtSupplierFirstName" name="edtSupplierFirstName"
                                         value="{{record.firstname}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Middle Name</label><input type="text" class="form-control" id="edtSupplierMiddleName" name="edtSupplierMiddleName"

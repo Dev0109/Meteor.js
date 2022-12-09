@@ -3,13 +3,17 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <header class="p-2 d-flex align-items-center" style="padding-left: 0px !important;">
-            <h2 class="m-1">Seed to Sale - Dashboard</h2>
-                <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
-                    <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-
+        <header class="row">
+            <div class="col-12 col-md-4">
+                <h2 class="m-1">Seed to Sale - Dashboard {{> helpbutton}}</h2>
+<!--                <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help-->
+<!--                    <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>-->
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
                 <!-- Start Help View Modal -->
-                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal fade" role="dialog" tabindex="-1" id="supportModal">
                     <div class="modal-dialog modal-sm" role="document">
                         <div class="modal-content">
                             <div class="modal-header" style="padding-bottom: 8px;">

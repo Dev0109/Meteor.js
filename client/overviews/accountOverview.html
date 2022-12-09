@@ -195,11 +195,11 @@
                 </div>
                 <button class="btn btnNav btn-primary vs1ButtonMargin btnTaxSummary" type="button" style="display:none"><i class="fas fa-user" style="padding-right: 5px;"></i>Tax Summary</button>
             </div>
-            {{#if equals isSetupFinished false}}
+            <!-- {{#if equals isSetupFinished false}} -->
                 <div class="col-2 setupIncompleatedMsg text-danger">
-                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
                 </div>
-            {{/if}}
+            <!-- {{/if}} -->
             <div class="col-5 col-md-5">
                 <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin" role="button" data-toggle="modal" href="#tblAccountOverview_Modal" ><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btnNav btn-primary float-right printConfirm vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>

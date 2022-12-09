@@ -50,11 +50,11 @@
                     <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary vs1ButtonMargin" type="button" ><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
                     <button class="btn btn-success btnAddVS1User vs1ButtonMargin" type="button" ><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button>
                 </div>
-                {{#if equals isSetupFinished false}}
+                <!-- {{#if equals isSetupFinished false}} -->
                     <div class="col-2 setupIncompleatedMsg text-danger">
-                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
                     </div>
-                {{/if}}
+                <!-- {{/if}} -->
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
                     {{> export_import_print_display_button tablename="tblEmployeelist"}}
                 </div>

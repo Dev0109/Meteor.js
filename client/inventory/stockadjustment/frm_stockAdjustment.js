@@ -2121,33 +2121,52 @@ Template.stockadjustmentcard.events({
             event.preventDefault();
         }
     },
-    'click .btnRemove': function (event) {
+    'click .btnRemove': async function (event) {
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
-
+        let stockTransferService = new StockTransferService();
+        var currentDate = new Date();
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var stockList = [];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
+            var adjustmentDate = stockData.fields.AdjustmentDate;
+            var fromDate = adjustmentDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
+            stockList = followingStocks.tstockadjustentry;
+        }
 
-        times++;
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblStockAdjustmentLine tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                let $tblrows = $("#tblStockAdjustmentLine tbody tr");
-                //if(selectLineID){
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-
-                return false;
-
-            } else {
+        if(targetID != undefined) {    
+            times++;
+            if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblStockAdjustmentLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblStockAdjustmentLine tbody tr");
+                    //if(selectLineID){
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+
+                    return false;
+
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
+        } else {
+            if(stockList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingStocks': async function (event) {
@@ -2238,6 +2257,7 @@ Template.stockadjustmentcard.events({
             $('.modal-backdrop').css('display', 'none');
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteStockAdjust': function (event) {

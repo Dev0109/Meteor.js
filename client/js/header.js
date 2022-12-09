@@ -29,7 +29,7 @@ let productService = new ProductService();
 let organizationService = new OrganisationService();
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
-Template.header.onCreated(function() {
+Template.header.onCreated(function () {
     const templateObject = Template.instance();
 
     templateObject.isCloudUserPass = new ReactiveVar();
@@ -76,14 +76,13 @@ Template.header.onCreated(function() {
     templateObject.isCloudSidePanelMenu.set(false);
     templateObject.isCloudTopPanelMenu = new ReactiveVar();
     templateObject.isCloudTopPanelMenu.set(false);
-
-
     templateObject.profilePhoto = new ReactiveVar();
-
     templateObject.searchdatatablerecords = new ReactiveVar([]);
 
+    templateObject.confirmedStepCount = new ReactiveVar([]);
+    templateObject.confirmedStepCount.set(0);
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         var loc = FlowRouter.current().path;
 
@@ -91,12 +90,23 @@ Template.header.onCreated(function() {
 
 });
 
-Template.header.onRendered(function() {
+Template.header.onRendered(function () {
     const templateObject = Template.instance();
+
+    // templateObject.getConfirmedStepCount = async function() {
+    //     let data = await organizationService.getOrganisationDetail();
+    //     let companyInfo = data.tcompanyinfo[0];
+    //     let cntConfirmedSteps = companyInfo.Address3 == "" ? 0 : parseInt(companyInfo.Address3);
+    //     templateObject.confirmedStepCount.set(cntConfirmedSteps);
+    // }
+    // templateObject.getConfirmedStepCount();
+    
+    checkSetupFinished2();
+
     let sidePanelToggle = Session.get('sidePanelToggle');
 
     var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || 'false';
-    setTimeout(function() {
+    setTimeout(function () {
         if (dontOpenSearchGuide == 'true' || dontOpenSearchGuide == true) {
             $(".chkOpenByDefault").prop("checked", true);
         } else {
@@ -115,17 +125,17 @@ Template.header.onRendered(function() {
         document.getElementById("mobileBarcodeScan2").style.display = "block";
     }
 
-    $(document).keypress(function(event){
+    $(document).keypress(function (event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
-        if(keycode == '13'){
+        if (keycode == '13') {
             if ($('#searchGuideModal').css('display') == 'block') {
-                $( "#btnCloseSearchGuide" ).trigger( "click" );
+                $("#btnCloseSearchGuide").trigger("click");
             }
-         }
+        }
     });
 
-    $(document).on( 'keydown', function(e) {
-        if ((e.keyCode == "27") ) {
+    $(document).on('keydown', function (e) {
+        if ((e.keyCode == "27")) {
             if ($('#searchGuideModal').css('display') == 'block') {
                 $('#searchGuideModal').modal(show);
             }
@@ -133,8 +143,8 @@ Template.header.onRendered(function() {
     });
 
 
-    $(document).ready(function() {
-        $('.btnClose').on('click', function(event) {
+    $(document).ready(function () {
+        $('.btnClose').on('click', function (event) {
             $('#searchGuideModal').modal('hide');
             if (isMobile == true) {
                 $('.txtGlobalSearchMobile').focus();
@@ -145,7 +155,7 @@ Template.header.onRendered(function() {
 
     });
 
-    $("#scanBarcodeHeadTop").click(function() {
+    $("#scanBarcodeHeadTop").click(function () {
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 
         } else {
@@ -154,11 +164,11 @@ Template.header.onRendered(function() {
     });
 
 
-    templateObject.getAllGlobalSearch = function(searchName) {
+    templateObject.getAllGlobalSearch = function (searchName) {
         $('.fullScreenSpin').css('display', 'inline-block');
 
         function checkStockColor() {
-            $('td.colTransStatus').each(function() {
+            $('td.colTransStatus').each(function () {
                 if ($(this).text() == "Processed") {
                     $(this).addClass('isProcessedColumn');
                 } else if ($(this).text() == "On Hold") {
@@ -171,13 +181,13 @@ Template.header.onRendered(function() {
 
 
         if (searchName.length <= 2) {
-            productService.getGlobalSearchReport(searchName).then(function(data) {
+            productService.getGlobalSearchReport(searchName).then(function (data) {
                 let dataSelectID = '';
                 let isProcessed = '';
                 var splashArrayList = new Array();
                 var splashArrayListDupp = new Array();
                 $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#tblSearchOverview_filter .form-control-sm').val(searchName);
                 }, 200);
                 let dataTableList = [];
@@ -267,7 +277,7 @@ Template.header.onRendered(function() {
 
 
 
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#searchPOP').modal('toggle');
 
                     $('#tblSearchOverview').DataTable({
@@ -277,25 +287,25 @@ Template.header.onRendered(function() {
                         "aaSorting": [],
                         "orderMulti": true,
                         columnDefs: [{
-                                className: "colId",
-                                "targets": [0]
-                            },
-                            {
-                                className: "colName",
-                                "targets": [1]
-                            },
-                            {
-                                className: "colType",
-                                "targets": [2]
-                            },
-                            {
-                                className: "colTransGlobal",
-                                "targets": [3]
-                            },
-                            {
-                                className: "colTransStatus",
-                                "targets": [4]
-                            }
+                            className: "colId",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colName",
+                            "targets": [1]
+                        },
+                        {
+                            className: "colType",
+                            "targets": [2]
+                        },
+                        {
+                            className: "colTransGlobal",
+                            "targets": [3]
+                        },
+                        {
+                            className: "colTransStatus",
+                            "targets": [4]
+                        }
 
                         ],
                         rowId: 0,
@@ -313,8 +323,8 @@ Template.header.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnDrawCallback": function(oSettings) {
+                        language: { search: "", searchPlaceholder: "Search List..." },
+                        "fnDrawCallback": function (oSettings) {
                             var searchDataValue = $('.txtGlobalSearch').val().toLowerCase();
                             $('#tblSearchOverview_wrapper .paginate_button.page-item').removeClass('disabled');
                             $('#tblSearchOverview_ellipsis').addClass('disabled');
@@ -330,12 +340,12 @@ Template.header.onRendered(function() {
                                 $('#tblSearchOverview_wrapper .paginate_button.page-item.next').addClass('disabled');
                             }
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function() {
+                                .on('click', function () {
                                     $('.fullScreenSpin').css('display', 'inline-block');
                                     let dataLenght = oSettings._iDisplayLength;
 
 
-                                    sideBarService.getGlobalSearchReport(searchDataValue, initialReportLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                    sideBarService.getGlobalSearchReport(searchDataValue, initialReportLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                         // templateObject.resetData(objCombineData);
                                         let dataOld = splashArrayList;
                                         for (let i = 0; i < dataObjectnew.tglobalsearchreport.length; i++) {
@@ -429,23 +439,23 @@ Template.header.onRendered(function() {
                                         // }
                                         $('.fullScreenSpin').css('display', 'none');
 
-                                    }).catch(function(err) {
+                                    }).catch(function (err) {
                                         $('.fullScreenSpin').css('display', 'none');
                                     });
 
                                 });
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 checkStockColor();
                             }, 100);
                         }
 
-                    }).on('page', function() {
+                    }).on('page', function () {
 
                     });
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 }, 0);
 
-                $('#tblSearchOverview tbody').on('click', 'tr', function() {
+                $('#tblSearchOverview tbody').on('click', 'tr', function () {
                     var listData = $(this).closest('tr').attr('id');
                     var transactiontype = $(event.target).closest("tr").find(".colType").text();
                     if ((listData) && (transactiontype)) {
@@ -495,7 +505,7 @@ Template.header.onRendered(function() {
                 });
 
 
-            }).catch(function(err) {
+            }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
@@ -512,7 +522,7 @@ Template.header.onRendered(function() {
                 oReqSID.send();
 
                 oReqSID.timeout = 30000;
-                oReqSID.onreadystatechange = function() {
+                oReqSID.onreadystatechange = function () {
                     if (oReqSID.readyState == 4 && oReqSID.status == 200) {
                         var dataListRet = JSON.parse(oReqSID.responseText)
                         for (var event in dataListRet) {
@@ -551,7 +561,7 @@ Template.header.onRendered(function() {
                 oReqSLineID.send();
 
                 oReqSLineID.timeout = 30000;
-                oReqSLineID.onreadystatechange = function() {
+                oReqSLineID.onreadystatechange = function () {
                     if (oReqSLineID.readyState == 4 && oReqSLineID.status == 200) {
                         var dataListRet = JSON.parse(oReqSLineID.responseText)
                         for (var event in dataListRet) {
@@ -580,7 +590,7 @@ Template.header.onRendered(function() {
 
 
             } else if (segs[0] == Barcode_Prefix_StockTransfer) {
-                productService.getGlobalSearchReportByType(segs[1], "Stock Transfer").then(function(data) {
+                productService.getGlobalSearchReportByType(segs[1], "Stock Transfer").then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -606,12 +616,12 @@ Template.header.onRendered(function() {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_StockAdjust) {
 
-                productService.getGlobalSearchStockAdjust(segs[1]).then(function(data) {
+                productService.getGlobalSearchStockAdjust(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -627,12 +637,12 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Employee) {
 
-                productService.getGlobalSearchEmployee(segs[1]).then(function(data) {
+                productService.getGlobalSearchEmployee(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -648,11 +658,11 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Invoice || segs[0] == Barcode_Prefix_Invoice2) {
-                productService.getGlobalSearchReportByType(segs[1], "Invoice").then(function(data) {
+                productService.getGlobalSearchReportByType(segs[1], "Invoice").then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -675,11 +685,11 @@ Template.header.onRendered(function() {
                     } else {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_SalesOrder) {
-                productService.getGlobalSearchReportByType(segs[1], "Sales Order").then(function(data) {
+                productService.getGlobalSearchReportByType(segs[1], "Sales Order").then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -702,11 +712,11 @@ Template.header.onRendered(function() {
                     } else {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Quote) {
-                productService.getGlobalSearchReportByType(segs[1], "Quote").then(function(data) {
+                productService.getGlobalSearchReportByType(segs[1], "Quote").then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -732,13 +742,13 @@ Template.header.onRendered(function() {
                     } else {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
 
             } else if (segs[0] == Barcode_Prefix_Refund) {
 
-                productService.getGlobalSearchRefund(segs[1]).then(function(data) {
+                productService.getGlobalSearchRefund(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -754,7 +764,7 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Payment) {
@@ -786,7 +796,7 @@ Template.header.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                 }); */
 
-                productService.getGlobalSearchPayment(segs[1]).then(function(data) {
+                productService.getGlobalSearchPayment(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -812,12 +822,12 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Bill) {
 
-                productService.getGlobalSearchBill(segs[1]).then(function(data) {
+                productService.getGlobalSearchBill(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -833,12 +843,12 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_PurchaseOrder) {
 
-                productService.getGlobalSearchPO(segs[1]).then(function(data) {
+                productService.getGlobalSearchPO(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -854,12 +864,12 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Journal) {
 
-                productService.getGlobalSearchJournalEntry(segs[1]).then(function(data) {
+                productService.getGlobalSearchJournalEntry(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -875,11 +885,11 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_TimeSheet) {
-                productService.getGlobalSearchTimeSheet(segs[1]).then(function(data) {
+                productService.getGlobalSearchTimeSheet(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -895,12 +905,12 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Customer) {
 
-                productService.getGlobalSearchCustomer(segs[1]).then(function(data) {
+                productService.getGlobalSearchCustomer(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -916,15 +926,12 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Supplier) {
-                productService.getGlobalSearchSupplier(segs[1]).then(function(data) {
+                productService.getGlobalSearchSupplier(segs[1]).then(function (data) {
                     let dataSelectID = '';
-                    let isProcessed = '';
-                    var splashArrayList = new Array();
-                    var splashArrayListDupp = new Array();
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
@@ -936,11 +943,11 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Product) {
-                productService.getGlobalSearchProduct(segs[1]).then(function(data) {
+                productService.getGlobalSearchProduct(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -956,11 +963,11 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Account) {
-                productService.getGlobalSearchAccount(segs[1]).then(function(data) {
+                productService.getGlobalSearchAccount(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -976,11 +983,11 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Check) {
-                productService.getGlobalSearchCheck(segs[1]).then(function(data) {
+                productService.getGlobalSearchCheck(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -996,11 +1003,11 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] == Barcode_Prefix_Shipping) {
-                productService.getGlobalSearchShipping(segs[1]).then(function(data) {
+                productService.getGlobalSearchShipping(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
@@ -1016,17 +1023,140 @@ Template.header.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
                     }
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
+            } else if (segs[0] === Barcode_Prefix_Appointment) {
+                productService.getGlobalSearchAppointment(segs[1]).then(function (data) {//Done Vladyslav
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.tappointmentex.length > 0) {
+                        window.open('/appointmentlist?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else if (segs[0] === Barcode_Prefix_Credit) {//Done Vladyslav
+                productService.getGlobalSearchCredit(segs[1]).then(function (data) {
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.tcreditlist.length > 0) {
+                        window.open('/creditcard?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else if (segs[0] === Barcode_Prefix_CRM) {
+                productService.getGlobalSearchCRM(segs[1]).then(function (data) {//
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.tprojecttaskslist.length > 0) {
+                        window.open('/crmoverview?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else if (segs[0] === Barcode_Prefix_Deposit) {//Done Vladyslav
+                productService.getGlobalSearchDeposit(segs[1]).then(function (data) {
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.tbankdepositlist.length > 0) {
+                        window.open('/depositcard?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else if (segs[0] === Barcode_Prefix_FixedAsset) {//Done Vladyslav
+                productService.getGlobalSearchFixedAssets(segs[1]).then(function (data) {
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.tfixedassets.length > 0) {
+                        window.open('/fixedassetcard?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+
+            } else if (segs[0] === Barcode_Prefix_ReceiptClaim) {
+                productService.getGlobalSearchReceiptClaims(segs[1]).then(function (data) {// DONE Vladyslav
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.texpenseclaimlist.length > 0) {
+                        window.open('/receiptsoverview?id='+dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else if (segs[0] === Barcode_Prefix_Task) {
+                productService.getGlobalSearchTasks(segs[1]).then(function (data) {
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.tprojecttaskslist.length > 0) {
+                        window.open('/crmoverview?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+
+            } else if (segs[0] === Barcode_Prefix_WorkOrder) {
+                productService.getGlobalSearchWorkOrders(segs[1]).then(function (data) {
+                    let dataSelectID = '';
+                    $('.fullScreenSpin').css('display', 'none');
+                    dataSelectID = segs[1] || '';
+                    if (data.tworkorderlist.length > 0) {
+                        window.open('/workordercard?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+
             } else {
-                productService.getGlobalSearchReport(searchName).then(function(data) {
+                productService.getGlobalSearchReport(searchName).then(function (data) {
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();
                     var splashArrayListDupp = new Array();
                     $('.fullScreenSpin').css('display', 'none');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('#tblSearchOverview_filter .form-control-sm').val(searchName);
                     }, 200);
                     let dataTableList = [];
@@ -1118,7 +1248,7 @@ Template.header.onRendered(function() {
 
 
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('#searchPOP').modal('toggle');
 
                             $('#tblSearchOverview').DataTable({
@@ -1128,25 +1258,25 @@ Template.header.onRendered(function() {
                                 "aaSorting": [],
                                 "orderMulti": true,
                                 columnDefs: [{
-                                        className: "colId",
-                                        "targets": [0]
-                                    },
-                                    {
-                                        className: "colName",
-                                        "targets": [1]
-                                    },
-                                    {
-                                        className: "colType",
-                                        "targets": [2]
-                                    },
-                                    {
-                                        className: "colTransGlobal",
-                                        "targets": [3]
-                                    },
-                                    {
-                                        className: "colTransStatus",
-                                        "targets": [4]
-                                    }
+                                    className: "colId",
+                                    "targets": [0]
+                                },
+                                {
+                                    className: "colName",
+                                    "targets": [1]
+                                },
+                                {
+                                    className: "colType",
+                                    "targets": [2]
+                                },
+                                {
+                                    className: "colTransGlobal",
+                                    "targets": [3]
+                                },
+                                {
+                                    className: "colTransStatus",
+                                    "targets": [4]
+                                }
 
                                 ],
                                 rowId: 0,
@@ -1164,8 +1294,8 @@ Template.header.onRendered(function() {
                                 ],
                                 info: true,
                                 responsive: true,
-                                language: { search: "",searchPlaceholder: "Search List..." },
-                                "fnDrawCallback": function(oSettings) {
+                                language: { search: "", searchPlaceholder: "Search List..." },
+                                "fnDrawCallback": function (oSettings) {
                                     var searchDataValue = $('.txtGlobalSearch').val().toLowerCase();
                                     $('#tblSearchOverview_wrapper .paginate_button.page-item').removeClass('disabled');
                                     $('#tblSearchOverview_ellipsis').addClass('disabled');
@@ -1181,12 +1311,12 @@ Template.header.onRendered(function() {
                                         $('#tblSearchOverview_wrapper .paginate_button.page-item.next').addClass('disabled');
                                     }
                                     $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                        .on('click', function() {
+                                        .on('click', function () {
                                             $('.fullScreenSpin').css('display', 'inline-block');
                                             let dataLenght = oSettings._iDisplayLength;
 
 
-                                            sideBarService.getGlobalSearchReport(searchDataValue, initialReportLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                            sideBarService.getGlobalSearchReport(searchDataValue, initialReportLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
                                                 let dataOld = splashArrayList;
                                                 for (let i = 0; i < dataObjectnew.tglobalsearchreport.length; i++) {
@@ -1278,17 +1408,17 @@ Template.header.onRendered(function() {
 
                                                 $('.fullScreenSpin').css('display', 'none');
 
-                                            }).catch(function(err) {
+                                            }).catch(function (err) {
                                                 $('.fullScreenSpin').css('display', 'none');
                                             });
 
                                         });
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         checkStockColor();
                                     }, 100);
                                 }
 
-                            }).on('page', function() {
+                            }).on('page', function () {
 
                             });
                             $('div.dataTables_filter input').addClass('form-control form-control-sm');
@@ -1296,7 +1426,7 @@ Template.header.onRendered(function() {
                     } else {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
-                    $('#tblSearchOverview tbody').on('click', 'tr', function() {
+                    $('#tblSearchOverview tbody').on('click', 'tr', function () {
                         var listData = $(this).closest('tr').attr('id');
                         var transactiontype = $(event.target).closest("tr").find(".colType").text();
                         if ((listData) && (transactiontype)) {
@@ -1348,7 +1478,7 @@ Template.header.onRendered(function() {
 
 
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             }
@@ -1364,7 +1494,7 @@ Template.header.onRendered(function() {
         if (barcodeScanner != '') {
             //$('.txtGlobalSearchMobile').val(barcode).trigger("change");
             //var searchData = $('.txtGlobalSearchMobile').val().toLowerCase();
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#tblSearchOverview_filter .form-control-sm').val(barcodeScanner);
             }, 200);
 
@@ -1381,10 +1511,10 @@ Template.header.onRendered(function() {
 
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "qr-reader-global", {
-            fps: 10,
-            qrbox: 250,
-            rememberLastUsedCamera: true
-        });
+        fps: 10,
+        qrbox: 250,
+        rememberLastUsedCamera: true
+    });
     html5QrcodeScanner.render(onScanSuccess);
 
 
@@ -1423,9 +1553,9 @@ Template.header.onRendered(function() {
     let isTopPanel = Session.get('CloudTopPanelMenu');
     let loggedUserEventFired = Session.get('LoggedUserEventFired');
     var splashArrayProd = new Array();
-    templateObject.getAllProducts = function() {
+    templateObject.getAllProducts = function () {
 
-        productService.getNewProductList().then(function(data) {
+        productService.getNewProductList().then(function (data) {
             let records = [];
             let inventoryData = [];
             for (let i = 0; i < data.tproduct.length; i++) {
@@ -1471,11 +1601,11 @@ Template.header.onRendered(function() {
 
         })
     };
-    templateObject.getBankDescription = function() {
+    templateObject.getBankDescription = function () {
         accountService.getOneAccountByName("BANK").then(function (data) {
             let bankDesc = data.taccountvs1[0].fields.Description;
             localStorage.setItem('vs1companyBankDesc', bankDesc);
-        }).catch(function(err) {
+        }).catch(function (err) {
             $('.process').addClass('killProgressBar');
             swal({
                 title: 'Oooops...',
@@ -1484,15 +1614,15 @@ Template.header.onRendered(function() {
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
             }).then((result) => {
-                if (result.value) {} else if (result.dismiss === 'cancel') {
+                if (result.value) { } else if (result.dismiss === 'cancel') {
 
                 }
             });
         });
     }
-    templateObject.getCompanyInfo = function() {
+    templateObject.getCompanyInfo = function () {
 
-        organizationService.getCompanyInfo().then(function(data) {
+        organizationService.getCompanyInfo().then(function (data) {
             let companyName = data.tcompanyinfo[0].CompanyName;
             let companyaddress1 = data.tcompanyinfo[0].PoBox;
             let companyaddress2 = data.tcompanyinfo[0].PoBox2 + ' ' + data.tcompanyinfo[0].PoBox3;
@@ -1550,7 +1680,7 @@ Template.header.onRendered(function() {
                 localStorage.setItem('VS1OrgEmail', localStorage.getItem('mySession'));
             }
 
-        }).catch(function(err) {
+        }).catch(function (err) {
             $('.process').addClass('killProgressBar');
             swal({
                 title: 'Oooops...',
@@ -1559,19 +1689,19 @@ Template.header.onRendered(function() {
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
             }).then((result) => {
-                if (result.value) {} else if (result.dismiss === 'cancel') {
+                if (result.value) { } else if (result.dismiss === 'cancel') {
 
                 }
             });
         });
 
-        organizationService.getCheckTcompLogoData().then(function(dataLogo) {
+        organizationService.getCheckTcompLogoData().then(function (dataLogo) {
 
 
             if (dataLogo.tcomplogo.length) {
-              let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture || '';
-              let logoPictureType = dataLogo.tcomplogo[0].Pictype || '';
-              let logoImageData = 'data:image/' + logoPictureType + ';base64,' + logoImagePicture;
+                let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture || '';
+                let logoPictureType = dataLogo.tcomplogo[0].Pictype || '';
+                let logoImageData = 'data:image/' + logoPictureType + ';base64,' + logoImagePicture;
                 localStorage.setItem("Image", logoImageData);
             };
         });
@@ -1594,7 +1724,7 @@ Template.header.onRendered(function() {
     if (loggedUserEventFired) {
         templateObject.getBankDescription();
         templateObject.getCompanyInfo();
-        $(document).ready(function() {
+        $(document).ready(function () {
             let checkGreenTrack = Session.get('isGreenTrack') || false;
             if (checkGreenTrack) {
                 document.title = 'GreenTrack';
@@ -1606,7 +1736,7 @@ Template.header.onRendered(function() {
 
         });
 
-        setTimeout(function() {
+        setTimeout(function () {
 
 
         }, 0);
@@ -1723,24 +1853,24 @@ Template.header.onRendered(function() {
 });
 
 Template.header.events({
-    'click .btnCloseProgess': function() {
+    'click .btnCloseProgess': function () {
         $('.headerprogressbar').removeClass('headerprogressbarShow');
         $('.headerprogressbar').addClass('headerprogressbarHidden');
     },
-    'click .chkOpenByDefault': function() {
+    'click .chkOpenByDefault': function () {
         if ($(event.target).is(':checked')) {
             localStorage.setItem('dontopensearchguide', true);
-            setTimeout(function() {
+            setTimeout(function () {
                 Meteor._reload.reload();
             }, 100);
         } else {
             localStorage.setItem('dontopensearchguide', false);
-            setTimeout(function() {
+            setTimeout(function () {
                 Meteor._reload.reload();
             }, 100);
         }
     },
-    'click .shorthandCode': function() {
+    'click .shorthandCode': function () {
         // let getData = $(event.target).text()||'';
         // if(getData != ''){
         //   $('.txtGlobalSearch').val(getData);
@@ -1748,71 +1878,71 @@ Template.header.events({
         //   $('#searchGuideModal').modal('toggle');
         // }
     },
-    'click .btnLoad': function() {
+    'click .btnLoad': function () {
 
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process1").removeClass("hideProcess");
         }, 2000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process2").removeClass("hideProcess");
         }, 4000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process3").removeClass("hideProcess");
         }, 6000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process4").removeClass("hideProcess");
         }, 8000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process5").removeClass("hideProcess");
         }, 10000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process1").addClass("hideProcess");
             $("#process6").removeClass("hideProcess");
         }, 12000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process2").addClass("hideProcess");
             $("#process7").removeClass("hideProcess");
         }, 14000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process3").addClass("hideProcess");
             $("#process8").removeClass("hideProcess");
         }, 16000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process4").addClass("hideProcess");
             $("#process9").removeClass("hideProcess");
         }, 18000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process5").addClass("hideProcess");
             $("#process10").removeClass("hideProcess");
         }, 20000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process6").addClass("hideProcess");
             $("#process11").removeClass("hideProcess");
         }, 22000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process7").addClass("hideProcess");
         }, 24000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process8").addClass("hideProcess");
         }, 26000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process9").addClass("hideProcess");
         }, 28000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process10").addClass("hideProcess");
         }, 30000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#process11").addClass("hideProcess");
         }, 32000);
-        setTimeout(function() {
+        setTimeout(function () {
             $("#checkmarkwrapper").removeClass("hide");
         }, 33000);
 
     },
-    'click .btnGlobalSearch': function(event) {
+    'click .btnGlobalSearch': function (event) {
         let templateObject = Template.instance();
         var searchData = $('.txtGlobalSearch').val().toLowerCase();
-        setTimeout(function() {
+        setTimeout(function () {
             $('#tblSearchOverview_filter .form-control-sm').val(searchData);
         }, 200);
         if (searchData != '') {
@@ -1821,13 +1951,13 @@ Template.header.events({
             $('#searchGuideModal').modal('toggle');
         }
     },
-    'keypress .txtGlobalSearch': function(event) {
+    'keypress .txtGlobalSearch': function (event) {
         var key = event.which;
         if (key == 13) {
             let templateObject = Template.instance();
             var searchData = $('.txtGlobalSearch').val().toLowerCase();
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#tblSearchOverview_filter .form-control-sm').val(searchData);
             }, 200);
             if (searchData != '') {
@@ -1836,7 +1966,7 @@ Template.header.events({
             }
         }
     },
-    'click .txtGlobalSearch': function(event) {
+    'click .txtGlobalSearch': function (event) {
         var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || 'false';
         if (dontOpenSearchGuide == 'true' || dontOpenSearchGuide == true) {
 
@@ -1848,10 +1978,10 @@ Template.header.events({
 
 
     },
-    'click #btnSearchGuide': function(event) {
+    'click #btnSearchGuide': function (event) {
         $('#searchGuideModal').modal('toggle');
     },
-    'click .txtGlobalSearchMobile': function(event) {
+    'click .txtGlobalSearchMobile': function (event) {
         var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || false;
         if (dontOpenSearchGuide) {
 
@@ -1861,7 +1991,7 @@ Template.header.events({
             }
         }
     },
-    'click .btnCloseModal': function(event) {
+    'click .btnCloseModal': function (event) {
         let templateObject = Template.instance();
         templateObject.searchdatatablerecords.set('');
         $('.txtGlobalSearch').val('');
@@ -1869,10 +1999,10 @@ Template.header.events({
         $('#tblSearchOverview_filter .form-control-sm').val('');
 
     },
-    'click .btnGlobalSearchMobile': function(event) {
+    'click .btnGlobalSearchMobile': function (event) {
         let templateObject = Template.instance();
         var searchData = $('.txtGlobalSearchMobile').val().toLowerCase();
-        setTimeout(function() {
+        setTimeout(function () {
             $('#tblSearchOverview_filter .form-control-sm').val(searchData);
         }, 200);
         if (searchData != '') {
@@ -1880,12 +2010,12 @@ Template.header.events({
 
         }
     },
-    'keypress .txtGlobalSearchMobile': function(event) {
+    'keypress .txtGlobalSearchMobile': function (event) {
         var key = event.which;
         if (key == 13) {
             let templateObject = Template.instance();
             var searchData = $('.txtGlobalSearchMobile').val().toLowerCase();
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#tblSearchOverview_filter .form-control-sm').val(searchData);
             }, 200);
             if (searchData != '') {
@@ -1894,7 +2024,7 @@ Template.header.events({
             }
         }
     },
-    'click .btnCloseModalMobile': function(event) {
+    'click .btnCloseModalMobile': function (event) {
         let templateObject = Template.instance();
         templateObject.searchdatatablerecords.set('');
         $('#tblSearchOverview_filter .form-control-sm').val('');
@@ -1902,14 +2032,14 @@ Template.header.events({
         $('.txtGlobalSearch').val('');
 
     },
-    'keyup #tblSearchOverview_filter input': function(event) {
+    'keyup #tblSearchOverview_filter input': function (event) {
         if (event.keyCode == 13) {
             $('.txtGlobalSearchMobile').val($(event.target).val());
             $('.txtGlobalSearch').val($(event.target).val());
             $(".btnGlobalSearch").trigger("click");
         }
     },
-    'click #sidebarToggleTop': function(event) {
+    'click #sidebarToggleTop': function (event) {
         var newnav = document.getElementById("sidebar");
         if (window.getComputedStyle(newnav).display === "none") {
             document.getElementById("sidebar").style.display = "block";
@@ -1919,115 +2049,115 @@ Template.header.events({
         }
     },
 
-    'click #navOrganisationSettings': function(event) {
+    'click #navOrganisationSettings': function (event) {
         window.open('/accesslevel', '_self');
     },
-    'click #navhome': function(event) {
+    'click #navhome': function (event) {
         window.open('/dashboard', '_self');
     },
-    'click #navmain': function(event) {
+    'click #navmain': function (event) {
         window.open('/home', '_self');
     },
-    'click #navbankaccounts': function(event) {
+    'click #navbankaccounts': function (event) {
         window.open('/bankaccounts', '_self');
     },
-    'click #navchartofaccounts': function(event) {
+    'click #navchartofaccounts': function (event) {
         window.open('/settings/accounts/all-accounts', '_self');
     },
-    'click #navpurchases': function(event) {
+    'click #navpurchases': function (event) {
         window.open('/purchases', '_self');
     },
-    'click #navinventory': function(event) {
+    'click #navinventory': function (event) {
         window.open('/productexpresslist', '_self');
     },
-    'click #navstocktransferlist': function(event) {
+    'click #navstocktransferlist': function (event) {
         window.open('/stocktransfer', '_self');
     },
-    'click #navstockadjlist': function(event) {
+    'click #navstockadjlist': function (event) {
         window.open('/stocktake', '_self');
     },
-    'click #navshipping': function(event) {
+    'click #navshipping': function (event) {
         window.open('/shipping', '_self');
     },
-    'click #navfittings': function(event) {
+    'click #navfittings': function (event) {
         window.open('/manufacturing', '_self');
     },
-    'click #navexpenseclaims': function(event) {
+    'click #navexpenseclaims': function (event) {
         window.open('/expenseclaims/current-claims', '_self');
     },
-    'click #navfixedassets': function(event) {
+    'click #navfixedassets': function (event) {
         window.open('/fixedassets/draft', '_self');
     },
-    'click #navallreports': function(event) {
+    'click #navallreports': function (event) {
         window.open('/allreports', '_self');
     },
-    'click #navvatreturns': function(event) {
+    'click #navvatreturns': function (event) {
         window.open('/vatreturn', '_self');
     },
-    'click #navallcontacts': function(event) {
+    'click #navallcontacts': function (event) {
         window.open('/allcontacts', '_self');
     },
-    'click #navcustomers': function(event) {
+    'click #navcustomers': function (event) {
         window.open('/customerslist', '_self');
     },
-    'click #navsuppliers': function(event) {
+    'click #navsuppliers': function (event) {
         window.open('/supplierlist', '_self');
     },
-    'click #navemployees': function(event) {
+    'click #navemployees': function (event) {
         window.open('/employeeslist', '_self');
     },
-    'click #navtraining': function(event) {
+    'click #navtraining': function (event) {
         window.open('/traininglist', '_self');
     },
-    'click #navgeneralsettings': function(event) {
+    'click #navgeneralsettings': function (event) {
         window.open('/settings', '_self');
     },
-    'click #navsales': function(event) {
+    'click #navsales': function (event) {
         window.open('/allsales', '_self');
     },
-    'click #navinvoices': function(event) {
+    'click #navinvoices': function (event) {
         window.open('/invoicelist/All', '_self');
     },
-    'click #navquotes': function(event) {
+    'click #navquotes': function (event) {
         window.open('/quoteslist/#All', '_self');
     },
-    'click #navsalesorder': function(event) {
+    'click #navsalesorder': function (event) {
         window.open('/salesorderslist', '_self');
     },
-    'click #navAccessLevel': function(event) {
+    'click #navAccessLevel': function (event) {
         window.open('/accesslevel', '_self');
     },
-    'click #navexpenseclaims': function(event) {
+    'click #navexpenseclaims': function (event) {
         window.open('/expenseclaims/current-claims', '_self');
     },
-    'click #navfixedassets': function(event) {
+    'click #navfixedassets': function (event) {
         window.open('/fixedassets/draft', '_self');
     },
-    'click #navpurchases': function(event) {
+    'click #navpurchases': function (event) {
         window.open('/purchases', '_self');
     },
-    'click #navbill': function(event) {
+    'click #navbill': function (event) {
         window.open('/billslist/All', '_self');
     },
-    'click #navpurchaseorder': function(event) {
+    'click #navpurchaseorder': function (event) {
         window.open('/polist/#All', '_self');
     },
-    'click #navawaitingcustpayment': function(event) {
+    'click #navawaitingcustpayment': function (event) {
         window.open('/awaitingcustomerpaylist', '_self');
     },
-    'click #navcustPaymentList': function(event) {
+    'click #navcustPaymentList': function (event) {
         window.open('/customerpaymentlist', '_self');
     },
-    'click #navawaitingsupptpayment': function(event) {
+    'click #navawaitingsupptpayment': function (event) {
         window.open('/awaitingsupplierpaylist', '_self');
     },
-    'click #navsuppPaymentList': function(event) {
+    'click #navsuppPaymentList': function (event) {
         window.open('/supplierpaymentlist', '_self');
     },
-    'click #navPaymentOverview': function(event) {
+    'click #navPaymentOverview': function (event) {
         window.open('/payments', '_self');
     },
-    'click #closeCloudTopPanelMenu': function(event) {
+    'click #closeCloudTopPanelMenu': function (event) {
         let templateObject = Template.instance();
         let empLoggedID = Session.get('mySessionEmployeeLoggedID');
         let accesslevelService = new AccessLevelService();
@@ -2045,42 +2175,42 @@ Template.header.events({
             }
         }
         if (confirm("Are you sure you want to close the top panel?")) {
-            accesslevelService.saveEmpAccess(data).then(function(data) {
+            accesslevelService.saveEmpAccess(data).then(function (data) {
                 Session.setPersistent('CloudTopPanelMenu', isTopPanel);
 
                 Meteor._reload.reload();
-            }).catch(function(err) {
+            }).catch(function (err) {
                 Bert.alert('<strong>' + err + '</strong>!', 'danger');
 
             });
-        } else {}
+        } else { }
     },
-    'click .userprofileclick': function(event) {
+    'click .userprofileclick': function (event) {
         window.open('/employeescard?id=' + Session.get('mySessionEmployeeLoggedID'), '_self');
     },
-    'click .accountantDatabases': function(event) {
-      $('.databaseSelectModal').modal('toggle');
-      $('.modal-backdrop').css('display', 'none');
+    'click .accountantDatabases': function (event) {
+        $('.databaseSelectModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
         // window.open('/employeescard?id=' + Session.get('mySessionEmployeeLoggedID'), '_self');
     },
-    'click .btnRefreshSearch': function(event) {
+    'click .btnRefreshSearch': function (event) {
         let templateObject = Template.instance();
         templateObject.searchdatatablerecords.set('');
         var searchData = $('.txtGlobalSearch').val().toLowerCase();
-        setTimeout(function() {
+        setTimeout(function () {
             $('#tblSearchOverview_filter .form-control-sm').val(searchData);
         }, 200);
         if (searchData != '') {
             templateObject.getAllGlobalSearch(searchData);
         }
     },
-    'click #exportbtn': function() {
+    'click #exportbtn': function () {
         jQuery('#tblSearchOverview_wrapper .dt-buttons .btntabletocsv').click();
     },
-    'click .printConfirm': function(event) {
+    'click .printConfirm': function (event) {
         jQuery('#tblSearchOverview_wrapper .dt-buttons .btntabletopdf').click();
     },
-    'click .dropdown-toggle': function(event) {
+    'click .dropdown-toggle': function (event) {
 
     }
 
@@ -2147,19 +2277,26 @@ Template.header.helpers({
     includeSettings: () => {
         return Template.instance().includeSettings.get();
     },
-    isGreenTrack: function() {
+    isGreenTrack: function () {
         let checkGreenTrack = Session.get('isGreenTrack') || false;
         return checkGreenTrack;
     },
-    isCloudTrueERP: function() {
+    isCloudTrueERP: function () {
         let checkCloudTrueERP = Session.get('CloudTrueERPModule') || false;
         return checkCloudTrueERP;
     },
-    isSetupWizardComplete: function() {
+    isSetupWizardComplete: function () {
         return localStorage.getItem("IS_SETUP_FINISHED") || false;
     },
+    isAllStepsConfirmed: function() {
+        let cntConfirmedSteps = Template.instance().confirmedStepCount.get();
+        let allStepsConfirmed = false;
+        if (parseInt(cntConfirmedSteps) == confirmStepCount)
+            allStepsConfirmed = true;
+        return allStepsConfirmed;
+    },
     searchdatatablerecords: () => {
-        return Template.instance().searchdatatablerecords.get().sort(function(a, b) {
+        return Template.instance().searchdatatablerecords.get().sort(function (a, b) {
             if (a.transDate == 'NA') {
                 return 1;
             } else if (b.transDate == 'NA') {
@@ -2168,7 +2305,7 @@ Template.header.helpers({
             return (a.transDate.toUpperCase() > b.transDate.toUpperCase()) ? 1 : -1;
         });
     },
-    isCloudAdminUser: function() {
+    isCloudAdminUser: function () {
         var adminUserDetails = localStorage.getItem('VS1AdminUserName') || '';
         var loggedUserDetails = localStorage.getItem('mySession') || '';
         let isAdminUser = false;

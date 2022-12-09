@@ -30,7 +30,6 @@ Template.paymentmethodpop.onCreated(function() {
 });
 
 Template.paymentmethodpop.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     var splashArrayPaymentMethodList = new Array();

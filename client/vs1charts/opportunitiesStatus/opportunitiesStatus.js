@@ -42,11 +42,11 @@ Template.opportunitiesStatus.onRendered(function() {
             let eqpm = Number(data.tleadstatustype[i].EQPM);
             const dataList = {
                 id: data.tleadstatustype[i].Id || '',
-                typeName: data.tleadstatustype[i].TypeName || '',
-                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName,
+                typeName: data.tleadstatustype[i].KeyValue || '',
+                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].KeyValue,
                 eqpm: utilityService.negativeNumberFormat(eqpm)
             };
-            dataTableList[data.tleadstatustype[i].TypeName] = dataList;
+            dataTableList[data.tleadstatustype[i].KeyValue] = dataList;
         }
         templateObject.tleadsstatustype.set(dataTableList);
 
@@ -211,7 +211,7 @@ Template.opportunitiesStatus.onRendered(function() {
 
     setTimeout(function() {
         templateObject.setDateVal();
-    }, 0);
+    }, 100);
 });
 
 Template.opportunitiesStatus.events({

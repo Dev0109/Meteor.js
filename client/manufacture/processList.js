@@ -39,692 +39,692 @@ Template.processList.onRendered (function() {
     //         if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
     //     });
     // };
-    templateObject.getProcessRecords  = function(e) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+    // templateObject.getProcessRecords  = function(e) {
+    //     $('.fullScreenSpin').css('display', 'inline-block');
 
-        getVS1Data('TProcessStep').then(function(dataObject){
-            if(dataObject.length == 0) {
-                manufacturingService.getAllProcessData().then(function(data){
-                    addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
-                    templateObject.datatablerecords.set(data.tprocessstep)
-                    if (templateObject.datatablerecords.get()) {
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
-                            if (error) {
-                            }
-                            else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
+    //     getVS1Data('TProcessStep').then(function(dataObject){
+    //         if(dataObject.length == 0) {
+    //             manufacturingService.getAllProcessData().then(function(data){
+    //                 addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
+    //                 templateObject.datatablerecords.set(data.tprocessstep)
+    //                 if (templateObject.datatablerecords.get()) {
+    //                     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
+    //                         if (error) {
+    //                         }
+    //                         else {
+    //                             if (result) {
+    //                                 for (let i = 0; i < result.customFields.length; i++) {
+    //                                     let customcolumn = result.customFields;
+    //                                     let columData = customcolumn[i].label;
+    //                                     let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                     let hiddenColumn = customcolumn[i].hidden;
+    //                                     let columnClass = columHeaderUpdate.split('.')[1];
+    //                                     let columnWidth = customcolumn[i].width;
+    //                                     let columnindex = customcolumn[i].index + 1;
             
-                                        if (hiddenColumn == true) {
+    //                                     if (hiddenColumn == true) {
             
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                        }
+    //                                         $("." + columnClass + "").addClass('hiddenColumn');
+    //                                         $("." + columnClass + "").removeClass('showColumn');
+    //                                     } else if (hiddenColumn == false) {
+    //                                         $("." + columnClass + "").removeClass('hiddenColumn');
+    //                                         $("." + columnClass + "").addClass('showColumn');
+    //                                     }
             
-                                    }
-                                }
+    //                                 }
+    //                             }
             
-                            }
-                        });
+    //                         }
+    //                     });
             
-                        // setTimeout(function () {
-                        //     MakeNegative();
-                        // }, 100);
+    //                     // setTimeout(function () {
+    //                     //     MakeNegative();
+    //                     // }, 100);
             
-                    }
+    //                 }
             
-                    $('.fullScreenSpin').css('display', 'none');
-                    setTimeout(function () {
-                        $('#tblProcessList').DataTable({
-                            columnDefs: [{
-                                    type: 'date',
-                                    targets: 0
-                                }
-                            ],
-                            "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [{
-                                    extend: 'excelHtml5',
-                                    text: '',
-                                    download: 'open',
-                                    className: "btntabletocsv hiddenColumn",
-                                    filename: "Process List excel - " + moment().format(),
-                                    orientation: 'portrait',
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        format: {
-                                            body: function (data, row, column) {
-                                                if (data.includes("</span>")) {
-                                                    var res = data.split("</span>");
-                                                    data = res[1];
-                                                }
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //                 setTimeout(function () {
+    //                     $('#tblProcessList').DataTable({
+    //                         columnDefs: [{
+    //                                 type: 'date',
+    //                                 targets: 0
+    //                             }
+    //                         ],
+    //                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                         buttons: [{
+    //                                 extend: 'excelHtml5',
+    //                                 text: '',
+    //                                 download: 'open',
+    //                                 className: "btntabletocsv hiddenColumn",
+    //                                 filename: "Process List excel - " + moment().format(),
+    //                                 orientation: 'portrait',
+    //                                 exportOptions: {
+    //                                     columns: ':visible',
+    //                                     format: {
+    //                                         body: function (data, row, column) {
+    //                                             if (data.includes("</span>")) {
+    //                                                 var res = data.split("</span>");
+    //                                                 data = res[1];
+    //                                             }
             
-                                                return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+    //                                             return column === 1 ? data.replace(/<.*?>/ig, "") : data;
             
-                                            }
-                                        }
-                                    }
-                                }, {
-                                    extend: 'print',
-                                    download: 'open',
-                                    className: "btntabletopdf hiddenColumn",
-                                    text: '',
-                                    title: 'Process List',
-                                    filename: "Process List - " + moment().format(),
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        stripHtml: false
-                                    }
-                                }
-                            ],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            // bStateSave: true,
-                            // rowId: 0,
-                            pageLength: initialDatatableLoad,
-                            "bLengthChange": false,
-                            info: true,
-                            responsive: true,
-                            "order": [[ 0, "desc" ],[ 2, "desc" ]],
-                            action: function () {
-                                $('#tblProcessOList').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function (oSettings) {
-                                let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //                                         }
+    //                                     }
+    //                                 }
+    //                             }, {
+    //                                 extend: 'print',
+    //                                 download: 'open',
+    //                                 className: "btntabletopdf hiddenColumn",
+    //                                 text: '',
+    //                                 title: 'Process List',
+    //                                 filename: "Process List - " + moment().format(),
+    //                                 exportOptions: {
+    //                                     columns: ':visible',
+    //                                     stripHtml: false
+    //                                 }
+    //                             }
+    //                         ],
+    //                         select: true,
+    //                         destroy: true,
+    //                         colReorder: true,
+    //                         // bStateSave: true,
+    //                         // rowId: 0,
+    //                         pageLength: initialDatatableLoad,
+    //                         "bLengthChange": false,
+    //                         info: true,
+    //                         responsive: true,
+    //                         "order": [[ 0, "desc" ],[ 2, "desc" ]],
+    //                         action: function () {
+    //                             $('#tblProcessOList').DataTable().ajax.reload();
+    //                         },
+    //                         "fnDrawCallback": function (oSettings) {
+    //                             let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
             
-                                $('.paginate_button.page-item').removeClass('disabled');
-                                $('#tblProcessList_ellipsis').addClass('disabled');
+    //                             $('.paginate_button.page-item').removeClass('disabled');
+    //                             $('#tblProcessList_ellipsis').addClass('disabled');
             
-                                if(oSettings._iDisplayLength == -1){
-                                if(oSettings.fnRecordsDisplay() > 150){
-                                    $('.paginate_button.page-item.previous').addClass('disabled');
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                                }else{
+    //                             if(oSettings._iDisplayLength == -1){
+    //                             if(oSettings.fnRecordsDisplay() > 150){
+    //                                 $('.paginate_button.page-item.previous').addClass('disabled');
+    //                                 $('.paginate_button.page-item.next').addClass('disabled');
+    //                             }
+    //                             }else{
             
-                                }
-                                if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
+    //                             }
+    //                             if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+    //                                 $('.paginate_button.page-item.next').addClass('disabled');
+    //                             }
             
-                                $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function(){
-                                    $('.fullScreenSpin').css('display','inline-block');
-                                    let dataLenght = oSettings._iDisplayLength;
+    //                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                             .on('click', function(){
+    //                                 $('.fullScreenSpin').css('display','inline-block');
+    //                                 let dataLenght = oSettings._iDisplayLength;
                                   
-                                });
+    //                             });
             
-                                // setTimeout(function () {
-                                //     MakeNegative();
-                                // }, 100);
-                            },
-                            "fnInitComplete": function () {
-                                this.fnPageChange('last');
-                                $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
-                                $('.myvarFilterForm').appendTo(".colDateFilter");
-                            },
-                            // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                            //     let countTableData = data.Params.Count || 0; //get count from API data
+    //                             // setTimeout(function () {
+    //                             //     MakeNegative();
+    //                             // }, 100);
+    //                         },
+    //                         "fnInitComplete": function () {
+    //                             this.fnPageChange('last');
+    //                             $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
+    //                             $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                         },
+    //                         // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                         //     let countTableData = data.Params.Count || 0; //get count from API data
             
-                            //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                            // }
+    //                         //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+    //                         // }
             
-                        }).on('page', function () {
-                            // setTimeout(function () {
-                            //     MakeNegative();
-                            // }, 100);
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                            // setTimeout(function () {
-                            //     MakeNegative();
-                            // }, 100);
-                        });
+    //                     }).on('page', function () {
+    //                         // setTimeout(function () {
+    //                         //     MakeNegative();
+    //                         // }, 100);
+    //                         let draftRecord = templateObject.datatablerecords.get();
+    //                         templateObject.datatablerecords.set(draftRecord);
+    //                     }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
+    //                         // setTimeout(function () {
+    //                         //     MakeNegative();
+    //                         // }, 100);
+    //                     });
             
-                        // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
-                        $('.fullScreenSpin').css('display', 'none');
+    //                     // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
+    //                     $('.fullScreenSpin').css('display', 'none');
             
-                    }, 0);
+    //                 }, 0);
             
-                    var columns = $('#tblProcessList th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let isCustomField = false;
-                    let sClass = "";
-                    $.each(columns, function (i, v) {
-                        if (v.hidden == false) {
-                            columVisible = true;
-                        }
-                        if ((v.className.includes("hiddenColumn"))) {
-                            columVisible = false;
-                        }
+    //                 var columns = $('#tblProcessList th');
+    //                 let sTible = "";
+    //                 let sWidth = "";
+    //                 let sIndex = "";
+    //                 let sVisible = "";
+    //                 let columVisible = false;
+    //                 let isCustomField = false;
+    //                 let sClass = "";
+    //                 $.each(columns, function (i, v) {
+    //                     if (v.hidden == false) {
+    //                         columVisible = true;
+    //                     }
+    //                     if ((v.className.includes("hiddenColumn"))) {
+    //                         columVisible = false;
+    //                     }
             
-                        if ((v.className.includes("customFieldColumn"))) {
-                            isCustomField = true;
-                        } else {
-                            isCustomField = false;
-                        }
+    //                     if ((v.className.includes("customFieldColumn"))) {
+    //                         isCustomField = true;
+    //                     } else {
+    //                         isCustomField = false;
+    //                     }
             
-                        sWidth = v.style.width.replace('px', "");
+    //                     sWidth = v.style.width.replace('px', "");
             
-                        let datatablerecordObj = {
-                            custid: $(this).attr("custid") || 0,
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '9',
-                            sIndex: v.cellIndex || '',
-                            sVisible: columVisible || false,
-                            sCustomField: isCustomField || false,
-                            sClass: v.className || ''
-                        };
-                        // tableHeaderList.push(datatablerecordObj);
-                    });
-                    // templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                })
-            }else {
-                let data = JSON.parse(dataObject[0].data);
-                templateObject.datatablerecords.set(data.tprocessstep);
+    //                     let datatablerecordObj = {
+    //                         custid: $(this).attr("custid") || 0,
+    //                         sTitle: v.innerText || '',
+    //                         sWidth: sWidth || '9',
+    //                         sIndex: v.cellIndex || '',
+    //                         sVisible: columVisible || false,
+    //                         sCustomField: isCustomField || false,
+    //                         sClass: v.className || ''
+    //                     };
+    //                     // tableHeaderList.push(datatablerecordObj);
+    //                 });
+    //                 // templateObject.tableheaderrecords.set(tableHeaderList);
+    //                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //             })
+    //         }else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             templateObject.datatablerecords.set(data.tprocessstep);
 
-                if (templateObject.datatablerecords.get()) {
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
-                        if (error) {
-                        }
-                        else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
+    //             if (templateObject.datatablerecords.get()) {
+    //                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
+    //                     if (error) {
+    //                     }
+    //                     else {
+    //                         if (result) {
+    //                             for (let i = 0; i < result.customFields.length; i++) {
+    //                                 let customcolumn = result.customFields;
+    //                                 let columData = customcolumn[i].label;
+    //                                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                 let hiddenColumn = customcolumn[i].hidden;
+    //                                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                                 let columnWidth = customcolumn[i].width;
+    //                                 let columnindex = customcolumn[i].index + 1;
         
-                                    if (hiddenColumn == true) {
+    //                                 if (hiddenColumn == true) {
         
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
+    //                                     $("." + columnClass + "").addClass('hiddenColumn');
+    //                                     $("." + columnClass + "").removeClass('showColumn');
+    //                                 } else if (hiddenColumn == false) {
+    //                                     $("." + columnClass + "").removeClass('hiddenColumn');
+    //                                     $("." + columnClass + "").addClass('showColumn');
+    //                                 }
         
-                                }
-                            }
+    //                             }
+    //                         }
         
-                        }
-                    });
+    //                     }
+    //                 });
         
-                    // setTimeout(function () {
-                    //     MakeNegative();
-                    // }, 100);
+    //                 // setTimeout(function () {
+    //                 //     MakeNegative();
+    //                 // }, 100);
         
-                }
+    //             }
         
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function () {
-                    $('#tblProcessList').DataTable({
-                        columnDefs: [{
-                                type: 'date',
-                                targets: 0
-                            }
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'excelHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Process List excel - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible',
-                                    format: {
-                                        body: function (data, row, column) {
-                                            if (data.includes("</span>")) {
-                                                var res = data.split("</span>");
-                                                data = res[1];
-                                            }
+    //             $('.fullScreenSpin').css('display', 'none');
+    //             setTimeout(function () {
+    //                 $('#tblProcessList').DataTable({
+    //                     columnDefs: [{
+    //                             type: 'date',
+    //                             targets: 0
+    //                         }
+    //                     ],
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     buttons: [{
+    //                             extend: 'excelHtml5',
+    //                             text: '',
+    //                             download: 'open',
+    //                             className: "btntabletocsv hiddenColumn",
+    //                             filename: "Process List excel - " + moment().format(),
+    //                             orientation: 'portrait',
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 format: {
+    //                                     body: function (data, row, column) {
+    //                                         if (data.includes("</span>")) {
+    //                                             var res = data.split("</span>");
+    //                                             data = res[1];
+    //                                         }
         
-                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+    //                                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
         
-                                        }
-                                    }
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Process List',
-                                filename: "Process List - " + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        "bLengthChange": false,
-                        info: true,
-                        responsive: true,
-                        "order": [[ 0, "desc" ],[ 2, "desc" ]],
-                        action: function () {
-                            $('#tblProcessOList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //                                     }
+    //                                 }
+    //                             }
+    //                         }, {
+    //                             extend: 'print',
+    //                             download: 'open',
+    //                             className: "btntabletopdf hiddenColumn",
+    //                             text: '',
+    //                             title: 'Process List',
+    //                             filename: "Process List - " + moment().format(),
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 stripHtml: false
+    //                             }
+    //                         }
+    //                     ],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     // bStateSave: true,
+    //                     // rowId: 0,
+    //                     pageLength: initialDatatableLoad,
+    //                     "bLengthChange": false,
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [[ 0, "desc" ],[ 2, "desc" ]],
+    //                     action: function () {
+    //                         $('#tblProcessOList').DataTable().ajax.reload();
+    //                     },
+    //                     "fnDrawCallback": function (oSettings) {
+    //                         let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
         
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblProcessList_ellipsis').addClass('disabled');
+    //                         $('.paginate_button.page-item').removeClass('disabled');
+    //                         $('#tblProcessList_ellipsis').addClass('disabled');
         
-                            if(oSettings._iDisplayLength == -1){
-                            if(oSettings.fnRecordsDisplay() > 150){
-                                $('.paginate_button.page-item.previous').addClass('disabled');
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                            }else{
+    //                         if(oSettings._iDisplayLength == -1){
+    //                         if(oSettings.fnRecordsDisplay() > 150){
+    //                             $('.paginate_button.page-item.previous').addClass('disabled');
+    //                             $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
+    //                         }else{
         
-                            }
-                            if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
+    //                         }
+    //                         if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+    //                             $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
         
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            .on('click', function(){
-                                $('.fullScreenSpin').css('display','inline-block');
-                                let dataLenght = oSettings._iDisplayLength;
+    //                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                         .on('click', function(){
+    //                             $('.fullScreenSpin').css('display','inline-block');
+    //                             let dataLenght = oSettings._iDisplayLength;
                                 
-                            });
+    //                         });
         
-                            // setTimeout(function () {
-                            //     MakeNegative();
-                            // }, 100);
-                        },
-                        "fnInitComplete": function () {
-                            this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
-                            $('.myvarFilterForm').appendTo(".colDateFilter");
-                        },
-                        // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                        //     let countTableData = data.Params.Count || 0; //get count from API data
+    //                         // setTimeout(function () {
+    //                         //     MakeNegative();
+    //                         // }, 100);
+    //                     },
+    //                     "fnInitComplete": function () {
+    //                         this.fnPageChange('last');
+    //                         $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
+    //                         $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                     },
+    //                     // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                     //     let countTableData = data.Params.Count || 0; //get count from API data
         
-                        //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                        // }
+    //                     //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+    //                     // }
         
-                    }).on('page', function () {
-                        // setTimeout(function () {
-                        //     MakeNegative();
-                        // }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                        // setTimeout(function () {
-                        //     MakeNegative();
-                        // }, 100);
-                    });
+    //                 }).on('page', function () {
+    //                     // setTimeout(function () {
+    //                     //     MakeNegative();
+    //                     // }, 100);
+    //                     let draftRecord = templateObject.datatablerecords.get();
+    //                     templateObject.datatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
+    //                     // setTimeout(function () {
+    //                     //     MakeNegative();
+    //                     // }, 100);
+    //                 });
         
-                    // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display', 'none');
+    //                 // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
+    //                 $('.fullScreenSpin').css('display', 'none');
         
-                }, 0);
+    //             }, 0);
         
-                var columns = $('#tblProcessList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let isCustomField = false;
-                let sClass = "";
-                $.each(columns, function (i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
+    //             var columns = $('#tblProcessList th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let isCustomField = false;
+    //             let sClass = "";
+    //             $.each(columns, function (i, v) {
+    //                 if (v.hidden == false) {
+    //                     columVisible = true;
+    //                 }
+    //                 if ((v.className.includes("hiddenColumn"))) {
+    //                     columVisible = false;
+    //                 }
         
-                    if ((v.className.includes("customFieldColumn"))) {
-                        isCustomField = true;
-                    } else {
-                        isCustomField = false;
-                    }
+    //                 if ((v.className.includes("customFieldColumn"))) {
+    //                     isCustomField = true;
+    //                 } else {
+    //                     isCustomField = false;
+    //                 }
         
-                    sWidth = v.style.width.replace('px', "");
+    //                 sWidth = v.style.width.replace('px', "");
         
-                    let datatablerecordObj = {
-                        custid: $(this).attr("custid") || 0,
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '9',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sCustomField: isCustomField || false,
-                        sClass: v.className || ''
-                    };
-                    // tableHeaderList.push(datatablerecordObj);
-                });
-                // templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //                 let datatablerecordObj = {
+    //                     custid: $(this).attr("custid") || 0,
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '9',
+    //                     sIndex: v.cellIndex || '',
+    //                     sVisible: columVisible || false,
+    //                     sCustomField: isCustomField || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 // tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             // templateObject.tableheaderrecords.set(tableHeaderList);
+    //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-            }
+    //         }
 
-        }).catch(function(err) {
-            manufacturingService.getAllProcessData().then(function(data) {
-                addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
-                templateObject.datatablerecords.set(data.tprocessstep);
-                if (templateObject.datatablerecords.get()) {
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
-                        if (error) {
-                        }
-                        else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
+    //     }).catch(function(err) {
+    //         manufacturingService.getAllProcessData().then(function(data) {
+    //             addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
+    //             templateObject.datatablerecords.set(data.tprocessstep);
+    //             if (templateObject.datatablerecords.get()) {
+    //                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
+    //                     if (error) {
+    //                     }
+    //                     else {
+    //                         if (result) {
+    //                             for (let i = 0; i < result.customFields.length; i++) {
+    //                                 let customcolumn = result.customFields;
+    //                                 let columData = customcolumn[i].label;
+    //                                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                 let hiddenColumn = customcolumn[i].hidden;
+    //                                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                                 let columnWidth = customcolumn[i].width;
+    //                                 let columnindex = customcolumn[i].index + 1;
         
-                                    if (hiddenColumn == true) {
+    //                                 if (hiddenColumn == true) {
         
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
+    //                                     $("." + columnClass + "").addClass('hiddenColumn');
+    //                                     $("." + columnClass + "").removeClass('showColumn');
+    //                                 } else if (hiddenColumn == false) {
+    //                                     $("." + columnClass + "").removeClass('hiddenColumn');
+    //                                     $("." + columnClass + "").addClass('showColumn');
+    //                                 }
         
-                                }
-                            }
+    //                             }
+    //                         }
         
-                        }
-                    });
+    //                     }
+    //                 });
         
-                    // setTimeout(function () {
-                    //     MakeNegative();
-                    // }, 100);
+    //                 // setTimeout(function () {
+    //                 //     MakeNegative();
+    //                 // }, 100);
         
-                }
+    //             }
         
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function () {
-                    $('#tblProcessList').DataTable({
-                        columnDefs: [{
-                                type: 'date',
-                                targets: 0
-                            }
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'excelHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Process List excel - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible',
-                                    format: {
-                                        body: function (data, row, column) {
-                                            if (data.includes("</span>")) {
-                                                var res = data.split("</span>");
-                                                data = res[1];
-                                            }
+    //             $('.fullScreenSpin').css('display', 'none');
+    //             setTimeout(function () {
+    //                 $('#tblProcessList').DataTable({
+    //                     columnDefs: [{
+    //                             type: 'date',
+    //                             targets: 0
+    //                         }
+    //                     ],
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     buttons: [{
+    //                             extend: 'excelHtml5',
+    //                             text: '',
+    //                             download: 'open',
+    //                             className: "btntabletocsv hiddenColumn",
+    //                             filename: "Process List excel - " + moment().format(),
+    //                             orientation: 'portrait',
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 format: {
+    //                                     body: function (data, row, column) {
+    //                                         if (data.includes("</span>")) {
+    //                                             var res = data.split("</span>");
+    //                                             data = res[1];
+    //                                         }
         
-                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+    //                                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
         
-                                        }
-                                    }
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Process List',
-                                filename: "Process List - " + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        "bLengthChange": false,
-                        info: true,
-                        responsive: true,
-                        "order": [[ 0, "desc" ],[ 2, "desc" ]],
-                        action: function () {
-                            $('#tblProcessOList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //                                     }
+    //                                 }
+    //                             }
+    //                         }, {
+    //                             extend: 'print',
+    //                             download: 'open',
+    //                             className: "btntabletopdf hiddenColumn",
+    //                             text: '',
+    //                             title: 'Process List',
+    //                             filename: "Process List - " + moment().format(),
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 stripHtml: false
+    //                             }
+    //                         }
+    //                     ],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     // bStateSave: true,
+    //                     // rowId: 0,
+    //                     pageLength: initialDatatableLoad,
+    //                     "bLengthChange": false,
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [[ 0, "desc" ],[ 2, "desc" ]],
+    //                     action: function () {
+    //                         $('#tblProcessOList').DataTable().ajax.reload();
+    //                     },
+    //                     "fnDrawCallback": function (oSettings) {
+    //                         let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
         
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblProcessList_ellipsis').addClass('disabled');
+    //                         $('.paginate_button.page-item').removeClass('disabled');
+    //                         $('#tblProcessList_ellipsis').addClass('disabled');
         
-                            if(oSettings._iDisplayLength == -1){
-                            if(oSettings.fnRecordsDisplay() > 150){
-                                $('.paginate_button.page-item.previous').addClass('disabled');
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                            }else{
+    //                         if(oSettings._iDisplayLength == -1){
+    //                         if(oSettings.fnRecordsDisplay() > 150){
+    //                             $('.paginate_button.page-item.previous').addClass('disabled');
+    //                             $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
+    //                         }else{
         
-                            }
-                            if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
+    //                         }
+    //                         if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+    //                             $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
         
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            .on('click', function(){
-                                $('.fullScreenSpin').css('display','inline-block');
-                                let dataLenght = oSettings._iDisplayLength;
+    //                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                         .on('click', function(){
+    //                             $('.fullScreenSpin').css('display','inline-block');
+    //                             let dataLenght = oSettings._iDisplayLength;
                                 
-                            });
+    //                         });
         
-                            // setTimeout(function () {
-                            //     MakeNegative();
-                            // }, 100);
-                        },
-                        "fnInitComplete": function () {
-                            this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
-                            $('.myvarFilterForm').appendTo(".colDateFilter");
-                        },
-                        // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                        //     let countTableData = data.Params.Count || 0; //get count from API data
+    //                         // setTimeout(function () {
+    //                         //     MakeNegative();
+    //                         // }, 100);
+    //                     },
+    //                     "fnInitComplete": function () {
+    //                         this.fnPageChange('last');
+    //                         $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
+    //                         $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                     },
+    //                     // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                     //     let countTableData = data.Params.Count || 0; //get count from API data
         
-                        //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                        // }
+    //                     //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+    //                     // }
         
-                    }).on('page', function () {
-                        // setTimeout(function () {
-                        //     MakeNegative();
-                        // }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                        // setTimeout(function () {
-                        //     MakeNegative();
-                        // }, 100);
-                    });
+    //                 }).on('page', function () {
+    //                     // setTimeout(function () {
+    //                     //     MakeNegative();
+    //                     // }, 100);
+    //                     let draftRecord = templateObject.datatablerecords.get();
+    //                     templateObject.datatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
+    //                     // setTimeout(function () {
+    //                     //     MakeNegative();
+    //                     // }, 100);
+    //                 });
         
-                    // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display', 'none');
+    //                 // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
+    //                 $('.fullScreenSpin').css('display', 'none');
         
-                }, 0);
+    //             }, 0);
         
-                var columns = $('#tblProcessList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let isCustomField = false;
-                let sClass = "";
-                $.each(columns, function (i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
+    //             var columns = $('#tblProcessList th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let isCustomField = false;
+    //             let sClass = "";
+    //             $.each(columns, function (i, v) {
+    //                 if (v.hidden == false) {
+    //                     columVisible = true;
+    //                 }
+    //                 if ((v.className.includes("hiddenColumn"))) {
+    //                     columVisible = false;
+    //                 }
         
-                    if ((v.className.includes("customFieldColumn"))) {
-                        isCustomField = true;
-                    } else {
-                        isCustomField = false;
-                    }
+    //                 if ((v.className.includes("customFieldColumn"))) {
+    //                     isCustomField = true;
+    //                 } else {
+    //                     isCustomField = false;
+    //                 }
         
-                    sWidth = v.style.width.replace('px', "");
+    //                 sWidth = v.style.width.replace('px', "");
         
-                    let datatablerecordObj = {
-                        custid: $(this).attr("custid") || 0,
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '9',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sCustomField: isCustomField || false,
-                        sClass: v.className || ''
-                    };
-                    // tableHeaderList.push(datatablerecordObj);
-                });
-                // templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //                 let datatablerecordObj = {
+    //                     custid: $(this).attr("custid") || 0,
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '9',
+    //                     sIndex: v.cellIndex || '',
+    //                     sVisible: columVisible || false,
+    //                     sCustomField: isCustomField || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 // tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             // templateObject.tableheaderrecords.set(tableHeaderList);
+    //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-            }).catch(function(error){
-                swal("Something went wrong!", "", "error");
-            })
-        })
+    //         }).catch(function(error){
+    //             swal("Something went wrong!", "", "error");
+    //         })
+    //     })
 
 
-        // templateObject.getCustomFieldData();
-    }
-    templateObject.getProcessRecords();
+    //     // templateObject.getCustomFieldData();
+    // }
+    // templateObject.getProcessRecords();
 
     // custom field displaysettings
-    templateObject.getCustomFieldData = function() {
+    // templateObject.getCustomFieldData = function() {
 
-        let custFields = [];
-        let dispFields = [];
-        let customData = {};
-        let customFieldCount = 11;
-        let listType = "ltProcessList";
+    //     let custFields = [];
+    //     let dispFields = [];
+    //     let customData = {};
+    //     let customFieldCount = 11;
+    //     let listType = "ltProcessList";
   
-        let reset_data = [
-          { label: 'Name', class: 'colName', active: true },
-          { label: 'Description', class: 'colDescription', active: true },
-          { label: 'Daily Hours', class: 'colDailyHours', active: true },
-          { label: 'Hourly Labour Cost', class: 'colHourlyLabourCost', active: true },
-          { label: 'Cost of Goods Sold', class: 'colCOGS', active: true },
-          { label: 'Expense Account', class: 'colExpense', active: true },
-          { label: 'Hourly Overhead Cost', class: 'colHourlyOverheadCost', active: true },
-          { label: 'Cost of Goods Sold(Overhead)', class: 'colOverCOGS', active: true },
-          { label: 'Expense Account(Overhead)', class: 'colOverExpense', active: false },
-          { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
-          { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
-        ];
+    //     let reset_data = [
+    //       { label: 'Name', class: 'colName', active: true },
+    //       { label: 'Description', class: 'colDescription', active: true },
+    //       { label: 'Daily Hours', class: 'colDailyHours', active: true },
+    //       { label: 'Hourly Labour Cost', class: 'colHourlyLabourCost', active: true },
+    //       { label: 'Cost of Goods Sold', class: 'colCOGS', active: true },
+    //       { label: 'Expense Account', class: 'colExpense', active: true },
+    //       { label: 'Hourly Overhead Cost', class: 'colHourlyOverheadCost', active: true },
+    //       { label: 'Cost of Goods Sold(Overhead)', class: 'colOverCOGS', active: true },
+    //       { label: 'Expense Account(Overhead)', class: 'colOverExpense', active: false },
+    //       { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
+    //       { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
+    //     ];
   
-        sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-            if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              custFields.push(customData);
-            } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              dispFields.push(customData);
-            }
-          }
+    //     sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+    //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+    //         if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+    //           customData = {
+    //             active: data.tcustomfieldlist[x].fields.Active || false,
+    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
+    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+    //           };
+    //           custFields.push(customData);
+    //         } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+    //           customData = {
+    //             active: data.tcustomfieldlist[x].fields.Active || false,
+    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
+    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+    //           };
+    //           dispFields.push(customData);
+    //         }
+    //       }
   
-          if (custFields.length < 3) {
-            let remainder = 3 - custFields.length;
-            let getRemCustomFields = parseInt(custFields.length);
-            for (let r = 0; r < remainder; r++) {
-              getRemCustomFields++;
-              customData = {
-                active: false,
-                id: "",
-                custfieldlabel: "Custom Field " + getRemCustomFields,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              // count++;
-              custFields.push(customData);
-            }
-          }
+    //       if (custFields.length < 3) {
+    //         let remainder = 3 - custFields.length;
+    //         let getRemCustomFields = parseInt(custFields.length);
+    //         for (let r = 0; r < remainder; r++) {
+    //           getRemCustomFields++;
+    //           customData = {
+    //             active: false,
+    //             id: "",
+    //             custfieldlabel: "Custom Field " + getRemCustomFields,
+    //             datatype: "",
+    //             isempty: true,
+    //             iscombo: false,
+    //           };
+    //           // count++;
+    //           custFields.push(customData);
+    //         }
+    //       }
   
-          if (dispFields.length < customFieldCount) {
-            let remainder = customFieldCount - dispFields.length;
-            let getRemCustomFields = parseInt(dispFields.length);
-            for (let r = 0; r < remainder; r++) {
-              customData = {
-                active: reset_data[getRemCustomFields].active,
-                id: "",
-                custfieldlabel: reset_data[getRemCustomFields].label,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              getRemCustomFields++;
-              // count++;
-              dispFields.push(customData);
-            }
-          }
+    //       if (dispFields.length < customFieldCount) {
+    //         let remainder = customFieldCount - dispFields.length;
+    //         let getRemCustomFields = parseInt(dispFields.length);
+    //         for (let r = 0; r < remainder; r++) {
+    //           customData = {
+    //             active: reset_data[getRemCustomFields].active,
+    //             id: "",
+    //             custfieldlabel: reset_data[getRemCustomFields].label,
+    //             datatype: "",
+    //             isempty: true,
+    //             iscombo: false,
+    //           };
+    //           getRemCustomFields++;
+    //           // count++;
+    //           dispFields.push(customData);
+    //         }
+    //       }
   
-          for (let index = 0; index < custFields.length; index++) {
-            const element = custFields[index];
-            dispFields.push(element);
+    //       for (let index = 0; index < custFields.length; index++) {
+    //         const element = custFields[index];
+    //         dispFields.push(element);
   
-          }
+    //       }
   
-          templateObject.custfields.set(custFields);
-          templateObject.displayfields.set(dispFields);
+    //       templateObject.custfields.set(custFields);
+    //       templateObject.displayfields.set(dispFields);
   
-        })
-      }
+    //     })
+    //   }
 
     
 });
@@ -923,32 +923,32 @@ Template.processList.events({
         setTimeout(function () {
             templateObject.getProcessRecords();
             window.open('/processlist', '_self');
-            }, 3000);
-        },
-    
-        'click .processList #exportbtn': function() {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            jQuery('#tblProcessList_wrapper .dt-buttons .btntabletocsv').click();
-            $('.fullScreenSpin').css('display', 'none');
-        },
-    
-        'click .processList .printConfirm': function() {
-            playPrintAudio();
-            setTimeout(function(){
-            $('.fullScreenSpin').css('display', 'inline-block');
-            jQuery('#tblProcessList_wrapper .dt-buttons .btntabletopdf').click();
-            $('.fullScreenSpin').css('display', 'none');
-        }, delayTimeAfterSound);
-        },
-    
-        'click .processList #btnNewProcess': function (e) {
-            FlowRouter.go('/processcard');
-        },
+        }, 3000);
+    },
 
-    
-        'click #tblProcessList tbody tr': function (e) {
-            var listData = $(e.target).closest('tr').attr('id');
-            FlowRouter.go('/processcard?id=' + listData)
-        }
+    'click .processList #exportbtn': function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblProcessList_wrapper .dt-buttons .btntabletocsv').click();
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
+    'click .processList .printConfirm': function() {
+        playPrintAudio();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblProcessList_wrapper .dt-buttons .btntabletopdf').click();
+        $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
+    },
+
+    'click .processList #btnNewProcess': function (e) {
+        FlowRouter.go('/processcard');
+    },
+
+
+    'click #tblProcessList tbody tr': function (e) {
+        var listData = $(e.target).closest('tr').find('.colProcessId').text();
+        FlowRouter.go('/processcard?id=' + listData)
+    }
 
 })

@@ -189,6 +189,19 @@ const authenticatedRoutes = FlowRouter.group({
     triggersEnter: [authenticatedRedirect]
 });
 
+FlowRouter.triggers.exit([
+    function (context, redirect) {
+        if (!confirm("Changes you made may not be saved.")) {
+            redirect(context.path);
+        }
+    }
+], {only: ["basreturn", "depositcard", "chequecard", "newbankrule", "customerscard", "workordercard",
+        "employeescard", "leadscard", "supplierscard", "journalentrycard", "fixedassetcard", "bom_setup",
+        "servicelogcard", "new_process", "stockadjustmentcard", "paymentcard", "supplierpaymentcard",
+        "purchaseordercard", "billcard", "creditcard", "allreports", "new_quote", "new_salesorder",
+        "new_invoice", "refundcard"
+    ]});
+
 authenticatedRoutes.route('/accounttransactions', {
     name: 'accounttransactions',
     action() {
@@ -990,6 +1003,14 @@ authenticatedRoutes.route('/suppliersummary', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'suppliersummary'
+        });
+    }
+});
+authenticatedRoutes.route('/supplierreport', {
+    name: 'supplierreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'supplierreport'
         });
     }
 });

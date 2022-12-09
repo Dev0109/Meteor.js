@@ -1,0 +1,201 @@
+<!-- Teamplase selector modal for Invoice header -->
+<!-- Params
+  getTemplateList
+-->
+<template name="template_selection_modal">
+  <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="padding-bottom: 8px;">
+          <h4>Select Templates</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row justify-content-center mb-3">
+            <div class="row add_dy">
+              {{#each title in getTemplateList}}
+              <div class="col-12  coltr {{title}}" id="id_{{title}}">
+                <div class="card shadow mb-3">
+                  <div class="card-header py-3">
+                    <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">
+                      {{title}}
+                    </span>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                      {{#each index in getTemplateNumber}}
+                      <li class="list-group-item templateItem justify-content-between" data-id="{{title}}"
+                        data-template-id="{{index}}">
+                        <div class="custom-control custom-switch">
+                          {{#if equals index '1'}}
+                          {{#if equals title 'Invoices'}}
+                          <input 
+                            class="custom-control-input chkGlobalSettings" 
+                            type="radio" 
+                            name="{{title}}"
+                            id="{{title}}_{{index}}" 
+                            value="{{index}}" 
+                            checked 
+                            style="cursor: pointer;">
+                          {{/if}}
+                          {{#if equals title 'Invoice Back Orders'}}
+                          <input 
+                            class="custom-control-input chkGlobalSettings" 
+                            type="radio" 
+                            name="{{title}}"
+                            id="Invoice_Back_Orders_{{index}}"
+                            value="{{index}}"
+                            checked 
+                            style="cursor: pointer;">
+                          {{/if}}
+                          {{#if equals title 'Delivery Docket'}}
+                          <input 
+                            class="custom-control-input chkGlobalSettings" 
+                            type="radio" 
+                            name="{{title}}"
+                            id="Delivery_Docket_{{index}}" 
+                            value="{{index}}" 
+                            checked 
+                            style="cursor: pointer;">
+                          {{/if}}
+                          {{else}}
+                          {{#if equals title 'Invoices'}}
+                          <input 
+                            class="custom-control-input chkGlobalSettings" 
+                            type="radio" 
+                            name="{{title}}"
+                            id="{{title}}_{{index}}" 
+                            value="{{index}}" 
+                            style="cursor: pointer;">
+                          {{/if}}
+                          {{#if equals title 'Invoice Back Orders'}}
+                          <input 
+                            class="custom-control-input chkGlobalSettings" 
+                            type="radio" name="{{title}}"
+                            id="Invoice_Back_Orders_{{index}}" 
+                            value="{{index}}" 
+                            style="cursor: pointer;">
+                          {{/if}}
+                          {{#if equals title 'Delivery Docket'}}
+                          <input 
+                            class="custom-control-input chkGlobalSettings" 
+                            type="radio" 
+                            name="{{title}}"
+                            id="Delivery_Docket_{{index}}" 
+                            value="{{index}}"
+                            style="cursor: pointer;">
+                          {{/if}}
+                          {{/if}}
+                          {{#if equals title 'Invoice Back Orders'}}
+                          <label 
+                            class="custom-control-label" 
+                            for="Invoice_Back_Orders_{{index}}"
+                            style="cursor: pointer; color: transparent;">
+                          </label>
+                          {{/if}}
+                          {{#if equals title 'Delivery Docket'}}
+                          <label 
+                            class="custom-control-label" 
+                            for="Delivery_Docket_{{index}}"
+                            style="cursor: pointer; color: transparent;">
+                          </label>
+                          {{/if}}
+                          {{#if equals title 'Invoices'}}
+                          <label 
+                            class="custom-control-label" 
+                            for="{{title}}_{{index}}"
+                            style="cursor: pointer; color: transparent;">
+                          </label>
+                          {{/if}}
+                          <input 
+                            type="text" 
+                            name="{{title}}_{{index}}" 
+                            style="border: 1px solid rgb(209 211 226 / 0%);"
+                            value="Template {{index}}" />
+                        </div>
+                        <i 
+                          id="btnPreviewTemplate" 
+                          data-id="{{title}}" 
+                          class="far fa-eye btnPreviewTemplate"
+                          data-toggle="modal">
+                        </i>
+                      </li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+                {{#if equals title 'Invoices'}}
+                <div class="col-12 ">
+                  <div class="custom-control custom-switch" id="print_invoice_option">
+                    <input 
+                      class="custom-control-input chkGlobalSettings " 
+                      checked 
+                      name="print_invoice" 
+                      type="checkbox"
+                      id="print_invoice" 
+                      autocomplete="off">
+                    <label 
+                      style="cursor: pointer;" 
+                      class="custom-control-label" 
+                      for="print_invoice">
+                      Print Invoice
+                    </label>
+                  </div>
+                </div>
+                {{/if}}
+                {{#if equals title 'Invoice Back Orders'}}
+                <div class="col-12 ">
+                  <div class="custom-control custom-switch" id="Invoices_back_orders_option">
+                    <input 
+                      class="custom-control-input chkGlobalSettings" 
+                      checked 
+                      name="print_Invoices_back_orders"
+                      type="checkbox" 
+                      id="print_Invoices_back_orders" 
+                      autocomplete="off">
+                    <label 
+                      style="cursor: pointer;" 
+                      class="custom-control-label" 
+                      for="print_Invoices_back_orders">
+                      Print Invoice Back Order
+                    </label>
+                  </div>
+                </div>
+                {{/if}}
+
+                {{#if equals title 'Delivery Docket'}}
+                <div class="col-12 ">
+                  <div class="custom-control custom-switch" id="print_delivery_option">
+                    <input 
+                      class="custom-control-input chkGlobalSettings" 
+                      name="print_delivery_docket" 
+                      type="checkbox"
+                      id="print_delivery_docket" 
+                      autocomplete="off">
+                    <label 
+                      style="cursor: pointer;" 
+                      class="custom-control-label" 
+                      for="print_delivery_docket">
+                      Print Delivery Docket
+                    </label>
+                  </div>
+                </div>
+                {{/if}}
+              </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 6px;">
+          <button class="btn btn-primary printConfirm btnFooter" type="button">
+            <i class="fa fa-print" style="margin-right: 5px;"></i>
+            Confirm Print
+          </button>
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,27 @@
+<!-- Files viewer modal for Refund invoice -->
+<!-- Params
+  uploadedFile
+-->
+<template name="files_viewer_modal">
+  {{# vs1_attachments}}
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">x</button>
+      <h4 class="modal-title">{{uploadedFile.name}}</h4>
+    </div>
+    <div class="modal-body">
+      {{#if uploadedFile.image}}
+      <div class="image-previewer">
+        <img src="{{uploadedFile.link}}">
+      </div>
+      {{else}}
+      <div class=" default-file {{uploadedFile.class}}">
+
+      </div>
+      {{/if}}
+      <div class="download_button">
+        <a class="new_create_btn btn btn-primary" id="downloadButton" download="{{uploadedFile.name}}"
+          href="{{uploadedFile.link}}">Download</a>
+      </div>
+    </div>
+  {{/vs1_attachments}}
+</template>

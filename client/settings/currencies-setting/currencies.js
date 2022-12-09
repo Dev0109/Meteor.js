@@ -43,7 +43,7 @@ Template.currenciessettings.onRendered(function () {
   templateObject.getCurrencies = async (fromRemote = false, refresh = false) => {
     LoadingOverlay.show();
 
-    let data = await CachedHttp.get(erpObject.TCurrency, async () => {
+    let data = await CachedHttp.get(erpObject.TCurrencyList, async () => {
       return await taxRateService.getCurrencies();
     }, {
       useIndexDb: true,
@@ -65,9 +65,9 @@ Template.currenciessettings.onRendered(function () {
     // if (fromRemote == true) {
     //   data = await taxRateService.getCurrencies();
     //   // TO DO: We should save these locally too
-    //   // await addVS1Data("TCurrency", data);
+    //   // await addVS1Data("TCurrencyList", data);
     // } else {
-    //   let dataObject = await getVS1Data("TCurrency");
+    //   let dataObject = await getVS1Data("TCurrencyList");
     //   data = ((dataObject.length == 0) == refresh) == true
     //     ? await taxRateService.getCurrencies()
     //     : JSON.parse(dataObject[0].data);
@@ -225,7 +225,7 @@ Template.currenciessettings.onRendered(function () {
    * @deprecated
    */
   templateObject.loadCurrencies = function () {
-    getVS1Data("TCurrency").then(function (dataObject) {
+    getVS1Data("TCurrencyList").then(function (dataObject) {
       if (dataObject.length == 0) {
         taxRateService.getCurrencies().then(function (data) {
           let lineItems = [];
@@ -1261,7 +1261,7 @@ Template.currenciessettings.events({
 
     if (currencyid == "") {
       objDetails = {
-        type: "TCurrency",
+        type: "TCurrencyList",
         fields: {
           Active: true,
           Country: country,
@@ -1275,7 +1275,7 @@ Template.currenciessettings.events({
       };
     } else {
       objDetails = {
-        type: "TCurrency",
+        type: "TCurrencyList",
         fields: {
           ID: parseInt(currencyid),
           Active: true,
@@ -1292,7 +1292,7 @@ Template.currenciessettings.events({
 
     taxRateService.saveCurrency(objDetails).then(function (objDetails) {
       sideBarService.getCurrencies().then(function (dataReload) {
-        addVS1Data("TCurrency", JSON.stringify(dataReload)).then(function (datareturn) {
+        addVS1Data("TCurrencyList", JSON.stringify(dataReload)).then(function (datareturn) {
           Meteor._reload.reload();
         }).catch(function (err) {
           Meteor._reload.reload();
@@ -1493,7 +1493,7 @@ export const updateAllCurrencies = (employeeId,
 
         currencies.forEach((currency) => {
           formatedList.push({
-            type: "TCurrency",
+            type: "TCurrencyList",
             fields: currency
           });
         });
@@ -1531,9 +1531,9 @@ export const updateCurrency = async (currencyData, callback) => {
     currencyData.BuyRate = parseFloat(rates.buy);
     currencyData.SellRate = parseFloat(rates.sell);
 
-    taxRateService.saveCurrency({type: "TCurrency", fields: currencyData}).then(currencyData => {
+    taxRateService.saveCurrency({type: "TCurrencyList", fields: currencyData}).then(currencyData => {
       sideBarService.getCurrencies().then(dataReload => {
-        addVS1Data("TCurrency", JSON.stringify(dataReload)).then(function (datareturn) {
+        addVS1Data("TCurrencyList", JSON.stringify(dataReload)).then(function (datareturn) {
           callback();
           // Meteor._reload.reload();
         }).catch(function (err) {});

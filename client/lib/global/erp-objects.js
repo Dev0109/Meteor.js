@@ -48,6 +48,7 @@ const erpObject = {
     TModel: "TModel",
     TOtherContact: "TOtherContact",
     TPaymentMethod: "TPaymentMethod",
+    TPaymentMethodList: "TPaymentMethodList",
     TpaySplit: "TpaySplit",
     TPhoneSupportLog: "TPhoneSupportLog",
     TPhoneSupportType: "TPhoneSupportType",
@@ -116,6 +117,7 @@ const erpObject = {
     TBillReport: "TBillReport",
     TGeneralLedgerReport: "TGeneralLedgerReport",
     TUnitOfMeasure: "TUnitOfMeasure",
+    TUnitOfMeasureList: "TUnitOfMeasureList",
     TProductClassQuantity: "TProductClassQuantity",
     TProductBarcode: "TProductBarcode",
     TProductPicture: "TProductPicture",
@@ -167,6 +169,7 @@ const erpObject = {
     TTaxcodeVS1: "TTaxcodeVS1",
     TSubTaxVS1: "TSubTaxVS1",
     TTermsVS1: "TTermsVS1",
+    TTermsVS1List: "TTermsVS1List",
     TPaymentMethodVS1: "TPaymentMethodVS1",
     TcompLogo: "TcompLogo",
     TEmployeePicture: "TEmployeePicture",
@@ -308,6 +311,7 @@ const erpObject = {
     TProspectList: "TProspectList",
     TABADetailRecord: "TABADetailRecord",
     TABADescriptiveRecord: "TABADescriptiveRecord",
+    TProjectTasksList:"TProjectTasksList",
 };
 
 export default erpObject;

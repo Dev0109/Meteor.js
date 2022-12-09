@@ -1837,7 +1837,7 @@ Template.productview.onRendered(function() {
 
             getVS1Data('TProductVS1').then(function(dataObject) {
                 if (dataObject.length == 0) {
-                    productService.getOneProductdatavs1(currentProductID).then(function(data) {
+                    productService.getOneProductdata(currentProductID).then(function(data) {
                         $('.fullScreenSpin').css('display', 'none');
 
                         // add to custom field
@@ -2196,7 +2196,7 @@ Template.productview.onRendered(function() {
                         }
                     }
                     if (!added) {
-                        productService.getOneProductdatavs1(currentProductID).then(function(data) {
+                        productService.getOneProductdata(currentProductID).then(function(data) {
                             $('.fullScreenSpin').css('display', 'none');
                             let lineItems = [];
                             let lineItemObj = {};
@@ -2235,7 +2235,7 @@ Template.productview.onRendered(function() {
                                 lockextrasell: data.fields.LockExtraSell,
                                 customfield1: data.fields.CUSTFLD1,
                                 customfield2: data.fields.CUSTFLD2,
-                                totalqtyinstock : TotalQtyInStock,
+                                totalqtyinstock : data.fields.TotalQtyInStock,
                                 barcode: data.fields.BARCODE,
                                 // data.fields.TotalQtyInStock,
                                 totalqtyonorder: data.fields.TotalQtyOnOrder,
@@ -2368,7 +2368,7 @@ Template.productview.onRendered(function() {
                     }
                 }
             }).catch(function(err) {
-                productService.getOneProductdatavs1(currentProductID).then(function(data) {
+                productService.getOneProductdata(currentProductID).then(function(data) {
                     $('.fullScreenSpin').css('display', 'none');
                     let lineItems = [];
                     let lineItemObj = {};
@@ -4421,8 +4421,18 @@ Template.productview.events({
     },
     'click #loadrecenttransaction': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        templateObject.getAllProductRecentTransactions();
+        //modified by matthias
+        isShowRecentTrans = $('.product_recent_trans')[0].style.display;
+        if(isShowRecentTrans == 'none')
+        {
+            let templateObject = Template.instance();
+            templateObject.getAllProductRecentTransactions();
+        }
+        else
+        {
+            $('.product_recent_trans').hide();
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
     'click #btnSave': async function() {
         playSaveAudio();
