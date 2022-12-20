@@ -1983,7 +1983,13 @@ Template.bankingoverview.events({
     'click .btnReconList': function() {
         FlowRouter.go('/reconciliationlist');
     },
-    'click .btnBankRule': function() {
+    'click #btnReconRuleList': function() {
+        FlowRouter.go('/reconrulelist');
+    },
+    'click #btnNewReconRule': function(event) {
+        FlowRouter.go('/newreconrule');
+    },
+    'click #btnBankRuleList': function() {
         FlowRouter.go('/bankrulelist');
     },
     'click #btnNewBankRule': function(event) {

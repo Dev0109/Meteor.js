@@ -1,14 +1,21 @@
 import ProfitLossLayoutFields from "./ProfitLossLayoutFields";
 export default class ProfitLossLayout {
-  constructor({type, fields}) {
-    this.type = type;
+  // constructor({type, fields}) {
+  //   this.type = type;
+  //   if(fields instanceof ProfitLossLayoutFields) {
+  //     this.fields = fields;
+  //   }else {
+  //     this.fields = new ProfitLossLayoutFields(fields);
+  //   }
+  // }
 
+  constructor(fields) {
+    //this.type = type;
     if(fields instanceof ProfitLossLayoutFields) {
       this.fields = fields;
     }else {
       this.fields = new ProfitLossLayoutFields(fields);
     }
-    
   }
 
   /**

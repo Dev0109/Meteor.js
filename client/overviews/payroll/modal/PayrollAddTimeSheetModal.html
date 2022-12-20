@@ -1,0 +1,57 @@
+<template name="PayrollAddTimeSheetModal">
+<div class="modal fade" role="dialog" tabindex="-1" id="addTimeSheetModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable ui-draggable" role="document" style="left: -6px; top: -49px;">
+            <div class="modal-content">
+              <div class="modal-header supportHelpModal ui-draggable-handle">
+                  <h4>Add Timesheet</h4>
+              </div>
+              <div class="modal-body supportHelpModal">
+                <form class="addTimeSheetForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Employee</label>
+                            <input class="form-control es-input select-employee-js employee-select" type="search" autocomplete="off" value="Select an employee">
+
+                            <!-- <select class="form-control employee-select">
+                                <option value="0">Select an employee</option>
+
+                                {{#if employees}}
+                                    {{#each employee in employees}}
+                                        <option value="{{ employee.ID }}">{{ employee.EmployeeName }}</option>
+                                    {{/each}}
+                                {{/if}}
+
+                            </select> -->
+                        </div>
+                        <style>
+                            .hidden {
+                                display: none;
+                            }
+                        </style>
+                        <div class="col-md-6 payperiod-field hidden">
+                            <label>Period</label>
+                            <input class="form-control es-input select-period-js payperiod-select" type="search" autocomplete="off" value="Select a pay period">
+
+                            <!-- <select class="form-control payperiod-select">
+                                <option value="0">Select a pay period</option>
+
+                                {{#if payPeriods}}
+                                    {{#each pay in payPeriods}}
+                                        <option value="{{ pay.ID }}">{{ pay.PayrollCalendarName }} ({{ pay.PayrollCalendarPayPeriod }})</option>
+                                    {{/each}}
+                                {{/if}}
+                             
+                            </select> -->
+                        </div>
+                    </div>
+                </form>
+              </div>
+                <div class="modal-footer ui-draggable-handle">
+                    <button class="btn btn-primary add-new-timesheet" disabled type="button"><i class="fas fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button" autocomplete="off"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+      </div>
+
+</template>

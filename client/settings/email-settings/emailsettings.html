@@ -159,7 +159,7 @@
                                                 <tbody>
                                                     {{#each item in employeescheduledrecord}}
                                                         {{#if checkIfEssentials item.formID}}
-                                                            <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
+                                                            <tr class="dnd-moved tr-essential" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                                 <td contenteditable="false" class="arrow" id="{{#if equals item.formID 1}}groupedReports{{/if}}" data-ids="{{item.formIDs}}">{{item.formname}}</td>
                                                                 {{#if equals item.frequencyType "M"}}
                                                                     <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
@@ -384,7 +384,7 @@
                                                 <tbody>
                                                     {{#each item in employeescheduledrecord}}
                                                         {{#if checkIfNotEssentials item.formID}}
-                                                            <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
+                                                            <tr class="dnd-moved tr-normal" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                                 <td contenteditable="false" class="arrow">{{item.formname}}</td>
                                                                 {{#if equals item.frequencyType "M"}}
                                                                     <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"

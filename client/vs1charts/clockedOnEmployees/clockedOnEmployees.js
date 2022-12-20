@@ -87,13 +87,10 @@ Template.clockedOnEmployees.onRendered(function () {
                 }
               }
             }
-            templateObject.clockedOnEmpData.set(clockedOnEmpList);
-            // $(".fullScreenSpin").css("display", "none");
+            templateObject.clockedOnEmpData.set(clockedOnEmpList); 
           })
           .catch(function (err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
+            $(".fullScreenSpin").css("display", "none"); 
           });
       });
   };

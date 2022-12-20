@@ -80,15 +80,29 @@ Template.new_quote.onCreated(() => {
     templateObject.productextrasellrecords = new ReactiveVar([]);
 
     templateObject.defaultsaleterm = new ReactiveVar();
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
     templateObject.subtaxcodes = new ReactiveVar([]);
+    templateObject.hasFollow = new ReactiveVar(false);
 
     templateObject.customerRecord = new ReactiveVar();
 });
 
 Template.new_quote.onRendered(() => {
     let templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        let templateObject = Template.instance();
+        var currentDate = new Date();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
+            var isRepeated = quoteData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
+        }
+    }
+    templateObject.hasFollowings();
     $('#edtFrequencyDetail').css('display', 'none');
 //     $('#onEventSettings').css('display', 'none');
 //   $('#basedOnFrequency').prop('checked', false);
@@ -192,35 +206,6 @@ Template.new_quote.onRendered(() => {
     }
   }
 
-  templateObject.hasFollowings = async function() {
-    var currentDate = new Date();
-    const salesService = new SalesBoardService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split('?id=');
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = '';
-    if (getso_id[1]) {
-        currentInvoice = parseInt(currentInvoice);
-        var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-        var saleDate = quoteData.fields.SaleDate;
-        var fromDate = saleDate.substring(0, 10);
-        var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-        var followingQuotes = await sideBarService.getAllTQuoteListData(
-            fromDate,
-            toDate,
-            false,
-            initialReportLoad,
-            0
-        );
-        var quoteList = followingQuotes.tquotelist;
-        if (quoteList.length > 1) {
-            $("#btn_follow2").css("display", "inline-block");
-        } else {
-            $("#btn_follow2").css("display", "none");
-        }
-    }        
-  }
-
     $('#choosetemplate').attr('checked', true);
     $(window).on('load', function() {
         const win = $(this); //this = window
@@ -237,34 +222,6 @@ Template.new_quote.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
 
-    // set initial table rest_data
-    function init_reset_data() {
-
-      let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
-        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
-        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
-        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-      ];
-
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      reset_data[11].display = !!isBatchSerialNoTracking;
-
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    // set initial table rest_data
 
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
         let title = $(this).parent().attr("data-id");
@@ -292,147 +249,6 @@ Template.new_quote.onRendered(() => {
             break;
         }
     };
-
-    templateObject.getTemplateInfoNew = function(){
-       LoadingOverlay.show();
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Quotes_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-                 }
-
-
-                  LoadingOverlay.hide();
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Quotes_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-                 }
-                  LoadingOverlay.hide();
-          }
-        }).catch(function(err) {
-        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                     {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                      $('#Quotes_1').attr('checked','checked');
-                                    }
-
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                  $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Quotes_2').attr('checked','checked');
-                                  }
-                            }
-
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                  $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Quotes_3').attr('checked','checked');
-                                  }
-                            }
-
-
-                     }
-                  }
-
-
-                  LoadingOverlay.hide();
-        }).catch(function (err) {
-          LoadingOverlay.hide();
-        });
-      });
-
-    };
-
-    templateObject.getTemplateInfoNew();
 
     templateObject.getLastQuoteData = async function() {
         let lastBankAccount = "Bank";
@@ -1005,7 +821,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1018,9 +834,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1072,7 +888,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1085,9 +901,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1141,7 +957,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1154,9 +970,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1477,7 +1293,7 @@ Template.new_quote.onRendered(() => {
             }
         }
 
-        
+
 
         }
 
@@ -5054,13 +4870,9 @@ Template.new_quote.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5156,8 +4968,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5241,13 +5054,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5543,57 +5352,6 @@ Template.new_quote.onRendered(function() {
     };
     tempObj.getSubTaxCodes();
 
-    tempObj.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      showCustomFieldDisplaySettings(reset_data);
-
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : ''
-        };
-        custFields.push(customData);
-      }
-      tempObj.displayfields.set(custFields);
-    }
-    tempObj.initCustomFieldDisplaySettings("", "tblQuoteLine");
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
@@ -5660,10 +5418,7 @@ Template.new_quote.helpers({
     vs1companyBankRoutingNo: () => {
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
-    // custom field displaysettings
-    displayfields: () => {
-      return Template.instance().displayfields.get();
-    },
+
     custfields: () => {
         return Template.instance().custfields.get();
     },
@@ -5816,28 +5571,6 @@ Template.new_quote.helpers({
     getDefaultCurrency: () => {
         return defaultCurrencyCode;
     },
-    convertToForeignAmount: (amount) => {
-        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-    },
-
-    displayFieldColspan: (displayfield) => {
-        if(foreignCols.includes(displayfield.custfieldlabel))
-        {
-            if(Template.instance().isForeignEnabled.get() == true) {
-                return 2
-            }
-            return 1;
-        }
-        return 1;
-    },
-
-    subHeaderForeign: (displayfield) => {
-
-        if(foreignCols.includes(displayfield.custfieldlabel)) {
-            return true;
-        }
-        return false;
-    },
 
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
@@ -5941,28 +5674,7 @@ Template.new_quote.events({
         clickedInput = "three";
         $('#clickedControl').val(clickedInput);
     },
-    'click  #open_print_confirm': function(event) {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked')) {
-            $('#templateselection').modal('show');
-        } else {
-           LoadingOverlay.show();
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
-        }
-    }, delayTimeAfterSound);
-    },
+    'click  #open_print_confirm': function(event) {},
     'click #choosetemplate':function(event) {
         if($('#choosetemplate').is(':checked'))
         {
@@ -6922,6 +6634,8 @@ Template.new_quote.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7285,33 +6999,10 @@ Template.new_quote.events({
     },
     'click .btnRemove': async function(event) {
         let templateObject = Template.instance();
-        await templateObject.hasFollowings();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-        var currentDate = new Date();
-        let salesService = new SalesBoardService();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var quoteList = [];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-            var saleDate = quoteData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingQuotes = await sideBarService.getAllTQuoteListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            quoteList = followingQuotes.tquotelist;
-        }
         if(targetID != undefined) {
             times++;
 
@@ -7444,7 +7135,7 @@ Template.new_quote.events({
                 }
             }
         } else {
-            if(quoteList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },
@@ -7510,7 +7201,7 @@ Template.new_quote.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7554,7 +7245,7 @@ Template.new_quote.events({
           }
         }
     }, delayTimeAfterSound);
-    },    
+    },
     'click .btnDeleteQuote': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
@@ -8885,107 +8576,7 @@ Template.new_quote.events({
         // $("" + columHeaderUpdate + "").html(columData);
         $("th.col" + columHeaderUpdate + "").html(columData);
     },
-    // custom field displaysettings
-    'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
-        let lineItems = [];
-        $(".fullScreenSpin").css("display", "inline-block");
-        $(".displaySettings").each(function (index) {
-            const $tblrow = $(this);
-            const fieldID = $tblrow.attr("custid") || 0;
-            const colTitle = $tblrow.find(".divcolumn").text() || "";
-            const colWidth = $tblrow.find(".custom-range").val() || 0;
-            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-            let colHidden = false;
-            colHidden = !!$tblrow.find(".custom-control-input").is(":checked");
-            let lineItemObj = {
-                index: parseInt(fieldID),
-                label: colTitle,
-                active: colHidden,
-                width: parseInt(colWidth),
-                class: colthClass,
-                display: true
-            };
-            lineItems.push(lineItemObj);
-        });
 
-        let reset_data = templateObject.reset_data.get();
-        reset_data = reset_data.filter(redata => redata.display == false);
-        lineItems.push(...reset_data);
-        lineItems.sort((a,b) => a.index - b.index);
-
-        try {
-            let erpGet = erpDb();
-            let tableName = "tblQuoteLine";
-            let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-            let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-            $(".fullScreenSpin").css("display", "none");
-            if(added) {
-              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-                  addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-              });
-                swal({
-                    title: 'SUCCESS',
-                    text: "Display settings is updated!",
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {
-                        $('#myModal2').modal('hide');
-                    }
-                });
-            } else {
-                swal("Something went wrong!", "", "error");
-            }
-        } catch (error) {
-            $(".fullScreenSpin").css("display", "none");
-            swal("Something went wrong!", "", "error");
-        }
-    }, delayTimeAfterSound);
-    },
-    // custom field displaysettings
-    'click .btnResetGridSettings': function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      reset_data[11].display = !!isBatchSerialNoTracking;
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow
-          .find(".custom-control-input")
-          .prop("checked", reset_data[index].active);
-
-        let title = $("#tblQuoteLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-        } else {
-          $(title).html(reset_data[index].label);
-        }
-
-
-        if (reset_data[index].active) {
-          // $(".col" + reset_data[index].class).css("display", "table-cell");
-          // $(".col" + reset_data[index].class).css("padding", ".75rem");
-          // $(".col" + reset_data[index].class).css("vertical-align", "top");
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          // $(".col" + reset_data[index].class).css("display", "none");
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
-      });
-    },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get('mycloudLogonID'),
@@ -10848,7 +10439,7 @@ Template.new_quote.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10915,7 +10506,7 @@ Template.new_quote.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10968,7 +10559,7 @@ Template.new_quote.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -11049,17 +10640,17 @@ Template.new_quote.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -11136,21 +10727,21 @@ Template.new_quote.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             window.open("/invoicecard", "_self");

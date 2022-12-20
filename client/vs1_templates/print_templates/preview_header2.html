@@ -40,12 +40,18 @@
     </style>
     <div class="template-preview-header2">
         <div class="d-flex flex-row d-sm-flex d-md-flex">
-            <div class="col-6 col-md-6 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center;">
+            <div class="col-3 col-md-3 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center;">
                 <div style="width: 100%"><!-- max-width: 60mm; max-height: 30mm; -->
                     <img src="assets/img/VS1.png" class="uploadedImage" style="width: 50%; margin-bottom: 0px;">
                 </div>
             </div>
-            <div class="col-6 col-md-6 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly;">
+            <div class="col-4 col-md-4 col-sm-12" style="margin-top: 10px; padding: 0px; border: none !important; ">
+                <p><svg id="Barcode"></svg></p>
+                                         <script>
+                    JsBarcode("#Barcode", "BI-751",{displayValue: false});
+                     </script>
+            </div>
+            <div class="col-5 col-md-5 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly;">
                 <p class="label-p print-header2"></p>
             </div>
         </div>
@@ -92,5 +98,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>                       
 </template>

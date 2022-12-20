@@ -98,7 +98,7 @@ Meteor.methods({
 
     try {
       Email.send({
-        to: details.EmployeeEmail,
+        to: details.Recipients,
         // to: 'heidikalatasra20@gmail.com',
         from: 'noreply@vs1cloud.com',
         cc: '',
@@ -113,7 +113,7 @@ Meteor.methods({
         DateSent: details.StartDate,
         Memo: details.NextDueDate,
         Subject: details.FormName,
-        RecipientEmail:  details.EmployeeEmail
+        RecipientEmail:  details.Recipients
       }}, details.connectionInfo,  (error, result) => {
         if(!error) {
           // Meteor.call('get', 'TEmailHistory', (err, res) => {
@@ -130,9 +130,9 @@ Meteor.methods({
   },
   addTask: function(details) {
     if (details.Active) {
-      SyncedCron.remove(details.EmployeeId + "_" + details.FormID);
+      SyncedCron.remove(details.EID + "_" + details.FormID);
       SyncedCron.add({
-        name: details.EmployeeId + "_" + details.FormID,
+        name: details.EID + "_" + details.FormID,
         schedule: function(parser) {
           return parser.recur().on(new Date(details.NextDueDate)).fullDate();
           // let current = new Date();
@@ -141,21 +141,21 @@ Meteor.methods({
         },
         job: function() {
           Meteor.call('sendNormalEmail', details);
-          FutureTasks.remove(details.EmployeeId + "_" + details.FormID);
-          SyncedCron.remove(details.EmployeeId + "_" + details.FormID);
+          FutureTasks.remove(details.EID + "_" + details.FormID);
+          SyncedCron.remove(details.EID + "_" + details.FormID);
           Meteor.call('calculateNextDate', details, function(error, result) {
             if (result !== '') {
               details.NextDueDate = result;
               Meteor.call('addTask', details);
             }
-            return details.EmployeeId + "_" + details.FormID;
+            return details.EID + "_" + details.FormID;
           });
         }
       })
     } else {
       // If email scheduling is inactive, remove corresponding FutureTask and SyncedCron job
-      FutureTasks.remove(details.EmployeeId + "_" + details.FormID);
-      SyncedCron.remove(details.EmployeeId + "_" + details.FormID);
+      FutureTasks.remove(details.EID + "_" + details.FormID);
+      SyncedCron.remove(details.EID + "_" + details.FormID);
     }
   },
   calculateNextDate: function(details) {

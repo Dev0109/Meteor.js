@@ -868,6 +868,7 @@ initTemplateHeaderFooter1 = function() {
   $("#templatePreviewModal .io").text("");
   $("#templatePreviewModal .ro").text("");
   $("#templatePreviewModal .due").text("");
+  $("#templatePreviewModal .div_header1_1").hide();
 }
 
 initTemplateHeaderFooter2 = function() {
@@ -928,36 +929,64 @@ loadTemplateHeaderFooter1 = function(object_invoce) {
       if (pcomment != "" && pcomment != null && pcomment != undefined)
         pcomment = pcomment.replace(/[\r\n]/g, "<br/>");
       $("#templatePreviewModal #printcomment").text(pcomment);
-      
+      $("#templatePreviewModal .o_abn_label").text("Company #");
       if (LoggedCountry == "South Africa")
-          $("#templatePreviewModal .o_abn_label").text("VAT No");
-      else
+          $("#templatePreviewModal .o_abn_label").text("VAT #");
+      if (LoggedCountry == "Australia")
           $("#templatePreviewModal .o_abn_label").text("ABN");
       let companyABN = object_invoce[0]["o_abn"];
-      $("#templatePreviewModal .o_abn").text(companyABN.substring(0, 2) + "-" + companyABN.substring(2, 5) + "-" + companyABN.substring(5, 8) + "-" + companyABN.substring(8, companyABN.length));
+      if (companyABN != "")
+        $("#templatePreviewModal .o_abn").text(companyABN.substring(0, 2) + "-" + companyABN.substring(2, 5) + "-" + companyABN.substring(5, 8) + "-" + companyABN.substring(8, companyABN.length));
+      else
+        $("#templatePreviewModal .o_abn").text("");
       
       let txabillingAddress = object_invoce[0]["supplier_addr"];
       if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
           txabillingAddress = txabillingAddress.replace(/[\r\n]/g, "<br/>");
       $("#templatePreviewModal .pdfCustomerAddress").html(txabillingAddress);
       $("#templatePreviewModal .employeeName").text(object_invoce[0]["employee_name"]);
+      if (object_invoce[0]["title"] == "Statement") {
+        $("#templatePreviewModal .dateLabel1").text("Statement Date:");
+        $("#templatePreviewModal .div_header1").hide();
+        $("#templatePreviewModal .div_header1_1").show();
+        $("#templatePreviewModal .div_cust_no").hide();
+      } else {
+        $("#templatePreviewModal .dateLabel1").text("Date:");
+        $("#templatePreviewModal .div_header1").show();
+        $("#templatePreviewModal .div_header1_1").hide();
+        $("#templatePreviewModal .div_cust_no").show();
+      }
+      
       $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
       $("#templatePreviewModal .modal-title").text(object_invoce[0]["title"] + " " + " Template");
       $("#templatePreviewModal .print-header-value").text(object_invoce[0]["value"]);
       
-      $("#templatePreviewModal .bankname").text(localStorage.getItem("vs1companyBankName"));
+      $("#templatePreviewModal .bankname").text("Bank Name : " + localStorage.getItem("vs1companyBankName"));
       $("#templatePreviewModal .bankdesc").text(localStorage.getItem("vs1companyBankDesc"));
       $("#templatePreviewModal .ban").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
-      $("#templatePreviewModal .bsb").text("BSB (Branch Number) : " + object_invoce[0]["bsb"]);
+          
+      if (LoggedCountry == "Australia")
+        $("#templatePreviewModal .bsb").text("BSB (Branch Number) : " + object_invoce[0]["bsb"]);
+      if (LoggedCountry == "United States" || LoggedCountry == "United States of America")
+        $("#templatePreviewModal .bsb").text("Routing Number : " + object_invoce[0]["bsb"]);
+      if (LoggedCountry == "South Africa")
+        $("#templatePreviewModal .bsb").text("Branch Code : " + object_invoce[0]["bsb"]);
       $("#templatePreviewModal .account_number").text("Account Number : " + object_invoce[0]["account"]);
       $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
   
       let companyName = Session.get("vs1companyName");
       let companyReg = Session.get("vs1companyReg");
-      if (companyReg != "")
+      if (companyReg != "") {
+        if (LoggedCountry == "Australia")
           $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
-      else
+        else
+          $("#templatePreviewModal .companyInfo1").text(companyName + " - " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
+      } else {
+        if (LoggedCountry == "Australia")
           $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN ");
+        else
+          $("#templatePreviewModal .companyInfo1").text(companyName);
+      }
       let companyAddr = Session.get("vs1companyaddress1");
       if (companyAddr == "")
           companyAddr = Session.get("vs1companyaddress2");
@@ -970,20 +999,31 @@ loadTemplateHeaderFooter1 = function(object_invoce) {
       if (companyPhone != "")
           $("#templatePreviewModal .companyInfo3").text("Ph: " + companyPhone.substring(0, 2) + " " + companyPhone.substring(2, 6) + " " + companyPhone.substring(6, companyPhone.length));
   
-      if (object_invoce[0]["date"] != "")
+      if (object_invoce[0]["date"] != "" && object_invoce[0]["date"] != undefined)
           $("#templatePreviewModal .date").text(convertDateFormatForPrint(object_invoce[0]["date"]));
       $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
       $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
       $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-      if (object_invoce[0]["duedate"] != "")
-          $("#templatePreviewModal .due").text(convertDateFormatForPrint(object_invoce[0]["duedate"]));
+      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != undefined)
+        $("#templatePreviewModal .due").text(convertDateFormatForPrint(object_invoce[0]["duedate"]));
+      else
+        $("#templatePreviewModal .due").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 
+      if (object_invoce[0]["title"] == "Customer Payment") {
+        $("#templatePreviewModal .field_payment").hide();
+        $("#templatePreviewModal .field_amount").hide();
+        $("#templatePreviewModal .div_cust_no").hide();
+      } else {
+        $("#templatePreviewModal .field_payment").show();
+        $("#templatePreviewModal .field_amount").show();
+        $("#templatePreviewModal .div_cust_no").show();
+      }
       //   table header
       var tbl_header = $("#templatePreviewModal .tbl_header");
       tbl_header.empty();
       for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
           tbl_header.append(
-          "<th style='width: " + value[0] + "%; color: rgb(0 0 0); text-align: " + value[1] + ";'>" + key + "</th>"
+          "<th style='width: " + value[0] + "%; color: rgb(0 0 0); text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
           );
       }
   }
@@ -1003,10 +1043,16 @@ loadTemplateHeaderFooter2 = function(object_invoce) {
       $("#templatePreviewModal .pdfCustomerAddress2").html(txabillingAddress);
       $("#templatePreviewModal .print-header2").text(object_invoce[0]["title"]);
       $("#templatePreviewModal .modal-title").text(object_invoce[0]["title"] + " " + " Template");
+      $("#templatePreviewModal .print-header-value2").text(object_invoce[0]["value"]);
   
-      $("#templatePreviewModal .bankname2").text("BANK : " + localStorage.getItem("vs1companyBankName"));
+      $("#templatePreviewModal .bankname2").text("Bank Name : " + localStorage.getItem("vs1companyBankName"));
       $("#templatePreviewModal .ban2").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
-      $("#templatePreviewModal .bsb2").text("BSB : " + object_invoce[0]["bsb"]);
+      if (LoggedCountry == "Australia")
+        $("#templatePreviewModal .bsb2").text("BSB (Branch Number) : " + object_invoce[0]["bsb"]);
+      if (LoggedCountry == "United States" || LoggedCountry == "United States of America")
+        $("#templatePreviewModal .bsb2").text("Routing Number : " + object_invoce[0]["bsb"]);
+      if (LoggedCountry == "South Africa")
+        $("#templatePreviewModal .bsb2").text("Branch Code : " + object_invoce[0]["bsb"]);
       $("#templatePreviewModal .account_number2").text("ACC : " + object_invoce[0]["account"]);
       
       let companyName = Session.get("vs1companyName");
@@ -1026,23 +1072,47 @@ loadTemplateHeaderFooter2 = function(object_invoce) {
       $("#templatePreviewModal .o_state2").text(companyState + " " + companyPostcode);
       if (companyPhone != "")
           $("#templatePreviewModal .o_phone2").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
-      $("#templatePreviewModal .o_email2").text(localStorage.getItem("VS1Accountant"));
-  
-      if (LoggedCountry == "South Africa")
-          $("#templatePreviewModal .o_abn_label2").text("VAT No");
-      else
-          $("#templatePreviewModal .o_abn_label2").text("ABN");
       
+      if (object_invoce[0]["title"] == "Statement") {
+        $("#templatePreviewModal .p_header2").hide();
+        $("#templatePreviewModal .p_header2_2").show();
+        $("#templatePreviewModal .div_invoice2").hide();
+      } else {
+        $("#templatePreviewModal .p_header2").show();
+        $("#templatePreviewModal .p_header2_2").hide();
+        $("#templatePreviewModal .div_invoice2").show();
+      }
+
+      if (object_invoce[0]["title"] == "Customer Payment") {
+        $("#templatePreviewModal .o_email2").text(object_invoce[0]["supplier_name"]);
+        $("#templatePreviewModal .label_date2").text("Payment Date");
+        $("#templatePreviewModal .p_inv_num").hide();
+        $("#templatePreviewModal .div_payment2").hide();
+      } else {
+        $("#templatePreviewModal .o_email2").text(localStorage.getItem("VS1Accountant"));
+        $("#templatePreviewModal .label_date2").text("Invoice Date");
+        $("#templatePreviewModal .p_inv_num").show();
+        $("#templatePreviewModal .div_payment2").show();
+      }
+  
+      $("#templatePreviewModal .o_abn_label2").text("Company #");
+      if (LoggedCountry == "South Africa")
+          $("#templatePreviewModal .o_abn_label2").text("VAT #");
+      if (LoggedCountry == "Australia")
+          $("#templatePreviewModal .o_abn_label2").text("ABN");
+
       let companyABN = object_invoce[0]["o_abn"];
       if (companyABN != "")
-          $("#templatePreviewModal .o_abn2").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
+        $("#templatePreviewModal .o_abn2").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
+      else
+        $("#templatePreviewModal .o_abn2").text("");
       
-      if (object_invoce[0]["date"] != "")
+      if (object_invoce[0]["date"] != "" && object_invoce[0]["date"] != undefined)
           $("#templatePreviewModal .date2").text(convertDateFormatForPrint2(object_invoce[0]["date"]));
   
       $("#templatePreviewModal .io2").text(object_invoce[0]["invoicenumber"]);
       $("#templatePreviewModal .ro2").text(object_invoce[0]["refnumber"]);
-      if (object_invoce[0]["duedate"] != "")
+      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != undefined)
           $("#templatePreviewModal .due2").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
   
       //   table header
@@ -1050,7 +1120,7 @@ loadTemplateHeaderFooter2 = function(object_invoce) {
       tbl_header.empty();
       for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
           tbl_header.append(
-              "<th style='width: " + value[0] + "%; color: #000000; text-align: " + value[1] + ";'>" + key + "</th>"
+              "<th style='width: " + value[0] + "%; color: #000000; text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
           );
       }
   }
@@ -1063,14 +1133,28 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
           txabillingAddress = txabillingAddress.replace(/[\r\n]/g, "<br/>");
       $("#templatePreviewModal .pdfCustomerAddress3").html(txabillingAddress);
-      $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
-      $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");
+      
+      if (object_invoce[0]["title"] == "Customer Payment") {
+        $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase() + " # " + object_invoce[0]["value"]);
+        $("#templatePreviewModal .toLabel3").text("CUSTOMER TO: ");
+        $("#templatePreviewModal .div_invoice3").hide();
+        $("#templatePreviewModal .div_payment3_title").hide();
+        $("#templatePreviewModal .div_payment3").hide();
+        $("#templatePreviewModal .div_company_info3").hide();
+      } else {
+        $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
+        $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");
+        $("#templatePreviewModal .div_invoice3").show();
+        $("#templatePreviewModal .div_payment3_title").show();
+        $("#templatePreviewModal .div_payment3").show();
+        $("#templatePreviewModal .div_company_info3").show();
+      }
       $("#templatePreviewModal .dateLabel3").text(object_invoce[0]["title"].toUpperCase() + " DATE: ");
       //   $("#templatePreviewModal .invNumber3").text(object_invoce[0]["title"].toUpperCase() + " NUMBER");
       $("#templatePreviewModal .modal-title").text(
           object_invoce[0]["title"] + " " + " Template"
       );
-      $("#templatePreviewModal .bankname3").text(localStorage.getItem("vs1companyBankName"));
+      $("#templatePreviewModal .bankname3").text("Bank Name : " + localStorage.getItem("vs1companyBankName"));
       $("#templatePreviewModal .ban3").text(localStorage.getItem('vs1companyBankAccountName'));
       $("#templatePreviewModal .swift3").text(object_invoce[0]["swift"]);
       $("#templatePreviewModal .account_number3").text(object_invoce[0]["account"]);
@@ -1089,30 +1173,33 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
 
       $("#templatePreviewModal .o_name3").text(companyName);
       $("#templatePreviewModal .o_address3").text(companyAddr);
-      $("#templatePreviewModal .o_city3").text(companyCity);
-      $("#templatePreviewModal .o_state3").text(companyState + " " + companyPostcode);
+      $("#templatePreviewModal .o_city3").text(companyCity + ", " + companyState);
+      $("#templatePreviewModal .o_state3").text(companyPostcode + ", " + LoggedCountry);
       if (companyPhone != "")
           $("#templatePreviewModal .o_phone3").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
       $("#templatePreviewModal .o_email3").text(localStorage.getItem("VS1Accountant"));
       $("#templatePreviewModal .o_url3").text(companyURL);
   
+      $("#templatePreviewModal .o_abn_label3").text("Company #");
       if (LoggedCountry == "South Africa")
-          $("#templatePreviewModal .o_abn_label3").text("VAT No:");
-      else
-          $("#templatePreviewModal .o_abn_label3").text("ABN:");
-      
+          $("#templatePreviewModal .o_abn_label3").text("VAT #");
+      if (LoggedCountry == "Australia")
+          $("#templatePreviewModal .o_abn_label3").text("ABN");
+
       let companyABN = object_invoce[0]["o_abn"];
       if (companyABN != "")
-          $("#templatePreviewModal .o_abn3").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
+        $("#templatePreviewModal .o_abn3").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
+      else
+        $("#templatePreviewModal .o_abn3").text("");
       
-      if (object_invoce[0]["date"] != "")
+      if (object_invoce[0]["date"] != "" && object_invoce[0]["date"] != undefined)
           $("#templatePreviewModal .date3").text(convertDateFormatForPrint3(object_invoce[0]["date"]));
       $("#templatePreviewModal .io3").text(object_invoce[0]["invoicenumber"]);
       $("#templatePreviewModal .ro3").text(object_invoce[0]["refnumber"]);
       $("#templatePreviewModal .po3").text(object_invoce[0]["pqnumber"]);
       $("#templatePreviewModal .amountdue3").text(object_invoce[0]["bal_due"]);
   
-      if (object_invoce[0]["duedate"] != "")
+      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != "")
           $("#templatePreviewModal .due3").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
       $("#templatePreviewModal .termdays").text($("#sltTerms").val());
       $("#templatePreviewModal .termdesc").text(Session.get("ERPTermDesc") || "-");
@@ -1122,8 +1209,16 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       tbl_header.empty();
       for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
           tbl_header.append(
-              "<th style='width: " + value[0] + "%; background-color: #00949E; color: white; text-align: " + value[1] + ";'>" + key + "</th>"
+              "<th style='width: " + value[0] + "%; background-color: #00949E; color: white; text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
           );
       }
   }  
 }
+
+validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};

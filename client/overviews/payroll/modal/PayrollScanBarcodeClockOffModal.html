@@ -1,0 +1,45 @@
+<template name="PayrollScanBarcodeClockOffModal">
+	
+	<div class="modal fade" role="dialog" tabindex="-1" id="scanBarcodeModalClockOff">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Barcode Scanner</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        #qr-reader-ClockOff>div:first-of-type {
+                            display: none !important;
+                        }
+
+                        #qr-reader-ClockOff__dashboard_section_swaplink {
+                            display: none !important;
+                        }
+
+                        #qr-reader-ClockOff__dashboard_section_csr>div>button:first-of-type {
+                            color: #fff !important;
+                            background-color: #00a3d3 !important;
+                            border-color: #00a3d3 !important;
+                            border: 1px solid transparent;
+                            display: inline-block !important;
+                            font-weight: 400 !important;
+                            text-align: center !important;
+                            vertical-align: middle !important;
+                            padding: .375rem .75rem !important;
+                            font-size: 1rem !important;
+                            line-height: 1.5 !important;
+                            border-radius: .35rem !important;
+                            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+                        }
+                    </style>
+                    <!-- <div id="reader" style="width: 100%"></div> -->
+                    <div id="qr-reader-ClockOff" style="width:100%"></div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button"
+                        data-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+</template>

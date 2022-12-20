@@ -120,29 +120,7 @@
                 color: #00a3d3;
             }
         </style>
-        <div class="row justify-content-center mb-6">
-            <div class="col-12 col-md-11">
-                <div class="card shadow" style="padding: 16px;">
-                    <div class="row">
-                        <div class="col-12 col-md-12" style="display: flex;">
-                            <div class="ruleType ruleTypeActive" style="border-right: 1px solid #e3e6f0;" id="btnSpentRule">
-                                <p class="" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">Spent money rule</p>
-                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Applies to bank statement lines where money is going out of your bank account.</p>
-                            </div>
-                            <div class="ruleType" style="border-right: 1px solid #e3e6f0;" id="btnReceivedRule">
-                                <p class="" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">Received money rule</p>
-                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Applies to bank statement lines where money is coming into your bank account.</p>
-                            </div>
-                            <div class="ruleType" id="btnTransferRule">
-                                <p class="" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">Transfer money rule</p>
-                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Applies to bank statement lines where money is being transferred between bank accounts.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <input type="hidden" id="selectedCard" value="spent">
+
         <div class="row justify-content-center mb-6" id="spentRuleCard">
             <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
                 <div class="card col-lg-6 col-md-12 col-sm-12 spentBankRuleCard" id="spentBankRuleCard">
@@ -156,703 +134,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div style="padding: 20px 10px;">
-                                    <h4>1. Apply a bank rule</h4>
+                                    <h4>1. Select Bank Account Name</h4>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-group" style="padding-left: 40px;">
-                                    <label>All or Any</label><br />
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="anySpentConditionType" id="anySpentConditionType" value="any" checked>
-                                        <label class="form-check-label" for="anySpentConditionType">Any conditions match</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="allSpentConditionType" id="allSpentConditionType" value="all">
-                                        <label class="form-check-label" for="allSpentConditionType">All conditions match</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="col-12 col-md-12" style="padding: 0 20px;">
-                                    <div>
-                                        <p>Add conditions</p>
-                                    </div>
-                                    <div class="table-responsive" style="padding: .375rem .75rem;">
-                                        <table id="tblSpentCondition" style="width:100%;" class="table table-bordered tblSpentCondition">
-                                            <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colID hiddenColumn">id</th>
-                                                <th>Field</th>
-                                                <th>Condition</th>
-                                                <th>Value</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if spentConditionData}}
-                                                    {{#each item in spentConditionData}}
-                                                        <tr class="dnd-moved" id="sc_{{item.id}}">
-                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                            <td class="colField">
-                                                                <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
-                                                            </td>
-                                                            <td class="colCondition">
-                                                                <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
-                                                            </td>
-                                                            <td class="colValue">
-                                                                <input class="highlightInput lineValue" type="text" value="{{item.value}}">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="table-remove btnRemove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#unless spentConditionData}}
-                                                    <tr class="dnd-moved" id="noData">
-                                                        <td colspan="5">No conditions</td>
-                                                    </tr>
-                                                {{/unless}}
-                                                <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
-                                                    <td class="colField">
-                                                        <input class="es-input highlightSelect lineField" type="search" value="">
-                                                    </td>
-                                                    <td class="colCondition">
-                                                        <input class="es-input highlightSelect lineCondition" type="search" value="">
-                                                    </td>
-                                                    <td class="colValue">
-                                                        <input class="highlightInput lineValue" type="text" value="">
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="table-remove btnRemove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineCondition" >Add a new condition</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>2. Set the contact</h4>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group"  style="padding: 0 20px;">
-                                    <label style="margin-right: 20px;">Customer: </label>
-                                    <input type="hidden" id="sltCustomerID" value="">
-                                    <select type="search" class="form-control" id="sltCustomer" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>3. Allocate line items</h4>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="col-12 col-md-12" style="padding: 0 20px;">
-                                    <div>
-                                        <p>Automatically allocate fixed value line items</p>
-                                    </div>
-                                    <div class="table-responsive" style="padding: .375rem .75rem;">
-                                        <table id="tblSpentFixedItem" style="width:100%;" class="table table-bordered tblSpentFixedItem">
-                                            <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colID hiddenColumn">id</th>
-                                                <th>Description</th>
-                                                <th>Account</th>
-                                                <th>Tax Rate</th>
-                                                <th>Amount</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if spentFixedItemData}}
-                                                    {{#each item in spentFixedItemData}}
-                                                        <tr class="dnd-moved" id="sf_{{item.id}}">
-                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                            <td class="colDesc">
-                                                                <input class="highlightInput lineDesc" type="text" value="{{item.description}}">
-                                                            </td>
-                                                            <td class="colAccount">
-                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
-                                                            </td>
-                                                            <td class="colTaxCode">
-                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
-                                                            </td>
-                                                            <td class="colAmount text-right">
-                                                                <input class="highlightInput lineAmount text-right" type="number" value="{{item.amount}}">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="table-remove btnRemove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#unless spentFixedItemData}}
-                                                    <tr class="dnd-moved" id="noData">
-                                                        <td colspan="6">No items</td>
-                                                    </tr>
-                                                {{/unless}}
-                                                <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
-                                                    <td class="colDesc">
-                                                        <input class="highlightInput lineDesc" type="text" value="">
-                                                    </td>
-                                                    <td class="colAccount">
-                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
-                                                    </td>
-                                                    <td class="colTaxCode">
-                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
-                                                    </td>
-                                                    <td class="colAmount text-right">
-                                                        <input class="highlightInput lineAmount text-right" type="number" value="">
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="table-remove btnRemove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLineFixed" >Add a new line</button>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="spentTotalAmount"></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-12" style="margin-top: 20px; padding: 0 20px;">
-                                    <div>
-                                        <p>With any remainder, allocate ratios using percent line items</p>
-                                    </div>
-                                    <div class="table-responsive" style="padding: .375rem .75rem;">
-                                        <table id="tblSpentPercentItem" style="width:100%;" class="table table-bordered tblSpentPercentItem">
-                                            <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colID hiddenColumn">id</th>
-                                                <th>Description</th>
-                                                <th>Account</th>
-                                                <th>Tax Rate</th>
-                                                <th>Percent</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if spentPercentItemData}}
-                                                    {{#each item in spentPercentItemData}}
-                                                        <tr class="dnd-moved" id="sp_{{item.id}}">
-                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                            <td class="colDesc">
-                                                                <input class="highlightInput lineDesc" type="text" value="{{item.description}}">
-                                                            </td>
-                                                            <td class="colAccount">
-                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
-                                                            </td>
-                                                            <td class="colTaxCode">
-                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
-                                                            </td>
-                                                            <td class="colPercent text-right">
-                                                                <input class="highlightInput linePercent text-right" type="number" value="{{item.percent}}">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="table-remove btnRemove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#unless spentPercentItemData}}
-                                                    <tr class="dnd-moved" id="noData">
-                                                        <td colspan="6">No items</td>
-                                                    </tr>
-                                                {{/unless}}
-                                                <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
-                                                    <td class="colDesc">
-                                                        <input class="highlightInput lineDesc" type="text" value="">
-                                                    </td>
-                                                    <td class="colAccount">
-                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
-                                                    </td>
-                                                    <td class="colTaxCode">
-                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
-                                                    </td>
-                                                    <td class="colPercent text-right">
-                                                        <input class="highlightInput linePercent text-right" type="number" value="">
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="table-remove btnRemove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLinePercent" >Add a new line</button>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="spentTotalPercent"></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>4. Add rule details</h4>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-6" style="padding: 0 20px;">
+                            <div class="col-6 col-md-6 mx-4">
                                 <div class="form-group mb-0">
-                                    <label>Rule Name</label>
-                                    <input type="text" class="form-control" id="spentRuleName" value="">
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-6">
-                                <div class="form-group mb-0">
-                                    <label>Comment</label>
-                                    <input type="text" class="form-control" id="spentRuleComment" value="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center mb-6" id="receivedRuleCard" style="display: none;">
-            <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
-                <div class="card col-lg-6 col-md-12 col-sm-12 receivedBankRuleCard" id="receivedBankRuleCard">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-primary m-0 font-weight-bold" id="receivedRuleTitle">New Bank rule</p>
-                        </div>
-                        <div class="float-right"></div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>1. Apply a bank rule</h4>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group" style="padding-left: 40px;">
-                                    <label>All or Any</label><br />
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="anyReceivedConditionType" id="anyReceivedConditionType" value="any" checked>
-                                        <label class="form-check-label" for="anyReceivedConditionType">Any conditions match</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="allReceivedConditionType" id="allReceivedConditionType" value="all">
-                                        <label class="form-check-label" for="allReceivedConditionType">All conditions match</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="col-12 col-md-12" style="padding: 0 20px;">
-                                    <div>
-                                        <p>Add conditions</p>
-                                    </div>
-                                    <div class="table-responsive" style="padding: .375rem .75rem;">
-                                        <table id="tblReceivedCondition" style="width:100%;" class="table table-bordered tblReceivedCondition">
-                                            <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colID hiddenColumn">id</th>
-                                                <th>Field</th>
-                                                <th>Condition</th>
-                                                <th>Value</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if receivedConditionData}}
-                                                    {{#each item in receivedConditionData}}
-                                                        <tr class="dnd-moved" id="rc_{{item.id}}">
-                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                            <td class="colField">
-                                                                <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
-                                                            </td>
-                                                            <td class="colCondition">
-                                                                <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
-                                                            </td>
-                                                            <td class="colValue">
-                                                                <input class="highlightInput lineValue" type="search" value="{{item.value}}">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="table-remove btnRemove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#unless receivedConditionData}}
-                                                    <tr class="dnd-moved" id="noData">
-                                                        <td colspan="5">No conditions</td>
-                                                    </tr>
-                                                {{/unless}}
-                                                <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                    <td class="colField">
-                                                        <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
-                                                    </td>
-                                                    <td class="colCondition">
-                                                        <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
-                                                    </td>
-                                                    <td class="colValue">
-                                                        <input class="highlightInput lineValue" type="text" value="{{item.value}}">
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="table-remove btnRemove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineCondition" >Add a new condition</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>2. Set the contact</h4>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group"  style="padding: 0 20px;">
-                                    <label style="margin-right: 20px;">Supplier: </label>
-                                    <input type="hidden" id="sltSupplierID" value="">
-                                    <select type="search" class="form-control" id="sltSupplier" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>3. Allocate line items</h4>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="col-12 col-md-12" style="padding: 0 20px;">
-                                    <div>
-                                        <p>Automatically allocate fixed value line items</p>
-                                    </div>
-                                    <div class="table-responsive" style="padding: .375rem .75rem;">
-                                        <table id="tblReceivedFixedItem" style="width:100%;" class="table table-bordered tblReceivedFixedItem">
-                                            <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colID hiddenColumn">id</th>
-                                                <th>Description</th>
-                                                <th>Account</th>
-                                                <th>Tax Rate</th>
-                                                <th>Amount</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if receivedFixedItemData}}
-                                                    {{#each item in receivedFixedItemData}}
-                                                        <tr class="dnd-moved" id="rf_{{item.id}}">
-                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                            <td class="colDesc">
-                                                                <input class="highlightInput lineDesc" type="search" value="{{item.description}}">
-                                                            </td>
-                                                            <td class="colAccount">
-                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
-                                                            </td>
-                                                            <td class="colTaxCode">
-                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
-                                                            </td>
-                                                            <td class="colAmount text-right">
-                                                                <input class="highlightInput lineAmount text-right" type="search" value="{{item.amount}}">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="table-remove btnRemove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#unless receivedFixedItemData}}
-                                                    <tr class="dnd-moved" id="noData">
-                                                        <td colspan="6">No items</td>
-                                                    </tr>
-                                                {{/unless}}
-                                                <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
-                                                    <td class="colDesc">
-                                                        <input class="highlightInput lineDesc" type="text" value="">
-                                                    </td>
-                                                    <td class="colAccount">
-                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
-                                                    </td>
-                                                    <td class="colTaxCode">
-                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
-                                                    </td>
-                                                    <td class="colAmount text-right">
-                                                        <input class="highlightInput lineAmount text-right" type="number" value="">
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="table-remove btnRemove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLineFixed" >Add a new line</button>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="receivedTotalAmount"></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-12" style="margin-top: 20px; padding: 0 20px;">
-                                    <div>
-                                        <p>With any remainder, allocate ratios using percent line items</p>
-                                    </div>
-                                    <div class="table-responsive" style="padding: .375rem .75rem;">
-                                        <table id="tblReceivedPercentItem" style="width:100%;" class="table table-bordered tblReceivedPercentItem">
-                                            <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colID hiddenColumn">id</th>
-                                                <th>Description</th>
-                                                <th>Account</th>
-                                                <th>Tax Rate</th>
-                                                <th>Percent</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if receivedPercentItemData}}
-                                                    {{#each item in receivedPercentItemData}}
-                                                        <tr class="dnd-moved" id="rp_{{item.id}}">
-                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                            <td class="colDesc">
-                                                                <input class="highlightInput lineDesc" type="text" value="{{item.description}}">
-                                                            </td>
-                                                            <td class="colAccount">
-                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
-                                                            </td>
-                                                            <td class="colTaxCode">
-                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
-                                                            </td>
-                                                            <td class="colPercent text-right">
-                                                                <input class="highlightInput linePercent text-right" type="number" value="{{item.percent}}">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="table-remove btnRemove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#unless receivedPercentItemData}}
-                                                    <tr class="dnd-moved" id="noData">
-                                                        <td colspan="6">No items</td>
-                                                    </tr>
-                                                {{/unless}}
-                                                <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
-                                                    <td class="colDesc">
-                                                        <input class="highlightInput lineDesc" type="text" value="">
-                                                    </td>
-                                                    <td class="colAccount">
-                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
-                                                    </td>
-                                                    <td class="colTaxCode">
-                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
-                                                    </td>
-                                                    <td class="linePercent">
-                                                        <input class="highlightInput linePercent text-right" type="number" value="">
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="table-remove btnRemove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLinePercent" >Add a new line</button>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="receivedTotalPercent"></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>4. Add rule details</h4>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-6" style="padding: 0 20px;">
-                                <div class="form-group mb-0">
-                                    <label>Rule Name</label>
-                                    <input type="text" class="form-control" id="receivedRuleName" value="">
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-6">
-                                <div class="form-group mb-0">
-                                    <label>Comment</label>
-                                    <input type="text" class="form-control" id="receivedRuleComment" value="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center mb-6" id="transferRuleCard" style="display: none;">
-            <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
-                <div class="card col-lg-6 col-md-12 col-sm-12 transferBankRuleCard" id="transferBankRuleCard">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-primary m-0 font-weight-bold" id="transferRuleTitle">New Bank rule</p>
-                        </div>
-                        <div class="float-right"></div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>1. Apply a bank rule</h4>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group" style="padding-left: 40px;">
-                                    <label>All or Any</label><br />
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="anyTransferConditionType" id="anyTransferConditionType" value="any" checked>
-                                        <label class="form-check-label" for="anyTransferConditionType">Any conditions match</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="allTransferConditionType" id="allTransferConditionType" value="all">
-                                        <label class="form-check-label" for="allTransferConditionType">All conditions match</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="col-12 col-md-12" style="padding: 0 20px;">
-                                    <div>
-                                        <p>Add conditions</p>
-                                    </div>
-                                    <div class="table-responsive" style="padding: .375rem .75rem;">
-                                        <table id="tblTransferCondition" style="width:100%;" class="table table-bordered tblTransferCondition">
-                                            <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colID hiddenColumn">id</th>
-                                                <th>Field</th>
-                                                <th>Condition</th>
-                                                <th>Value</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {{#if transferConditionData}}
-                                                {{#each item in transferConditionData}}
-                                                    <tr class="dnd-moved" id="tc_{{item.id}}">
-                                                        <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                        <td class="colField">
-                                                            <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
-                                                        </td>
-                                                        <td class="colCondition">
-                                                            <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
-                                                        </td>
-                                                        <td class="colValue">
-                                                            <input class="highlightInput lineValue" type="text" value="{{item.value}}">
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <span class="table-remove btnRemove">
-                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            {{#unless transferConditionData}}
-                                                <tr class="dnd-moved" id="noData">
-                                                    <td colspan="5">No conditions</td>
-                                                </tr>
-                                            {{/unless}}
-                                            <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                <td class="colField">
-                                                    <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
-                                                </td>
-                                                <td class="colCondition">
-                                                    <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
-                                                </td>
-                                                <td class="colValue">
-                                                    <input class="highlightInput lineValue" type="search" value="{{item.value}}">
-                                                </td>
-                                                <td class="text-center">
-                                                    <span class="table-remove btnRemove">
-                                                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineCondition" >Add a new condition</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div style="padding: 20px 10px;">
-                                    <h4>2. Create a transfer</h4>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div>
-                                    <p>A transfer will be created between the selected account and the account being reconciled.</p>
-                                </div>
-                                <div class="form-group"  style="padding: 0 20px;">
-                                    <label style="margin-right: 20px;">Bank Account: </label>
+                                    <label>Bank Account Name</label>
                                     <input type="hidden" id="sltBankAccountID" value="">
                                     <select type="search" class="form-control" id="sltBankAccount" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
                                 </div>
@@ -861,19 +148,97 @@
                         <div class="row">
                             <div class="col-12">
                                 <div style="padding: 20px 10px;">
-                                    <h4>3. Add rule details</h4>
+                                    <h4>2. Apply a bank rule</h4>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-6" style="padding: 0 20px;">
-                                <div class="form-group mb-0">
-                                    <label>Rule Name</label>
-                                    <input type="text" class="form-control" id="transferRuleName" value="">
+                            <div class="col-12">
+                                <div class="col-12 col-md-12" style="padding: 0 20px;">
+                                    <div>
+                                        <p>Add columns</p>
+                                    </div>
+                                    <div class="table-responsive" style="padding: .375rem .75rem;">
+                                        <table id="tblBankRule" style="width:100%;" class="table table-bordered tblBankRule">
+                                            <thead>
+                                            <tr class="dnd-moved">
+                                                <th class="th colID hiddenColumn">id</th>
+                                                <th>Column Name</th>
+                                                <th>#</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#if bankRuleData}}
+                                                    {{#each item in bankRuleData}}
+                                                        <tr class="dnd-moved">
+                                                            <td class="colColumn">
+                                                                <input class="highlightInput lineColumn" type="text" value="{{item.column}}" data-id="{{@index}}">
+                                                            </td>
+                                                            <td class="colOrder">
+                                                                <input class="highlightInput lineOrder" type="number" value="{{item.order}}" data-id="{{@index}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove" data-id="{{@index}}">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless bankRuleData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="5">No columns</td>
+                                                    </tr>
+                                                {{/unless}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row">
+                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineColumn" >Add a new column</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-6">
-                                <div class="form-group mb-0">
-                                    <label>Comment</label>
-                                    <input type="text" class="form-control" id="transferRuleComment" value="">
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="padding: 20px 10px;">
+                                    <h4>3. Preview</h4>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="col-12 col-md-12" style="padding: 0 20px;">
+                                    <div>
+                                        <p>Preview bank statement</p>
+                                    </div>
+                                    {{#if bankRuleData}}
+                                    <div class="table-responsive" style="padding: .375rem .75rem;">
+                                        <table id="tblBankRulePreview" style="width:100%;" class="table table-bordered tblBankRulePreview">
+                                            <thead>
+                                            <tr class="dnd-moved">
+                                                {{#each item in previewColumn}}
+                                                    <th>{{item.column}}</th>
+                                                {{/each}}
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#if previewData}}
+                                                    {{#each rowItem in previewData}}
+                                                    <tr class="dnd-moved">
+                                                        {{#each item in rowItem}}
+                                                            <td>{{item}}</td>
+                                                        {{/each}}
+                                                    </tr>
+                                                    {{/each}}
+                                                {{else}}
+                                                    <tr class="dnd-moved">
+                                                        {{#each item in previewColumn}}
+                                                            <td>xxx</td>
+                                                        {{/each}}
+                                                    </tr>
+                                                {{/if}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>
@@ -896,176 +261,11 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="taxRateListModal">
-        {{> taxratelistpop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-        {{> newtaxratepop}}
-    </div>
-    <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="bankAccountListModal">
-        {{> accountlistpop}}
-    </div>
-    <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="fullAccountListModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
-                    <div class="card-body p-1 rounded" >
-                        <div class="table-responsive">
-                            <style>
-                                .thAccountName {
-                                    width: 20% !important;
-                                }
-                                .thDescription {
-                                    width: 40% !important;
-                                }
-                                .thAccountNo {
-                                    width: 10% !important;
-                                }
-                                .thType {
-                                    width: 10% !important;
-                                }
-                                .thBalance {
-                                    width: 10% !important;
-                                }
-                                .thTaxRate {
-                                    width: 10% !important;
-                                }
-                            </style>
-                            <table id="tblFullAccount" style="width:100%" class="table table-striped table-bordered tblFullAccount">
-                                <thead>
-                                    <tr class="dnd-moved">
-                                        <th class="thAccountName">Account Name</th>
-                                        <th class="thDescription">Description</th>
-                                        <th class="thAccountNo">Account No</th>
-                                        <th class="thType">Type</th>
-                                        <th class="thBalance" style="text-align: left!important;">Balance</th>
-                                        <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
-                                        <th class="thAccountID hiddenColumn">Account ID</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-            </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+            {{> addaccountpop}}
+        </div>
+        <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="bankAccountListModal">
+            {{> accountlistpop}}
         </div>
     </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-        {{> addaccountpop}}
-    </div>
-    <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="productListModal">
-        {{> productlistpop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-        {{> newproductpop}}
-    </div>
-    <div class="modal fade customerListModal newbankrule" role="dialog" tabindex="-1" id="customerListModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
-            <div class="modal-content customerListContent">
-                <div class="modal-header">
-                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
-                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
-                    {{> customerlistpop}}
-                </div>
-                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-        {{> addcustomerpop}}
-    </div>
-    <div class="modal fade supplierListModal newbankrule" role="dialog" tabindex="-1" id="supplierListModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
-            <div class="modal-content supplierListContent">
-                <div class="modal-header">
-                    <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
-                    <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
-                    {{> supplierlistpop}}
-
-                </div>
-                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
-        {{> addsupplierpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="fieldModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 40vw;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Field List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
-                    <div class="card-body p-1 rounded" >
-                        <div class="table-responsive">
-                            <table id="tblFields" style="width:100%" class="table table-striped table-bordered tblFields">
-                                <thead>
-                                    <tr class="dnd-moved">
-                                        <th class="thFieldName">Field Name</th>
-                                        <th class="thDescription">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="conditionModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 40vw;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Condition List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
-                    <div class="card-body p-1 rounded" >
-                        <div class="table-responsive">
-                            <table id="tblConditions" style="width:100%" class="table table-striped table-bordered tblConditions">
-                                <thead>
-                                    <tr class="dnd-moved">
-                                        <th class="thConditionName">Condition Name</th>
-                                        <th class="thDescription">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-            </div>
-        </div>
-    </div>
-    <script>
-        modalDraggable();
-    </script>
 </template>

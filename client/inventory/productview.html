@@ -327,7 +327,7 @@
                         <div class="card-body" style="background-color: #ededed; padding: 2em;">
 
                             <div class="row">
-                                <div class="col-6 col-md-7 colProductName" id="colProductName">
+                                <div class="col-6 col-md-6 colProductName" id="colProductName">
                                     <div class="form-group">
                                         <label>Product Name</label>
                                         <input type="text" class="form-control highlightInput" id="edtproductname" name="edtproductname" value="{{productrecord.productname}}">
@@ -344,7 +344,7 @@
                                         <input type="text" class="form-control highlightInput edtsellqty1priceIncCheck " id="edtsellqty1priceInc" name="edtsellqty1priceInc" value="{{productrecord.sellqty1priceinc}}">
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-2 trackItemvisible colTotalQty" id="colTotalQty" style="{{#if isTrackChecked}}visibility: visible;{{else}}visibility: hidden;{{/if}}">
+                                <div class="col-6 col-md-3 trackItemvisible colTotalQty" id="colTotalQty" style="{{#if isTrackChecked}}visibility: visible;{{else}}visibility: hidden;{{/if}}">
                                     <div class="form-group">
                                         <label>Total Quantity</label>
                                         <input type="text" class="form-control highlightInput" id="edttotalqtyinstock" name="edttotalqtyinstock" value="{{totaldeptquantity}}">
@@ -357,6 +357,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row" style="float: right;">
+                                <div style="margin-left: 8px;">
+                                    <span id="addNewUOM" class="btnSpinType"><i class="fas fa-plus" style="font-size: 11px !important;"></i></span>
+                                </div>
+                            </div>
+                            <div id="UOMRows">
+                                
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-6 col-md-4 colSalesAccount" id="colSalesAccount">
                                     <div class="form-group">
@@ -370,6 +379,41 @@
                                         <select type="search" class="form-control" id="slttaxcodesales" name="slttaxcodesales" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row uomRow" style="display: none;" id="uomRow_0">
+                                <div class="col-6 col-md-3 colSalesAccount" id="colSalesAccount">
+                                    <div class="form-group">
+                                        <label>Sales Account</label>
+                                        <select type="search" class="form-control" id="sltsalesacount" name="sltsalesacount" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 colTaxCode" id="colUOM">
+                                    <div class="form-group">
+                                        <label>Unit of Measure</label>
+                                        <input type="search" class="form-control"  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 colTaxCode" id="colTaxCode">
+                                    <div class="form-group">
+                                        <label>Tax Code</label>
+                                        <select type="search" class="form-control" id="slttaxcodesales" name="slttaxcodesales" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 colPrice" id="colPrice">
+                                    <div class="form-group">
+                                        <label class="lblPriceEx hiddenColumn">Price (Ex Tax) <i class="fas fa-random"></i></label>
+                                        <label class="lblPriceInc ">Price (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
+                                        <div style="display: flex;">
+                                            <input type="hidden" class="lblPriceCheckStatus" value="">
+    
+                                            <input type="text" class="form-control highlightInput edtsellqty1priceCheck hiddenColumn" id="edtsellqty1price" name="edtsellqty1price" value="{{productrecord.sellqty1price}}">
+                                            <input type="text" class="form-control highlightInput edtsellqty1priceIncCheck " id="edtsellqty1priceInc" name="edtsellqty1priceInc" value="{{productrecord.sellqty1priceinc}}">
+                                            <span class="table-remove btnRemoveUOM" style="margin-left: 10px;"><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off"><i class="fa fa-remove"></i></button></span>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="col-6 col-md-3 colBarcode" id="colBarcode">
@@ -449,6 +493,41 @@
                                         <input type="text" class="form-control highlightInput edtbuyqty1costInc " id="edtbuyqty1costInc" name="edtbuyqty1costInc" value="{{productrecord.buyqty1costinc}}">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row COGSRow" style="display: none;" id="COGSRow_0">
+                                <div class="col-6 col-md-4 colCOGS" id="colCOGS">
+                                    <div class="form-group">
+                                        <label>Cost of Goods Sold</label>
+                                        <input class="form-control" id="COGS" name="sltsalesacount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 colUOM" id="colUOM">
+                                    <div class="form-group">
+                                        <label>Unit of Measure</label>
+                                        <input type="search" class="form-control"  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-2 colTaxCode" id="colTaxCode">
+                                    <div class="form-group">
+                                        <label>Tax Code</label>
+                                        <select type="search" class="form-control" id="slttaxcodesales" name="slttaxcodesales" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 colCost" id="colCost">
+                                    <div class="form-group">
+                                        <label class="lblCostEx hiddenColumn">Cost (Ex Tax) <i class="fas fa-random"></i></label>
+                                        <label class="lblCostInc ">Cost (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
+                                        <div style="display: flex;">
+                                            <input type="hidden" class="lblCostCheckStatus" value="">
+    
+                                            <input type="text" class="form-control highlightInput edtsellqty1CostCheck hiddenColumn" id="edtsellqty1Cost" name="edtsellqty1Cost" value="">
+                                            <input type="text" class="form-control highlightInput edtsellqty1costIncCheck " id="edtsellqty1costInc" name="edtsellqty1costInc" value="">
+                                            <span class="table-remove btnRemoveCOGS" style="margin-left: 10px;"><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off"><i class="fa fa-remove"></i></button></span>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -699,8 +778,8 @@
                                             <tr class="dnd-moved">
                                                 <th style="width:80px;">Date</th>
                                                 <th style="width: 130px;">Type</th>
-                                                <th>Reference</th>
-                                                <th style="width:50px;">Quantity</th>
+                                                <th style="width:30px;">Ref</th>
+                                                <th style="width:30px;">Qty</th>
                                                 <th style="width:80px;">Unit Price</th>
                                                 <th style="width:80px;">Total</th>
                                             </tr>

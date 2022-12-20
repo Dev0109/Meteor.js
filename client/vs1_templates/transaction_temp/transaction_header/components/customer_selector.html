@@ -1,12 +1,17 @@
 <!-- Customer selector -->
 <!-- Params
   label
+  id
 -->
 <template name="customer_selector">
   <div class="formgoup">
     <div class="form-group">
       <label>{{label}}</label>
-      {{> vs1_dropdown}}
+      {{> vs1_dropdown
+        type='search'
+        id=id
+        name=name
+      }}
     </div>
     <div>
       <span data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied"

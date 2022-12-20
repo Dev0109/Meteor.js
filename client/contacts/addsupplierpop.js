@@ -1442,7 +1442,7 @@ Template.addsupplierpop.events({
     "click .addsupplierpop .transTab": function(event) {
         let templateObject = Template.instance();
         let supplierName = $("#edtSupplierCompany").val();
-        templateObject.getAllProductRecentTransactions(supplierName);
+        // templateObject.getAllProductRecentTransactions(supplierName);
     },
     "click .addsupplierpop .btnDeleteSupplier": function(event) {
         playDeleteAudio();

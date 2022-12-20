@@ -384,11 +384,11 @@
             "ModuleName": "Receipt Claims",
             "moduledescription": "EScan or manually upload any receipts to VS1 and instantly generate reports based on them.",
             "IsMonthly": false,
-            "IsExtra": false,
+            "IsExtra": true,
             "REquiredLevel": "",
             "Discountfrom": "1899-12-30 00:00:00",
             "Discountto": "1899-12-30 00:00:00",
-            "Price": 0,
+            "Price": 6,
             "discount": 0
         },
         {
@@ -1271,11 +1271,11 @@
             "ModuleName": "Receipt Claims",
             "moduledescription": "EScan or manually upload any receipts to VS1 and instantly generate reports based on them.",
             "IsMonthly": false,
-            "IsExtra": false,
+            "IsExtra": true,
             "REquiredLevel": "",
             "Discountfrom": "1899-12-30 00:00:00",
             "Discountto": "1899-12-30 00:00:00",
-            "Price": 0,
+            "Price": 6,
             "discount": 0
         },
         {
@@ -2158,11 +2158,11 @@
             "ModuleName": "Receipt Claims",
             "moduledescription": "EScan or manually upload any receipts to VS1 and instantly generate reports based on them.",
             "IsMonthly": false,
-            "IsExtra": false,
+            "IsExtra": true,
             "REquiredLevel": "",
             "Discountfrom": "1899-12-30 00:00:00",
             "Discountto": "1899-12-30 00:00:00",
-            "Price": 0,
+            "Price": 6,
             "discount": 0
         },
         {
@@ -3011,11 +3011,11 @@
             "ModuleName": "Receipt Claims",
             "moduledescription": "EScan or manually upload any receipts to VS1 and instantly generate reports based on them.",
             "IsMonthly": false,
-            "IsExtra": false,
+            "IsExtra": true,
             "REquiredLevel": "",
             "Discountfrom": "1899-12-30 00:00:00",
             "Discountto": "1899-12-30 00:00:00",
-            "Price": 0,
+            "Price": 6,
             "discount": 0
         },
         {
@@ -4000,11 +4000,11 @@
             "ModuleName": "Receipt Claims",
             "moduledescription": "EScan or manually upload any receipts to VS1 and instantly generate reports based on them.",
             "IsMonthly": false,
-            "IsExtra": false,
+            "IsExtra": true,
             "REquiredLevel": "",
             "Discountfrom": "1899-12-30 00:00:00",
             "Discountto": "1899-12-30 00:00:00",
-            "Price": 0,
+            "Price": 6,
             "discount": 0
         },
         {
@@ -4955,11 +4955,11 @@
             "ModuleName": "Receipt Claims",
             "moduledescription": "EScan or manually upload any receipts to VS1 and instantly generate reports based on them.",
             "IsMonthly": false,
-            "IsExtra": false,
+            "IsExtra": true,
             "REquiredLevel": "",
             "Discountfrom": "1899-12-30 00:00:00",
             "Discountto": "1899-12-30 00:00:00",
-            "Price": 0,
+            "Price": 6,
             "discount": 0
         },
         {
@@ -5910,11 +5910,11 @@
             "ModuleName": "Receipt Claims",
             "moduledescription": "EScan or manually upload any receipts to VS1 and instantly generate reports based on them.",
             "IsMonthly": false,
-            "IsExtra": false,
+            "IsExtra": true,
             "REquiredLevel": "",
             "Discountfrom": "1899-12-30 00:00:00",
             "Discountto": "1899-12-30 00:00:00",
-            "Price": 0,
+            "Price": 6,
             "discount": 0
         },
         {

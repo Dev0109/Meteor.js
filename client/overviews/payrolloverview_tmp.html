@@ -1,0 +1,72 @@
+<template name="payrolloverview_tmp">
+    <style>
+        .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+
+        .card.hovered {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+            cursor: move;
+            transition-duration: 300ms;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+    </style>
+
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <style>
+            .now-success {
+                background-color: #1cc88a;
+            }
+
+            @media screen and (max-width: 376px) {
+                .btnOpenSettings {
+                    margin-right: 0px;
+                }
+            }
+
+            .colPayDate, .colPayInBatch, .colEarning, .colTax, .colSuper, .colGross, .colPaid, .colNetPay {
+                width: 80px !important;
+            }
+        </style>
+        <div>
+            {{> PayrollOverviewHeaderSection }} 
+
+            {{> allChartLists  tabGroupID="6" chartGroup="Payroll" }} 
+
+            {{> employeeAbsentDays }}
+            
+            {{> PayrollOverviewPayrunHistory}}
+
+            {{> PayrollImportModal }}
+
+            {{> PayrollTimeSheet }}
+
+            {{> PayrollOverviewPayrun}}
+        </div>
+    </div> 
+
+    {{> PayrollClickOffModal}}
+    {{> PayrollFrmOnHoldModal}}
+    {{> PayrollemployeeListModalModal}}
+    {{> PayrollCustomerListModal}}
+    {{> PayrollAddCustomerModal}}
+    {{> PayrollProductListModal}} 
+    {{> PayrollScanBarcodeClockOffModal}} 
+    {{> PayrollAddTimeSheetModal}} 
+    {{> AddPayRunModal }}
+    {{> PayrollSelectPayrunModal}}
+    {{> PayrollSelectPayperiodModal}}  
+    <script>
+        modalDraggable();
+    </script>
+</template>

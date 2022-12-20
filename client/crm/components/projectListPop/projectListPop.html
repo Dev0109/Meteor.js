@@ -1,0 +1,113 @@
+<template name="projectListPop">
+  <div class="modal fade" role="dialog" tabindex="-1" id="projectListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+      style="max-width: 90vw;">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Project List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+          <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+            <div class="card-body rounded" style="margin: 0px;">
+              <div class="tbl_responsive" style="overflow-x: hidden !important">
+                <table id="tblProjectsDatatablePop" name="tblProjectsDatatablePop" style="width:100%"
+                  class="dataTable table table-hover table-striped table-bordered tblProjectsDatatablePop">
+                  <thead>
+                    <tr class="dnd-moved">
+                      <th class="th colPrjectDate">Date</th>
+                      <th class="th colProjectName">Project</th>
+                      <th class="th colProjectDesc">Description</th>
+                      <th class="th colProjectStatus">Status</th>
+                      <th class="th colProjectTasks">Tasks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="projectListModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="min-width: 90vw;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title editCrmProjectName"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row" style="margin-bottom: 16px;">
+            <div class="col-12">
+              <!-- <button type="button" class="btn btn-primary float-left addTaskOnProject" style="margin-right: 8px;"><i
+                  class="fas fa-plus" style="margin-right: 5px;"></i>Add Task</button> -->
+              <div class="dropdown float-left">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownProjectMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Project Options
+                </button>
+                <div class="dropdown-menu" style="width: 250px;" aria-labelledby="dropdownProjectMenuButton">
+                  <a class="dropdown-item edit-project" data-toggle="modal" data-target="#editCrmProject"><i
+                      class="far fa-edit text-info" style="width: 16px; margin-right: 5px;"></i>Edit Project</a>
+                  <div class="dropdown-divider"></div>
+                  <!-- For Sasa: Show/Hide must toggle between each other -->
+                  <a class="dropdown-item showCompletedTaskOnProject"><i class="far fa-check-circle text-success"
+                      style="width: 16px; margin-right: 5px;"></i>
+                    <span class="lblShowCompletedTaskOnProject">Show Completed Tasks</span></a>
+                  <a class="dropdown-item" href="#" style="display: none;"><i class="fas fa-ban text-danger"
+                      style="width: 16px; margin-right: 5px;"></i>Hide Completed Tasks</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item delete-project"><i class="far fa-trash-alt text-danger"
+                      style="width: 16px; margin-right: 5px;"></i>Delete Project</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="margin-bottom: 16px;">
+            <!-- <div class="col-12">
+                        <h5 class="sectionOpened pointer"><i class="fas fa-angle-down" style="margin-top: 2px; margin-right: 5px;"></i>[Section 1]</h5>
+                        <h5 class="sectionClosed pointer" style="display: none;"><i class="fas fa-angle-right" style="margin-top: 2px; margin-right: 5px;"></i>[Section 1]</h5>
+                    </div> -->
+            <div class="col-12 sectionCol1">
+              <table id="tblProjectTasks" name="tblProjectTasks" style="width:100%"
+                class="dataTable table table-hover table-striped table-bordered tblProjectTasks">
+                <thead>
+                  <tr class="dnd-moved">
+                    <th class="th colCompleteTask" style="width: 2%;">
+                    </th>
+                    <th class="th colTaskDate no-modal">Date</th>
+                    <th class="th colPriority hiddenColumn">Priority</th>
+                    <th class="th colContact no-modal hiddenColumn">Contact</th>
+                    <th class="th colTaskName no-modal">Task</th>
+                    <th class="th colProjectTaskDesc no-modal">Description</th>
+                    <th class="th colProjectTaskLabels no-modal">Labels</th>
+                    <th class="th hiddenColumn no-modal">Projects</th>
+                    <th class="th colTaskActions no-modal hiddenColumn">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tblProjectTasksBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" data-dismiss="modal" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+              style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

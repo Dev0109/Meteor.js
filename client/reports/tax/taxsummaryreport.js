@@ -14,6 +14,9 @@ const taxRateService = new TaxRateService();
 
 let defaultCurrencyCode = CountryAbbr;
 
+let gResultNet = 0;
+let gResultTax = 0;
+
 Template.taxsummaryreport.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar([]);
@@ -131,6 +134,8 @@ Template.taxsummaryreport.onRendered(() => {
 
 
     templateObject.loadReport = async(dateFrom, dateTo, ignoreDate = false) => {
+        document.getElementById("mainTaxCode").checked = true;
+        document.getElementById("subTaxCode").checked = false;
         LoadingOverlay.show();
 
         const _data = await CachedHttp.get("TTaxSummaryReport", async() => {
@@ -332,7 +337,14 @@ Template.taxsummaryreport.onRendered(() => {
 
                 mainReportRecords = _.sortBy(mainReportRecords, 'taxcode');
                 subReportRecords = _.sortBy(subReportRecords, 'subtaxcode');
-
+                taxsubtotal = 0;
+                subReportRecords.forEach(e => {
+                    e.totaltax2 = Math.abs(e.outputexsales) * Number.parseFloat(e.taxrate2) / 100;
+                    taxsubtotal += Math.abs(e.outputexsales) * Number.parseFloat(e.taxrate2) / 100;
+                })
+                mainReportRecords.forEach(e => {
+                    e.totaltax2 = Math.abs(e.outputexsales) * Number.parseFloat(e.taxrate2) / 100;
+                })
                 // templateObject.mainReportRecords.set(mainReportRecords);
                 // templateObject.reportRecords.set(mainReportRecords);
                 //   records = _.sortBy(records, 'SupplierName');
@@ -364,7 +376,7 @@ Template.taxsummaryreport.onRendered(() => {
                     outputexsalestotal = outputexsalestotal + parseFloat(record.outputexsales);
                     outputincsalestotal = outputincsalestotal + parseFloat(record.outputincsales);
                     nettotal = nettotal + parseFloat(record.totalnet);
-                    taxtotal = taxtotal + parseFloat(record.totaltax);
+                    taxtotal = taxtotal + parseFloat(record.totaltax2);
                     taxratetotal = taxratetotal + Number(record.taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
                     taxtotal1 = taxtotal1 + parseFloat(record.totaltax1);
 
@@ -1547,6 +1559,7 @@ Template.taxsummaryreport.events({
         LoadingOverlay.hide();
     },
 });
+
 Template.taxsummaryreport.helpers({
     records: () => {
         return Template.instance().records.get();
@@ -1766,6 +1779,24 @@ Template.taxsummaryreport.helpers({
         }
         return utilityService.modifynegativeCurrencyFormat(amount) || 0.00;
     },
+
+    calculateTax(output, rate) {
+        let utilityService = new UtilityService();
+        if (isNaN(output)) {
+            output = (output === undefined || output === null || output.length === 0) ? 0 : output;
+            output = (output) ? Number(output.replace(/[^0-9.-]+/g, "")) : 0;
+        }
+
+        if (isNaN(rate)) {
+            rate = (rate === undefined || rate === null || rate.length === 0) ? 0 : rate;
+            rate = (rate) ? Number(rate.replace(/[^0-9.-]+/g, "")) : 0;
+        }
+        let result = output * rate / 100; 
+
+        return utilityService.modifynegativeCurrencyFormat(result) || 0.00;
+    },
+
+    
 });
 Template.registerHelper('equals', function(a, b) {
     return a === b;

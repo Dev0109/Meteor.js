@@ -1,0 +1,86 @@
+<!-- Stock Transfer header -->
+<!-- Params -->
+
+<template name="transaction_stocktransfer_header">
+  <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+    <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Stock Transfer
+      {{> helpbutton}}
+    </h2>
+    <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
+  </header>
+  {{> help_modal}}
+  
+  <div class="row" style="background-color: #ededed; padding: 32px; padding-bottom: 0px;">
+    <div class="col-12 col-md-6 col-lg-2 colProcessed" id="colProcessed" style="display: none;">
+      <h3 style="margin-left: 0px; margin-top: 35px; color: #e02d1b; font-weight: 600;">Processed</h3>
+    </div>
+  </div>
+  <div class="row" style="background-color: #ededed; padding: 8px 32px 0px 32px;">
+    <div class="col-12 col-lg-3">
+      <div class="row">
+        <div class="col-12">
+          {{> customer_email_input
+            label="Employee"
+            hideEmailUser=true
+          }}
+          {{> default_input
+            label="Transfer No"
+            type="text"
+            id="txtTransfer"
+            name="txtTransfer"
+            defaultValue=data.id
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-3">
+      <div class="row">
+        <div class="col-6 col-lg-6">
+          {{> single_date_picker
+            label="Transfer Date"
+            id="dtShipDate"
+            name="dtShipDate"
+            defaultValue=data.transdate
+          }}
+          {{> default_select
+            label="Ship Via"
+            type="search"
+            id="shipvia"
+            name="shipvia"
+          }}
+        </div>
+        <div class="col-6 col-lg-6">
+          {{> default_select
+            label="Transfer From"
+            type="search"
+            id="sltDepartment"
+            name="sltDepartment"
+          }}
+
+          {{> default_select
+            label="To Account"
+            id="sltBankAccountName"
+            name="sltBankAccountName"
+            type="search"
+          }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-3">
+      {{# vs1_textarea
+        label="Reason"
+        row="5"
+        id="txtNotes"
+        name="txtNotes"
+        }}{{data.descriptions}}{{/vs1_textarea}}
+    </div>
+    <div class="col-12 col-lg-3">
+      {{# vs1_textarea
+        label="Description"
+        row="5"
+        id="shipcomments"
+        name="shipcomments"
+        }}{{data.notes}}{{/vs1_textarea}}
+    </div>
+  </div>
+</template>

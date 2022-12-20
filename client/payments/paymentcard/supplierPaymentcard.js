@@ -51,6 +51,7 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.isInvoiceNo.set(true);
   templateObject.accountID = new ReactiveVar();
   templateObject.stripe_fee_method = new ReactiveVar();
+  templateObject.hasFollow = new ReactiveVar(false);
 });
 
 
@@ -71,6 +72,34 @@ export const _getTmpAppliedAmount = () => {
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();
   const templateObject = Template.instance();
+  templateObject.hasFollowings = async function() {
+    var currentDate = new Date();
+    let paymentService = new PaymentsService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split('?id=');
+    var currentInvoice = getso_id[getso_id.length - 1];
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
+        var paymentDate = paymentData.fields.PaymentDate;
+        var fromDate = paymentDate.substring(0, 10);
+        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+        var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
+            fromDate,
+            toDate,
+            false,
+            initialReportLoad,
+            0
+        );
+        var paymentList = followingPayments.tsupplierpaymentlist;
+        if (paymentList.length > 1) {
+          templateObject.hasFollow.set(true);
+        } else {
+            templateObject.hasFollow.set(false);
+        }
+    }
+  }
+  templateObject.hasFollowings();
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
@@ -805,150 +834,6 @@ Template.supplierpaymentcard.onRendered(() => {
         });
 
 
-        templateObject.getTemplateInfoNew = function(){
-          $('.fullScreenSpin').css('display', 'inline-block');
-          getVS1Data('TTemplateSettings').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
-                      {
-                               if(data.ttemplatesettings[i].fields.Template == 1)
-                               {
-                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                       if(data.ttemplatesettings[i].fields.Active == true)
-                                       {
-                                         $('#Supplier_Payments_1').attr('checked','checked');
-                                       }
-
-                               }
-                               if(data.ttemplatesettings[i].fields.Template == 2)
-                               {
-                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                     if(data.ttemplatesettings[i].fields.Active == true)
-                                     {
-                                       $('#Supplier_Payments_2').attr('checked','checked');
-                                     }
-                               }
-
-                               if(data.ttemplatesettings[i].fields.Template == 3)
-                               {
-                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                     if(data.ttemplatesettings[i].fields.Active == true)
-                                     {
-                                       $('#Supplier_Payments_3').attr('checked','checked');
-                                     }
-                               }
-
-
-                      }
-
-
-
-                    }
-
-
-                    $('.fullScreenSpin').css('display', 'none');
-                }).catch(function (err) {
-                  $('.fullScreenSpin').css('display', 'none');
-                });
-            }else{
-                    let data = JSON.parse(dataObject[0].data);
-
-                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
-                      {
-                               if(data.ttemplatesettings[i].fields.Template == 1)
-                               {
-                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                       if(data.ttemplatesettings[i].fields.Active == true)
-                                       {
-                                         $('#Supplier_Payments_1').attr('checked','checked');
-                                       }
-
-                               }
-                               if(data.ttemplatesettings[i].fields.Template == 2)
-                               {
-                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                     if(data.ttemplatesettings[i].fields.Active == true)
-                                     {
-                                       $('#Supplier_Payments_2').attr('checked','checked');
-                                     }
-                               }
-
-                               if(data.ttemplatesettings[i].fields.Template == 3)
-                               {
-                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                     if(data.ttemplatesettings[i].fields.Active == true)
-                                     {
-                                       $('#Supplier_Payments_3').attr('checked','checked');
-                                     }
-                               }
-
-
-                      }
-
-
-
-                   }
-                    $('.fullScreenSpin').css('display', 'none');
-            }
-          }).catch(function(err) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
-
-                       if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
-                       {
-                                if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
-                                        $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                          $('#Supplier_Payments_1').attr('checked','checked');
-                                        }
-
-                                }
-                                if(data.ttemplatesettings[i].fields.Template == 2)
-                                {
-                                      $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                      if(data.ttemplatesettings[i].fields.Active == true)
-                                      {
-                                        $('#Supplier_Payments_2').attr('checked','checked');
-                                      }
-                                }
-
-                                if(data.ttemplatesettings[i].fields.Template == 3)
-                                {
-                                      $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                      if(data.ttemplatesettings[i].fields.Active == true)
-                                      {
-                                        $('#Supplier_Payments_3').attr('checked','checked');
-                                      }
-                                }
-
-
-                       }
-
-
-                    }
-                    $('.fullScreenSpin').css('display', 'none');
-          }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-          });
-        });
-
-        };
-
-        templateObject.getTemplateInfoNew();
-
     function loadTemplateBody1(object_invoce) {
       // table content
       var tbl_content = $("#templatePreviewModal .tbl_content")
@@ -971,11 +856,11 @@ Template.supplierpaymentcard.onRendered(() => {
        for(item_temp of item){
 
           if(count == 1){
-              html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+            html = html + "<td style='color:#00a3d3; style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else if (count > 2) {
-            html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+            html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else {
-              html = html + "<td>" + item_temp + "</td>";
+            html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           }
           count++;
        }
@@ -1023,11 +908,11 @@ Template.supplierpaymentcard.onRendered(() => {
        for(item_temp of item){
 
           if(count == 1){
-              html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+            html = html + "<td style='color:#00a3d3; style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else if (count > 2) {
-            html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+            html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else {
-              html = html + "<td>" + item_temp + "</td>";
+            html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           }
           count++;
        }
@@ -1078,11 +963,11 @@ Template.supplierpaymentcard.onRendered(() => {
        for(item_temp of item){
 
           if(count == 1){
-              html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+            html = html + "<td style='color:#00a3d3; style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else if (count > 2) {
-            html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+            html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else {
-              html = html + "<td>" + item_temp + "</td>";
+            html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           }
           count++;
        }
@@ -8500,44 +8385,7 @@ Template.supplierpaymentcard.events({
   }, delayTimeAfterSound);
   },
 
-  "click  #open_print_confirm": function (event) {
-    playPrintAudio();
-    setTimeout(async function(){
-    if ($("#choosetemplate").is(":checked")) {
-        $('#templateselection').modal('show');
-    } else {
-      LoadingOverlay.show();
-      // $("#html-2-pdfwrapper").css("display", "block");
-      let result = await exportSalesToPdf(template_list[0], 1);      
-      // if ($(".edtCustomerEmail").val() != "") {
-      //   $(".pdfCustomerName").html($("#edtCustomerName").val());
-      //   $(".pdfCustomerAddress").html(
-      //     $("#txabillingAddress")
-      //       .val()
-      //       .replace(/[\r\n]/g, "<br />")
-      //   );
-      //   $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-      //   var ponumber = $("#ponumber").val() || ".";
-      //   $(".po").text(ponumber);
-      //   var rowCount = $(".tblInvoiceLine tbody tr").length;
-      //   exportSalesToPdf1();
-      // } else {
-      //   swal({
-      //     title: "Customer Email Required",
-      //     text: "Please enter customer email",
-      //     type: "error",
-      //     showCancelButton: false,
-      //     confirmButtonText: "OK",
-      //   }).then((result) => {
-      //     if (result.value) {
-      //     } else if (result.dismiss === "cancel") {
-      //     }
-      //   });
-      // }
-      // $("#confirmprint").modal("hide");
-    }
-  }, delayTimeAfterSound);
-  },
+  "click  #open_print_confirm": function (event) {},
 
   "click #choosetemplate": function (event) {
     if ($("#choosetemplate").is(":checked")) {
@@ -12628,33 +12476,10 @@ Template.supplierpaymentcard.events({
   },
   "click .btnRemove": async function (event) {
     $(".btnDeleteLine").show();
-    let templateObject = Template.instance();
     let utilityService = new UtilityService();
-    var clicktimes = 0;
     var targetID = $(event.target).closest("tr").attr("id") || 0; // table row ID
-    
     $("#selectDeleteLineID").val(targetID);
-    var currentDate = new Date();
-    let paymentService = new PaymentsService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split('?id=');
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var paymentList = [];
-    if (getso_id[1]) {
-        currentInvoice = parseInt(currentInvoice);
-        var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
-        var paymentDate = paymentData.fields.PaymentDate;
-        var fromDate = paymentDate.substring(0, 10);
-        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-        var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
-            fromDate,
-            toDate,
-            false,
-            initialReportLoad,
-            0
-        );
-        paymentList = followingPayments.tsupplierpaymentlist;
-    }
+    
     if(targetID != undefined){
       times++;
       if (times == 1) {
@@ -12695,7 +12520,7 @@ Template.supplierpaymentcard.events({
         }
       }
     } else {
-      if(paymentList.length > 1) $("#footerDeleteModal2").modal("toggle");
+      if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
       else $("#footerDeleteModal1").modal("toggle");
     }
   },

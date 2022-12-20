@@ -1,0 +1,255 @@
+<template name="PayrollOverviewPayrun">
+	
+	<header style="padding: 16px; background-color: #fffff;">
+        <h1 style="margin: 16px; margin-bottom: 8px;" class="timesheetHeader">Pay Runs
+        </h1>
+    </header>
+
+    <div class="row" style="background-color: #fffff; padding-top: 0px;">
+        <div class="col-6">
+            <button class="btn btn-primary btnRefreshOne btnNav" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh </button>
+            <button id="" name="" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;" data-toggle="modal" data-target="#newPayRunModal"><i class="fas fa-check" style="margin-right: 5px;"></i>Add Pay Run</button>
+        </div>
+        <div class="col-6">
+            <a class="btn btnOpenSettings float-right btnNav" style="margin: 12px;" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+            <button class="btn btn-primary float-right printConfirm btnNav" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+            <button class="btn btn-primary float-right export exportbtn btnNav" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+            <a class="btn btnOpenSettings float-right btnOpenSettingsMobile" style="margin: 16px; display: none;" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12" style="margin-bottome: 16px;">
+            <div class="table-responsive">
+                <div class="row no-gutters d-xl-flex align-items-xl-end">
+                    <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                        <h4 style="font-weight: 600;">Draft Pay Run</h4>
+                    </div>
+                    <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                    </div>
+                    <!-- <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <button type="button" class="btn btn-link btnSetupSingleTouch" ><i class="fas fa-wrench" style="margin-right: 5px;"></i>Setup Single Touch Payroll</button>
+                    </div> -->
+                </div>
+                <table id="tblPayRunHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRunHistory">
+                    <thead>
+                        <tr class="dnd-moved">
+                            <th class="th colPayRunCalendar" >Calendar</th>
+                            <th class="th colPayRunPeriod" >Period</th>
+                            <th class="th colPayRunPaymentDate" >Payment Date</th>
+                            <th class="th colPayRunWages" >Wages</th>
+                            <th class="th colPayRunTax" >Tax</th>
+                            <th class="th colPayRunSuper" >Super</th>
+                            <th class="th colPayRunNetPay" >Net Pay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if draftPayRunRecords}}
+                            {{#each item in draftPayRunRecords}}
+                                <tr class="dnd-moved redirect-to-payrun-details" payrun-id="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                    <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
+                                    <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
+                                    <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
+                                    <td class="colPayRunWages" contenteditable="false">{{ item.wages }}</td>
+                                    <td class="colPayRunTax" contenteditable="false">{{ item.taxes }}</td>
+                                    <td class="colPayRunSuper" contenteditable="false">{{ item.superAnnuation }}</td>
+                                    <td class="colPayRunNetPay" contenteditable="false">{{ item.netPay }}</td>
+                                </tr>
+                            {{/each}}
+                        {{/if}}
+
+                    </tbody>
+                </table>
+            </div>
+            <hr class="mt-2" />
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12" style="margin-bottom: 16px;">
+            <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
+
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
+
+                    .hiddenColumn {
+                        display: none;
+                    }
+
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
+
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
+
+                    .highlightInput {
+                        border: 0px solid transparent !important;
+                        background-color: rgba(0, 0, 0, 0) !important;
+                        padding: 0px !important;
+                        width: 100% !important;
+                        text-align: right !important;
+                        color: #858796 !important;
+                    }
+
+                    .highlightInput::-webkit-outer-spin-button,
+                    .highlightInput::-webkit-inner-spin-button {
+                        -webkit-appearance: none !important;
+                        margin: 0 !important;
+                    }
+
+                    /* Firefox */
+                    .highlightInput[type=number] {
+                        -moz-appearance: textfield !important;
+                    }
+
+                    .colFlag {
+                        width: 1% !important;
+                    }
+
+                    .tdEmpty {
+                        width: 3% !important;
+                    }
+
+                    @media screen and (max-width: 450px) {
+
+                        #tblPayRunList_filter {
+                            width: 70%;
+                        }
+
+                        .form-control-sm {
+                            width: 70% !important;
+                        }
+
+                        .input-group.date {
+                            width: 130px !important;
+                        }
+
+                        .dateFromGroup {
+                            float: right !important;
+                            width: 183px !important;
+                        }
+
+                        .dateToGroup {
+                            float: right !important;
+                            width: 172px !important;
+                        }
+
+                        .myvarFilterForm {
+                            /* display: inline-flex !important; */
+                            padding: 0px !important;
+                        }
+
+                        .colDateFilter {
+                            padding-left: 0px !important;
+                        }
+
+                        .dropdownDateRange {
+                            float: right !important;
+                            width: 100% !important;
+                        }
+
+                        .btn-daterange {
+                            float: right !important;
+                        }
+                    }
+                </style>
+                <div class="table-responsive">
+                    <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                            <h4 style="font-weight: 600;">Pay Run History</h4>
+                        </div>
+                        
+                        <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                        </div>
+                        <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                            <div class="dropdown dropdownDateRange" style="margin: 8px; margin-top: 0px;">
+                                <style>
+                                    .btn-daterange::after {
+                                        display: none;
+                                    }
+                                </style>
+                                <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu" role="menu">
+                                    <h6 class="dropdown-header" role="presentation">Date ranges</h6>
+                                    <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
+                                    <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
+                                    <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
+                                    <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                </div>
+                            </div>
+                            <div class="form-group dateFromGroup" style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                                <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                                <div class="input-group date" style="width: 160px;">
+                                    <input type="text" class="form-control formClassDate" id="dateFrom" name="dateFrom">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group dateToGroup" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                                <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                                <div class="input-group date" style="width: 160px;">
+                                    <input type="text" class="form-control formClassDate" id="dateTo" name="dateTo">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="tblPayRunList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRunList">
+                        <thead>
+                            <tr class="dnd-moved">
+                                <th class="th colPayRunCalendar" >Calendar</th>
+                                <th class="th colPayRunPeriod" >Period</th>
+                                <th class="th colPayRunPaymentDate" >Payment Date</th>
+                                <th class="th colPayRunWages" >Wages</th>
+                                <th class="th colPayRunTax" >Tax</th>
+                                <th class="th colPayRunSuper" >Super</th>
+                                <th class="th colPayRunNetPay" >Net Pay</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#if payRunHistoryRecords}}
+                                {{#each item in payRunHistoryRecords}}
+                                    <tr class="dnd-moved redirect-to-payrun-details" payrun-id="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                        <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
+                                        <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
+                                        <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
+                                        <td class="colPayRunWages" contenteditable="false">{{ item.wages }}</td>
+                                        <td class="colPayRunTax" contenteditable="false">{{ item.taxes }}</td>
+                                        <td class="colPayRunSuper" contenteditable="false">{{ item.superAnnuation }}</td>
+                                        <td class="colPayRunNetPay" contenteditable="false">{{ item.netPay }}</td>
+                                    </tr>
+                                {{/each}}
+                            {{/if}}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -82,11 +82,27 @@ Template.billcard.onCreated(() => {
     templateObject.statusrecords = new ReactiveVar([]);
     templateObject.subtaxcodes = new ReactiveVar([]);
 
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
+    templateObject.hasFollow = new ReactiveVar(false);
+
+    templateObject.supplierRecord = new ReactiveVar();
+
 });
 Template.billcard.onRendered(() => {
     let templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let purchaseService = new PurchaseBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+            var isRepeated = billData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
+        }
+    }
+    templateObject.hasFollowings();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
     // $('#basedOnFrequency').prop('checked', false);
@@ -108,36 +124,6 @@ Template.billcard.onRendered(() => {
       changeYear: true,
       yearRange: "-90:+10",
     });
-
-    templateObject.hasFollowings = async function() {
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        let billTotal = $('#grandTotal').text();
-        var objDetails = "";
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
-            var orderDate = billData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingBills = await sideBarService.getAllBillListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var billList = followingBills.tbilllist;
-            if (billList.length > 1) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }            
-        }
-    }
 
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
@@ -222,224 +208,6 @@ Template.billcard.onRendered(() => {
 
     $('#choosetemplate').attr('checked', true);
 
-    // set initial table rest_data
-    function init_reset_data() {
-
-      let reset_data = [
-        { index: 0, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
-        { index: 1, label: "Memo", class: "Memo", width: "", active: true, display: true },
-        { index: 2, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 3, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-        { index: 4, label: "Fixed Asset", class: "FixedAsset", width: "124", active: true, display: true },
-        { index: 5, label: "Customer/Job", class: "CustomerJob", width: "155", active: true, display: true },
-        { index: 6, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-        { index: 7, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 8, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 9, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
-        { index: 10, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
-      ];
-
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    // set initial table rest_data
-    // custom field displaysettings
-     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      showCustomFieldDisplaySettings(reset_data);
-
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : ''
-        };
-        custFields.push(customData);
-      }
-      templateObject.displayfields.set(custFields);
-    }
-    templateObject.initCustomFieldDisplaySettings("", "tblBillLine");
-
-
-    templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
-                    {
-
-                         if(data.ttemplatesettings[i].fields.Template == 1)
-                         {
-                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                    $('#Bills_1').attr('checked','checked');
-                                 }
-
-                         }
-                         if(data.ttemplatesettings[i].fields.Template == 2)
-                         {
-                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_2').attr('checked','checked');
-                               }
-                         }
-
-                         if(data.ttemplatesettings[i].fields.Template == 3)
-                         {
-                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_3').attr('checked','checked');
-                               }
-                         }
-
-
-                    }
-
-
-                  }
-
-
-                  LoadingOverlay.hide();
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
-                    {
-
-                         if(data.ttemplatesettings[i].fields.Template == 1)
-                         {
-                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                    $('#Bills_1').attr('checked','checked');
-                                 }
-
-                         }
-                         if(data.ttemplatesettings[i].fields.Template == 2)
-                         {
-                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_2').attr('checked','checked');
-                               }
-                         }
-
-                         if(data.ttemplatesettings[i].fields.Template == 3)
-                         {
-                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_3').attr('checked','checked');
-                               }
-                         }
-
-
-                    }
-
-
-
-                 }
-                  LoadingOverlay.hide();
-          }
-        }).catch(function(err) {
-           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
-                    {
-
-                         if(data.ttemplatesettings[i].fields.Template == 1)
-                         {
-                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                    $('#Bills_1').attr('checked','checked');
-                                 }
-
-                         }
-                         if(data.ttemplatesettings[i].fields.Template == 2)
-                         {
-                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_2').attr('checked','checked');
-                               }
-                         }
-
-                         if(data.ttemplatesettings[i].fields.Template == 3)
-                         {
-                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_3').attr('checked','checked');
-                               }
-                         }
-
-
-                    }
-
-
-                  }
-                  LoadingOverlay.hide();
-        }).catch(function (err) {
-          LoadingOverlay.hide();
-        });
-        });
-
-    };
-
-    templateObject.getTemplateInfoNew();
 
     templateObject.getOrganisationDetails = function () {
         let account_id = Session.get('vs1companyStripeID') || '';
@@ -2397,9 +2165,9 @@ Template.billcard.onRendered(() => {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2465,9 +2233,9 @@ Template.billcard.onRendered(() => {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2533,9 +2301,9 @@ Template.billcard.onRendered(() => {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -4079,6 +3847,54 @@ Template.billcard.onRendered(() => {
                             }
 
                             setTimeout(function() {
+                                let supplierRecord = {
+                                    id: popSupplierID,
+                                    company: popSupplierName,
+                                    email: popSupplierEmail,
+                                    title: popSupplierTitle,
+                                    firstname: popSupplierFirstName,
+                                    middlename: popSupplierMiddleName,
+                                    lastname: popSupplierLastName,
+                                    tfn: '' || '',
+                                    phone: popSupplierPhone,
+                                    mobile: popSupplierMobile,
+                                    fax: popSupplierFaxnumber,
+                                    skype: popSupplierSkypeName,
+                                    website: popSupplierURL,
+                                    shippingaddress: popSupplierStreet,
+                                    scity: popSupplierStreet2,
+                                    sstate: popSupplierState,
+                                    spostalcode: popSupplierPostcode,
+                                    scountry: popSupplierCountry,
+                                    billingaddress: popSupplierbillingaddress,
+                                    bcity: popSupplierbcity,
+                                    bstate: popSupplierbstate,
+                                    bpostalcode: popSupplierbpostalcode,
+                                    bcountry: popSupplierbcountry,
+                                    custfield1: popSuppliercustfield1,
+                                    custfield2: popSuppliercustfield2,
+                                    custfield3: popSuppliercustfield3,
+                                    custfield4: popSuppliercustfield4,
+                                    notes: popSuppliernotes,
+                                    preferedpayment: popSupplierpreferedpayment,
+                                    terms: popSupplierterms,
+                                    deliverymethod: popSupplierdeliverymethod,
+                                    accountnumber: popSupplieraccountnumber,
+                                    isContractor: popSupplierisContractor,
+                                    issupplier: popSupplierissupplier,
+                                    iscustomer: popSupplieriscustomer,
+                                    bankName: data.tsuppliervs1[0].fields.BankName || '',
+                                    swiftCode: data.tsuppliervs1[0].fields.SwiftCode || '',
+                                    routingNumber: data.tsuppliervs1[0].fields.RoutingNumber || '',
+                                    bankAccountName: data.tsuppliervs1[0].fields.BankAccountName || '',
+                                    bankAccountBSB: data.tsuppliervs1[0].fields.BankAccountBSB || '',
+                                    bankAccountNo: data.tsuppliervs1[0].fields.BankAccountNo || '',
+                                    foreignExchangeCode:data.tsuppliervs1[0].fields.ForeignExchangeCode || CountryAbbr,
+                                    // openingbalancedate: data.tsuppliervs1[0].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[0].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                    // taxcode:data.tsuppliervs1[0].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                };
+                                templateObject.supplierRecord.set(supplierRecord);
+
                                 $('#addSupplierModal').modal('show');
                             }, 200);
 
@@ -4174,6 +3990,53 @@ Template.billcard.onRendered(() => {
                                 }
 
                                 setTimeout(function() {
+                                    let supplierRecord = {
+                                        id: popSupplierID,
+                                        company: popSupplierName,
+                                        email: popSupplierEmail,
+                                        title: popSupplierTitle,
+                                        firstname: popSupplierFirstName,
+                                        middlename: popSupplierMiddleName,
+                                        lastname: popSupplierLastName,
+                                        tfn: '' || '',
+                                        phone: popSupplierPhone,
+                                        mobile: popSupplierMobile,
+                                        fax: popSupplierFaxnumber,
+                                        skype: popSupplierSkypeName,
+                                        website: popSupplierURL,
+                                        shippingaddress: popSupplierStreet,
+                                        scity: popSupplierStreet2,
+                                        sstate: popSupplierState,
+                                        spostalcode: popSupplierPostcode,
+                                        scountry: popSupplierCountry,
+                                        billingaddress: popSupplierbillingaddress,
+                                        bcity: popSupplierbcity,
+                                        bstate: popSupplierbstate,
+                                        bpostalcode: popSupplierbpostalcode,
+                                        bcountry: popSupplierbcountry,
+                                        custfield1: popSuppliercustfield1,
+                                        custfield2: popSuppliercustfield2,
+                                        custfield3: popSuppliercustfield3,
+                                        custfield4: popSuppliercustfield4,
+                                        notes: popSuppliernotes,
+                                        preferedpayment: popSupplierpreferedpayment,
+                                        terms: popSupplierterms,
+                                        deliverymethod: popSupplierdeliverymethod,
+                                        accountnumber: popSupplieraccountnumber,
+                                        isContractor: popSupplierisContractor,
+                                        issupplier: popSupplierissupplier,
+                                        iscustomer: popSupplieriscustomer,
+                                        bankName: data.tsuppliervs1[i].fields.BankName || '',
+                                        swiftCode: data.tsuppliervs1[i].fields.SwiftCode || '',
+                                        routingNumber: data.tsuppliervs1[i].fields.RoutingNumber || '',
+                                        bankAccountName: data.tsuppliervs1[i].fields.BankAccountName || '',
+                                        bankAccountBSB: data.tsuppliervs1[i].fields.BankAccountBSB || '',
+                                        bankAccountNo: data.tsuppliervs1[i].fields.BankAccountNo || '',
+                                        foreignExchangeCode:data.tsuppliervs1[i].fields.ForeignExchangeCode || CountryAbbr,
+                                        // openingbalancedate: data.tsuppliervs1[i].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[i].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                        // taxcode:data.tsuppliervs1[i].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                    };
+                                    templateObject.supplierRecord.set(supplierRecord);
                                     $('#addSupplierModal').modal('show');
                                 }, 200);
                             }
@@ -5311,6 +5174,11 @@ Template.billcard.helpers({
     billrecord: () => {
         return Template.instance().billrecord.get();
     },
+
+    supplierRecord: () => {
+        return Template.instance().supplierRecord.get();
+    },
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
@@ -5433,9 +5301,7 @@ Template.billcard.helpers({
     },
 
     // custom field displaysettings
-    displayfields: () => {
-      return Template.instance().displayfields.get();
-    },
+
 
     isForeignEnabled: () => {
         return Template.instance().isForeignEnabled.get();
@@ -5443,28 +5309,7 @@ Template.billcard.helpers({
     getDefaultCurrency: () => {
         return defaultCurrencyCode;
     },
-    convertToForeignAmount: (amount) => {
-        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-    },
 
-    displayFieldColspan: (displayfield) => {
-        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel))
-        {
-            if(Template.instance().isForeignEnabled.get() == true) {
-                return 2
-            }
-            return 1;
-        }
-        return 1;
-    },
-
-    subHeaderForeign: (displayfield) => {
-
-        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel)) {
-            return true;
-        }
-        return false;
-    },
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
 
@@ -7483,7 +7328,7 @@ Template.billcard.events({
 
             });
 
-            if($('#print_bill').is(':checked') || $('#print_bill_second').is(':checked')) {
+            if($('#print_bill').is(':checked')) {
                 printTemplate.push('Bills');
             }
 
@@ -7500,7 +7345,10 @@ Template.billcard.events({
 
                     }
                 }
+            } else {
+                LoadingOverlay.hide();
             }
+
             // if ($('.edtCustomerEmail').val() != "") {
             //     $('.pdfCustomerName').html($('#edtCustomerName').val());
             //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -7601,44 +7449,6 @@ Template.billcard.events({
     }, delayTimeAfterSound);
     },
 
-    'click  #open_print_confirm':function(event)
-    {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked'))
-        {
-            $('#templateselection').modal('show');
-        }
-        else
-        {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // } else {
-            //     swal({
-            //         title: 'Customer Email Required',
-            //         text: 'Please enter customer email',
-            //         type: 'error',
-            //         showCancelButton: false,
-            //         confirmButtonText: 'OK'
-            //     }).then((result) => {
-            //         if (result.value) {}
-            //         else if (result.dismiss === 'cancel') {}
-            //     });
-            // }
-            // $('#confirmprint').modal('hide');            
-        }
-    }, delayTimeAfterSound);
-    },
-
     'click #choosetemplate':function(event)
     {
         if($('#choosetemplate').is(':checked'))
@@ -7685,34 +7495,10 @@ Template.billcard.events({
     },
     'click .btnRemove': async function(event) {
         let templateObject = Template.instance();
-        await templateObject.hasFollowings();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
-        $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        let billTotal = $('#grandTotal').text();
-        var billList = [];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
-            var orderDate = billData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingBills = await sideBarService.getAllBillListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            billList = followingBills.tbilllist;
-        }
+        $('#selectDeleteLineID').val(targetID);  
         if(targetID != undefined){
             times++;
             if (times == 1) {
@@ -7814,7 +7600,7 @@ Template.billcard.events({
                 }
             }
         } else {
-            if(billList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },
@@ -9014,112 +8800,6 @@ Template.billcard.events({
         // $("" + columHeaderUpdate + "").html(columData);
         $("th.col" + columHeaderUpdate + "").html(columData);
 
-    },
-    'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
-      let lineItems = [];
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      $(".displaySettings").each(function (index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || "";
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(":checked")) {
-          colHidden = true;
-        } else {
-          colHidden = false;
-        }
-        let lineItemObj = {
-          index: parseInt(fieldID),
-          label: colTitle,
-          active: colHidden,
-          width: parseInt(colWidth),
-          class: colthClass,
-          display: true
-        };
-
-        lineItems.push(lineItemObj);
-      });
-
-
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display == false);
-      lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index);
-
-      try {
-        let erpGet = erpDb();
-        let tableName = "tblBillLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-        $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          });
-            swal({
-              title: 'SUCCESS',
-              text: "Display settings is updated!",
-              type: 'success',
-              showCancelButton: false,
-              confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                   $('#myModal2').modal('hide');
-                }
-            });
-        } else {
-          swal("Something went wrong!", "", "error");
-        }
-      } catch (error) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Something went wrong!", "", "error");
-      }
-    }, delayTimeAfterSound);
-    },
-    'click .btnResetGridSettings': function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
-      } else {
-        reset_data[11].display = false;
-      }
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow
-          .find(".custom-control-input")
-          .prop("checked", reset_data[index].active);
-
-        let title = $("#tblBillLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-        } else {
-          $(title).html(reset_data[index].label);
-        }
-
-
-        if (reset_data[index].active) {
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
-      });
     },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({

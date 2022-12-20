@@ -16,137 +16,10 @@
             <div class="spinner"></div>
         </div>
         {{#if record}}
-            <div class="row no-gutters" style="background-color: #ededed;">
-                <div class="col">
-                    <header>
-                        <h2 style="margin: 32px;margin-bottom: 0px;">{{record.lid}}
-
-                            {{> helpbutton}}
-
-                            <!-- Start Help View Modal -->
-                            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                                <div class="modal-dialog modal-sm" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="padding-bottom: 8px;">
-                                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                            <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                            {{> helpadvisor}}
-                                            {{> helpgotoforum}}
-                                        </div>
-                                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Help View Modal -->
-
-                        </h2>
-                    </header>
-                </div>
-                {{#if equals record.isReconciled true}}
-                    <div class="col-2 colProcessed" id="colProcessed">
-                        <h3 style="margin-left: -24px; margin-top: 36px; color: #e02d1b; font-weight: 600;">Reconciled</h3>
-                    </div>
-                {{/if}}
-            </div>
-
-            <div class="row" style="padding: 32px; padding-bottom: 0px; background-color: #ededed;">
-                <div class="col-12 col-md-8">
-                    <div class="row">
-                        <div class="col-12 col-md-8">
-                            <div class="row">
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label>Date</label>
-                                        <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="dtTransDate" name="dtTransDate" value="{{record.transdate}}" style="background-color: #ffffff;height: 38px;">
-                                            <div class="input-group-addon" style="">
-                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label>Department</label>
-                                        <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label>Entry No.</label>
-                                        <input type="text" class="form-control" id="edtEnrtyNo" name="edtEnrtyNo" value="{{record.entryno}}">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label>Memo</label>
-                                        <textarea class="form-control" rows="3" id="txaMemo" name="txaMemo" style="width: 100%;">{{record.memo}}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {{#if isCurrencyEnable}}
-                        <div class="col-12 col-md-3">
-                            {{> CurrencyWidget rate="buy"}}
-                        </div>
-                        {{/if}}
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="row">
-                        <div class="col-12 col-md-12">
-                          <div class="form-group d-flex" style="justify-content: right;">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-primary form-control" type="button" id="copyJournal" style="width: 160px; margin-top: 32px; margin-right: 2px;">Copy Journal</button>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- <div class="col-12 col-md-8">
-                    <div class="row">
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="form-group d-xl-flex flex-column justify-content-xl-start">
-                                <label>Date</label>
-                                <div class="input-group date" style="cursor: pointer;">
-                                    <input type="text" class="form-control" id="dtTransDate" name="dtTransDate" value="{{record.transdate}}" style="background-color: #ffffff;height: 38px;">
-                                    <div class="input-group-addon" style="">
-                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="form-group d-xl-flex flex-column justify-content-xl-start">
-                                <label>Department</label>
-                                <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="form-group d-xl-flex flex-column justify-content-xl-start">
-                                <label>Entry No.</label>
-                                <input type="text" class="form-control" id="edtEnrtyNo" name="edtEnrtyNo" value="{{record.entryno}}">
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4 col-lg-3">
-                            {{> CurrencyWidget rate="buy"}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-lg-9">
-                            <div class="form-group d-xl-flex flex-column justify-content-xl-start">
-                                <label>Memo</label>
-                                <textarea class="form-control" rows="3" id="txaMemo" name="txaMemo" style="width: 100%;">{{record.memo}}</textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                </div> -->
-            </div>
+            {{> transaction_journal_header
+                data=record
+                isCurrencyEnable=isCurrencyEnable
+            }}
 
             <div class="row no-gutters">
                 <div class="col">
@@ -734,7 +607,7 @@
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
                     <button class="btn btn-success btnSave vs1ButtonMargin" type="button" ><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                     <button class="btn btn-primary vs1ButtonMargin" id="open_print_confirm" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                    <button class="btn btn-danger btnDelete vs1ButtonMargin" type="button" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <button class="btn btn-danger btnRemove vs1ButtonMargin" type="button" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
                     <button class="btn btn-secondary btnBack vs1ButtonMargin" type="button" ><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                 </div>
 
@@ -960,4 +833,5 @@
     <script>
         modalDraggable();
     </script>
+    {{> init_form_page_script}}
 </template>

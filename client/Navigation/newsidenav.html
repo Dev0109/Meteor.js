@@ -13,7 +13,7 @@
                 display: none;
                 flex-direction: column;
                 align-items: center;
-                background-color: #333333 !important;
+                background-color: #858796 !important;
                 color: white !important;
                 padding: 2px !important;
             }
@@ -41,7 +41,7 @@
                 position: absolute;
                 width: 8px;
                 height: 8px;
-                background: #333333;
+                background: #858796;
             }
             .popper-arrow {
                 visibility: hidden;
@@ -973,35 +973,77 @@
                             </li>
                         {{else}}
                             <li>
+                                <a id="organisationsettings" name="organisationsettings" class="text-left"><i class="fas fa-cog"></i> Organization Details</a>
+                            </li>
+                            <li>
                                 <a id="sidenavcompanyappsettings" name="sidenavcompanyappsettings" class="text-left"><i class="fas fa-cog"></i> VS1 Modules</a>
+                            </li>
+                            <li>
+                                <a id="backuprestore" name="backuprestore" class="text-left"><i class="fas fa-cog"></i> Backup and Restore</a>
                             </li>
                             {{#if checkFXCurrency}}
                                 <li>
                                     <a id="sidenavcurrenciesSettings" name="sidenavcurrenciesSettings" class="text-left">
-                                        <i class="fas fa-cog"></i> Currency Settings
+                                        <i class="fas fa-cog"></i> Currency
                                     </a>
                                 </li>
                             {{/if}}
                             <li>
+                                <a id="clienttypesettings" name="clienttypesettings" class="text-left"><i class="fas fa-cog"></i> Customer Type</a>
+                            </li>
+
+                            <li>
+                                <a id="leadstatussettings" name="leadstatussettings" class="text-left"><i class="fas fa-cog"></i> Lead Status</a>
+                            </li>
+
+                            <li>
                                 <a id="sidenavdepartmentSettings" name="sidenavdepartmentSettings" class="text-left">
-                                    <i class="fas fa-cog"></i> Department Settings
+                                    <i class="fas fa-cog"></i> Department
                                 </a>
                             </li>
+
                             <li>
-                                <a id="sidenavaccesslevel" name="sidenavaccesslevel" class="text-left">
-                                    <i class="fas fa-cog"></i> Employee Settings
+                                <a id="edIntegrations" name="edi-integrations" class="text-left">
+                                    <i class="fas fa-cog"></i> EDI and Integrations
                                 </a>
                             </li>
+
                             <li>
-                                <a id="sidenavorganisationsettings" name="sidenavorganisationsettings" class="text-left">
-                                    <i class="fas fa-cog"></i> Organization Settings
+                                <a id="emailsettings" name="emailsettings" class="text-left">
+                                    <i class="fas fa-cog"></i> Email Settings
                                 </a>
                             </li>
+
                             <li>
                                 <a id="sidenavpaymentmethodSettings" name="sidenavpaymentmethodSettings" class="text-left">
-                                    <i class="fas fa-cog"></i> Payment Settings
+                                    <i class="fas fa-cog"></i> Payment Method
                                 </a>
                             </li>
+
+                            <li>
+                                <a id="payrollrules" name="payrollrules" class="text-left">
+                                    <i class="fas fa-cog"></i> Payroll Settings
+                                </a>
+                            </li>
+
+                            <li>
+                                <a id="templatesettings" name="templatesettings" class="text-left">
+                                    <i class="fas fa-cog"></i> Print Options
+                                </a>
+                            </li>
+
+                            <li>
+                                <a id="setup" name="setup" class="text-left">
+                                    <i class="fas fa-cog"></i> Setup Wizards
+                                </a>
+                            </li>
+
+                            <li>
+                                <a id="subscriptionSettings" name="subscriptionSettings" class="text-left">
+                                    <i class="fas fa-cog"></i> Subscription
+                                </a>
+                            </li>
+
                             <li>
                                 <a id="sidenavtaxratesettings" name="sidenavtaxratesettings" class="text-left">
                                     <i class="fas fa-cog"></i> Tax Rate Settings
@@ -1010,6 +1052,12 @@
                             <li>
                                 <a id="sidenavtermsettings" name="sidenavtermsettings" class="text-left">
                                     <i class="fas fa-cog"></i> Terms Settings
+                                </a>
+                            </li>
+
+                            <li>
+                                <a id="uomSettings" name="uomSettings" class="text-left">
+                                    <i class="fas fa-cog"></i> UOM Settings
                                 </a>
                             </li>
                         {{/if}}

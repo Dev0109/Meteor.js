@@ -1196,8 +1196,8 @@ Template.generalledger.helpers({
 
     let convertedAmount =
       isMinus == true
-        ? `- ${currencyData.symbol} ${amount}`
-        : `${currencyData.symbol} ${amount}`;
+        ? `- ${currencyData.symbol}${amount}`
+        : `${currencyData.symbol}${amount}`;
 
 
     return convertedAmount;

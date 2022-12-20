@@ -1,0 +1,17 @@
+<template name="PayrollOverviewHeaderSection">
+	<header class="row">
+        <div class="col-12 col-md-4">
+            <h2 class="mr-1">Payroll Overview{{> helpbutton}}</h2>
+        </div>
+        <div class="col-12 col-md-4">
+            {{> loggedcompanyoverview}}
+        </div>
+
+            <!-- Start Help View Modal -->
+            {{> PayrollHelpModal }}
+            <!-- End Help View Modal -->
+
+
+            {{> PayrollDisplaySettingModal }}
+    </header>
+</template>

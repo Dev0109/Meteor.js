@@ -1,0 +1,77 @@
+<!-- Shipping docket transaction header -->
+<!-- Params 
+data
+-->
+<template name="transaction_shippingdocket_header">
+  <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+    <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Shipping Docket
+      {{> helpbutton}}
+      {{> help_modal}}
+    </h2>
+    <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
+</header>
+
+<div class="row" style="background-color: #ededed; padding: 32px; padding-bottom: 0px;">
+    <div class="col-12 col-lg-3">
+      {{> customer_selector
+        label="Customer"
+      }}
+    </div>
+    <div class="col-12 col-lg-3">
+        {{> customer_email_input
+          label="Customer"
+        }}
+    </div>
+</div>
+<div class="row" style="background-color: #ededed; padding: 8px 32px 16px 32px;">
+    <div class="col-12 col-lg-3">
+      {{# vs1_textarea
+        label="Shipping Address"
+        row="5"
+        id="txaShipingInfo"
+        name="txaShipingInfo"
+        }}{{data.shipto}}{{/vs1_textarea}}
+    </div>
+    <div class="col-12 col-lg-3">
+        <div class="row">
+            <div class="col-6">
+              {{> single_date_picker
+                label="Shipping Date"
+                id="dtShipDate"
+                name="dtShipDate"
+                defaultValue=data.shipdate
+              }}
+              {{> default_select
+                label="Ship Via"
+                type="search"
+                id="shipvia"
+                name="shipvia"
+              }}
+            </div>
+            <div class="col-6">
+              {{> default_input
+                label="Invoice No"
+                type="text"
+                id="invnumber"
+                name="invnumber"
+                defaultValue=data.id
+              }}
+              {{> default_input
+                label="Con. Note"
+                id="txtshipconnote"
+                name="txtshipconnote"
+                defaultValue=data.connote
+              }}
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      {{# vs1_textarea
+        label="Comments"
+        row="5"
+        id="shipcomments"
+        name="shipcomments"
+        }}{{data.comments}}{{/vs1_textarea}}
+    </div>
+</div>
+</template>

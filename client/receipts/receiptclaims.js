@@ -1728,7 +1728,203 @@ Template.receiptsoverview.onRendered(function () {
         });
     };
 
-    templateObject.base64data = function (file) {
+    templateObject.getOCRResultFromImageForMultiple = function(imageData, fileName, index) {
+        
+        $('.fullScreenSpin').css('display', 'inline-block');
+        ocrService.POST(imageData, fileName).then(function(data) {
+            $('.fullScreenSpin').css('display', 'none');
+
+            let from = $('#employeeListModal').attr('data-from');
+            let paymenttype = data.payment_type;
+            let transactionTypeName = "Cash";
+            if (paymenttype == "master_card") {
+                transactionTypeName = "Master Card";
+            } else if (paymenttype == "credit_card") {
+                transactionTypeName = "Credit Card";
+            } else if (paymenttype == "visa") {
+                transactionTypeName = "VISA";
+            }
+            let loggedUserName = Session.get('mySessionEmployee');
+            let loggedUserId = Session.get('mySessionEmployeeLoggedID');
+            let currency = Session.get('ERPCountryAbbr');
+            let parentElement;
+            if (from == 'ViewReceipt') {
+                parentElement = "#viewReceiptModal";
+            } else if (from == 'NavExpense') {
+                parentElement = "#nav-expense";
+            } else if (from == 'NavTime') {
+                parentElement = "#nav-time";
+            }
+            let objDetails;
+            let supplier_name = data.supplier.value?  data.supplier.value:"";
+            let phone_number = "";
+            // let phone_number = data.vendor.phone_number? data.vendor.phone_number:"";
+            let email = "";
+            // let email = data.vendor.email? data.vendor.email:"";
+            let currency_code = data.locale.currency? data.locale.currency:"";
+            let note = data.tip.value? data.tip.value:"";
+            // let address = data.vendor.address? data.vendor.address:"";
+            let address = "";
+            let vendor_type = data.category.value? data.category.value : "";
+
+            // if (supplier_name == "") {
+            //     let keyword = "Store:";
+            //     let start_pos = data.ocr_text.indexOf(keyword);
+            //     if (start_pos > 0) {
+            //         start_pos += keyword.length;
+            //         let subtext = data.ocr_text.substring(start_pos, data.ocr_text.length-1);
+            //         let end_pos = subtext.trim().indexOf("\n");
+            //         let subtext2 = subtext.substring(0, end_pos+1);
+            //         let end_pos2 = subtext2.trim().indexOf("\t");
+            //         if (end_pos2 != -1) {
+            //             supplier_name = subtext2.substring(0, end_pos2+1);
+            //         } else {
+            //             supplier_name = subtext2;
+            //         }
+            //         supplier_name = supplier_name.trim();
+            //     } else if (data.vendor.address && data.vendor.address != "") {
+            //         let pos = data.ocr_text.indexOf(data.vendor.address);
+            //         supplier_name = data.ocr_text.substring(0, pos-1);
+            //         supplier_name = supplier_name.replace("\n", " ");
+            //         supplier_name = supplier_name.trim();
+            //     }
+            // }
+            if (supplier_name != "") {
+                let isExistSupplier = false;
+                templateObject.suppliers.get().forEach(supplier => {
+                    if (supplier_name == supplier.suppliername) {
+                        isExistSupplier = true;
+                        $('#multipleSupplier-' + index).val(supplier_name);
+                        $('#multipleSupplier-' + index).attr('data-id', supplier.supplierid);
+                    }
+                });
+                if (!isExistSupplier) {
+                    contactService.getOneSupplierDataExByName(supplier_name).then(function(data) {
+                        if (data.tsupplier.length == 0) {
+                            // create supplier with vendor data
+                            objDetails = {
+                                type: "TSupplier",
+                                fields: {
+                                    ClientName: supplier_name,
+                                    FirstName: 'Unknown',
+                                    LastName: '',
+                                    Phone: phone_number,
+                                    Mobile: '',
+                                    Email: email,
+                                    SkypeName: '',
+                                    Street: address,
+                                    Street2: '',
+                                    Suburb: '',
+                                    State: '',
+                                    PostCode: '',
+                                    Country: '',
+                                    BillStreet: address,
+                                    BillStreet2: '',
+                                    BillState: '',
+                                    BillPostCode: '',
+                                    Billcountry: '',
+                                    PublishOnVS1: true,
+                                    Notes: vendor_type
+                                }
+                            };
+                            contactService.saveSupplier(objDetails).then(function(supplier) {
+                                let supplierSaveID = supplier.fields.ID;
+                                if (supplierSaveID) {
+                                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(dataReload) {
+                                        addVS1Data('TSupplierVS1', JSON.stringify(dataReload));
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        //  Meteor._reload.reload();
+                                        $('#multipleSupplier-' + index).val(supplier_name);
+                                        $('#multipleSupplier-' + index).attr('data-id', supplier.fields.ID);
+                                        const suppliers = templateObject.suppliers.get();
+                                        suppliers.push({
+                                            supplierid: supplier.fields.ID,
+                                            suppliername: supplier_name,
+                                        });
+                                        templateObject.suppliers.set(suppliers);
+                                    }).catch(function(err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+                                }
+                            }).catch(function(err) {
+                                swal({
+                                    title: 'Oooops...',
+                                    text: err,
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Try Again'
+                                }).then((result) => {
+                                    if (result.value) {
+
+                                    } else if (result.dismiss == 'cancel') {
+
+                                    }
+                                });
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        } else {
+                            $('#multipleSupplier-' + index).val(supplier_name);
+                            $('#multipleSupplier-' + index).attr('data-id', data.tsupplier[0].fields.ID);
+                            const suppliers = templateObject.suppliers.get();
+                            suppliers.push({
+                                supplierid: data.tsupplier[0].fields.ID,
+                                suppliername: supplier_name,
+                            });
+                            templateObject.suppliers.set(suppliers);
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    }).catch(function(err) {
+
+                    });
+                }
+            } else {
+                swal({
+                    title: 'Oooops...',
+                    text: "Failed to get information from the Receipt. Please use other valid receipt.",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            }
+            // $(parentElement + ' .employees').attr('data-id', loggedUserId);
+            // $(parentElement + ' .employees').val(loggedUserName);
+            // // $(parentElement + ' .currencies').val(currency);
+            $('#multipleCurrency' + index).val(currency_code);
+            $('#multipleDate-' + index).datepicker('setDate', new Date(data.date.value));
+            // // $(parentElement + ' .edtTotal').val('$' + data.total);
+            $('#multipleAmount-' + index).val(data.total_amount.value);
+            // $(parentElement + ' .transactionTypes').val(transactionTypeName);
+            $(' #multipleDescription-'+index).val(note);
+        }).catch(function(err) {
+            let errText = "";
+            if (err.error == "401") {
+                errText = "You have run out of free scans. Please upgrade your account to get more scans";
+                swal({
+                    title: 'Oooops...',
+                    text: errText,
+                    type: 'error',
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    // confirmButtonText: 'Try Again'
+                    timer: 2000
+                }).then((result) => {
+                    swal.close();
+                });
+            } else {
+                errText = err;
+            }
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    };
+
+    templateObject.base64data = function(file) {
         return new Promise((resolve, reject) => {
             const fr = new FileReader();
             fr.onerror = reject;
@@ -1891,8 +2087,8 @@ Template.receiptsoverview.events({
             $('#nav-time .img-placeholder').css('opacity', 0);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
-    },
-    'change #dateFrom, change #dateTo': function (event) {
+    },    
+    'change #dateFrom, change #dateTo': function(event) {
         const receiptTable = $('#tblReceiptList').DataTable();
         receiptTable.draw();
     },
@@ -3178,7 +3374,25 @@ Template.receiptsoverview.events({
             }
         }, delayTimeAfterSound);
     },
-    'change input[id^="splitAmount-"]': function (e) {
+    'click button[id^="multipleAttachButton-"]' : function(e) {
+        let index = e.target.parentElement.id.split('-')[1];
+        $('#selectedIndexForMultiple').val(index);
+        $('#nav-multiple .attachment-multiple-upload').trigger('click');
+    },
+    'change #nav-multiple .attachment-multiple-upload': function(event) {
+        let files = $(event.target)[0].files;
+        if (files == null || files.length == 0) {
+            return;
+        }
+        let imageFile = files[0];
+        let template = Template.instance();
+        template.base64data(imageFile).then(imageData => {
+            template.getOCRResultFromImageForMultiple(imageData, imageFile, $('#selectedIndexForMultiple').val());
+            $('#nav-multiple .attachment-multiple-upload').val('');
+        })
+    },
+
+    'change input[id^="splitAmount-"]': function(e) {
         let index = e.target.id.split('-')[1];
         let newValue = e.target.value.replace('$', '');
         let splitDataTable = $('#tblSplitExpense').DataTable();

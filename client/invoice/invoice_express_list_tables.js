@@ -27,6 +27,9 @@ Template.invoicelist.onCreated(function () {
 Template.invoicelist.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
+  let custfield1_index = 0;
+  let custfield2_index = 1;
+  let custfield3_index = 2;
 
 
   // set initial table rest_data
@@ -210,6 +213,49 @@ Template.invoicelist.onRendered(function () {
     location.reload();
   };
 
+  templateObject.loadCustomFields = async() => {
+    let custFields = [];
+    let customFieldCount = 3; // customfield tempcode
+    let customData = {};
+
+    await sideBarService.getAllCustomFields().then(function (data) {
+      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+        if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+          customData = {
+            active: data.tcustomfieldlist[x].fields.Active || false,
+            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+            class: "custfield" + x,
+            display: false,
+            width: ""
+            
+          };
+          custFields.push(customData);
+        }
+      }
+
+      if (custFields.length < customFieldCount) {
+        let remainder = customFieldCount - custFields.length;
+        let getRemCustomFields = parseInt(custFields.length);
+        // count = count + remainder;
+        for (let r = 0; r < remainder; r++) {
+          getRemCustomFields++;
+          customData = {
+            active: false,
+            id: "",
+            custfieldlabel: "Custom Field " + getRemCustomFields,
+            class: "custfield" + r + customFields.length,
+            display: false,
+            width: ""
+          };
+          // count++;
+          custFields.push(customData);
+        }
+      }
+      templateObject.custfields.set(custFields);
+    })
+  }
+
   templateObject.loadInvoices = async (refresh = false) => {
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
@@ -308,6 +354,32 @@ Template.invoicelist.onRendered(function () {
           // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
         };
 
+        let tmpObjCustFields = templateObject.custfields.get();
+        if (dataList.custfield1 != "") {
+          tmpObjCustFields[custfield1_index].active = true;
+          tmpObjCustFields[custfield1_index].display = true;
+        } else {
+          tmpObjCustFields[custfield1_index].active = false;
+          tmpObjCustFields[custfield1_index].display = false;
+        }
+
+        if (dataList.custfield2 != "") {
+          tmpObjCustFields[custfield2_index].active = true;
+          tmpObjCustFields[custfield2_index].display = true;
+        } else {
+          tmpObjCustFields[custfield2_index].active = false;
+          tmpObjCustFields[custfield2_index].display = false;
+        }
+
+        if (dataList.custfield3 != "") {
+          tmpObjCustFields[custfield3_index].active = true;
+          tmpObjCustFields[custfield3_index].display = true;
+        } else {
+          tmpObjCustFields[custfield3_index].active = false;
+          tmpObjCustFields[custfield3_index].display = false;
+        }
+        
+        templateObject.custfields.set(tmpObjCustFields);
         //if (data.tinvoiceex[i].fields.Deleted == false && data.tinvoiceex[i].fields.CustomerName.replace(/\s/g, '') != '') {
         dataTableList.push(dataList);
         //}
@@ -2192,6 +2264,7 @@ Template.invoicelist.onRendered(function () {
 
   templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
+    await templateObject.loadCustomFields();
     await templateObject.loadInvoices(refresh);
 
     LoadingOverlay.hide();

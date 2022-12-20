@@ -13,6 +13,7 @@ import { Random } from 'meteor/random';
 import { PaymentsService } from "../payments/payments-service";
 import { SalesBoardService } from "../js/sales-service";
 import { ContactService } from "../contacts/contact-service";
+import showBankInfo from "./bankInfo"
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1348,15 +1349,18 @@ Template.newbankrecon.onRendered(function() {
         if (selectedAccountFlag == 'ForBank') {
             $('#bankAccountName').val(accountname);
             $('#bankAccountID').val(accountId);
+            showBankInfo();
             if (accountId != "") {
                 bankaccountid = accountId;
                 bankaccountname = accountname;
                 if (bankaccountid != Session.get('bankaccountid')) {
-                    setTimeout(function () {
-                        Session.setPersistent('bankaccountid', accountId);
-                        Session.setPersistent('bankaccountname', accountname);
-                        window.open('/newbankrecon', '_self');
-                    }, 500);
+                    Session.setPersistent('bankaccountid', accountId);
+                    Session.setPersistent('bankaccountname', accountname);
+                    // setTimeout(function () {
+                    //     Session.setPersistent('bankaccountid', accountId);
+                    //     Session.setPersistent('bankaccountname', accountname);
+                    //     window.open('/newbankrecon', '_self');
+                    // }, 500);
                 }
             }
         } else if (selectedAccountFlag == 'ForTransfer') {
@@ -2694,6 +2698,26 @@ Template.newbankrecon.events({
     'change .selectSuppPaymentType': function(event) {
         let type = $(event.target).val() || '';
         changeTblReconInvoice(type);
+    },
+    'change #bankAccountName': function(event) {
+        swal({
+            title: 'Question',
+            text: "Account does not exist, would you like to create it?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            console.log(result)
+            console.log(localStorage.getItem("VS1Reconcile_Info"))
+            localStorage.setItem("VS1Reconcile_Info", false);
+            if (result.value) {
+                $('#addAccountModal').modal('toggle');
+                $('#edtAccountName').val(dataSearchName);
+            } else if (result.dismiss === 'cancel') {
+                $('#accountListModal').modal('toggle');
+            }
+        });
     },
 });
 

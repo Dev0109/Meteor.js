@@ -90,7 +90,9 @@
                         }
                     }
                 </style>
+                {{#if isModal}}
 
+                {{else}}
                 <div class="d-sm-flex justify-content-between align-items-center mb-4" style="margin-left: 8px;">
                     <h3 class="text-dark mb-0">Supplier Overview Dashboard {{> helpbutton}}</h3>
                 </div>
@@ -111,8 +113,11 @@
                         </div>
                     </div>
                 </div>
-
+                {{/if}}
                 <div class="row">
+                    {{#if isModal}}
+
+                    {{else}}
                     <div class="col-2 displayList" id="displayList">
                         <div class="card shadow mb-4 supplierCardParent" style="margin: 8px;">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -156,11 +161,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-10 displayInfo" id="displayInfo">
+                    {{/if}}
+                    <div class="{{#if isModal}}{{else}}col-10{{/if}} displayInfo" id="displayInfo" style="width: 100%;">
+                        {{#if isModal}}
 
+                        {{else}}
                         <!-- All Cards List -->
                         {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
-
+                        {{/if}}
                         <div class="card shadow mb-4 cardSizing">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 {{> vs1_contact_card_header isJob=isJob record=record id="supplierInfo"}}
@@ -272,7 +280,7 @@
 
                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link active supplierTab" role="tab" data-toggle="tab" data-target="#tab-2">Supplier Details</a></li>
                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-crm">CRM</a></li>
+                                        
                                         <!-- <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-3">Jobs / Projects</a></li> -->
                                     </ul>
                                     <div class="tab-content">
@@ -357,8 +365,8 @@
                                                 </div>
                                                 <div class="col-6 col-md-1" style="padding: 0px 8px;">
                                                     <div class="form-group">
-                                                        <label for="edtSupplierTitle">Title</label>
-                                                        <select type="search" class="form-control" id="edtSupplierTitle" name="edtSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
+                                                        <label for="editSupplierTitle">Title</label>
+                                                        <select type="search" class="form-control" id="editSupplierTitle" name="editSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -453,15 +461,23 @@
                                                 <div class="col" style="padding: 4px;margin-top: 16px;">
                                                     <div>
                                                         <ul class="nav nav-tabs nav-justified">
-                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-4">Address</a></li>
+                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link active crmTab" role="tab" data-toggle="tab" data-target="#tab-crm">CRM</a></li>
+                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-4">Address</a></li>
                                                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-5">Notes</a></li>
                                                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link bilingTab" role="tab" data-toggle="tab" data-target="#tab-6">Billing</a></li>
+                                                            {{#if record.iscustomer}}
+                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link bilingTab" role="tab" data-toggle="tab" data-target="#tab-11">Invoicing</a></li>
+                                                            {{/if}}
                                                             <li class="nav-item attachmentTab" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-8">{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li>
                                                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-9">Custom Fields</a></li>
                                                             <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-10">Tax</a></li> -->
                                                         </ul>
                                                         <div class="tab-content">
-                                                            <div class="tab-pane active border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                                            <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                                                <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                                {{> non_transactional_list tablename="tblSupplierCrmList"}}
+                                                            </div>
+                                                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                                 <div class="row no-gutters flex-column" style="margin: 12px;">
                                                                     <div class="col">
                                                                         <div class="row no-gutters">
@@ -750,6 +766,67 @@
                                                                     </div>
                                                                 </div> -->
                                                             </div>
+                                                           
+                                                            <div class="tab-pane border rounded-0" role="tabpanel"
+                                                            id="tab-11"
+                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                                            <div class="row" style="margin: 12px;">
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start"
+                                                                        style="margin: 4px;padding-right:4px;"><label
+                                                                            class="text-nowrap">Customer Type</label>
+
+                                                                        <select type="search" class="form-control"
+                                                                            id="sltCustomerType" name="sltCustomerType" value="{{record.clienttype}}"
+                                                                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                        </select>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group"
+                                                                        style="margin: 4px;padding-left:4px;">
+                                                                        <label>Terms</label>
+                                                                        <select type="search" class="form-control"
+                                                                            id="sltTerms" name="sltTerms"
+                                                                            value="{{record.terms}}"
+                                                                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start"
+                                                                        style="margin: 4px;padding-left:4px;"><label
+                                                                            class="text-nowrap">% Discount</label>
+                                                                        <input type="text" class="form-control pointer"
+                                                                            id="edtCustomerCardDiscount"
+                                                                            name="edtCustomerCardDiscount"
+                                                                            value="{{record.discount}}">
+                                                                    </div>
+                                                                </div>
+                                                                <!-- I need to talk with Josef for this part-->
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start"
+                                                                        style="margin: 4px;padding-left:4px;"><label
+                                                                            class="text-nowrap">Credit Limit</label>
+                                                                        <input type="text" class="form-control pointer"
+                                                                            id="edtCustomerCardDiscount"
+                                                                            name="edtCustomerCardDiscount"
+                                                                            value="{{record.discount}}">
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    {{> CurrencyWidget onlyCurrencyField="true"     }}
+                                                                </div> -->
+                                                                <div class="col-md-2 col-6" style="padding: 0; margin: 4px;margin-top: 41px;">
+                                                                    {{> toggle_button className="chkGlobalSettings" id="customer_stop_credit_toggle" width="131px" for="customer_stop_credit_toggle" displayName="Stop Credit"}}
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                            
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-7" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                                 <p>Tab content.</p>
                                                                 <div class="form-group d-xl-flex flex-column flex-grow-1 align-items-xl-start" style="margin: 4px;"><label>Street Address</label><textarea class="border rounded flex-grow-1" style="width: 100%;height: 116px;" rows="4"></textarea></div>
@@ -1220,244 +1297,54 @@
                                                                 opacity: 1;
                                                             }
                                                         </style>
-                                                         {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems displayItems=tableHeaderDisplayItems}}   
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                            <div class="row d-xl-flex flex-row justify-content-xl-center">
-                                                <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">
-                                                    <div class="btn-group float-left" style="margin: 16px; margin-bottom: 0;">
-                                                        <button class="btn btn-primary btnRefreshCrm" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"><i class="la la-lightbulb-o" style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary float-right printConfirm" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
-                                                </div>
-                                            </div>
-                                            <div class="row rowB" style="margin: 16px; margin-top: 0">
-                                                <div class="card-body rounded" style="padding: 0;">
-                                                    <div class="d-xl-flex justify-content-xl-end">
-                                                        <div>
-                                                            <a class="btn btnOpenSettingsCrm" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
-                                                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                                                                <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <div>
-                                                                                <style>
-                                                                                    .groove {
-                                                                                        border-style: solid;
-                                                                                        border-width: 1px;
-                                                                                        width: 200px;
-                                                                                        padding: 2px;
-                                                                                        border-radius: .35rem;
-                                                                                    }
-
-                                                                                    .custom-control-label {
-                                                                                        position: absolute;
-                                                                                    }
-
-                                                                                    .rngRange {
-                                                                                        position: relative;
-                                                                                        display: flex;
-                                                                                        flex-direction: column;
-                                                                                        width: 100%;
-                                                                                        pointer-events: auto;
-                                                                                        background-color: rgb(255, 255, 255);
-                                                                                        background-clip: padding-box;
-                                                                                        border: 1px solid rgb(133, 135, 150);
-                                                                                        padding: 2px;
-                                                                                        border-radius: .35rem;
-                                                                                        color: rgb(128, 128, 128);
-                                                                                        height: inherit !important;
-                                                                                    }
-
-                                                                                    @media only screen and (max-width: 480px) {
-                                                                                        .modal.show .modal-dialog {
-                                                                                            float: inherit !important;
-                                                                                            left: inherit !important;
-                                                                                            top: auto !important;
-
-                                                                                        }
-                                                                                    }
-                                                                                </style>
-                                                                                {{#if crmTableheaderRecords}}
-                                                                                    <form class="d-xl-flex align-items-xl-center">
-                                                                                        <div class="flex-grow-1">
-
-                                                                                            {{#each item in crmTableheaderRecords}}
-                                                                                                {{#if equals item.sTitle "id"}}
-                                                                                                {{else}}
-
-                                                                                                    <div id="{{item.sIndex}}" class="columnSettings">
-                                                                                                        <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                                                            <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
-                                                                                                            <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                                                                                                            <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                                                                                        </div>
-                                                                                                        <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                                                                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:
-                                                                                                                <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
-                                                                                                            </label>
-                                                                                                            <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                                                                            <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
-                                                                                                        </div>
-                                                                                                    </div>
-
-                                                                                                    {{#if equals item.sVisible true}}
-                                                                                                        <script>
-                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
-                                                                                                        </script>
-                                                                                                    {{else}}
-                                                                                                        <script>
-                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
-                                                                                                        </script>
-                                                                                                    {{/if}}
-
-                                                                                                {{/if}}
-                                                                                            {{/each}}
-                                                                                        </div>
-                                                                                    </form>
-                                                                                {{/if}}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button class="btn btn-success saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                            <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End -->
-                                                    <div class="table-responsive">
-                                                        <style>
-                                                            th {
-                                                                background-color: #ededed;
-                                                            }
-                                                            /*
-                                                            th.colDate {
-                                                                width: 15%;
-                                                            }
-
-                                                            th.colTaskName {
-                                                                width: 15%;
-                                                            }
-
-                                                            th.colTaskLabels {
-                                                                width: 15%;
-                                                            } */
-
-                                                            .table-striped tbody tr:nth-of-type(odd) {
-                                                                background-color: white !important;
-                                                            }
-
-                                                            .table-striped tbody tr:nth-of-type(even) {
-                                                                background-color: #0000000d !important;
-                                                            }
-
-                                                            .JColResizer>tbody>tr>td,
-                                                            .JColResizer>tbody>tr>th {
-                                                                padding: .75rem !important;
-                                                            }
-
-                                                            .hiddenColumn {
-                                                                display: none;
-                                                            }
-
-                                                            .showColumn {
-                                                                display: table-cell;
-                                                                padding: .75rem;
-                                                                vertical-align: top;
-                                                            }
-
-                                                            input[type=number]::-webkit-inner-spin-button,
-                                                            input[type=number]::-webkit-outer-spin-button {
-                                                                opacity: 1;
-                                                            }
-
-                                                            .task_priority_0 {
-                                                                color: #1cc88a;
-                                                                background: #1cc88a;
-                                                            }
-
-                                                            .task_priority_1 {
-                                                                color: #00a3d3;
-                                                                background: #00a3d3;
-                                                            }
-
-                                                            .task_priority_2 {
-                                                                color: #f6c23e;
-                                                                background: #f6c23e;
-                                                            }
-
-                                                            .task_priority_3 {
-                                                                color: #e74a3b;
-                                                                background: #e74a3b;
-                                                            }
-
-                                                            .taskTag {
-                                                                margin: 4px;
-                                                                /* font-size: 12px; */
-                                                            }
-
-                                                            .taganchor {
-                                                                color: #858796 !important;
-                                                                text-decoration: none;
-                                                            }
-                                                        </style>
-                                                        <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
+                                                         {{> non_transactional_list tablename="tblSupplierTransactionList"}} 
+                                                         <!-- <table id="tblTransactionlist" style="width:100%" class="dataTable table table-striped table-bordered tblTransactionlist">
                                                             <thead>
                                                                 <tr class="dnd-moved">
-                                                                    <th class="th colTaskId hiddenColumn"></th>
-                                                                    <th class="th colCompleteTask" style="width: 2%;"></th>
-                                                                    <th class="th colDate" style="width:100px;">Date</th>
-                                                                    <th class="th colTaskName" style="width:150px;">Task</th>
-                                                                    <th class="th colTaskDesc" style="width:300px;">Description</th>
-                                                                    <th class="th colTaskLabels" style="width:200px;">Labels</th>
+                                                                    <th class="th colSortDate hiddenColumn">id</th>
+                                                                    <th class="th colOrderDate">Order Date</th>
+                                                                    <th class="th colPurchaseNo">P/O No.</th>
+                                                                    <th class="th colSupplier">Supplier</th>
+                                                                    <th class="th colAmountEx">Amount (Ex)</th>
+                                                                    <th class="th colTax">Tax</th>
+                                                                    <th class="th colAmount">Amount</th>
+                                                                    <th class="th colPaid">Paid</th>
+                                                                    <th class="th colBalanceOutstanding">Balance Outstanding</th>
+                                                                    <th class="th colStatus">Type</th>
+                                                                    <th class="th colPurchaseCustField1 hiddenColumn">Custom Field 1</th>
+                                                                    <th class="th colPurchaseCustField2 hiddenColumn">Custom Field 2</th>
+                                                                    <th class="th colEmployee hiddenColumn">Employee</th>
+                                                                    <th class="th colComments">Comments</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {{#if crmRecords}}
-                                                                    {{#each item in crmRecords}}
-                                                                        <tr class="dnd-moved" style="cursor: pointer;" id="{{item.id}}" category="{{item.category}}">
-                                                                            <td contenteditable="false" class="colTaskId hiddenColumn">{{item.id}}</td>
-                                                                            <td contenteditable="false" class="th colCompleteTask" style="width: 2%;">
-                                                                                <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}" style="width:15px;">
-                                                                                </div>
-                                                                            </td>
-                                                                            <td contenteditable="false" class="colDate">{{item.date}}</td>
-                                                                            <td contenteditable="false" class="colTaskName">{{item.taskName}}</td>
-                                                                            <td contenteditable="false" class="colTaskDesc">{{item.description}}</td>
-                                                                            <td contenteditable="false" class="colTaskLabels">
-                                                                                {{#if item.labels}}
-                                                                                    {{#each label in item.labels}}
-                                                                                        <span class="taskTag">
-                                                                                            <a class="taganchor filterByLabel" href="">
-                                                                                                <i class="fas fa-tag" style="margin-right: 5px;"></i>{{label.TaskLabelName}}
-                                                                                            </a>
-                                                                                        </span>
-                                                                                    {{/each}}
-                                                                                {{/if}}
-                                                                            </td>
+                                                                {{#if datatablerecords}}
+                                                                    {{#each item in datatablerecords}}
+                                                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                                            <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
+                                                                            <td contenteditable="false" class="colOrderDate"><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
+                                                                            <td contenteditable="false" class="colPurchaseNo">{{item.id}}</td>
+                                                                            <td contenteditable="false" class="colSupplier">{{item.suppliername}}</td>
+                                                                            <td contenteditable="false" class="colAmountEx" style="text-align: right!important;">{{item.totalamountex}}</td>
+                                                                            <td contenteditable="false" class="colTax" style="text-align: right!important;">{{item.totaltax}}</td>
+                                                                            <td contenteditable="false" class="colAmount" style="text-align: right!important;">{{item.totalamount}}</td>
+                                                                            <td contenteditable="false" class="colPaid" style="text-align: right!important;">{{item.totalpaid}}</td>
+                                                                            <td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
+                                                                            <td contenteditable="false" class="colStatus">{{item.type}}</td>
+                                                                            <td contenteditable="false" class="colPurchaseCustField1 hiddenColumn">{{item.custfield1}}</td>
+                                                                            <td contenteditable="false" class="colPurchaseCustField2 hiddenColumn">{{item.custfield2}}</td>
+                                                                            <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employee}}</td>
+                                                                            <td contenteditable="false" class="colComments">{{item.comments}}</td>
                                                                         </tr>
                                                                     {{/each}}
                                                                 {{/if}}
                                                             </tbody>
-                                                        </table>
+                                                        </table> -->
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -1536,6 +1423,58 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
       {{> bankNameModal}}
     </div>
+
+    {{> taskDetailModal}}
+    {{> frmappointmentpop}}
+    {{> newTaskModal}}
+    
+
+    <div class="modal fade customerListCrmModal" role="dialog" tabindex="-1" id="customerListCrmModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+          style="max-width: 90vw;">
+          <div class="modal-content customerListContent">
+            <div class="modal-header">
+              <h4>Contact List</h4><button type="button" class="close checkclose" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+              <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID"
+                name="customerSelectLineID" readonly>
+              <div class="row">
+                <div class="col-12 contactlistcol">
+                  {{> contactlistpop}}
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeListCRMModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+            style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+            <div class="modal-header">
+                <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+                {{> employeelistpop}}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    {{> projectListPop}}
+    <input type="hidden" id="assignedID" />
+    <input type="hidden" id="contactID" />
+    <input type="hidden" id="contactType" />
 
     <!-- End Help Video Modal -->
     <script>

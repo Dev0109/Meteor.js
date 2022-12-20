@@ -87,20 +87,20 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TTaxCode, data);
     }
 
-    getTaxRateVS1( regionName = "" ) {
+    getTaxRateVS1( regionName = "", activeFlag = true ) {
         let options = {};
         if( regionName ){
             options = {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 RegionName: regionName,
                 ListType: "Detail",
-                select: "[Active]=true",
+                select: "[Active]=" + activeFlag,
             };
         }else{
             options = {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 ListType: "Detail",
-                select: "[Active]=true",
+                select: "[Active]=" + activeFlag,
             };
         }
 

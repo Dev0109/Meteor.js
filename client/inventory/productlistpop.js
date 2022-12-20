@@ -167,6 +167,8 @@ Template.productlistpop.onRendered(function () {
                                     "targets": [8]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
                             lengthMenu: [ [initialBaseDataLoad, -1], [initialBaseDataLoad, "All"] ],
                             info: true,
@@ -507,6 +509,8 @@ Template.productlistpop.onRendered(function () {
                                 "targets": [8]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
                         lengthMenu: [ [initialBaseDataLoad, -1], [initialBaseDataLoad, "All"] ],
                         info: true,

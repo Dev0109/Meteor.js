@@ -1101,7 +1101,7 @@
                                 <div class="col-12">
                                     <button type="button" class="btn btn-danger btn-detach" style="float: right; margin-left: 8px; margin-top: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete Receipt</button>
                                     <button type="button" class="btn btn-primary btn-upload" style="float: right; margin-right: 8px; margin-top: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload Receipt</button>
-                                    <input type="file" class="attachment-upload" style="display:none" accept=".jpg,.png,.pdf,.jpeg">
+                                    <input type="file" class="attachment-upload" style="display:none" accept=".jpg,.png,.jpeg">
                                 </div>
                             </div>
                         </div>
@@ -1253,7 +1253,7 @@
                                         {{#if isCurrencyEnable}}
                                             <th class="th" style="width: 10%;">Currency</th>
                                         {{/if}}
-                                        <th class="th" style="width: 3%;"></th>
+                                        <th class="th" style="width: 50px;"></th>
                                         <th class="th" style="width: 20%;">Account</th>
                                         <th class="th">Description</th>
                                     </tr>
@@ -1276,9 +1276,18 @@
                                                 <input id="multipleAmount-{{@index}}" class="form-control multipleAmount" style="text-align: right; width: 100%;" value="${{item.amount}}" />
                                             </td>
                                             {{#if isCurrencyEnable}}
-                                                <td contenteditable="false">{{item.currency}}</td>
+                                                <td contenteditable="false">
+                                                    <input id="multipleCurrency-{{@index}}" class="form-control multipleCurrency" style="width: 100%;" value="{{item.currency}}" readonly />
+                                                </td>
+                                                <!-- <td contenteditable="false">
+                                                    <select id="multipleCurrency-{{@index}}" class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                                </td> -->
                                             {{/if}}
-                                            <td contenteditable="false" id="multipleAttach-{{@index}}" class="multipleAttach"><i class="fa fa-cloud-upload"></i></td>
+                                            <td contenteditable="false" id="multipleAttach-{{@index}}" class="multipleAttach">
+                                                <button id="multipleAttachButton-{{@index}}" type="button" style="border: none; background: transparent; margin-top: 8px;" >
+                                                    <i class="fa fa-cloud-upload"></i>
+                                                </button>
+                                            </td>
                                             <td contenteditable="false">
                                                 <select type="search" id="multipleAccount-{{@index}}" class="form-control multipleAccount" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </td>
@@ -1289,6 +1298,8 @@
                                     {{/each}}
                                 </tbody>
                             </table>
+                            <input type="file" class="attachment-multiple-upload" style="display:none" accept=".jpg,.png,.jpeg">
+                            <input id="selectedIndexForMultiple" style="display:none">
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,23 @@
+<template name="PayrollCustomerListModal">
+	
+	<div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+            style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID"
+                        name="customerSelectLineID" readonly>
+                    {{> customerlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal"
+                        type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

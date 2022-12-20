@@ -12,36 +12,188 @@
     }
 
     #nav-subtasks .dataTables_wrapper {
-      min-height: 32vh !important;
+      min-height: 22vh !important;
       padding: 0 10px;
     }
   </style>
   <div class="modal fade" id="taskDetailModal" tabindex="-1" role="dialog" aria-labelledby="taskNameLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content" style="min-height: 90vh; padding: 20px;">
-        <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+      <div class="modal-content" style="min-height: 90vh; padding: 20px; background-color: #EDEDED !important;">
+        <div class="modal-header" style="border-bottom: none; padding-bottom: 0; background-color: #EDEDED;">
           <div style="display: grid; width: 100%;">
-
-            <div style="display: inline-flex; justify-content: space-between;">
-              <div class="form-group flex" style="width: calc(100% - 150px);">
-                <label class="detail-label" style="width: 120px;">Task to do is:</label>
-                <h5 class="modal-title displayTaskNameDescription" style="padding-top: 5px;" id="taskmodalNameLabel">
-                </h5>
-                <input type="text" class="editTaskNameDescription editTaskDetailName" />
-              </div>
-
-              <!-- <div style="display: inline-flex; width: 120px;">
-                <div class="custom-control custom-checkbox chkBox pointer"
-                  style="width: 15px; margin: 4px; background: transparent;" id="chkComplete_taskEditLabel_">
-                  <label id="lblComplete_taskEditLabel" class="custom-control-label chkBox pointer chk_complete"
-                    for="chkComplete_taskEdit" data-dismiss="modal" data-id="edit">Completed</label>
-                  <input class="custom-control-input chkBox chkComplete pointer chk_complete" type="checkbox"
-                    id="chkComplete_taskEdit" value="" style="background: transparent !important;" data-dismiss="modal">
+            <div style="justify-content: space-between;">
+              <div class="row">
+                <div class="col-6">
+                  <h4>
+                    <div id="add-account-title" name="add-account-title" style="float: left; font-size: xx-large;">Task to do is</div>
+                  </h4>
                 </div>
-              </div> -->
-
-              <div class="custom-control custom-switch" style="cursor: pointer;padding-right: 100px; margin-top: 5px;">
+                <div class="col-6" style="display: inline-flex; justify-content: end;">
+                  <div class="dropdown">
+                    <i class="fas fa-list-ul taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" title="Select a project..."></i>
+                    <div class="dropdown-menu dropdown-menu-right goProjectWrapper" aria-labelledby="dropdownMenuButton"
+                      style="width: 275px;">
+                    </div>
+                  </div>
+                  <div class="dropdown">
+                    <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" title="Select the label(s) for this task"></i>
+                    <div class="dropdown-menu dropdown-menu-right detailTaskLabelWrapper" id="detailTaskLabelWrapper"
+                      aria-labelledby="dropdownMenuButton">
+                    </div>
+                  </div>
+                  <div class="dropdown">
+                    <i class="fas fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                      style="width: 200px;">
+                      <a class="dropdown-item task_modal_priority_3 taskDropSecondFlag" title="Priority 1" data-priority="3"
+                        data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="3"
+                          data-id="edit"></i>Priority 1
+                        <div style="width: 20%; float: right;" data-priority="3" data-id="edit">
+                          <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
+                            data-priority="3" data-id="edit">
+                            <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority3" value="3"
+                              data-priority="3" data-id="edit">
+                            <label class="custom-control-label chkBox pointer" for="chkPriority3" data-priority="3"
+                              data-id="edit"></label>
+                          </div>
+                        </div>
+                      </a>
+                      <a class="dropdown-item task_modal_priority_2 taskDropSecondFlag" title="Priority 2" data-priority="2"
+                        data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="2"
+                          data-id="edit"></i>Priority 2
+                        <div style="width: 20%; float: right;" data-priority="2" data-id="edit">
+                          <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
+                            data-priority="2" data-id="edit">
+                            <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority2" value="2"
+                              data-priority="2" data-id="edit">
+                            <label class="custom-control-label chkBox pointer" for="chkPriority2" data-priority="2"
+                              data-id="edit"></label>
+                          </div>
+                        </div>
+                      </a>
+                      <a class="dropdown-item task_modal_priority_1 taskDropSecondFlag" title="Priority 3" data-priority="1"
+                        data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="1"
+                          data-id="edit"></i>Priority 3
+                        <div style="width: 20%; float: right;" data-priority="1" data-id="edit">
+                          <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
+                            data-priority="1" data-id="edit">
+                            <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority1" value="1"
+                              data-priority="1" data-id="edit">
+                            <label class="custom-control-label chkBox pointer" for="chkPriority1" data-priority="1"
+                              data-id="edit"></label>
+                          </div>
+                        </div>
+                      </a>
+                      <a class="dropdown-item task_modal_priority_0 taskDropSecondFlag" title="Priority 4" data-priority="0"
+                        data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="0"
+                          data-id="edit"></i>Priority 4
+                        <div style="width: 20%; float: right;" data-priority="0" data-id="edit">
+                          <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
+                            data-priority="0" data-id="edit">
+                            <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority0" value="0"
+                              data-priority="0" data-id="edit">
+                            <label class="custom-control-label chkBox pointer" for="chkPriority0" data-priority="0"
+                              data-id="edit"></label>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="close" style="position: absolute; right: 14px; top: 14px" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="background-color: #EDEDED;">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group" style="margin: 4px;">
+                <input type="text" class="form-control editTaskNameDescription editTaskDetailName" id="edtAccountName" name="edtAccountName" style="font-size: larger;">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group" style="margin: 4px;">
+                <label>Description</label>
+                <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
+                <textarea class="form-control editTaskNameDescription editTaskDetailDescription" rows="3" id="txaAccountDescription" name="txaAccountDescription"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Who is task for</label>
+                  <select type="search" class="form-control pointer crmSelectLeadList selectBg" id="crmEditSelectLeadList" name="userForTask" style="height: 38px;">
+                  </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
+                    <input type="text" class="form-control disableBg" id="contactEmailClient" name="contactEmailClient">
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
+                  <input type="text" class="form-control disableBg" id="contactPhoneClient" name="contactPhoneClient">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Assigned to</label>
+                  <select type="search" class="form-control pointer crmSelectEmployeeList selectBg" id="crmEditSelectEmployeeList" name="userForTask" style="height: 38px;">
+                  </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
+                    <input type="text" class="form-control disableBg" id="contactEmailUser" name="contactEmailUser">
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
+                  <input type="text" class="form-control disableBg" id="contactPhoneUser" name="contactPhoneUser">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;">
+                <label>For Project:</label>
+                <select type="search" class="form-control pointer taskDetailModalCategoryLabel selectBg" id="taskDetailModalCategoryLabel" name="userForTask" style="height: 38px;">
+                </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;">
+                <label>Completed by:</label>
+                <div class="input-group date" style="cursor: pointer;">
+                    <input type="text" class="form-control formClassDate taskmodalDuedate" id="taskmodalDuedate" name="taskmodalDuedate">
+                    <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                    </div>
+                </div>
+                <!-- <div style="display: flex;">
+                  <span class="taskDueDate">
+                    <span id="taskmodalDuedate"></span>
+                  </span>
+                  <div id="taskmodalLabels" style="margin-top:4px;">
+                    <span class="taskTag"><i class="fas fa-tag"></i></span>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="custom-control custom-switch" style="cursor: pointer; margin-top: 42px;">
                 <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
                   id="chkComplete_taskEdit" name="Additional" style="cursor: pointer;" additionalqty="1"
                   autocomplete="off" data-id="edit">
@@ -49,137 +201,247 @@
                   style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label>
               </div>
             </div>
-
-            <div class="form-group">
-              <label class="detail-label">Task Description</label>
-              <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
-              <textarea class="editTaskNameDescription editTaskDetailDescription"></textarea>
-            </div>
-
-            <div style="display: inline-flex;">
-              <div class="form-group flex" style="margin-right: 16px;">
-                <label class="detail-label" style="width: 290px;">Who is the Task is for:</label>
-                <select id="crmEditSelectLeadList" class="form-control crmSelectLeadList">
-                </select>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Activity</label>
+              <div class="row" style="border: 1px solid #e3e3e3; margin: 0 5px;">
+                <div class="row">
+                  <span class="activityAdded"></span>
+                  <!-- <hr style="width: 100%; margin: 0px 32px;" /> -->
+                </div>
+                <div class="col-12 task-activity-row">
               </div>
-              <div class="form-group flex">
-                <label class="detail-label" style="width: 145px;">Assigned to:</label>
-                <select id="crmEditSelectEmployeeList" class="form-control crmSelectEmployeeList">
-                </select>
+                <!-- <div class="row" style="padding: 16px;">
+                  <div class="col-12">
+                    <span class="activityDate">9999-99-99</span>
+                  </div>
+                  <hr style="width: 100%; margin: 8px 16px;" />
+                  <div class="col-1">
+                    <div class="commentUser">test</div>
+                  </div>
+                  <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
+                    <div class="row">
+                      <span class="activityName">test</span> <span class="activityAction">test</span>
+                    </div>
+                    <div class="row">
+                      <span class="activityComment">adasdasdasd}</span>
+                    </div>
+                    <div class="row">
+                      <span class="activityTime">6:6sdfsd</span>
+                    </div>
+                  </div>
+                  <hr style="width: 100%; margin: 16px;" />
+                </div> -->
               </div>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-12" style="padding-top:10px">
+              <div class="row">
+                <div class="col-12">
+                  <label>Sub-Tasks</label>
+                  <button type="button" class="btn btn-link btnAddSubTask btnNav btn-primary" style="margin: -8px 16px 0px 16px; float: right; color: white;"><i
+                      class="fas fa-plus" style="margin-right: 8px; color: white;"></i> Sub-Task</button>
+                </div>
+              </div>
+              <div class="tab-pane fade show active" id="nav-subtasks" role="tabpanel"
+                  aria-labelledby="nav-subtasks-tab">
+                  <div class="row no-gutters">
+                    <div class="subtask-row col-12">
+                      <div class="table-responsive">
+                        <table id="tblSubtaskDatatable" name="tblSubtaskDatatable" style="width:100%"
+                          class="dataTable table table-hover table-striped table-bordered tblSubtaskDatatable">
+                          <thead>
+                            <tr class="dnd-moved">
+                              <th class="th colCompleteTask" style="width: 2%;">
+                              </th>
+                              <th class="th colPriority no-modal hiddenColumn">Priority</th>
+                              <th class="th colSubDate no-modal">Date</th>
+                              <th class="th colSubTaskName no-modal" style="width: 50% !important;">Task</th>
+                              <th class="th colTaskDesc no-modal hiddenColumn">Description</th>
+                              <th class="th colTaskLabels no-modal hiddenColumn">Labels</th>
+                              <th class="th colTaskProjects no-modal hiddenColumn">Project</th>
+                              <th class="th colTaskActions no-modal">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
 
-            <div style="display: inline-flex; justify-content: space-between;">
-              <div class=" flex">
-                <label class="detail-label" style="width: 147px;">To be completed by:</label>
-                <div style="display: flex;">
-                  <span class="taskDueDate">
-                    <span id="taskmodalDuedate"></span>
-                  </span>
-                  <div id="taskmodalLabels" style="margin-top:4px;">
-                    <span class="taskTag"><i class="fas fa-tag"></i></span>
+                    <div class="col-12">
+                      <div class="col-12 newTaskRow" style="display: none;">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label>Task Name</label>
+                            <input class="form-control" type="text" id="" name="" autocomplete="off">
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label>Task Description</label>
+                            <textarea class="form-control" rows="2" id="" name="" autocomplete="off"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-6" style="display: inline-flex;">
+                          <div class="dropdown taskDropdownSchedule">
+                            <button class="btn btn-primary dropdown-toggle btnSchedule" type="button" id=""
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="far fa-calendar-minus" style="margin-right: 8px;"></i>Schedule
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                              <a class="dropdown-item" href="#"><i class="fas fa-calendar-day text-success"
+                                  style="margin-right: 8px;"></i>Today
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Wed
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-sun text-warning"
+                                  style="margin-right: 8px;"></i>Tomorrow
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Thu
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-couch text-primary"
+                                  style="margin-right: 8px;"></i>This Weekend
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Sat
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-calendar-alt text-danger"
+                                  style="margin-right: 8px;"></i>Next Week
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Mon
+                                  Apr 11</div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-ban text-secondary"
+                                  style="margin-right: 8px;"></i>No Date</a>
+                              <div class="dropdown-divider"></div>
+                              <div class="form-group" data-toggle="tooltip" data-placement="bottom"
+                                title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                                <div class="input-group date" style="cursor: pointer;">
+                                  <input type="text" class="form-control hasDatepicker" id="dtScheduleDate"
+                                    name="dtScheduleDate" autocomplete="off"><img class="ui-datepicker-trigger"
+                                    src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                                  <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="dropdown taskDropdownFilter">
+                            <button class="btn btn-primary dropdown-toggle btnSchedule"
+                              style="background-color: rgba(0,0,0,0);" type="button" id="" data-toggle="dropdown"
+                              aria-haspopup="true" aria-expanded="false">
+                              <span class="dropdownFilter"><i class="fas fa-inbox text-primary"
+                                  style="margin-right: 5px;"></i><span class="detailTaskModalProjectName">All
+                                  Tasks</span></span>
+                            </button>
+                            <div class="dropdown-menu goProjectWrapper" aria-labelledby="dropdownMenuButton"
+                              style="width: 275px;">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6" style="display: inline-flex; justify-content: end;">
+                          <div class="dropdown">
+                            <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                              title="Select the label(s) for this task"></i>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                              style="width: 200px;">
+                            </div>
+                          </div>
+                          <div class="dropdown">
+                            <i class="fas fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                              title="Set the priority..."></i>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                              style="width: 200px;">
+                              <a class="dropdown-item task_modal_priority_3" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 1
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item task_modal_priority_2" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 2
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item task_modal_priority_1" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 3
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item task_modal_priority_0" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 4
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                          <i class="far fa-bell taskModalAction" data-toggle="tooltip" data-placement="bottom"
+                            title="Add reminder(s)..."></i>
+                        </div>
+                        <div class="col-12" style="margin-top: 12px;">
+                          <button class="btn btn-success" type="button" style=""><i class="fa fa-save"
+                              style="margin-right: 5px;"></i>Add Task</button>
+                          <button class="btn btn-secondary btnCancelAddTask" type="button" style="margin-left: 8px;"><i
+                              class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div class=" flex taskDetailProjectName">
-                <label class="detail-label">For Project:</label>
-                <span class="taskLocation" style="margin-right: 0;"><a class="taganchor" href=""
-                    id="taskDetailModalCategoryLabel"><i class="fas fa-inbox text-primary"
-                      style="margin-right: 5px;"></i>All Tasks</a></span>
-              </div>
             </div>
-
           </div>
-
-          <button type="button" class="close" style="position: absolute; right: 14px; top: 14px" data-dismiss="modal"
-            aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div class="modal-body">
-          <div class="row">
-
-            <div class="col-12" style="display: inline-flex; justify-content: end;">
-              <div class="dropdown">
-                <i class="fas fa-list-ul taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false" title="Select a project..."></i>
-                <div class="dropdown-menu dropdown-menu-right goProjectWrapper" aria-labelledby="dropdownMenuButton"
-                  style="width: 275px;">
+          <!-- <div class="row">
+            <div class="task-comment-row col-12">
+            </div>
+            <div class="col-12 commentSection">
+              <div class="row">
+                <div class="form-group col-md-12" style="width: 100%;">
+                  <label>Comment</label>
+                  <textarea class="form-control" rows="1" id="txtCommentsDescription" name=""
+                    autocomplete="off"></textarea>
+                  <input type="hidden" id="txtCrmTaskID" value="" />
+                  <input type="hidden" id="txtCrmProjectID" value="" />
+                  <input type="hidden" id="txtCrmSubTaskID" value="" />
                 </div>
-              </div>
-              <div class="dropdown">
-                <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false" title="Select the label(s) for this task"></i>
-                <div class="dropdown-menu dropdown-menu-right detailTaskLabelWrapper" id="detailTaskLabelWrapper"
-                  aria-labelledby="dropdownMenuButton">
-                </div>
-              </div>
-              <div class="dropdown">
-                <i class="fas fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
-                  style="width: 200px;">
-                  <a class="dropdown-item task_modal_priority_3 taskDropSecondFlag" title="Priority 1" data-priority="3"
-                    data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="3"
-                      data-id="edit"></i>Priority 1
-                    <div style="width: 20%; float: right;" data-priority="3" data-id="edit">
-                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
-                        data-priority="3" data-id="edit">
-                        <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority3" value="3"
-                          data-priority="3" data-id="edit">
-                        <label class="custom-control-label chkBox pointer" for="chkPriority3" data-priority="3"
-                          data-id="edit"></label>
-                      </div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item task_modal_priority_2 taskDropSecondFlag" title="Priority 2" data-priority="2"
-                    data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="2"
-                      data-id="edit"></i>Priority 2
-                    <div style="width: 20%; float: right;" data-priority="2" data-id="edit">
-                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
-                        data-priority="2" data-id="edit">
-                        <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority2" value="2"
-                          data-priority="2" data-id="edit">
-                        <label class="custom-control-label chkBox pointer" for="chkPriority2" data-priority="2"
-                          data-id="edit"></label>
-                      </div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item task_modal_priority_1 taskDropSecondFlag" title="Priority 3" data-priority="1"
-                    data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="1"
-                      data-id="edit"></i>Priority 3
-                    <div style="width: 20%; float: right;" data-priority="1" data-id="edit">
-                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
-                        data-priority="1" data-id="edit">
-                        <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority1" value="1"
-                          data-priority="1" data-id="edit">
-                        <label class="custom-control-label chkBox pointer" for="chkPriority1" data-priority="1"
-                          data-id="edit"></label>
-                      </div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item task_modal_priority_0 taskDropSecondFlag" title="Priority 4" data-priority="0"
-                    data-id="edit"><i class="fas fa-flag" style="margin-right: 8px;" data-priority="0"
-                      data-id="edit"></i>Priority 4
-                    <div style="width: 20%; float: right;" data-priority="0" data-id="edit">
-                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
-                        data-priority="0" data-id="edit">
-                        <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority0" value="0"
-                          data-priority="0" data-id="edit">
-                        <label class="custom-control-label chkBox pointer" for="chkPriority0" data-priority="0"
-                          data-id="edit"></label>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              <div data-id="edit">
-                <i class="fas fa-trash-alt taskModalAction delete-task" aria-haspopup="true" aria-expanded="false"
-                  title="Delete task..." data-id="edit"></i>
+                <button type="button" class="btn btn-primary btnCrmAddComment"
+                  style="margin-left: 16px;">Comment</button>
               </div>
             </div>
+          </div> -->
+          <input type="hidden" id="txtCrmTaskID" value="" />
+          <input type="hidden" id="txtCrmProjectID" value="" />
+          <input type="hidden" id="txtCrmSubTaskID" value="" />
+        </div>
+        <!-- <div class="modal-body">
+          <div class="row">
             <div class="col-12">
               <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                 <li class="nav-item">
@@ -408,7 +670,8 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
+        <!-- Split line -->
         <!-- <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
             <div style="margin-right: 5px;">
                 <div class="dropdown btnTaskTableAction vs1ButtonMargin float-left" style="padding-left: 14px;">
@@ -522,7 +785,7 @@
                 </div>
             </div>
         </div> -->
-        <div class="modal-footer">
+        <div class="modal-footer" style="background-color: #EDEDED;">
             <button class="btn btn-success btnSaveEditTask vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-save"
                    style="padding-right: 8px;"></i>Save</button>
             <button class="btn btn-danger vs1ButtonMargin delete-task" aria-haspopup="true" aria-expanded="false"
@@ -549,10 +812,11 @@
     }
 
     .editTaskDetailName {
+      height: 38px;
       width: 100%;
       border-radius: 5px;
       padding: 0 10px;
-      margin-left: 5px;
+      margin-left: 0px;
     }
 
     .editTaskDetailDescription {
@@ -562,5 +826,15 @@
       padding: 5px 15px;
       border-radius: 5px;
     }
+
+    .selectBg {
+      background-color: #ffffff !important;
+    }
+
+    .disableBg {
+      /* background-color: #e3e3e3 !important; */
+      background-color: #ffffff !important;
+    }
+
   </style>
 </template>

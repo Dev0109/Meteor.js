@@ -195,7 +195,6 @@ Template.companyappsettingsdup.onRendered(function () {
                         price: utilityService.modifynegativeCurrencyFormat(tvs1ModulePrice) || 0,
                         discount: data.tvs1licenselevelsnmodules[i].discount,
                     };
-
                     if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == true && data.tvs1licenselevelsnmodules[i].IsMonthly == false) {
                         extraArr.push(recordObj);
                     }

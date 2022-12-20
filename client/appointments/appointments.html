@@ -12,54 +12,9 @@
         <div class="col-12 col-md-4 divLogged">
             {{> loggedcompanyoverview}}
         </div>
-
-<!--        <div class="d-sm-flex justify-content-between align-items-center mb-4 headerDiv" style="margin-left: 24px;">-->
-            <!--        <h3 class="text-dark mb-0 appointmentHeader" style="width: 100%; margin-right: 1em; padding-right: 32px;">-->
-<!--            Appointment Overview-->
-
-<!--            {{> helpbutton}}-->
-<!--            {{#if equals accessStartStopOnly true}}-->
-<!--            {{else}}-->
-<!--                &lt;!&ndash; <a style="margin-right: 12px;" class="btn float-right btnoptionsmodal" role="button" href="#settingsModal"><i class="icon ion-android-more-horizontal"></i></a> &ndash;&gt;-->
-<!--            {{/if}}-->
-<!--        </h3>-->
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding-bottom: 8px;">
-                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=56" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                        {{> helpadvisor}}
-                        {{> helpgotoforum}}
-                    </div>
-                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-            <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-                <div class="modal-content">
-                    <div class="modal-header">
-
-                        <h4 class="title-header">Appointment List</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                            <source src="https://erphelpes.com/vs1videos/appointmentoverview.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <style>
+    <style >
         @media screen and (max-width: 450px) {
             .navbar .container-fluid> :not(#sidebarToggleTop) {
                 display: none;
@@ -778,7 +733,7 @@
                         <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
-                            <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->                            
+                            <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->
                         {{else}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
                             <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button> -->
@@ -1315,7 +1270,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                                         <th class="thSalesPrice" style="width: 13% !important;text-align: left!important;">Sale Price</th>
                                         <th class="thQty hiddenColumn" style="width: 8% !important;">Quantity</th>
                                         <th class="thTax hiddenColumn" style="width: 8% !important;text-align: left!important;">Tax Rate</th>
-                                        
+
                                         <th style="width: 25px !important;"></th>
                                         <th class="thExtraSellPrice hiddenColumn">Prouct ID</th>
                                     </tr>
@@ -1425,7 +1380,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     <!-- END Attachments -->
 
     {{> deletepop itemName1="Appointment" itemName2="appointment" itemName3="Appointment" button1="btnDeleteAppointment" button2="btnDeleteFollowingAppointments"}}
-    
+
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> payrollproductlistpop}}
     </div>
@@ -1435,7 +1390,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-        {{> addcustomerpop}}
+        <!-- {{> addcustomerpop customerRecord=customerRecord}} -->
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal1">
         {{> productlistpopwithcheckboxes}}
@@ -1475,9 +1430,9 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- {{> newLeaveRequestModal}} -->
+    </div> 
+
+    {{> newLeaveRequestModal}} 
 
     <style>
         .fc-next-button {
@@ -4149,5 +4104,5 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </template>

@@ -1,0 +1,93 @@
+<template name="PayrollImportModal">
+	<div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal"
+	                    aria-label="Close"><span aria-hidden="true">×</span></button>
+	            </div>
+	            <div class="modal-body">
+	                <div
+	                    class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+	                    <p style="margin-bottom: 0px;font-weight: bold;">1. Download the
+	                        &lt;&lt;form&gt;&gt; template</p>
+	                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Start by
+	                        downloading our template file. This file has the correct column headings to
+	                        allow VS1 Cloud to import your form's details.</p>
+	                    <div class="col flex-grow-1">
+	                        <button class="btn btn-primary templateDownload" type="button"
+	                            style="margin: 16px;margin-bottom: 0px;"><i class="fas fa-file-csv"
+	                                style="margin-right: 5px;"></i>Download CSV Template</button>
+	                        <button class="btn btn-primary templateDownloadXLSX" type="button"
+	                            style="margin: 16px;margin-bottom: 0px;"><i class="fas fa-file-csv"
+	                                style="margin-right: 5px;"></i>Download Excel Template</button>
+	                    </div>
+	                    <div class="col d-xl-flex align-items-xl-center"
+	                        style="width: 50px;max-width: 50px;">
+	                        <a href="#" download><i class="fa fa-question-circle-o"
+	                                data-toggle="tooltip" data-bs-tooltip=""
+	                                title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+	                                style="margin: 12px;"></i></a>
+	                    </div>
+	                </div>
+	                <hr>
+	                <div
+	                    class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+	                    <p style="margin-bottom: 0px;font-weight: bold;">2. Copy your items into the
+	                        template</p>
+	                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Using MS Excel,
+	                        or another spreadsheet editor, you can fill in the VS1 Cloud template with
+	                        your desired details.</p>
+	                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 16px;">Important:
+	                        Avoid changing the column headings in the template file.</p>
+	                </div>
+	                <hr>
+	                <div
+	                    class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+	                    <p style="margin-bottom: 0px;font-weight: bold;">3. Import the updated template
+	                        file</p>
+	                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your
+	                        updated template and you're ready to go.</p>
+
+	                    <div class="divTable" id="file-display">
+	                    </div>
+	                    <input type="file" id="attachment-upload" style="display:none"
+	                        accept=".csv,.txt,.xlsx">
+	                    <style>
+	                        #row1 {
+	                            display: flex;
+	                            flex-direction: row;
+	                            justify-content: space-around;
+	                        }
+
+	                        #column1 {
+	                            display: flex;
+	                        }
+
+
+	                        #column2 {
+	                            display: flex;
+	                            flex-direction: column;
+	                            margin: 16px;
+	                            padding: .375rem .75rem;
+	                        }
+	                    </style>
+	                    <div id="row1">
+	                        <div id="column1"></div><button
+	                            class="btn btn-primary btnUploadFile new_attachment_btn" type="button"
+	                            style="margin: 12px;"><i class="fa fa-cloud-upload"
+	                                style="margin-right: 5px;"></i>Browse</button>
+	                        <div class="file-name" id="column2"></div>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="modal-footer"><button class="btn btn-primary btnImport" type="button"
+	                    disabled><i class="fas fa-file-import"
+	                        style="margin-right: 5px;"></i>Import</button>
+	                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+	                        class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+	            </div>
+	        </div>
+	    </div>
+	</div> 
+</template>

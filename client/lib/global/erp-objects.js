@@ -280,7 +280,7 @@ const erpObject = {
     TBASReturn: "TBASReturn",
     TBASReturnDetail: "TBASReturnDetail",
     TBASReturnLines: "TBASReturnLines",
-    TVATReturn: "TVATReturn",
+    TVATReturn: "TVATReturns",
     TVATReturnDetail: "TVATReturnDetail",
     VS1_Customize: "VS1_Customize",
     TProductList: "TProductList",
@@ -311,7 +311,7 @@ const erpObject = {
     TProspectList: "TProspectList",
     TABADetailRecord: "TABADetailRecord",
     TABADescriptiveRecord: "TABADescriptiveRecord",
-    TProjectTasksList:"TProjectTasksList",
+    TProjectTasksList: "TProjectTasksList",
 };
 
 export default erpObject;

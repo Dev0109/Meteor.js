@@ -46,10 +46,9 @@
                 </div>
                 <div class="modal-body" style="justify-content: center;">
                     {{#if equals itemName1 "Appointment"}}
-                    <p>Please select "Delete {{itemName1}}" to delete the {{itemName2}} or "Delete {{itemName1}} 
-                        <br>and Following {{itemName3}}s" to delete {{itemName2}} and following {{itemName2}}s</p>
+                    <p>Please select "Delete {{itemName1}}" to delete the {{itemName2}}</p>
                     {{else}}
-                    <p>Please select "Delete Line" to remove row or "Delete {{itemName1}}" to delete the entire {{itemName2}}</p>
+                    <p>Please select "Delete {{itemName1}}" to delete the entire {{itemName2}}</p>
                     {{/if}}
                     <div align="center">
                     <button class="btn btn-danger {{button1}}" type="button" style="margin-right: 5px;">
@@ -75,7 +74,8 @@
                     <p>Please select "Delete {{itemName1}}" to delete the {{itemName2}} or "Delete {{itemName1}} 
                         <br>and Following {{itemName3}}s" to delete {{itemName2}} and following {{itemName2}}s</p>
                     {{else}}
-                    <p>Please select "Delete Line" to remove row or "Delete {{itemName1}}" to delete the entire {{itemName2}}</p>
+                    <p>Please select "Delete {{itemName1}}" to delete the {{itemName2}} or "Delete {{itemName1}} 
+                        <br>and Following {{itemName3}}s" to delete {{itemName2}} and following {{itemName2}}s</p>
                     {{/if}}
                     <div align="center">
                     <button class="btn btn-danger {{button1}}" type="button" style="margin-right: 5px;">

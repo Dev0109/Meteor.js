@@ -2015,14 +2015,14 @@
                                                     {{#each item in profitlosslayoutrecords }}
                                                     <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList pSortItems">
                                                             <div class="mainHeadingDiv">
-                                                                <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
+                                                                <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.Account_Type }}</h1>
                                                             </div>
                                                             <ol class="groupedListNew" parent="{{ item.Level0Order }}">
                                                                 {{#each acItem in item.subAccounts }}
                                                                     {{#if isAccount acItem }}
                                                                         <li class="subChild cSortItems" data-group="{{ acItem.AccountName }}" plid="{{ acItem.ID }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}">
                                                                             <span class="childInner">
-                                                                                <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
+                                                                                <span class="collepsDiv fas"></span>{{ acItem.Account_Type }}
                                                                             </span>
                                                                         </li>
                                                                     {{else}}
@@ -2032,21 +2032,21 @@
                                                                                     {{#if isAccount subacItem }}
                                                                                     <li class="subChild scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <span class="childInner">
-                                                                                                <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
+                                                                                                <span class="collepsDiv fas"></span>{{ subacItem.Account_Type }}
                                                                                             </span>
                                                                                         </li>
                                                                                     {{else}}
                                                                                     <li class="subChild noDrag scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <ol class="ddllkk"></ol>
                                                                                             <span class="childInner">
-                                                                                                <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
+                                                                                                <span class="collepsDiv fas"></span><strong>{{ subacItem.Account_Type }}</strong>
                                                                                             </span>
                                                                                         </li>
                                                                                     {{/if}}
                                                                                 {{/each}}
                                                                             </ol>
                                                                             <span class="childInner">
-                                                                                <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
+                                                                                <span class="collepsDiv fas"></span><strong>{{ acItem.Account_Type }}</strong>
                                                                             </span>
                                                                         </li>
                                                                     {{/if}}

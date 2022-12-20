@@ -23,26 +23,31 @@
                                         <th class="th colALTypeOpeningBalance">Opening Balance</th>
                                         <th class="th colALTypeTerminationBalance">On termination Balance</th>
                                         <th class="th colALTypeActions">Actions</th>
+
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {{#if leaveTypes}}
-                                        {{#each leaveType in leaveTypes}}
-                                            <tr leaveType-id="{{leaveType.ID}}">
-                                                <td class="colALTypeID hiddenColumn">{{leaveType.ID}}</td>
-                                                <td class="leave-type-name">{{leaveType.LeaveType}}</td>
-                                                <td >{{leaveType.LeaveCalcMethod}}</td>
-                                                <td >{{leaveType.HoursAccruedAnnually}}</td>
-                                                <td >{{leaveType.HoursAccruedAnnuallyFullTimeEmp}}</td>
-                                                <td >{{leaveType.HoursFullTimeEmpFortnightlyPay}}</td>
-                                                <td >{{leaveType.HoursLeave}}</td>
-                                                <td >{{leaveType.OpeningBalance}}</td>
-                                                <td >{{ terminationBalance leaveType.OnTerminationUnusedBalance}}</td>
+                                .
+                                <tbody> 
+                                    {{#if leaveTypesList}}
+                                        {{#each leaveType in leaveTypesList}}
+                                            <tr leaveType-id="{{leaveType.fields.ID}}">
+                                                <td class="colALTypeID hiddenColumn">
+                                                    {{leaveType.fields.ID}}
+                                                    <input type="hidden" class="coledtEmpID" value="{{leaveType.fields.ID}}">
+                                                </td>
+                                                <td class="leave-type-name">{{leaveType.fields.LeaveType}}</td>
+                                                <td >{{leaveType.fields.LeaveCalcMethod}}</td>
+                                                <td >{{leaveType.fields.HoursAccruedAnnually}}</td>
+                                                <td >{{leaveType.fields.HoursAccruedAnnuallyFullTimeEmp}}</td>
+                                                <td >{{leaveType.fields.HoursFullTimeEmpFortnightlyPay}}</td>
+                                                <td >{{leaveType.fields.HoursLeave}}</td>
+                                                <td >{{leaveType.fields.OpeningBalance}}</td>
+                                                <td >{{ terminationBalance leaveType.fields.OnTerminationUnusedBalance}}</td>
                                                 <td >
-                                                    <button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="{{leaveType.ID}}"><i class="fa fa-remove"></i></button>
+                                                    <button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="{{leaveType.fields.ID}}"><i class="fa fa-remove"></i></button>
                                                 </td>
                                             </tr>
-                                        {{/each}}
+                                        {{/each}} 
                                     {{/if}}
                                 </tbody>
                             </table>

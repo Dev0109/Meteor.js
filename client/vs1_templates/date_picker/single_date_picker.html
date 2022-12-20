@@ -1,0 +1,20 @@
+<!-- Single Date Picker -->
+<!-- Params 
+  label
+  id
+  classes
+  name
+  defaultValue
+-->
+<template name="single_date_picker">
+  <div class="form-group d-xl-flex flex-column justify-content-xl-start">
+    <label>{{label}}</label>
+    <div class="input-group date sltDate" style="cursor: pointer;">
+      <input type="text" class="form-control {{classes}}" id="{{id}}" name="{{name}}" value="{{defaultValue}}"
+        style="background-color: #ffffff;height: 38px;">
+      <div class="input-group-addon" style="">
+        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+      </div>
+    </div>
+  </div>
+</template>

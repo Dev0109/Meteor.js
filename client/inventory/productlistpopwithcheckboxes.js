@@ -70,226 +70,128 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
     const lineExtaSellItems = [];
     var currentLoc = FlowRouter.current().route.path;
     tempObj.getAllProducts = function() {
-        getVS1Data("TProductVS1")
+        getVS1Data("TProductList")
             .then(function(dataObject) {
                 if (dataObject.length == 0) {
                     sideBarService
                         .getNewProductListVS1(initialBaseDataLoad, 0)
                         .then(function(data) {
-                            addVS1Data("TProductVS1", JSON.stringify(data));
+                            addVS1Data("TProductList", JSON.stringify(data));
                             let records = [];
                             let inventoryData = [];
 
-                            for (let i = 0; i < data.tproductvs1.length; i++) {
-                                if (data.tproductvs1[i].fields.Active == true) {
+                            for (let i = 0; i < data.tproductlist.length; i++) {
+                                if (data.tproductlist[i].Active == true) {
                                     linestatus = "";
-                                } else if (data.tproductvs1[i].fields.Active == false) {
+                                } else if (data.tproductlist[i].Active == false) {
                                     linestatus = "In-Active";
                                 };
-                                if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
+                                costprice = utilityService.modifynegativeCurrencyFormat(
+                                    Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
+                                sellprice = utilityService.modifynegativeCurrencyFormat(
+                                    Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
+                                if (data.tproductlist[i].ExtraSellPrice != null) {
                                     for (
-                                        let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++
+                                        let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
                                     ) {
                                         let lineExtaSellObj = {
-                                            clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
+                                            clienttype: data.tproductlist[i].ExtraSellPrice[e]
                                                 .ClientTypeName || "",
-                                            productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
+                                            productname: data.tproductlist[i].ExtraSellPrice[e]
                                                 .ProductName ||
-                                                data.tproductvs1[i].fields.ProductName,
+                                                data.tproductlist[i].ProductName,
                                             price: utilityService.modifynegativeCurrencyFormat(
-                                                data.tproductvs1[i].fields.ExtraSellPrice[e].fields
+                                                data.tproductlist[i].ExtraSellPrice[e]
                                                 .Price1
                                             ) || 0,
-                                            qtypercent: data.tproductvs1[i].fields.QtyPercent1 || 0,
+                                            qtypercent: data.tproductlist[i].QtyPercent1 || 0,
                                         };
                                         lineExtaSellItems.push(lineExtaSellObj);
                                     }
                                 }
                                 var dataList = "";
-                                if (data.tproductvs1[i].fields.Active == true) {
-                                    linestatus = "";
-                                } else if (data.tproductvs1[i].fields.Active == false) {
-                                    linestatus = "In-Active";
-                                };
                                 if (currentLoc == "/purchaseordercard") {
                                     dataList = [
                                         '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                                        data.tproductvs1[i].fields.ID +
+                                        data.tproductlist[i].PARTSID +
                                         "x" +
-                                        data.tproductvs1[i].fields.ProductName +
+                                        data.tproductlist[i].ProductName +
                                         '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                                        data.tproductvs1[i].fields.ID +
+                                        data.tproductlist[i].PARTSID +
                                         "x" +
-                                        data.tproductvs1[i].fields.ProductName +
+                                        data.tproductlist[i].ProductName +
                                         '"></label></div>',
-                                        data.tproductvs1[i].fields.ID || "",
-                                        data.tproductvs1[i].fields.ProductName || "-",
-                                        data.tproductvs1[i].fields.SalesDescription || "",
-                                        data.tproductvs1[i].fields.BARCODE || "",
-                                        utilityService.modifynegativeCurrencyFormat(
-                                            Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                                            100
-                                        ),
-                                        utilityService.modifynegativeCurrencyFormat(
-                                            Math.floor(
-                                                data.tproductvs1[i].fields.SellQty1Price * 100
-                                            ) / 100
-                                        ),
-                                        data.tproductvs1[i].fields.TotalQtyInStock,
-                                        data.tproductvs1[i].fields.TaxCodePurchase || "",
-                                        data.tproductvs1[i].fields.ID || "",
-                                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                        null,
-                                        linestatus,
-
+                                        data.tproductlist[i].PARTSID || "",
+                                        data.tproductlist[i].PARTNAM || "",
+                                        data.tproductlist[i].PARTSDESCRIPTION || "",
+                                        data.tproductlist[i].BARCODE || "",
+                                        costprice,
+                                        sellprice,
+                                        data.tproductlist[i].InstockQty,
+                                        data.tproductlist[i].PURCHTAXCODE || "",
+                                        data.tproductlist[i].PRODUCTCODE || "",
+                                        data.tproductlist[i].Ex_Works || null,
+                                        linestatus
                                     ];
                                 } else {
                                     dataList = [
                                         '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                        data.tproductvs1[i].fields.ID +
+                                        data.tproductlist[i].PARTSID +
                                         '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                        data.tproductvs1[i].fields.ID +
+                                        data.tproductlist[i].PARTSID +
                                         '"></label></div>',
-                                        data.tproductvs1[i].fields.ID || "",
-                                        data.tproductvs1[i].fields.ProductName || "-",
-                                        data.tproductvs1[i].fields.SalesDescription || "",
-                                        data.tproductvs1[i].fields.BARCODE || "",
-                                        utilityService.modifynegativeCurrencyFormat(
-                                            Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                                            100
-                                        ),
-                                        utilityService.modifynegativeCurrencyFormat(
-                                            Math.floor(
-                                                data.tproductvs1[i].fields.SellQty1Price * 100
-                                            ) / 100
-                                        ),
-                                        data.tproductvs1[i].fields.TotalQtyInStock,
-                                        data.tproductvs1[i].fields.TaxCodeSales || "",
-                                        data.tproductvs1[i].fields.ID || "",
-                                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                        null,
-                                        linestatus,
+                                        data.tproductlist[i].PARTSID || "",
+                                        data.tproductlist[i].PARTNAM || "",
+                                        data.tproductlist[i].PARTSDESCRIPTION || "",
+                                        data.tproductlist[i].BARCODE || "",
+                                        costprice,
+                                        sellprice,
+                                        data.tproductlist[i].InstockQty,
+                                        data.tproductlist[i].PURCHTAXCODE || "",
+                                        data.tproductlist[i].PRODUCTCODE || "",
+                                        data.tproductlist[i].Ex_Works || null,
+                                        linestatus
                                     ];
                                 }
 
                                 if (currentLoc == "/stockadjustmentcard") {
-                                    if (data.tproductvs1[i].fields.ProductType == "INV") {
+                                    if (data.tproductlist[i].PRODUCTGROUP == "INV") {
                                         splashArrayProductList.push(dataList);
                                     }
                                 } else {
                                     splashArrayProductList.push(dataList);
                                 }
                             }
-                            //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
 
-                            // if (splashArrayProductList) {
-                            //     $("#tblInventoryCheckbox").dataTable({
-                            //         data: splashArrayProductList,
-                            //         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            //
-                            //         columnDefs: [{
-                            //                 className: "colID",
-                            //                 targets: [0],
-                            //             },
-                            //             {
-                            //                 className: "colChkBox pointer",
-                            //                 orderable: false,
-                            //                 targets: [1],
-                            //             },
-                            //             {
-                            //                 className: "colProductName",
-                            //                 targets: [2],
-                            //             },
-                            //             {
-                            //                 className: "colSalesDescription",
-                            //                 targets: [3],
-                            //             },
-                            //             {
-                            //                 className: "colBarcode",
-                            //                 targets: [4],
-                            //             },
-                            //             {
-                            //                 className: "colCostPrice text-right",
-                            //                 targets: [5],
-                            //             },
-                            //             {
-                            //                 className: "colSalesPrice text-right",
-                            //                 targets: [6],
-                            //             },
-                            //             {
-                            //                 className: "colQty text-right",
-                            //                 targets: [7],
-                            //             },
-                            //             {
-                            //                 className: "colTax",
-                            //                 targets: [8],
-                            //             },
-                            //             {
-                            //                 className: "colProuctPOPID hiddenColumn",
-                            //                 targets: [9],
-                            //             },
-                            //             {
-                            //                 className: "colExtraSellPrice hiddenColumn",
-                            //                 targets: [10],
-                            //             },
-                            //             {
-                            //                 className: "colStatus",
-                            //                 targets: [11],
-                            //             }
-                            //         ],
-                            //         colReorder: true,
-                            //         lengthMenu: [
-                            //             [initialBaseDataLoad, -1],
-                            //             [initialBaseDataLoad, "All"],
-                            //         ],
-                            //         info: true,
-                            //         responsive: true,
-                            //         fnDrawCallback: function(oSettings) {
-                            //             // $('.dataTables_paginate').css('display', 'none');
-                            //         },
-                            //         language: { search: "", searchPlaceholder: "Search List..." },
-                            //         fnInitComplete: function() {
-                            //             $(
-                            //                 "<a class='btn btn-primary scanProdBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
-                            //             ).insertAfter("#tblInventoryCheckbox_filter");
-                            //             $(
-                            //                 "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                            //             ).insertAfter("#tblInventoryCheckbox_filter");
-                            //             $(
-                            //                 "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                            //             ).insertAfter("#tblInventoryCheckbox_filter");
-                            //         },
-                            //     });
-                            //
-                            //     $("div.dataTables_filter input").addClass(
-                            //         "form-control form-control-sm"
-                            //     );
-                            // }
                         });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tproductvs1;
+                    let useData = data.tproductlist;
                     let records = [];
                     let inventoryData = [];
-                    for (let i = 0; i < data.tproductvs1.length; i++) {
-                        if (data.tproductvs1[i].fields.Active == true) {
+                    for (let i = 0; i < data.tproductlist.length; i++) {
+                        if (data.tproductlist[i].Active == true) {
                             linestatus = "";
-                        } else if (data.tproductvs1[i].fields.Active == false) {
+                        } else if (data.tproductlist[i].Active == false) {
                             linestatus = "In-Active";
                         };
-                        if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
+                        costprice = utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(data.tproductlist[i].BuyQty1Cost * 100) / 100); //Cost Price
+                        sellprice = utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(data.tproductlist[i].SellQty1Price* 100) / 100); //Sell Price
+                        if (data.tproductlist[i].ExtraSellPrice != null) {
                             for (
-                                let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++
+                                let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
                             ) {
                                 let lineExtaSellObj = {
-                                    clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
+                                    clienttype: data.tproductlist[i].ExtraSellPrice[e]
                                         .ClientTypeName || "",
-                                    productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                                        .ProductName || data.tproductvs1[i].fields.ProductName,
+                                    productname: data.tproductlist[i].ExtraSellPrice[e]
+                                        .ProductName || data.tproductlist[i].ProductName,
                                     price: utilityService.modifynegativeCurrencyFormat(
-                                        data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1
+                                        data.tproductlist[i].ExtraSellPrice[e].Price1
                                     ) || 0,
-                                    qtypercent: data.tproductvs1[i].fields.QtyPercent1 || 0,
+                                    qtypercent: data.tproductlist[i].QtyPercent1 || 0,
                                 };
                                 lineExtaSellItems.push(lineExtaSellObj);
                             }
@@ -299,62 +201,50 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                         if (currentLoc == "/purchaseordercard") {
                             dataList = [
                                 '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                                data.tproductvs1[i].fields.ID +
+                                data.tproductlist[i].PARTSID +
                                 "x" +
-                                data.tproductvs1[i].fields.ProductName +
+                                data.tproductlist[i].ProductName +
                                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                                data.tproductvs1[i].fields.ID +
+                                data.tproductlist[i].PARTSID +
                                 "x" +
-                                data.tproductvs1[i].fields.ProductName +
+                                data.tproductlist[i].ProductName +
                                 '"></label></div>',
-                                data.tproductvs1[i].fields.ID || "",
-                                data.tproductvs1[i].fields.ProductName || "-",
-                                data.tproductvs1[i].fields.SalesDescription || "",
-                                data.tproductvs1[i].fields.BARCODE || "",
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
-                                ),
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                    100
-                                ),
-                                data.tproductvs1[i].fields.TotalQtyInStock,
-                                data.tproductvs1[i].fields.TaxCodePurchase || "",
-                                data.tproductvs1[i].fields.ID || "",
-                                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                null,
-                                linestatus,
+                                data.tproductlist[i].PARTSID || "",
+                                data.tproductlist[i].PARTNAM || "",
+                                data.tproductlist[i].PARTSDESCRIPTION || "",
+                                data.tproductlist[i].BARCODE || "",
+                                costprice,
+                                sellprice,
+                                data.tproductlist[i].InstockQty,
+                                data.tproductlist[i].PURCHTAXCODE || "",
+                                data.tproductlist[i].PRODUCTCODE || "",
+                                data.tproductlist[i].Ex_Works || null,
+                                linestatus
                             ];
                         } else {
                             dataList = [
                                 '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                data.tproductvs1[i].fields.ID +
+                                data.tproductlist[i].PARTSID +
                                 '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                data.tproductvs1[i].fields.ID +
+                                data.tproductlist[i].PARTSID +
                                 '"></label></div>',
-                                data.tproductvs1[i].fields.ID || "",
-                                data.tproductvs1[i].fields.ProductName || "-",
-                                data.tproductvs1[i].fields.SalesDescription || "",
-                                data.tproductvs1[i].fields.BARCODE || "",
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
-                                ),
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                    100
-                                ),
-                                data.tproductvs1[i].fields.TotalQtyInStock,
-                                data.tproductvs1[i].fields.TaxCodeSales || "",
-                                data.tproductvs1[i].fields.ID || "",
-                                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                null,
-                                linestatus,
+                                data.tproductlist[i].PARTSID || "",
+                                data.tproductlist[i].PARTNAM || "",
+                                data.tproductlist[i].PARTSDESCRIPTION || "",
+                                data.tproductlist[i].BARCODE || "",
+                                costprice,
+                                sellprice,
+                                data.tproductlist[i].InstockQty,
+                                data.tproductlist[i].PURCHTAXCODE || "",
+                                data.tproductlist[i].PRODUCTCODE || "",
+                                data.tproductlist[i].Ex_Works || null,
+                                linestatus
                             ];
                         }
 
                         // splashArrayProductList.push(dataList);
                         if (currentLoc == "/stockadjustmentcard") {
-                            if (data.tproductvs1[i].fields.ProductType == "INV") {
+                            if (data.tproductlist[i].PRODUCTGROUP == "INV") {
                                 splashArrayProductList.push(dataList);
                             }
                         } else {
@@ -363,275 +253,52 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                     }
 
                     tempObj.productextrasellrecords.set(lineExtaSellItems);
-                    //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
 
-                    // if (splashArrayProductList) {
-                    //     $("#tblInventoryCheckbox")
-                    //         .dataTable({
-                    //             data: splashArrayProductList,
-                    //
-                    //             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    //
-                    //             columnDefs: [{
-                    //                     className: "colID",
-                    //                     targets: [0],
-                    //                 },
-                    //                 {
-                    //                     className: "colChkBox pointer",
-                    //                     orderable: false,
-                    //                     targets: [1],
-                    //                 },
-                    //                 {
-                    //                     className: "colProductName",
-                    //                     targets: [2],
-                    //                 },
-                    //                 {
-                    //                     className: "colSalesDescription",
-                    //                     targets: [3],
-                    //                 },
-                    //                 {
-                    //                     className: "colBarcode",
-                    //                     targets: [4],
-                    //                 },
-                    //                 {
-                    //                     className: "colCostPrice text-right",
-                    //                     targets: [5],
-                    //                 },
-                    //                 {
-                    //                     className: "colSalesPrice text-right",
-                    //                     targets: [6],
-                    //                 },
-                    //                 {
-                    //                     className: "colQty text-right",
-                    //                     targets: [7],
-                    //                 },
-                    //                 {
-                    //                     className: "colTax",
-                    //                     targets: [8],
-                    //                 },
-                    //                 {
-                    //                     className: "colProuctPOPID hiddenColumn",
-                    //                     targets: [9],
-                    //                 },
-                    //                 {
-                    //                     className: "colExtraSellPrice hiddenColumn",
-                    //                     targets: [10],
-                    //                 },
-                    //                 {
-                    //                     className: "colStatus",
-                    //                     targets: [11],
-                    //                 }
-                    //             ],
-                    //             select: true,
-                    //             destroy: false,
-                    //             colReorder: true,
-                    //             pageLength: initialDatatableLoad,
-                    //             lengthMenu: [
-                    //                 [initialDatatableLoad, -1],
-                    //                 [initialDatatableLoad, "All"],
-                    //             ],
-                    //             info: true,
-                    //             responsive: true,
-                    //             fnDrawCallback: function(oSettings) {
-                    //                 $(".paginate_button.page-item").removeClass("disabled");
-                    //                 $("#tblInventoryCheckbox_ellipsis").addClass("disabled");
-                    //                 if (oSettings._iDisplayLength == -1) {
-                    //                     if (oSettings.fnRecordsDisplay() > 150) {}
-                    //                 } else {}
-                    //                 if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                    //                     $(".paginate_button.page-item.next").addClass("disabled");
-                    //                 }
-                    //
-                    //                 $(
-                    //                     ".paginate_button.next:not(.disabled)",
-                    //                     this.api().table().container()
-                    //                 ).on("click", function() {
-                    //                     $(".fullScreenSpin").css("display", "inline-block");
-                    //                     let dataLenght = oSettings._iDisplayLength;
-                    //                     let customerSearch = $("#tblInventoryCheckbox_filter input").val();
-                    //
-                    //                     sideBarService
-                    //                         .getNewProductListVS1(
-                    //                             initialDatatableLoad,
-                    //                             oSettings.fnRecordsDisplay()
-                    //                         )
-                    //                         .then(function(dataObjectnew) {
-                    //                             for (
-                    //                                 let i = 0; i < dataObjectnew.tproductvs1.length; i++
-                    //                             ) {
-                    //                                 var dataListDupp = "";
-                    //
-                    //                                 if (currentLoc == "/purchaseordercard") {
-                    //                                     dataListDupp = [
-                    //                                         '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                    //                                         data.tproductvs1[i].fields.ID +
-                    //                                         "x" +
-                    //                                         data.tproductvs1[i].fields.ProductName +
-                    //                                         '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                    //                                         data.tproductvs1[i].fields.ID +
-                    //                                         "x" +
-                    //                                         data.tproductvs1[i].fields.ProductName +
-                    //                                         '"></label></div>',
-                    //                                         data.tproductvs1[i].fields.ProductName || "-",
-                    //                                         data.tproductvs1[i].fields.SalesDescription || "",
-                    //                                         data.tproductvs1[i].fields.BARCODE || "",
-                    //                                         utilityService.modifynegativeCurrencyFormat(
-                    //                                             Math.floor(
-                    //                                                 data.tproductvs1[i].fields.BuyQty1Cost * 100
-                    //                                             ) / 100
-                    //                                         ),
-                    //                                         utilityService.modifynegativeCurrencyFormat(
-                    //                                             Math.floor(
-                    //                                                 data.tproductvs1[i].fields.SellQty1Price * 100
-                    //                                             ) / 100
-                    //                                         ),
-                    //                                         data.tproductvs1[i].fields.TotalQtyInStock,
-                    //                                         data.tproductvs1[i].fields.TaxCodePurchase || "",
-                    //                                         data.tproductvs1[i].fields.ID || "",
-                    //                                         JSON.stringify(
-                    //                                             data.tproductvs1[i].fields.ExtraSellPrice
-                    //                                         ) || null,
-                    //                                         linestatus,
-                    //                                     ];
-                    //                                 } else {
-                    //                                     dataListDupp = [
-                    //                                         '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                    //                                         data.tproductvs1[i].fields.ID +
-                    //                                         "x" +
-                    //                                         data.tproductvs1[i].fields.ProductName +
-                    //                                         '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                    //                                         data.tproductvs1[i].fields.ID +
-                    //                                         "x" +
-                    //                                         data.tproductvs1[i].fields.ProductName +
-                    //                                         '"></label></div>',
-                    //                                         data.tproductvs1[i].fields.ProductName || "-",
-                    //                                         data.tproductvs1[i].fields.SalesDescription || "",
-                    //                                         data.tproductvs1[i].fields.BARCODE || "",
-                    //                                         utilityService.modifynegativeCurrencyFormat(
-                    //                                             Math.floor(
-                    //                                                 data.tproductvs1[i].fields.BuyQty1Cost * 100
-                    //                                             ) / 100
-                    //                                         ),
-                    //                                         utilityService.modifynegativeCurrencyFormat(
-                    //                                             Math.floor(
-                    //                                                 data.tproductvs1[i].fields.SellQty1Price * 100
-                    //                                             ) / 100
-                    //                                         ),
-                    //                                         data.tproductvs1[i].fields.TotalQtyInStock,
-                    //                                         data.tproductvs1[i].fields.TaxCodeSales || "",
-                    //                                         data.tproductvs1[i].fields.ID || "",
-                    //                                         JSON.stringify(
-                    //                                             data.tproductvs1[i].fields.ExtraSellPrice
-                    //                                         ) || null,
-                    //                                         linestatus,
-                    //                                     ];
-                    //                                 }
-                    //
-                    //                                 if (currentLoc == "/stockadjustmentcard") {
-                    //                                     if (
-                    //                                         data.tproductvs1[i].fields.ProductType == "INV"
-                    //                                     ) {
-                    //                                         splashArrayProductList.push(dataListDupp);
-                    //                                     }
-                    //                                 } else {
-                    //                                     splashArrayProductList.push(dataListDupp);
-                    //                                 }
-                    //                             }
-                    //
-                    //                             let uniqueChars = [...new Set(splashArrayProductList)];
-                    //                             var datatable = $("#tblInventoryCheckbox").DataTable();
-                    //                             datatable.clear();
-                    //                             datatable.rows.add(uniqueChars);
-                    //                             datatable.draw(false);
-                    //                             setTimeout(function() {
-                    //                                 $("#tblInventoryCheckbox").dataTable().fnPageChange("last");
-                    //                             }, 400);
-                    //
-                    //                             $(".fullScreenSpin").css("display", "none");
-                    //                         })
-                    //                         .catch(function(err) {
-                    //                             $(".fullScreenSpin").css("display", "none");
-                    //                         });
-                    //                 });
-                    //                 // setTimeout(function () {
-                    //                 //     MakeNegative();
-                    //                 // }, 100);
-                    //             },
-                    //             language: { search: "", searchPlaceholder: "Search List..." },
-                    //             fnInitComplete: function() {
-                    //                 $(
-                    //                     "<a class='btn btn-primary scanProdBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
-                    //                 ).insertAfter("#tblInventoryCheckbox_filter");
-                    //                 $(
-                    //                     "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                    //                 ).insertAfter("#tblInventoryCheckbox_filter");
-                    //                 $(
-                    //                     "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                    //                 ).insertAfter("#tblInventoryCheckbox_filter");
-                    //             },
-                    //         })
-                    //         .on("length.dt", function(e, settings, len) {
-                    //             $(".fullScreenSpin").css("display", "inline-block");
-                    //             let dataLenght = settings._iDisplayLength;
-                    //             // splashArrayProductList = [];
-                    //             if (dataLenght == -1) {
-                    //                 $(".fullScreenSpin").css("display", "none");
-                    //             } else {
-                    //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                    //                     $(".fullScreenSpin").css("display", "none");
-                    //                 } else {
-                    //                     $(".fullScreenSpin").css("display", "none");
-                    //                 }
-                    //             }
-                    //         });
-                    //
-                    //     $("div.dataTables_filter input").addClass(
-                    //         "form-control form-control-sm"
-                    //     );
-                    // }
                 }
             })
             .catch(function(err) {
                 sideBarService
                     .getNewProductListVS1(initialBaseDataLoad, 0)
                     .then(function(data) {
-                        addVS1Data("TProductVS1", JSON.stringify(data));
+                        addVS1Data("TProductList", JSON.stringify(data));
                         let records = [];
                         let inventoryData = [];
                         let buyrate = 0.00;
                         let sellrate = 0.00;
                         let linestatus = '';
 
-                        chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductvs1[i].fields.ID + "x" + data.tproductvs1[i].fields.ProductName +
-                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductvs1[i].fields.ID +
-                        "x" + data.tproductvs1[i].fields.ProductName +
-                        '"></label></div>'; //switchbox
 
-                        costprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100); //Cost Price
-                        sellprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(data.tproductvs1[i].fields.SellQty1Price* 100) / 100); //Sell Price
 
-                        for (let i = 0; i < data.tproductvs1.length; i++) {
-                            if (data.tproductvs1[i].fields.Active == true) {
+                        for (let i = 0; i < data.tproductlist.length; i++) {
+                            if (data.tproductlist[i].Active == true) {
                                 linestatus = "";
-                            } else if (data.tproductvs1[i].fields.Active == false) {
+                            } else if (data.tproductlist[i].Active == false) {
                                 linestatus = "In-Active";
                             };
-                            if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
+                            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].ProductName +
+                            '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
+                            "x" + data.tproductlist[i].ProductName +
+                            '"></label></div>'; //switchbox
+
+                            costprice = utilityService.modifynegativeCurrencyFormat(
+                                Math.floor(data.tproductlist[i].BuyQty1Cost * 100) / 100); //Cost Price
+                            sellprice = utilityService.modifynegativeCurrencyFormat(
+                                Math.floor(data.tproductlist[i].SellQty1Price* 100) / 100); //Sell Price
+
+                            if (data.tproductlist[i].ExtraSellPrice != null) {
                                 for (
-                                    let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++
+                                    let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
                                 ) {
                                     let lineExtaSellObj = {
-                                        clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
+                                        clienttype: data.tproductlist[i].ExtraSellPrice[e]
                                             .ClientTypeName || "",
-                                        productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                                            .ProductName || data.tproductvs1[i].fields.ProductName,
+                                        productname: data.tproductlist[i].ExtraSellPrice[e]
+                                            .ProductName || data.tproductlist[i].ProductName,
                                         price: utilityService.modifynegativeCurrencyFormat(
-                                            data.tproductvs1[i].fields.ExtraSellPrice[e].fields
+                                            data.tproductlist[i].ExtraSellPrice[e]
                                             .Price1
                                         ) || 0,
-                                        qtypercent: data.tproductvs1[i].fields.QtyPercent1 || 0,
+                                        qtypercent: data.tproductlist[i].QtyPercent1 || 0,
                                     };
                                     lineExtaSellItems.push(lineExtaSellObj);
                                 }
@@ -640,158 +307,45 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
 
                             if (currentLoc == "/purchaseordercard") {
                                 dataList = [
-                                    '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                                    data.tproductvs1[i].fields.ID +
-                                    "x" +
-                                    data.tproductvs1[i].fields.ProductName +
-                                    '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                                    data.tproductvs1[i].fields.ID +
-                                    "x" +
-                                    data.tproductvs1[i].fields.ProductName +
-                                    '"></label></div>',
-                                    data.tproductvs1[i].fields.ID || "",
-                                    data.tproductvs1[i].fields.ProductName || "-",
-                                    data.tproductvs1[i].fields.SalesDescription || "",
-                                    data.tproductvs1[i].fields.BARCODE || "",
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                                        100
-                                    ),
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                        100
-                                    ),
-                                    data.tproductvs1[i].fields.TotalQtyInStock,
-                                    data.tproductvs1[i].fields.TaxCodePurchase || "",
-                                    data.tproductvs1[i].fields.ID || "",
-                                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                    null,
-                                    linestatus,
+                                    chkBox,
+                                    data.tproductlist[i].PARTSID || "",
+                                    data.tproductlist[i].PARTNAM || "",
+                                    data.tproductlist[i].PARTSDESCRIPTION || "",
+                                    data.tproductlist[i].BARCODE || "",
+                                    costprice,
+                                    sellprice,
+                                    data.tproductlist[i].InstockQty,
+                                    data.tproductlist[i].PURCHTAXCODE || "",
+                                    data.tproductlist[i].PRODUCTCODE || "",
+                                    data.tproductlist[i].Ex_Works || null,
+                                    linestatus
                                 ];
                             } else {
                                 dataList = [
-                                    '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                    data.tproductvs1[i].fields.ID +
-                                    '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                    data.tproductvs1[i].fields.ID +
-                                    '"></label></div>',
-                                    data.tproductvs1[i].fields.ID || "",
-                                    data.tproductvs1[i].fields.ProductName || "-",
-                                    data.tproductvs1[i].fields.SalesDescription || "",
-                                    data.tproductvs1[i].fields.BARCODE || "",
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                                        100
-                                    ),
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                        100
-                                    ),
-                                    data.tproductvs1[i].fields.TotalQtyInStock,
-                                    data.tproductvs1[i].fields.TaxCodeSales || "",
-                                    data.tproductvs1[i].fields.ID || "",
-                                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                    null,
-                                    linestatus,
+                                    chkBox,
+                                    data.tproductlist[i].PARTSID || "",
+                                    data.tproductlist[i].PARTNAM || "",
+                                    data.tproductlist[i].PARTSDESCRIPTION || "",
+                                    data.tproductlist[i].BARCODE || "",
+                                    costprice,
+                                    sellprice,
+                                    data.tproductlist[i].InstockQty,
+                                    data.tproductlist[i].PURCHTAXCODE || "",
+                                    data.tproductlist[i].PRODUCTCODE || "",
+                                    data.tproductlist[i].Ex_Works || null,
+                                    linestatus
                                 ];
                             }
 
                             if (currentLoc == "/stockadjustmentcard") {
-                                if (data.tproductvs1[i].fields.ProductType == "INV") {
+                                if (data.tproductlist[i].PRODUCTGROUP == "INV") {
                                     splashArrayProductList.push(dataList);
                                 }
                             } else {
                                 splashArrayProductList.push(dataList);
                             }
                         }
-                        //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
 
-                        // if (splashArrayProductList) {
-                        //     $("#tblInventoryCheckbox").dataTable({
-                        //         data: splashArrayProductList,
-                        //         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        //         columnDefs: [{
-                        //                 className: "colID",
-                        //                 targets: [0],
-                        //             },
-                        //             {
-                        //                 className: "colChkBox pointer",
-                        //                 orderable: false,
-                        //                 targets: [1],
-                        //             },
-                        //             {
-                        //                 className: "colProductName",
-                        //                 targets: [2],
-                        //             },
-                        //             {
-                        //                 className: "colSalesDescription",
-                        //                 targets: [3],
-                        //             },
-                        //             {
-                        //                 className: "colBarcode",
-                        //                 targets: [4],
-                        //             },
-                        //             {
-                        //                 className: "colCostPrice text-right",
-                        //                 targets: [5],
-                        //             },
-                        //             {
-                        //                 className: "colSalesPrice text-right",
-                        //                 targets: [6],
-                        //             },
-                        //             {
-                        //                 className: "colQty text-right",
-                        //                 targets: [7],
-                        //             },
-                        //             {
-                        //                 className: "colTax",
-                        //                 targets: [8],
-                        //             },
-                        //             {
-                        //                 className: "colProuctPOPID hiddenColumn",
-                        //                 targets: [9],
-                        //             },
-                        //             {
-                        //                 className: "colExtraSellPrice hiddenColumn",
-                        //                 targets: [10],
-                        //             },
-                        //             {
-                        //                 className: "colStatus",
-                        //                 targets: [11],
-                        //             }
-                        //
-                        //         ],
-                        //         colReorder: true,
-                        //         lengthMenu: [
-                        //             [initialBaseDataLoad, -1],
-                        //             [initialBaseDataLoad, "All"],
-                        //         ],
-                        //         info: true,
-                        //         responsive: true,
-                        //         order: [
-                        //             [0, "asc"]
-                        //         ],
-                        //         fnDrawCallback: function(oSettings) {
-                        //             // $('.dataTables_paginate').css('display', 'none');
-                        //         },
-                        //         language: { search: "", searchPlaceholder: "Search List..." },
-                        //         fnInitComplete: function() {
-                        //             $(
-                        //                 "<a class='btn btn-primary scanProdBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='margin-left: 12px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
-                        //             ).insertAfter("#tblInventoryCheckbox_filter");
-                        //             $(
-                        //                 "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                        //             ).insertAfter("#tblInventoryCheckbox_filter");
-                        //             $(
-                        //                 "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                        //             ).insertAfter("#tblInventoryCheckbox_filter");
-                        //         },
-                        //     });
-                        //
-                        //     $("div.dataTables_filter input").addClass(
-                        //         "form-control form-control-sm"
-                        //     );
-                        // }
                     });
             });
     };
@@ -845,82 +399,72 @@ Template.productlistpopwithcheckboxes.events({
                     let records = [];
 
                     let inventoryData = [];
-                    if (data.tproductvs1.length > 0) {
-                        for (let i = 0; i < data.tproductvs1.length; i++) {
+                    if (data.tproductlist.length > 0) {
+                        for (let i = 0; i < data.tproductlist.length; i++) {
                             var dataList = "";
+                            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].PARTNAM +
+                            '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
+                            "x" + data.tproductlist[i].PARTNAM +
+                            '"></label></div>'; //switchbox
+
+                            costprice = utilityService.modifynegativeCurrencyFormat(
+                                Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
+                            sellprice = utilityService.modifynegativeCurrencyFormat(
+                                Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
                             if (currentLoc == "/purchaseordercard") {
                                 dataList = [
                                     '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                    data.tproductvs1[i].fields.ID +
+                                    data.tproductlist[i].PARTSID +
                                     '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                    data.tproductvs1[i].fields.ID +
+                                    data.tproductlist[i].PARTSID +
                                     '"></label></div>',
-                                    data.tproductvs1[i].fields.ID || "",
-                                    data.tproductvs1[i].fields.ProductName || "-",
-                                    data.tproductvs1[i].fields.SalesDescription || "",
-                                    data.tproductvs1[i].fields.BARCODE || "",
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                                        100
-                                    ),
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                        100
-                                    ),
-                                    data.tproductvs1[i].fields.TotalQtyInStock,
-                                    data.tproductvs1[i].fields.TaxCodePurchase || "",
-                                    data.tproductvs1[i].fields.ID || "",
-                                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                    null,
-                                    linestatus,
+                                    data.tproductlist[i].PARTSID || "",
+                                    data.tproductlist[i].PARTNAM || "",
+                                    data.tproductlist[i].PARTSDESCRIPTION || "",
+                                    data.tproductlist[i].BARCODE || "",
+                                    costprice,
+                                    sellprice,
+                                    data.tproductlist[i].InstockQty,
+                                    data.tproductlist[i].PURCHTAXCODE || "",
+                                    data.tproductlist[i].PRODUCTCODE || "",
+                                    data.tproductlist[i].Ex_Works || null,
+                                    linestatus
                                 ];
                             } else {
                                 dataList = [
                                     '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                    data.tproductvs1[i].fields.ID +
+                                    data.tproductlist[i].PARTSID +
                                     '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                    data.tproductvs1[i].fields.ID +
+                                    data.tproductlist[i].PARTSID +
                                     '"></label></div>',
-                                    data.tproductvs1[i].fields.ID || "",
-                                    data.tproductvs1[i].fields.ProductName || "-",
-                                    data.tproductvs1[i].fields.SalesDescription || "",
-                                    data.tproductvs1[i].fields.BARCODE || "",
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                                        100
-                                    ),
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                        100
-                                    ),
-                                    data.tproductvs1[i].fields.TotalQtyInStock,
-                                    data.tproductvs1[i].fields.TaxCodeSales || "",
-                                    data.tproductvs1[i].fields.ID || "",
-                                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                    null,
-                                    linestatus,
+                                    data.tproductlist[i].PARTSID || "",
+                                    data.tproductlist[i].PARTNAM || "",
+                                    data.tproductlist[i].PARTSDESCRIPTION || "",
+                                    data.tproductlist[i].BARCODE || "",
+                                    costprice,
+                                    sellprice,
+                                    data.tproductlist[i].InstockQty,
+                                    data.tproductlist[i].PURCHTAXCODE || "",
+                                    data.tproductlist[i].PRODUCTCODE || "",
+                                    data.tproductlist[i].Ex_Works || null,
+                                    linestatus
                                 ];
                             }
 
-                            if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
+                            if (data.tproductlist[i].ExtraSellPrice != null) {
                                 for (
-                                    let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++
+                                    let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
                                 ) {
                                     let lineExtaSellObj = {
-                                        clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                                            .ClientTypeName || "",
-                                        productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                                            .ProductName || data.tproductvs1[i].fields.ProductName,
-                                        price: utilityService.modifynegativeCurrencyFormat(
-                                            data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                                            .Price1
-                                        ) || 0,
+                                        clienttype: data.tproductlist[i].ExtraSellPrice[e].ClientTypeName || "",
+                                        productname: data.tproductlist[i].ExtraSellPrice[e].ProductName || data.tproductlist[i].ProductName,
+                                        price: utilityService.modifynegativeCurrencyFormat(data.tproductlist[i].ExtraSellPrice[e].Price1) || 0,
                                     };
                                     lineExtaSellItems.push(lineExtaSellObj);
                                 }
                             }
                             if (currentLoc == "/stockadjustmentcard") {
-                                if (data.tproductvs1[i].fields.ProductType == "INV") {
+                                if (data.tproductlist[i].PRODUCTGROUP == "INV") {
                                     splashArrayProductList.push(dataList);
                                 }
                             } else {
@@ -959,88 +503,80 @@ Template.productlistpopwithcheckboxes.events({
                     $(".fullScreenSpin").css("display", "none");
                 });
         } else {
-            sideBarService
-                .getNewProductListVS1(initialBaseDataLoad, 0)
-                .then(function(data) {
-                    addVS1Data("TProductVS1", JSON.stringify(data));
+            sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) { addVS1Data("TProductList", JSON.stringify(data));
                     let records = [];
                     let inventoryData = [];
-                    for (let i = 0; i < data.tproductvs1.length; i++) {
-                        var dataList = "";
+                    let chkBox;
+                    let costprice = 0.00;
+                    let sellrate = 0.00;
+                    let linestatus = '';
+                    if(data.Params.Search.replace(/\s/g, "") == ""){
+                      deleteFilter = true;
+                    }else{
+                      deleteFilter = false;
+                    };
 
+                    for (let i = 0; i < data.tproductlist.length; i++) {
+                        var dataList = "";
+                        if (data.tproductlist[i].Active == true) {
+                            linestatus = "";
+                        } else if (data.tproductlist[i].Active == false) {
+                            linestatus = "In-Active";
+                        };
+                        chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].PARTNAM +
+                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
+                        "x" + data.tproductlist[i].PARTNAM +
+                        '"></label></div>'; //switchbox
+
+                        costprice = utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
+                        sellprice = utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
                         if (currentLoc == "/purchaseordercard") {
                             dataList = [
-                                '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                                data.tproductvs1[i].fields.ID +
-                                "x" +
-                                data.tproductvs1[i].fields.ProductName +
-                                '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                                data.tproductvs1[i].fields.ID +
-                                "x" +
-                                data.tproductvs1[i].fields.ProductName +
-                                '"></label></div>',
-                                data.tproductvs1[i].fields.ID || "",
-                                data.tproductvs1[i].fields.ProductName || "-",
-                                data.tproductvs1[i].fields.SalesDescription || "",
-                                data.tproductvs1[i].fields.BARCODE || "",
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
-                                ),
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                    100
-                                ),
-                                data.tproductvs1[i].fields.TotalQtyInStock,
-                                data.tproductvs1[i].fields.TaxCodePurchase || "",
-                                data.tproductvs1[i].fields.ID || "",
-                                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                null,
+                                chkBox,
+                                data.tproductlist[i].PARTSID || "",
+                                data.tproductlist[i].PARTNAM || "",
+                                data.tproductlist[i].PARTSDESCRIPTION || "",
+                                data.tproductlist[i].BARCODE || "",
+                                costprice,
+                                sellprice,
+                                data.tproductlist[i].InstockQty,
+                                data.tproductlist[i].PURCHTAXCODE || "",
+                                data.tproductlist[i].PRODUCTCODE || "",
+                                data.tproductlist[i].Ex_Works || null,
                                 linestatus
                             ];
                         } else {
                             dataList = [
-                                '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                data.tproductvs1[i].fields.ID +
-                                '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                data.tproductvs1[i].fields.ID +
-                                '"></label></div>',
-                                data.tproductvs1[i].fields.ID || "",
-                                data.tproductvs1[i].fields.ProductName || "-",
-                                data.tproductvs1[i].fields.SalesDescription || "",
-                                data.tproductvs1[i].fields.BARCODE || "",
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
-                                ),
-                                utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                                    100
-                                ),
-                                data.tproductvs1[i].fields.TotalQtyInStock,
-                                data.tproductvs1[i].fields.TaxCodeSales || "",
-                                data.tproductvs1[i].fields.ID || "",
-                                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                                null,
+                                chkBox,
+                                data.tproductlist[i].PARTSID || "",
+                                data.tproductlist[i].PARTNAM || "",
+                                data.tproductlist[i].PARTSDESCRIPTION || "",
+                                data.tproductlist[i].BARCODE || "",
+                                costprice,
+                                sellprice,
+                                data.tproductlist[i].InstockQty,
+                                data.tproductlist[i].PURCHTAXCODE || "",
+                                data.tproductlist[i].PRODUCTCODE || "",
+                                data.tproductlist[i].Ex_Works || null,
                                 linestatus
                             ];
                         }
-                        if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
+                        if (data.tproductlist[i].ExtraSellPrice != null) {
                             for (
-                                let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++
+                                let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
                             ) {
                                 let lineExtaSellObj = {
-                                    clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                                        .ClientTypeName || "",
-                                    productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                                        .ProductName || data.tproductvs1[i].fields.ProductName,
-                                    price: utilityService.modifynegativeCurrencyFormat(
-                                        data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1
-                                    ) || 0,
+                                    clienttype: data.tproductlist[i].ExtraSellPrice[e].ClientTypeName || "",
+                                    productname: data.tproductlist[i].ExtraSellPrice[e].ProductName || data.tproductlist[i].ProductName,
+                                    price: utilityService.modifynegativeCurrencyFormat(data.tproductlist[i].ExtraSellPrice[e].Price1) || 0,
                                 };
                                 lineExtaSellItems.push(lineExtaSellObj);
                             }
                         }
                         if (currentLoc == "/stockadjustmentcard") {
-                            if (data.tproductvs1[i].fields.ProductType == "INV") {
+                            if (data.tproductlist[i].PRODUCTGROUP == "INV") {
                                 splashArrayProductList.push(dataList);
                             }
                         } else {

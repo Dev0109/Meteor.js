@@ -4470,21 +4470,24 @@ Template.stocktransfercard.events({
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-
-        times++;
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblStocktransfer tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                return false;
-
-            } else {
+        if(targetID != undefined) {       
+            times++;
+            if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
-            }
+            } else {
+                    if ($('#tblStocktransfer tbody>tr').length > 1) {
+                        this.click;
+                        $(event.target).closest('tr').remove();
+                        event.preventDefault();
+                        return false;
 
+                    } else {
+                        $('#deleteLineModal').modal('toggle');
+                    }
+
+                }
+        }else {
+            $('#footerDeleteModal1').modal('toggle'); 
         }
     },
     'click #tdBarcodeScannerMobile': function(event) {

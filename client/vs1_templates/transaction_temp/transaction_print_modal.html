@@ -1,0 +1,235 @@
+<template name="transaction_print_modal">
+  <style></style>
+  <div class="modal fade" role="dialog" tabindex="-1" id="printModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="padding-bottom: 8px;">
+          <h4>Print Options</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <!-- Choose Template -->
+            {{#each printTypeTemplate in printTypeTemplates}}
+            <div class="row mb-3">
+              <div class="col-10 d-flex justify-content-center">
+                <div class="card shadow w-75">
+                  <div class="card-header py-3">
+                    <span class="text-primary m-0 font-weight-bold"
+                      >{{getTemplateTitle TransactionType
+                      printTypeTemplate.templateName}}</span
+                    >
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                      {{#each template in printTypeTemplate.templateList}}
+                      <li
+                        class="list-group-item templateItem justify-content-between"
+                        data-id="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}"
+                        data-template-id="{{template.fields.Template}}"
+                      >
+                        <div class="custom-control custom-switch">
+                          <input
+                            type="hidden"
+                            name="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}"
+                          />
+                          <input
+                            class="custom-control-input chkGlobalSettings"
+                            type="radio"
+                            name="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}"
+                            id="{{getTemplateKey TransactionType printTypeTemplate.templateName}}_{{template.fields.Template}}"
+                            value="{{template.fields.Template}}"
+                            style="cursor: pointer;"
+                          />
+                          <label
+                            class="custom-control-label"
+                            for="{{getTemplateKey TransactionType printTypeTemplate.templateName}}_{{template.fields.Template}}"
+                            style="cursor: pointer; color: transparent;"
+                          ></label>
+                          <input
+                            type="text"
+                            name="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}_{{template.fields.Template}}"
+                            style="border: none; width: 90%;"
+                            value="{{template.fields.Description}}"
+                          />
+                        </div>
+                        <i
+                          data-id="{{template.fields.SettingName}}"
+                          class="far fa-eye btnPreviewTemplate"
+                          data-toggle="modal"
+                        ></i>
+                      </li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-2 d-flex justify-content-center align-items-center"
+              >
+                <div class="custom-control custom-switch ml-1">
+                  <input
+                    class="custom-control-input chkGlobalSettings"
+                    name="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
+                    id="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
+                    type="checkbox"
+                    style="cursor: pointer;"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="cursor: pointer;"
+                    for="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
+                  ></label>
+                </div>
+              </div>
+            </div>
+            {{/each}}
+
+            <!-- Email -->
+            <div class="row mb-3">
+              <div class="col-10 d-flex justify-content-center">
+                <span
+                  class="badge badge-primary w-75 p-3"
+                  style="font-size: 100%;"
+                  >Email</span
+                >
+              </div>
+              <div
+                class="col-2 d-flex justify-content-center align-items-center"
+              >
+                <div class="custom-control custom-switch">
+                  <input
+                    class="custom-control-input chkGlobalSettings"
+                    id="emailSend"
+                    type="checkbox"
+                    style="cursor: pointer;"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="width: 131px; cursor: pointer;"
+                    for="emailSend"
+                  ></label>
+                </div>
+              </div>
+            </div>
+            <!-- SMS -->
+            <div class="row mb-3">
+              <div class="col-10 d-flex justify-content-center">
+                <span
+                  class="badge badge-primary w-75 p-3"
+                  style="font-size: 100%;"
+                  >SMS</span
+                >
+              </div>
+              <div
+                class="col-2 d-flex justify-content-center align-items-center"
+              >
+                <div class="custom-control custom-switch">
+                  <input
+                    class="custom-control-input chkGlobalSettings"
+                    id="sms"
+                    type="checkbox"
+                    style="cursor: pointer;"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="width: 131px; cursor: pointer;"
+                    for="sms"
+                  ></label>
+                </div>
+              </div>
+            </div>
+            <!-- Print -->
+            <div class="row mb-3">
+              <div class="col-10 d-flex justify-content-center">
+                <span
+                  class="badge badge-primary w-75 p-3"
+                  style="font-size: 100%;"
+                  >Print</span
+                >
+              </div>
+              <div
+                class="col-2 d-flex justify-content-center align-items-center"
+              >
+                <div class="custom-control custom-switch">
+                  <input
+                    class="custom-control-input chkGlobalSettings"
+                    id="print"
+                    type="checkbox"
+                    style="cursor: pointer;"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="width: 131px; cursor: pointer;"
+                    for="print"
+                  ></label>
+                </div>
+              </div>
+            </div>
+            <!-- Preview -->
+            <div class="row">
+              <div class="col-10 d-flex justify-content-center">
+                <span
+                  class="badge badge-primary w-75 p-3"
+                  style="font-size: 100%;"
+                  >Preview</span
+                >
+              </div>
+              <div
+                class="col-2 d-flex justify-content-center align-items-center"
+              >
+                <i
+                  id="btnPreviewTemplate1"
+                  data-id="1"
+                  class="far fa-eye btnPreviewTemplate1"
+                  data-toggle="modal1"
+                ></i>
+              </div>
+            </div>
+            <!-- <div class="row mb-3">
+              <div
+                class="col-10 d-flex justify-content-center align-items-center"
+              >
+                <p class="m-0">Choose Template</p>
+              </div>
+              <div
+                class="col-2 d-flex justify-content-center align-items-center"
+              >
+                <div class="custom-control custom-switch">
+                  <input
+                    class="custom-control-input chkGlobalSettings"
+                    id="choosetemplate"
+                    type="checkbox"
+                    style="cursor: pointer;"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="width: 131px; cursor: pointer;"
+                    for="choosetemplate"
+                  ></label>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        <!-- Footer Buttons -->
+        <div class="modal-footer">
+          <button class="btn btn-primary printConfirm btnFooter" type="button">
+            <i class="fa fa-print" style="margin-right: 5px;"></i>
+            Confirm Print
+          </button>
+          <button class="btn btn-light" data-dismiss="modal" type="button">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

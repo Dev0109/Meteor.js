@@ -4,11 +4,29 @@
   uploadedFile
   isCurrencyEnable
   custfields
-  showTemplateModals
   showUploadAttachment
   showTransactionButtons
+  salesCloudPreferenceRec
+  showCustomer
+  showBilingAddress
+  showSalesDate
+  showPONumber
+  showInvoiceNumber
+  showVia
+  showTerms
+  showStatus
+  showReference
+  showDepartment
+  showCurrency
+  showCustomFields
+  showShippingInfo
+  showPayment
+  showCopyTransaction
+  showCopyToInvoice
+  showCopyToOrder
+  showBalanceDue
  -->
-<template name="transaction_header">
+ <template name="transaction_header">
   <style>
     @media (min-width: 1200px) {
       .row-middle .col-xl-2 {
@@ -24,11 +42,121 @@
       }
     }
   </style>
+   <style>
+    @media screen and (max-width: 387px) {
+      .btnSettings {
+        padding: 0px !important;
+        font-size: 16px !important;
+      }
+      h2 {
+        font-size: 24px;
+      }
+    }
+
+    @media screen and (max-height: 450px) and (max-width: 950px) {
+      .colPaid {
+        display: block !important;
+      }
+      #colBalanceDue {
+        /* display: none !important; */
+      }
+    }
+
+    @media screen and (max-width: 450px) {
+      .btnTransaction {
+        width: 80% !important;
+      }
+
+      .payNow {
+        margin-right: 8px !important;
+      }
+
+      .btnMakePayment {
+        margin-left: 8px !important;
+      }
+
+      .colBtn {
+        padding: 0px;
+      }
+
+      .colPaid {
+        display: block !important;
+      }
+
+      #colBalanceDue {
+        /* display: none !important; */
+      }
+    }
+
+    .templateItem {
+      display: inline-flex !important;
+
+    }
+
+    .btnPreviewTemplate {
+      padding: 6px;
+      cursor: pointer;
+    }
+
+    .btnPreviewTemplate:hover {
+      background-color: #f8f9fc;
+    }
+
+    #tblInvoiceLine_length,
+    #tblInvoiceLine_filter {
+      display: none;
+    }
+
+    .colUnitPriceEx,
+    .colUnitPriceInc,
+    .colAmountEx,
+    .colAmountInc {
+      cursor: pointer;
+    }
+    .lead {
+        font-size: 25px;
+        font-weight: 500;
+        margin: 0px;
+        color: #696969;
+        float: right;
+      }
+
+    .leadTotal {
+      font-weight: 800 !important;
+    }
+
+    .leadHidden {
+      visibility: hidden;
+      height: 0px !important;
+    }
+
+    @media screen and (min-width: 1366px) {
+      .colComments {
+        padding-right: 2.5rem;
+      }
+    }
+
+    @media screen and (max-width: 450px) {
+      .desktopButtons {
+        display: none;
+      }
+
+      .mobileButtons {
+        display: flex !important;
+      }
+    }
+
+    .paidIcon {
+      animation: blink 2s ease-in infinite;
+      -webkit-animation: blink 2s ease-in infinite;
+    }
+  </style>
   <header
     style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
     <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
       {{data.lid}}
       {{> helpbutton}}
+      {{#if showCustomFields}}
       <a 
         class="btn btnSettings"
         role="button"
@@ -37,6 +165,10 @@
         style="float: right;">
         <i class="icon ion-android-more-horizontal"></i>
       </a>
+      {{/if}}
+      {{#if equals data.isReconciled true}}
+      <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+      {{/if}}
     </h2>
     <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
   </header>
@@ -49,24 +181,8 @@
   {{> files_viewer_modal }}
   {{/if}}
 
-  {{#if showTemplateModals}}
-  {{> template_selection_modal}}
-  <div 
-    class="modal fade" 
-    id="templatePreviewModal" 
-    tabindex="2" 
-    role="dialog"
-    aria-labelledby="templatePreviewLabel" 
-    aria-hidden="true">
-    {{> custom_print_template 
-      modalId="templatePreviewModal" 
-      idPrefix="html-2-pdfwrapper"
-      namePrefix="html-2-pdfwrapper" 
-    }}
-  </div>
-  {{/if}}
   <div class="row" style="background-color: #ededed;">
-    {{#if equals data.ispaid true}}
+    {{#if data.ispaid}}
     <div class="col-12 colPaid" style="display: none;">
       <p style="font-size: 25px;font-weight: 700 ;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
       <input class="form-control form-control ispaidInv" type="hidden" value="true">
@@ -74,20 +190,50 @@
     {{/if}}
 
     <div class="col-12 col-xl-10">
-      <div class="row" style="margin: 8px 16px 0px 16px;">
-        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-        {{> customer_selector
-          label=getUserLabel
+      {{#if equals cardType 'Cheque'}}
+      {{> transaction_cheque_header
+        data=data
+      }}
+      {{#if showCustomFields}}
+        {{> custom_fields
+          containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
+          salesCloudPreferenceRec=salesCloudPreferenceRec
+          custfields=custfields
+          data=data
         }}
+      {{/if}}
+      {{else}}
+      <div class="row" style="margin: 8px 16px 0px 16px;">
+        {{#if showCustomer}}
+        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+          {{# if equals cardType 'Invoice'}}
+            {{> customer_selector
+              label=getUserLabel
+            }}
+          {{else}}
+          {{# if equals cardType 'Sales Order'}}
+            {{> customer_selector
+              label=getUserLabel
+            }}
+          {{else}}
+          {{> customer_selector
+            label=getUserLabel
+            id='edtSupplierName'
+          }}
+          {{/if}}
+          {{/if}}
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
           {{> customer_email_input
             label=getUserLabel
           }}
         </div>
+        {{/if}}
       </div>
+      {{/if}}
       
       <div class="row" style="margin: 16px 16px 0px 16px;">
+        {{#if showBilingAddress}}
         <div class="col-12 col-md-6 col-lg-2 col-xl-3">
           {{# vs1_textarea 
             label="Billing Address" 
@@ -96,18 +242,45 @@
             name="txabillingAddress"
           }}{{data.invoiceToDesc}}{{/vs1_textarea}}
         </div>
+        {{/if}}
         <div class="col-12 col-md-6 col-lg-8 col-xl-9 ">
           <div class="row row-middle">
+            {{#if showSalesDate}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
             {{> sale_date_selector
               label=getDateInputLabel
-              SODdate=data.saledate
+              SODate=data.saledate
               DueDate=data.duedate
             }}
             </div>
+            {{/if}}
+            {{#if showPONumber}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> po_number_input}}
+              {{> po_number_input
+                value=data.custPONumber
+                firstname=data.firstname
+                lastname=data.lastname
+              }}
             </div>
+            {{/if}}
+            {{#if showInvoiceNumber}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> invoice_number_input
+                  value=data.invoicenumber
+                }}
+              </div>
+            {{/if}}
+            {{#if showVia}}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_select
+                label="Via"
+                id="shipvia"
+                type="search"
+                name="shipvia"
+              }}
+            </div>
+            {{/if}}
+            {{#if showTerms}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Terms"
@@ -116,6 +289,8 @@
                 name="sltTerms"
               }}
             </div>
+            {{/if}}
+            {{#if showStatus}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Status"
@@ -124,6 +299,8 @@
                 name="sltStatus"
               }}
             </div>
+            {{/if}}
+            {{#if showReference}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_input
                 label="Reference"
@@ -134,7 +311,8 @@
                 defaultValue=data.reference
               }}
             </div>
-
+            {{/if}}
+            {{#if showDepartment}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Department"
@@ -142,20 +320,30 @@
                 name="sltDept"
               }}
             </div>
-            {{#if isCurrencyEnable}}
-            {{> CurrencyWidget rate="sell" trans="true"}}
             {{/if}}
-
+            {{#if isCurrencyEnable}}
+              {{#if equals cardType 'Invoice'}}
+              {{> CurrencyWidget rate="sell" trans="true"}}
+              {{else}}
+              {{#if equals cardType 'Sales Order'}}
+              {{> CurrencyWidget rate="sell" trans="true"}}
+              {{else}}
+              {{> CurrencyWidget rate="buy" row="true"}}
+              {{/if}}
+              {{/if}}
+            {{/if}}
+            {{#if showCustomFields}}
             {{> custom_fields
               containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
               salesCloudPreferenceRec=salesCloudPreferenceRec
               custfields=custfields
+              data=data
             }}
-
+            {{/if}}
           </div>
         </div>
-
       </div>
+      {{#if showShippingInfo}}
       <div class="row" style="margin: 16px 16px 0px 16px;">
         <div class="col-12 mb-3">
           <a class="btn btn-link" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notes"
@@ -171,15 +359,23 @@
 
         </div>
       </div>
+      {{/if}}
     </div>
     <div class="col-12 col-xl-2">
       <div class="row justify-content-end">
         {{> transaction_buttons_top 
-          showBalanceDue=true
+          hideBalanceDue=hideBalanceDue
           showButtons=showTransactionButtons
           recorddeleted=data.deleted
           recordispaid=data.ispaid
           recordbalanceDue=data.balanceDue
+          recordtype=cardType
+          isConverted=data.isConverted
+          abletomakeworkorder=abletomakeworkorder
+          showPayment=showPayment
+          showCopyTransaction=showCopyTransaction
+          showCopyToInvoice=showCopyToInvoice
+          showCopyToOrder=showCopyToOrder
         }}
       </div>
     </div>

@@ -1,0 +1,136 @@
+<!-- Transaction header for deposit -->
+<!-- Params
+  data
+-->
+<template name="transaction_deposit_header">
+  <div class="row no-gutters" style="background-color: #ededed;">
+    <div class="col">
+      <header>
+        <h1 style="margin: 32px;margin-bottom: 0;">{{data.lid}}
+          {{> helpbutton}}
+          {{> help_modal}}
+        </h1>
+        <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+      </header>
+    </div>
+
+    {{#if equals data.isReconciled true}}
+    <div class="col-2 colProcessed" id="colProcessed">
+      <h3 style="margin-left: -24px; margin-top: 36px; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+    </div>
+    {{/if}}
+  </div>
+
+  <script>
+    setTimeout(function () {
+      var x = window.matchMedia("(max-width: 420px)");
+      function mediaQuery(x) {
+        if (x.matches) {
+          $("#colAccount").removeClass("col-2");
+          $("#colAccount").addClass("col-6");
+          // $("#colArea").removeClass("col-1");
+          // $("#colArea").addClass("col-6");
+
+          $("#colDepNo").removeClass("col-1");
+          $("#colDepNo").addClass("col-6");
+          $("#colDepTotal").removeClass("col-1");
+          $("#colDepTotal").addClass("col-6");
+          $("#colDate").removeClass("col-1");
+          $("#colDate").removeClass("col-12");
+          $("#colDate").addClass("col-6");
+        }
+      }
+      mediaQuery(x);
+      x.addListener(mediaQuery)
+    }, 10);
+    setTimeout(function () {
+      var x = window.matchMedia("(max-width: 1024px)");
+      function mediaQuery(x) {
+        if (x.matches) {
+          $("#colAccount").removeClass("col-2");
+          $("#colAccount").addClass("col-6");
+          // $("#colArea").removeClass("col-1");
+          // $("#colArea").addClass("col-6");
+
+          $("#colDepNo").removeClass("col-1");
+          $("#colDepNo").addClass("col-4");
+          $("#colDepTotal").removeClass("col-1");
+          $("#colDepTotal").addClass("col-4");
+          $("#colDate").removeClass("col-1");
+          $("#colDate").addClass("col-4");
+        }
+      }
+      mediaQuery(x);
+      x.addListener(mediaQuery)
+    }, 10);
+    setTimeout(function () {
+      var x = window.matchMedia("(max-width: 1600px)");
+      function mediaQuery(x) {
+        if (x.matches) {
+          $("#colDepNo").removeClass("col-1");
+          $("#colDepNo").addClass("col-2");
+          $("#colDepTotal").removeClass("col-1");
+          $("#colDepTotal").addClass("col-2");
+        }
+      }
+      mediaQuery(x);
+      x.addListener(mediaQuery)
+    }, 10);
+  </script>
+  <style>
+    @media (min-width: 1366px) {
+      .sltDate {
+        width: 145px !important;
+      }
+
+      .sltArea {
+        width: 145px !important;
+      }
+    }
+  </style>
+
+  <div class="row" style="padding: 0px 32px; padding-bottom: 0; background-color: #ededed;">
+    <div class="col-6 col-lg-2 col-md-3">
+      {{> default_select
+        label="Account"
+        id="sltAccountName"
+        type="search"
+        name="sltAccountName"
+      }}
+    </div>
+    <div class="col-6 col-lg-2 col-md-2">
+      {{> default_input
+        type="text"
+        label="Deposit No."
+        id="edtEntryNo"
+        name="edtEntryNo"
+        defaultValue=data.id
+      }}
+    </div>
+    <div class="col-6 col-lg-2 col-md-3">
+      {{> default_input
+        type="text"
+        label="Deposit Total"
+        id="depositTotal"
+        name="depositTotal"
+        classes="depositTotal"
+        defaultValue=data.deposittotal
+      }}
+    </div>
+    <div class="col-6 col-lg-2 col-md-2">
+      {{> single_date_picker
+        label="Date"
+        id="dtTransDate"
+        name="dtTransDate"
+        defaultValue=data.transdate
+      }}
+    </div>
+    <div class="col-6 col-lg-4 col-md-4">
+      <div class="form-group d-flex" style="justify-content: right;">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary form-control" type="button" id="copyDeposit"
+          style="width: 160px; margin-top: 32px; margin-right: 2px;">Copy Deposit</button>
+      </div>
+    </div>
+  </div>
+</template>

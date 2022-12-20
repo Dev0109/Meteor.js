@@ -693,8 +693,8 @@ Template.new_workorder.events({
                                     DueDate: record.duedate,
                                     BOM: subs,
                                     SalesOrderID: templateObject.salesOrderId.get(),
-                                    OrderDate: new Date().toLocaleString(),
-                                    StartTime: subStart.toLocaleString(),
+                                    StartTime: subStart,
+                                    OrderDate: new Date(),
                                     InProgress: record.isStarted,
                                     Quantity: record.line.fields.Qty? record.line.fields.Qty* parseFloat(subs.qty) : subs.qty
                                 }
@@ -797,8 +797,8 @@ Template.new_workorder.events({
                 Line: record.line,
                 BOM: templateObject.bomStructure.get(),
                 SalesOrderID: templateObject.salesOrderId.get(),
-                OrderDate: new Date().toLocaleString(),
-                StartTime: mainOrderStart.toLocaleString(),
+                OrderDate: new Date(),
+                StartTime: mainOrderStart,
                 Quantity: record.line.fields.Qty || 1,
                 InProgress: record.isStarted,
             }
@@ -1452,7 +1452,7 @@ Template.new_workorder.events({
         event.preventDefault();
         let templateObject = Template.instance();
         let record = JSON.parse(JSON.stringify(templateObject.workorderrecord.get()))
-        record.line.fields.Qty = parseInt($(event.target).val())
+        record.line.fields.Qty = parseFloat($(event.target).val())
         templateObject.workorderrecord.set(record);
     },
 

@@ -1,0 +1,360 @@
+<template name="PayrollOverviewPayrunHistory">
+	
+	<style>
+                @media screen and (max-width: 450px) {
+                    .btnNav {
+                        width: 90% !important;
+                        margin: 12px 0px !important;
+                    }
+
+                    .btnNewOptions {
+                        display: none !important;
+                    }
+
+                    .QuoteList {
+                        width: 120px;
+                    }
+
+                    .salesOrderList {
+                        width: 120px;
+                    }
+
+                    .invoiceList {
+                        width: 120px;
+                    }
+
+                    .btnOpenSettingsMobile {
+                        display: block !important;
+                        margin: 12px 0px !important;
+                    }
+
+                    .btnOpenSettingsDesktop {
+                        display: none;
+                    }
+
+                    .dateSelectMobile {
+                        float: right !important;
+                        margin-right: 0px !important;
+                    }
+
+                    .dropdownMobile {
+                        margin: 0px !important;
+                    }
+                }
+            </style>
+
+            {{#if includePayrollClockOnOffOnly}}
+                <div class="row">
+                    <div class="col-6 col-md-7 col-lg-8">
+                        <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                        {{#if equals clockOnOff true}}
+                            <button id="btnClockOnOff" name="btnClockOnOff" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-user-clock" style="padding-right: 5px;"></i>Clock On/Off</button>
+                        {{/if}}
+                    </div>
+                    <div class="col-6 col-md-5 col-lg-4">
+                        <a class="btn btnNav btnNewOptions float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+
+                        <button class="btn btnNav btn-primary printConfirm float-right" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+
+                        <button style="margin: 12px;" class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+
+                        <div class="btn-group float-right btnNav" style="margin: 12px;">
+                            <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                            <div role="menu" class="dropdown-menu">
+                                <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
+                                <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                            </div>
+                        </div>
+
+                        <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+                    </div>
+                </div>
+
+                <div class="card-body px-0 py-2 rounded">
+                    <div class="table-responsive">
+                        
+                        <style>
+
+                            th {
+                                background-color: #ededed;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer>tbody>tr>td,
+                            .JColResizer>tbody>tr>th {
+                                padding: .75rem !important;
+                            }
+
+                            .hiddenColumn {
+                                display: none;
+                            }
+
+                            .showColumn {
+                                display: table-cell;
+                                padding: .75rem;
+                                vertical-align: top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+                        </style>
+                        <table id="tblPayHistorylist" name="tblPayHistorylist"  class="dataTable table table-hover table-striped table-bordered tblPayHistorylist">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colPayNo hiddenColumn">Pay No</th>
+                                    <th class="th colEmployeeName">Employee Name</th>
+                                    <th class="th colEmployeeNo hiddenColumn">Emp #</th>
+                                    <th class="th colCalendar">Calendar</th>
+                                    <th class="th colPayDate">Payment Date</th>
+                                    <th class="th colWages">Wages</th>
+                                    <th class="th colTax">Tax</th>
+                                    <th class="th colSuper">Super</th>
+                                    <th class="th colGross">Gross</th>
+                                    <th class="th colNetPay">Net Pay</th>
+                                    <th class="th colPaid" style="width:20px;">Paid</th>
+                                    <th class="th colCommission hiddenColumn">Commission</th>
+                                    <th class="th colDeduction hiddenColumn">Deduction</th>
+                                    <th class="th colAllowance hiddenColumn">Allowance</th>
+                                    <th class="th colNotes">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if datatablerecords}}
+                                {{#each item in datatablerecords}}
+                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                    <td contenteditable="false" class="colPayNo hiddenColumn">{{item.payid}}</td>
+                                    <td contenteditable="false" class="colEmployeeName">{{item.employeename}}</td>
+                                    <td contenteditable="false" class="colEmployeeNo hiddenColumn">{{item.id}}</td>
+                                    <td contenteditable="false" class="colCalendar">{{item.calendar}}</td>
+
+                                    <td contenteditable="false" class="colPayDate">{{item.paydate}}</td>
+                                    <td contenteditable="false" class="colWages" style="text-align: right!important;">
+                                        {{item.earning}}</td>
+                                    <td contenteditable="false" class="colTax" style="text-align: right!important;">
+                                        {{item.tax}}</td>
+                                    <td contenteditable="false" class="colSuper" style="text-align: right!important;">
+                                        {{item.super}}</td>
+                                    <td contenteditable="false" class="colGross" style="text-align: right!important;">
+                                        {{item.gross}}</td>
+                                    <td contenteditable="false" class="colNetPay" style="text-align: right!important;">
+                                        {{item.netpay}}</td>
+                                    <td contenteditable="false" class="colPaid" style="text-align: center;">
+                                        {{#if equals item.paid true}}
+                                        <div class="custom-control custom-switch"
+                                            style="display: inline-flex !important;">
+                                            <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                                id="chkPaid" checked>
+                                            <label class="custom-control-label"
+                                                style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                        </div>
+                                        {{else}}
+                                        <div class="custom-control custom-switch"
+                                            style="display: inline-flex !important;">
+                                            <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                                id="chkPaid">
+                                            <label class="custom-control-label"
+                                                style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                        </div>
+                                        {{/if}}
+                                    </td>
+                                    <td contenteditable="false" class="colCommission hiddenColumn"
+                                        style="text-align: right!important;">{{item.commission}}</td>
+                                    <td contenteditable="false" class="colDeduction hiddenColumn"
+                                        style="text-align: right!important;">{{item.deduction}}</td>
+                                    <td contenteditable="false" class="colAllowance hiddenColumn"
+                                        style="text-align: right!important;">{{item.allowance}}</td>
+                                    <td contenteditable="false" class="colNotes">{{item.notes}}</td>
+
+                                </tr>
+                                {{/each}}
+                                {{/if}}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {{else}}
+            
+                <div class="row">
+                    <div class="col-6 col-md-7 col-lg-8">
+                        <button class="btn btnNav btn-primary btnRefresh" type="button" 
+                                style="margin: 12px; margin-left: 0px">
+                                <i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                        {{!-- <button class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;" data-toggle="modal" data-target="#newPayRunModal">
+                            <i class="fas fa-check" style="margin-right: 5px;"></i>Add Pay Run
+                        </button> --}}
+                        {{#if equals showTimesheet true}}
+                        <button class="btn btnNav btn-primary" id="btnTimesheet" name="btnTimesheet" type="button"
+                            style="margin: 12px;"><i class="fas fa-clock"
+                                style="padding-right: 5px;"></i>Timesheet List</button>
+                        {{/if}}
+
+                        {{#if equals clockOnOff true}}
+                        <button id="btnClockOnOff" name="btnClockOnOff" class="btn btnNav btn-primary" type="button"
+                            role="button" style="margin: 12px;"><i class="fas fa-user-clock"
+                                style="padding-right: 5px;"></i>Clock On/Off</button>
+                        {{/if}}
+
+                        <button id="btnSingleTouchPayroll" name="btnSingleTouchPayroll" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-dollar-sign" style="padding-right: 5px;"></i>ST Payroll</button>
+                        <a href="/payrollleave" class="btn btnNav btn-primary">Payroll Leave</a>
+                    </div>
+                    <div class="col-6 col-md-5 col-lg-4">
+                        <a class="btn btnNav float-right" role="button" data-toggle="modal" href="#myModal2"
+                            style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+
+                        <button class="btn btnNav btn-primary printConfirm float-right" type="button"
+                            style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+
+                        <button style="margin: 12px;" class="btn btnNav btn-primary float-right" role="button"
+                            data-toggle="modal" href="#importModal"><i class="fas fa-file-import"
+                                style="padding-right: 5px;"></i>Import</button> 
+                        <div class="btn-group float-right btnNav" style="margin: 12px;">
+                            <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export"
+                                    style="margin-right: 5px;"></i>Export</button>
+                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                                aria-expanded="false" type="button"></button>
+                            <div role="menu" class="dropdown-menu">
+                                <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel"
+                                    href="#">Export Excel</a>
+                                <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export
+                                    CSV</a>
+                            </div>
+                        </div>
+
+                        <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal"
+                            href="#myModal2" style="margin: 16px; display: none;"><i
+                                class="icon ion-android-more-horizontal"></i></a>
+                        
+                    </div>
+                </div>
+
+                <div class="card-body  px-0 py-2  rounded" style="display: none;">
+
+                    <!-- Start {{> optionNavSalesOverview}} -->
+
+                    <!-- End -->
+
+                    <div class="table-responsive">
+
+                        <style>
+                            th {
+                                background-color: #ededed;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: white !important;
+                            }
+
+                            .table-striped tbody tr:nth-of-type(even) {
+                                background-color: #0000000d !important;
+                            }
+
+                            .JColResizer>tbody>tr>td,
+                            .JColResizer>tbody>tr>th {
+                                padding: .75rem !important;
+                            }
+
+                            .hiddenColumn {
+                                display: none;
+                            }
+
+                            .showColumn {
+                                display: table-cell;
+                                padding: .75rem;
+                                vertical-align: top;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                opacity: 1;
+                            }
+                        </style>
+
+                        <table id="tblPayHistorylist" name="tblPayHistorylist" class="dataTable table table-hover table-striped table-bordered tblPayHistorylist">
+                            <thead>
+                                <tr class="dnd-moved"> 
+
+                                    <th class="th colPayNo hiddenColumn">Pay No</th>
+                                    <th class="th colEmployeeName">Employee Name</th>
+                                    <th class="th colEmployeeNo hiddenColumn">Emp #</th>
+                                    <th class="th colCalendar">Calendar</th>
+                                    <th class="th colPayDate">Payment Date</th>
+                                    <th class="th colWages">Wages</th>
+                                    <th class="th colTax">Tax</th>
+                                    <th class="th colSuper">Super</th>
+                                    <th class="th colGross">Gross</th>
+                                    <th class="th colNetPay">Net Pay</th>
+                                    <th class="th colPaid" style="width:20px;">Paid</th>
+                                    <th class="th colCommission hiddenColumn">Commission</th>
+                                    <th class="th colDeduction hiddenColumn">Deduction</th>
+                                    <th class="th colAllowance hiddenColumn">Allowance</th>
+                                    <th class="th colNotes">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if datatablerecords}}
+                                    {{#each item in datatablerecords}}
+                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                            <td contenteditable="false" class="colPayNo hiddenColumn">{{item.payid}}</td>
+                                            <td contenteditable="false" class="colEmployeeName">{{item.employeename}}</td>
+                                            <td contenteditable="false" class="colEmployeeNo hiddenColumn">{{item.id}}</td>
+                                            <td contenteditable="false" class="colCalendar">{{item.calendar}}</td>
+
+                                            <td contenteditable="false" class="colPayDate">{{item.paydate}}</td>
+                                            <td contenteditable="false" class="colWages" style="text-align: right!important;">
+                                                {{item.earning}}</td>
+                                            <td contenteditable="false" class="colTax" style="text-align: right!important;">
+                                                {{item.tax}}</td>
+                                            <td contenteditable="false" class="colSuper" style="text-align: right!important;">
+                                                {{item.super}}</td>
+                                            <td contenteditable="false" class="colGross" style="text-align: right!important;">
+                                                {{item.gross}}</td>
+                                            <td contenteditable="false" class="colNetPay" style="text-align: right!important;">
+                                                {{item.netpay}}</td>
+                                            <td contenteditable="false" class="colPaid" style="text-align: center;">
+                                                {{#if equals item.paid true}}
+                                                <div class="custom-control custom-switch"
+                                                    style="display: inline-flex !important;">
+                                                    <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                                        id="chkPaid" checked>
+                                                    <label class="custom-control-label"
+                                                        style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                                </div>
+                                                {{else}}
+                                                <div class="custom-control custom-switch"
+                                                    style="display: inline-flex !important;">
+                                                    <input class="custom-control-input" type="checkbox" name="chkPaid"
+                                                        id="chkPaid">
+                                                    <label class="custom-control-label"
+                                                        style="position: absolute; margin-top: 5px;" for="chkPaid"></label>
+                                                </div>
+                                                {{/if}}
+                                            </td>
+                                            <td contenteditable="false" class="colCommission hiddenColumn"
+                                                style="text-align: right!important;">{{item.commission}}</td>
+                                            <td contenteditable="false" class="colDeduction hiddenColumn"
+                                                style="text-align: right!important;">{{item.deduction}}</td>
+                                            <td contenteditable="false" class="colAllowance hiddenColumn"
+                                                style="text-align: right!important;">{{item.allowance}}</td>
+                                            <td contenteditable="false" class="colNotes">{{item.notes}}</td>
+
+                                        </tr>
+                                    {{/each}}
+                                {{/if}}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {{/if}}
+</template>

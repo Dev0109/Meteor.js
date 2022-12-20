@@ -3,6 +3,7 @@
   containerClasses
   custfields
   salesCloudPreferenceRec
+  data
 -->
 <template name="custom_fields">
   <div class="col-12 col-md-6 col-lg-4 col-xl-2">
@@ -12,7 +13,7 @@
         <div class="form-group">
           <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
           <input class="form-control form-control" type="text" id="edtSaleCustField1"
-            name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
+            name="edtSaleCustField1" value="{{data.saleCustField1}}" custfieldid=''>
         </div>
       </div>
     </div>
@@ -25,7 +26,7 @@
         <div class="form-group">
           <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
           <input class="form-control form-control" type="text" id="edtSaleCustField2"
-            name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
+            name="edtSaleCustField2" value="{{data.saleCustField2}}" custfieldid=''>
         </div>
       </div>
     </div>
@@ -38,7 +39,7 @@
         <div class="form-group">
           <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
           <input class="form-control form-control" type="text" id="edtSaleCustField3"
-            name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
+            name="edtSaleCustField3" value="{{data.saleCustField3}}" custfieldid=''>
         </div>
       </div>
     </div>

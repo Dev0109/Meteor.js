@@ -7,10 +7,11 @@
   <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
       {{> newproductpop}}
   </div>
-
+  {{#if customerRecord}}
   <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-      {{> addcustomerpop}}
+      {{> addcustomerpop customerRecord=customerRecord}}
   </div>
+  {{/if}}
 
   <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
       {{> termlistpop}}
@@ -155,8 +156,10 @@
 </div>
 
 <!-- End Modal Supplier -->
+{{#if supplierRecord}}
 <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
-    {{> addsupplierpop}}
+    {{> addsupplierpop supplierRecord=supplierRecord}}
 </div>
+{{/if}}
 
 </template>

@@ -18,6 +18,7 @@ let utilityService = new UtilityService();
 var times = 0;
 Template.stockadjustmentcard.onCreated(() => {
     const templateObject = Template.instance();
+    templateObject.hasFollow = new ReactiveVar(false);
     templateObject.records = new ReactiveVar();
     templateObject.originrecord = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
@@ -74,11 +75,33 @@ Template.stockadjustmentcard.onCreated(() => {
 
 });
 Template.stockadjustmentcard.onRendered(() => {
+    const templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        let stockTransferService = new StockTransferService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
+            var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
+            var stockList = followingStocks.tstockadjustentry;
+            if(stockList.length > 1){
+                templateObject.hasFollow.set(true);
+            } else {
+                templateObject.hasFollow.set(false);
+            }
+        }
+    }
+    templateObject.hasFollowings();
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
     };
-    const templateObject = Template.instance();
+
+
+
+
     const records = [];
     let stockTransferService = new StockTransferService();
 
@@ -312,7 +335,7 @@ Template.stockadjustmentcard.onRendered(() => {
                         };
 
                         let getDepartmentVal = data.fields.Lines[0].fields.DeptName || defaultDept;
-
+                        console.log(getDepartmentVal);
                         setTimeout(function () {
                             // $('#sltDepartment').val(getDepartmentVal);
                             $('#sltAccountName').val(data.fields.AccountName);
@@ -2123,26 +2146,8 @@ Template.stockadjustmentcard.events({
     },
     'click .btnRemove': async function (event) {
         let templateObject = Template.instance();
-        let utilityService = new UtilityService();
-        let stockTransferService = new StockTransferService();
-        var currentDate = new Date();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var stockList = [];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
-            var adjustmentDate = stockData.fields.AdjustmentDate;
-            var fromDate = adjustmentDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
-            stockList = followingStocks.tstockadjustentry;
-        }
-
         if(targetID != undefined) {    
             times++;
             if (times == 1) {
@@ -2165,7 +2170,7 @@ Template.stockadjustmentcard.events({
                 }
             }
         } else {
-            if(stockList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

@@ -9,225 +9,15 @@
                     margin: 0px !important;
                 }
             }
+            #transferreason {
+                padding: 2px !important;
+            }
         </style>
-        <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-            <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Stock Transfer
-                {{> helpbutton}}
-                <!-- <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a> -->
-            </h2>
-            <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
-        </header>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding-bottom: 8px;">
-                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                        <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                    </div>
-                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
-            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4>Field Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <form class="d-xl-flex align-items-xl-center">
-                                <div class="flex-grow-1">
-                                    <div class="custom-control custom-switch" style="margin: 8px;">
-                                        <input class="custom-control-input" type="checkbox" id="formCheck-one" value="one">
-                                        <label class="custom-control-label" style="position: absolute;" for="formCheck-one"></label>
-                                        <div contenteditable="true" class="groove customField1Text">Custom Field 1</div>
-                                    </div>
-
-                                    <div class="custom-control custom-switch" style="margin: 8px;">
-                                        <input class="custom-control-input" type="checkbox" id="formCheck-two" value="two">
-                                        <label class="custom-control-label" style="position: absolute;" for="formCheck-two"></label>
-                                        <div contenteditable="true" class="groove customField2Text">Custome Field 2</div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-success btnSaveSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                        <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         {{#if stocktransferrecord}}
 
-            <style>
-                #transferreason {
-                    padding: 2px !important;
-                }
-            </style>
-
-            <!-- <div class="row" style="background-color: #ededed; padding: 32px;">
-                <div class="col-12 col-lg-6">
-                    <div class="row">
-                        <div class="col-12 col-lg-4">
-                            <div class="form-group"><label>Employee Email</label>
-                                <input class="form-control" type="text" id="edtCustomerEmail" name="edtCustomerEmail" customerid=" " customerfirstname=" " customerlastname=" " style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                            </div>
-                            <div class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center" style="margin: 0px 16px; margin-bottom: 24px; padding:-2px; padding-left: 24px; width: 100%;">
-                                <div class="form-group" style="margin-right: 35px; Width:50%;">
-                                    <input class="custom-control-input chkEmailCopy" type="checkbox" id="formCheck-1" style="font-size: 22px;"><label class="custom-control-label" for="formCheck-1">Email Employee</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-8">
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea class="form-control" rows="3" id="shipcomments" name="shipcomments">{{stocktransferrecord.notes}}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 col-lg-4">
-                            <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
-                                <label>Transfer Date</label>
-                                <div class="input-group date" style="cursor: pointer;">
-                                    <input type="text" class="form-control" id="dtShipDate" name="dtShipDate" value="{{stocktransferrecord.transdate}}">
-                                    <div class="input-group-addon" style="">
-                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Ship Via</label>
-                                <select type="search" class="form-control" id="shipvia" name="shipvia" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-6 col-lg-4">
-                            <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
-                                <label>Transfer From</label>
-                                <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>To Account</label>
-                                <select type="search" class="form-control" id="sltBankAccountName" name="sltBankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-6 col-lg-4">
-                            <div class="form-group">
-                                <label>Transfer No</label>
-                                <input class="form-control" type="text" id="txtTransfer" name="txtTransfer" value="{{stocktransferrecord.id}}">
-                            </div>
-                            <div class="form-group">
-                                <label>Reason</label>
-                                <input class="form-control" type="text" id="txtNotes" name="txtNotes" value="{{stocktransferrecord.descriptions}}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-2 colProcessed" id="colProcessed" style="display: none;">
-                    <h3 style="margin-left: 0px; margin-top: 35px; color: #e02d1b; font-weight: 600;">Processed</h3>
-                </div>
-            </div> -->
-
-            <!-- <div class="row" style="background-color: #ededed; padding: 32px; padding-bottom: 0px;">
-                <div class="col-12 col-lg-2">
-                    <div class="form-group"><label>Employee Email</label>
-                        <input class="form-control" type="text" id="edtCustomerEmail" name="edtCustomerEmail" customerid=" " customerfirstname=" " customerlastname=" ">
-                    </div>
-                    <div class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center" style="margin: 0px 16px;padding: -2px;padding-left: 24px;width: 100%;">
-                        <div class="form-group" style="margin-right: 35px; Width:50%;">
-                            <input class="custom-control-input chkEmailCopy" type="checkbox" id="formCheck-1" style="font-size: 22px;"><label class="custom-control-label" for="formCheck-1">Email Employee</label>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-            <div class="row" style="background-color: #ededed; padding: 32px; padding-bottom: 0px;">
-
-                <div class="col-12 col-md-6 col-lg-2 colProcessed" id="colProcessed" style="display: none;">
-                    <h3 style="margin-left: 0px; margin-top: 35px; color: #e02d1b; font-weight: 600;">Processed</h3>
-                </div>
-            </div>
-            <div class="row" style="background-color: #ededed; padding: 8px 32px 0px 32px;">
-                <div class="col-12 col-lg-3">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group" style="margin-bottom: 0px !important;">
-                                <label>Employee Email</label>
-                                <input class="form-control" type="text" id="edtCustomerEmail" name="edtCustomerEmail" customerid=" " customerfirstname=" " customerlastname=" " style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                            </div>
-                            <div class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center" style="margin: 8px 16px;padding-left: 24px;width: 100%;">
-                                <div class="form-group" style="margin-right: 35px; Width:50%;">
-                                    <input class="custom-control-input chkEmailCopy" type="checkbox" id="formCheck-1" style="font-size: 22px;"><label class="custom-control-label" for="formCheck-1">Email Employee</label>
-                                </div>
-                            </div>
-                            <div class="form-group" style="max-width: 25%;">
-                                <label>Transfer No</label>
-                                <input class="form-control" type="text" id="txtTransfer" name="txtTransfer" value="{{stocktransferrecord.id}}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3">
-                    <div class="row">
-                        <div class="col-6 col-lg-6">
-                            <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY" style="margin-bottom: 2.5rem;">
-                                <label>Transfer Date</label>
-                                <div class="input-group date" style="cursor: pointer;">
-                                    <input type="text" class="form-control" id="dtShipDate" name="dtShipDate" value="{{stocktransferrecord.transdate}}">
-                                    <div class="input-group-addon" style="">
-                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Ship Via</label>
-                                <select type="search" class="form-control" id="shipvia" name="shipvia" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-6 col-lg-6">
-                            <div class="form-group" style="margin-bottom: 2.5rem;">
-                                <label>Transfer From</label>
-                                <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>To Account</label>
-                                <select type="search" class="form-control" id="sltBankAccountName" name="sltBankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3">
-                    <div class="form-group">
-                        <label>Reason</label>
-                        <textarea class="form-control" rows="4" id="txtNotes" name="txtNotes" style="height: 150px;">{{stocktransferrecord.descriptions}}</textarea>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3">
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea class="form-control" rows="4" id="shipcomments" name="shipcomments" style="height: 150px;">{{stocktransferrecord.notes}}</textarea>
-                    </div>
-                </div>
-            </div>
+            {{> transaction_stocktransfer_header
+                data=stocktransferrecord
+            }}
 
             <div class="row" style="margin: 0px 32px; margin-top: 16px;">
                 <div class="table-responsive">
@@ -434,7 +224,7 @@
                                     <input class="form-control" id="allocBarcode" name="allocBarcode" type="text" placeholder="Enter the barcode">
                                     <style>
                                         .btnWhite {
-                                            color: #fff !importnat;
+                                            color: #fff !important;
                                         }
                                     </style>
                                     <div class="input-group-append">
@@ -551,7 +341,7 @@
                 <button class="btn btn-success btnSave" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                 <button class="btn btn-success btnProcess" type="button" style="margin: 12px;"><i class="fa fa-check" style="margin-right: 5px;"></i>Process</button>
                 <button class="btn btn-primary btnHold" type="button" style="margin: 12px;"><i class="fa fa-clock" style="margin-right: 5px;"></i>Hold</button>
-                <button class="btn btn-danger btnDeleteStockTransfer" type="button" style="margin: 12px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                <button class="btn btn-danger removebutton" type="button" style="margin: 12px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
 
                 <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                 <button class="btn btn-secondary btnBack" type="button" style="margin: 12px;">
@@ -753,7 +543,7 @@
                                 <input class="form-control" id="scanBarcodeModalInput" name="scanBarcodeModalInput" type="text" placeholder="Enter the barcode">
                                 <style>
                                     .btnWhite {
-                                        color: #fff !importnat;
+                                        color: #fff !important;
                                     }
                                 </style>
                                 <div class="input-group-append">

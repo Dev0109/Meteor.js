@@ -4,7 +4,7 @@
             <div class="spinner"></div>
         </div>
         <div class="row mb-4" style="padding: 16px;">
-            <h2 class="text-dark mb-0">New Bank Reconciliation
+            <h2 class="text-dark mb-0">Bank Reconciliation 2
                 <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
             </h2>
             <!-- Start Help View Modal -->
@@ -183,7 +183,7 @@
             <div class="col-12 col-md-11">
                 <div class="card shadow" style="padding: 16px;">
                     <div class="row">
-                        <div class="col-12 col-md-6" style="display: flex;">
+                        <div class="col-12 col-md-6 align-items-center" style="display: flex;">
                             <div style="border-right: 1px solid #e3e6f0; padding-right: 16px; margin-right: 16px;">
                                 <p class="yodleeBalance" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">$ 0.00</p>
                                 <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Statement Balance</p>
@@ -200,6 +200,8 @@
                                     <input type="hidden" style="width: 100%; display:none;" id="bankAccountID" name="bankAccountID" readonly>
                                 </div>
                             </div>
+                            <button class="btn btn-primary mt-2" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import Statement</button>
+                            {{> reconImportModal}}
                         </div>
                         <div class="col-12 col-md-6" style="display: flex; justify-content: end;">
                             <div style="padding-right: 16px; margin-right: 16px; text-align: right;">

@@ -1,7 +1,10 @@
+import { EmployeePayrollService } from '../js/employeepayroll-service';
+
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.custdatatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.leaveTypesList = new ReactiveVar([]);
 
     templateObject.selectedFile = new ReactiveVar();
 });
@@ -9,7 +12,34 @@ Template.assignLeaveTypePop.onCreated(function () {
 Template.assignLeaveTypePop.onRendered(function () {
     const templateObject = Template.instance();
     templateObject.currentDrpDownID = new ReactiveVar();
+
+
+    templateObject.getTLeaveTypes = async() => {
+        try { 
+            let data = [];
+            let dataObject = await getVS1Data('TAssignLeaveType')
+            data = JSON.parse(dataObject[0].data);  
+            if (data.tassignleavetype.length > 0) { 
+                let useData = data.tassignleavetype;
+                templateObject.leaveTypesList.set(useData);
+            }
+        } catch (err) {  
+        } 
+    } 
+
+    templateObject.getTLeaveTypes();
 });
+
+Template.assignLeaveTypePop.events({
+    'click #tblAssignLeaveTypes > tbody > tr': async function(event) {
+        $(".colALTypeID").html();
+        $(".leave-type-name").html(); 
+        
+         
+    },
+
+});
+
 
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
@@ -43,16 +73,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#period').editableSelect('add','Four Weekly');
         $('#period').editableSelect('add','Monthly');
         $('#period').editableSelect('add','Quarterly');
-
-
-        // $('#leaveCalcMethodSelect').editableSelect('add','Fixed Amount Each Period');
-        // $('#leaveCalcMethodSelect').editableSelect('add','Manually Recorded Rate');
-        // $('#leaveCalcMethodSelect').editableSelect('add','No Calculation Required');
-        // $('#leaveCalcMethodSelect').editableSelect('add','Based on Ordinary Earnings');
-        // $('.customEditableSelect').editableSelect('add', function(item){
-        //     $(this).val(item.id);
-        //     $(this).text(item.name);
-        // });
+        
         $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -208,5 +229,10 @@ Template.assignLeaveTypePop.onCreated(function () {
 Template.assignLeaveTypePop.helpers({
     terminationBalance: (t) => {
         return t ?  'Paid Out': 'Not Paid Out';
-    }
+    },
+    leaveTypesList: () => { 
+        return Template.instance().leaveTypesList.get();
+    },
+
+    
 })

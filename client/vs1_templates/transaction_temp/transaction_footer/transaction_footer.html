@@ -1,0 +1,51 @@
+<!-- Transaction Footer -->
+<!-- Params 
+    hideSaveButton
+    hidePrintButton
+    hideAttachmentButton
+    hideRemoveButton
+    hideCancelButton
+    AttachmentCount
+    title
+    TransactionType
+    cardType
+    data
+-->
+<template name="transaction_footer">
+  <style>
+    .btnFooter{
+      /* margin: {{margin}}; */
+      margin: 12px;
+      margin-top: 0px;
+      min-width: 100px;
+    }
+    .btnFooter .fa {
+      padding-right: 8px;
+    }
+  </style>
+  {{#unless hideSaveButton}}
+    {{> template_footer_save_button }}
+  {{/unless}}
+
+  {{#unless hidePrintButton}}
+    {{> template_footer_print_button
+      type=TransactionType
+    }}
+  {{/unless}}
+
+  {{#unless hideAttachmentButton}}
+    {{> template_footer_attachment_button
+      count=AttachmentCount
+    }}
+  {{/unless}}
+
+  {{#unless hideRemoveButton}}
+    {{> template_footer_remove_button}}
+  {{/unless}}
+
+  {{#unless hideCancelButton}}
+    {{> template_footer_cancel_button}}
+  {{/unless}}
+
+  {{> transaction_print_modal TransactionType=TransactionType data=data cardType=cardType}}
+</template>

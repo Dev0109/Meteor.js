@@ -74,24 +74,25 @@ Template.basreturntransactionlist.onRendered(function() {
             endDate = new Date(data.Tab4_Year, (parseInt(endMonth)), 0);
             endDate = moment(endDate).format("YYYY-MM-DD");
         }
-        for (let i = 0; i < data.Lines.length; i++) {
-            if (data.Lines[i].fields.ReportCode == transactionitem) {
-                var dataList = {
-                    description: data.BasSheetDesc,
-                    accountingMethod: data.AccMethod,
-                    datemethod: datemethod,
-                    dateFrom: startDate,
-                    dateTo: endDate,
-                    globalref: data.Lines[i].fields.TransGlobalref,
-                    transtype: data.Lines[i].fields.Transtype,
-                    transdate: moment(data.Lines[i].fields.TransDate).format("YYYY-MM-DD"),
-                    amount: data.Lines[i].fields.Amount,
-                };
+        if (data.Lines != null) {
+            for (let i = 0; i < data.Lines.length; i++) {
+                if (data.Lines[i].fields.ReportCode == transactionitem) {
+                    var dataList = {
+                        description: data.BasSheetDesc,
+                        accountingMethod: data.AccMethod,
+                        datemethod: datemethod,
+                        dateFrom: startDate,
+                        dateTo: endDate,
+                        globalref: data.Lines[i].fields.TransGlobalref,
+                        transtype: data.Lines[i].fields.Transtype,
+                        transdate: moment(data.Lines[i].fields.TransDate).format("YYYY-MM-DD"),
+                        amount: data.Lines[i].fields.Amount,
+                    };
 
-                dataTableList.push(dataList);
+                    dataTableList.push(dataList);
+                }
             }
         }
-
         templateObject.datatablerecords.set(dataTableList);
         setTimeout(function() {
             $('#tblBasReturnTransactionList').DataTable({
@@ -185,7 +186,7 @@ Template.basreturntransactionlist.onRendered(function() {
                     } else {
                         reportService.getOneBASReturn(basreturnid).then(function(data) {
                             if (data.tbasreturn.length > 0 && transactionitem != "") {
-                                templateObject.getAccountsSummaryReports(data.tbasreturn[i].fields, transactionitem);
+                                templateObject.getAccountsSummaryReports(data.tbasreturn[0].fields, transactionitem);
                             }
                             $('.fullScreenSpin').css('display', 'none');
                         })
@@ -193,7 +194,7 @@ Template.basreturntransactionlist.onRendered(function() {
                 }).catch(function(err) {
                     reportService.getOneBASReturn(basreturnid).then(function(data) {
                         if (data.tbasreturn.length > 0 && transactionitem != "") {
-                            templateObject.getAccountsSummaryReports(data.tbasreturn[i].fields, transactionitem);
+                            templateObject.getAccountsSummaryReports(data.tbasreturn[0].fields, transactionitem);
                         }
                         $('.fullScreenSpin').css('display', 'none');
                     })

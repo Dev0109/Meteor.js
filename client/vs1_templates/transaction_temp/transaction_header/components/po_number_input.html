@@ -1,11 +1,21 @@
+<!-- Po number input -->
+<!-- Params 
+  label
+  value
+  firstname
+  lastname
+-->
+
 <template name="po_number_input">
   <div class="form-group">
-    <label>P.O. Number</label>
+    <label>
+      P.O. Number
+    </label>
     <input class="form-control form-control" type="text" id="ponumber" name="ponumber"
-      value="{{invoicerecord.custPONumber}}">
+      value="{{value}}">
     <input class="form-control form-control" type="hidden" id="firstname"
-      value="{{invoicerecord.firstname}}">
+      value="{{firstname}}">
     <input class="form-control form-control" type="hidden" id="lastname"
-      value="{{invoicerecord.lastname}}">
+      value="{{lastname}}">
     </div>
 </template>

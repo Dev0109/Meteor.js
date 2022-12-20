@@ -1,0 +1,17 @@
+<template name="init_form_page_script">
+    <script>
+        $(document).ready(function () {
+            localStorage.setItem("isFormUpdated", false);
+
+            setTimeout(() => {
+                $("#form").on("change", "input, select, textarea", function () {
+                    localStorage.setItem("isFormUpdated", true);
+                });
+
+                $(".btnSave").click(function () {
+                    localStorage.setItem("isFormUpdated", false);
+                });
+            }, 3000);
+        });
+    </script>
+</template>

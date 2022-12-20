@@ -98,7 +98,7 @@
         <table id="{{tablename}}" name="{{tablename}}" style="width:100%" class="table table-bordered {{tablename}}">
             <thead>
                 <tr class="dnd-moved">
-                    <th data-col-index="0" data-class="colChkBoxAll pointer" style="width:15px!important;">
+                    <th data-col-index="0" data-class="colChkBoxAll pointer" style="width:10%!important;">
                         <div class="custom-control custom-switch colChkBoxAll pointer" style="width:15px;">
                             <input name="pointer" class="custom-control-input colChkBoxAll pointer" type="checkbox" id="colChkBoxAll" value="0">
                             <label class="custom-control-label colChkBoxAll" for="colChkBoxAll"></label>
@@ -106,7 +106,7 @@
                     </th>
                     {{#each displayfield in int_trans_with_switchbox_displayfields}}
                         {{#if displayfield.display}}
-                            <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{displayfield.width}}px">
+                            <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{displayfield.width}}!important;">
                                 {{displayfield.custfieldlabel}}
                             </th>
                         {{/if}}

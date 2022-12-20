@@ -6,6 +6,7 @@ import '../lib/global/erp-objects';
 import XLSX from 'xlsx';
 import 'jquery-editable-select';
 import { AccountService } from "../accounts/account-service";
+import showBankInfo from "./bankInfo";
 
 let accountService = new AccountService();
 let utilityService = new UtilityService();
@@ -23,10 +24,13 @@ Template.bankrecon.onCreated(function() {
     templateObject.okreconVS1with = new ReactiveVar([]);
     templateObject.selectedTransdep = new ReactiveVar([]);
     templateObject.selectedTranswith = new ReactiveVar([]);
+    templateObject.originalTransdep = new ReactiveVar([]);
+    templateObject.originalTranswith = new ReactiveVar([]);
 });
 
 Template.bankrecon.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
+    localStorage.setItem("reconHoldState", "false");
     $('#tblVS1Dep tbody').on('click', 'tr td.depositClick', function() {
         let paymentType = $(this).closest('tr').find('td:nth-child(5)').text();
         let selectDepositID = $(this).closest('tr').find('td:nth-child(6)').text();
@@ -82,7 +86,7 @@ Template.bankrecon.onRendered(function() {
     const url = FlowRouter.current().path;
     let accountnamerecords = [];
     let selectedTransAmountdep = 0;
-    let selectedTransAmountwidth = 0;
+    let selectedTransAmountwith = 0;
 
     templateObject.getAccountNames = function() {
         reconService.getAccountNameVS1().then(function(data) {
@@ -100,8 +104,10 @@ Template.bankrecon.onRendered(function() {
             }
             // Session - set account dropdown BEGIN
             setTimeout(function() {
-                let bankaccountid = Session.get('bankaccountid') || '';
-                let bankaccountname = Session.get('bankaccountname') || '';
+                // let bankaccountid = Session.get('bankaccountid') || '';
+                // let bankaccountname = Session.get('bankaccountname') || '';
+                let bankaccountid = parseInt($("#bankAccountID").val()) || '';
+                let bankaccountname = $("#bankAccountName").val() || '';
                 let statementDate = localStorage.getItem('statementdate') || '';
 
                 if (statementDate !== '') {
@@ -109,7 +115,7 @@ Template.bankrecon.onRendered(function() {
                 }
                 if (bankaccountid !== '') {
                     $('#bankAccountID').val(bankaccountid);
-                    $('#bankAccountName').val(bankaccountname);
+                    // $('#bankAccountName').val(bankaccountname);
                     const statementDateData = new Date($(".statementDate").datepicker("getDate"));
                     let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
 
@@ -158,11 +164,15 @@ Template.bankrecon.onRendered(function() {
         let notrecondep = [];
         let okrecondep = [];
         let splashArrayReconcileDepositList = [];
-        let selectedTransactionsDep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
+        let selectedTransactionsDep = [];
+        if (localStorage.getItem("SelectedTransactionsDep") != null &&
+            localStorage.getItem("SelectedTransactionsDep") != null &&
+            localStorage.getItem("SelectedTransactionsDep") != "") {
+            selectedTransactionsDep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
+        }
         $('.fullScreenSpin').css('display', 'inline-block');
         reconService.getToBeReconciledDeposit(accountTypeId, statementDate, ignoreDate).then(function(data) {
             if (data.ttobereconcileddeposit.length > 0) {
-                // for (let r = 0; r < data.ttobereconcileddeposit; r++ ) {
                 let notRecDepTotalAmount = 0;
                 for (let r in data.ttobereconcileddeposit) {
                     if (data.ttobereconcileddeposit.hasOwnProperty(r)) {
@@ -187,7 +197,7 @@ Template.bankrecon.onRendered(function() {
                             data.ttobereconcileddeposit[r].DepositLineID +
                             '"><input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheckDep_' +
                             data.ttobereconcileddeposit[r].DepositID +
-                            '" /><label class="custom-control-label" for="formCheck_' +
+                            '" style="margin:0 !important"/><label class="custom-control-label" for="formCheck_' +
                             data.ttobereconcileddeposit[r].DepositID +
                             '"></label></div>',
                             data.ttobereconcileddeposit[r].DepositDate != '' ? moment(data.ttobereconcileddeposit[r].DepositDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[r].DepositDate,
@@ -203,20 +213,20 @@ Template.bankrecon.onRendered(function() {
                             splashArrayReconcileDepositList.push(reconciledeposit);
                         }
 
-                        let notrecondepflag = true;
-                        if (selectedTransactionsDep) {
-                            for (let t in selectedTransactionsDep) {
-                                if (reconciledepositObj.recondepid == selectedTransactionsDep[t].reconid) {
-                                    notrecondepflag = false;
-                                    okrecondep.push(reconciledepositObj);
-                                }
-                            }
-                        }
+                        // let notrecondepflag = true;
+                        // if (selectedTransactionsDep) {
+                        //     for (let t in selectedTransactionsDep) {
+                        //         if (reconciledepositObj.recondepid == selectedTransactionsDep[t].reconid) {
+                        //             notrecondepflag = false;
+                        //             okrecondep.push(reconciledepositObj);
+                        //         }
+                        //     }
+                        // }
 
-                        if (notrecondepflag) {
-                            notrecondep.push(reconciledepositObj);
-                            notRecDepTotalAmount += parseFloat(data.ttobereconcileddeposit[r].Amount);
-                        }
+                        // if (notrecondepflag) {
+                        notrecondep.push(reconciledepositObj);
+                        notRecDepTotalAmount += parseFloat(data.ttobereconcileddeposit[r].Amount);
+                        // }
                     }
                 }
                 // const thirdaryData = $.merge($.merge([], templateObject.reconVS1dep.get()), recondep);
@@ -270,38 +280,11 @@ Template.bankrecon.onRendered(function() {
                     }, 0);
 
                     if (selectedTransactionsDep) {
-                        const selectedtransactionsdep = [];
-                        let selectedTransAmountdep = 0;
                         setTimeout(function() {
                             for (let t in selectedTransactionsDep) {
-                                $("#formCheckDep_" + selectedTransactionsDep[t].reconid).prop("checked", true);
-                                let transactionObj = {
-                                    reconid: selectedTransactionsDep[t].reconid,
-                                    recondate: selectedTransactionsDep[t].recondate,
-                                    reconname: selectedTransactionsDep[t].reconname,
-                                    recondesc: selectedTransactionsDep[t].recondesc,
-                                    reconamount: selectedTransactionsDep[t].reconamount,
-                                    reconref: selectedTransactionsDep[t].reconref,
-                                    reconpayid: selectedTransactionsDep[t].reconpayid,
-                                    depositLineID: selectedTransactionsDep[t].depositLineID || 0
-                                };
-                                var reconamounttrimdep = (selectedTransactionsDep[t].reconamount).replace(/[^0-9.-]+/g, "") || 0;
-                                selectedTransAmountdep = selectedTransAmountdep + parseFloat(reconamounttrimdep);
-                                selectedtransactionsdep.push(transactionObj);
+                                // $("#formCheckDep_" + selectedTransactionsDep[t].reconid).prop("checked", true);
+                                $("#formCheckDep_" + selectedTransactionsDep[t].reconid).trigger("click");
                             }
-                            templateObject.selectedTransdep.set(selectedtransactionsdep);
-                            setTimeout(function() {
-                                $("#divtblSelectedDeposits").height(300);
-                                $('.btnHold').prop("disabled", false);
-                            }, 0);
-                            $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
-                            $('#print_totalokrecondepamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
-
-                            var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-                            var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-                            var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
-                            var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-                            $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
                         }, 100);
                     }
                 }
@@ -363,11 +346,16 @@ Template.bankrecon.onRendered(function() {
         let notreconwith = [];
         let okreconwith = [];
         let splashArrayReconcileWithdrawalList = [];
+        let selectedTransactionsWith = [];
+        if (localStorage.getItem("SelectedTransactionsWith") != null &&
+            localStorage.getItem("SelectedTransactionsWith") != null &&
+            localStorage.getItem("SelectedTransactionsWith") != "") {
+            selectedTransactionsWith = JSON.parse(localStorage.getItem("SelectedTransactionsWith"));
+        }
         $('.fullScreenSpin').css('display', 'inline-block');
         reconService.getToBeReconciledWithdrawal(accountTypeId, statementDate, ignoreDate).then(function(data) {
             let notRecWithTotalAmount = 0;
             if (data.ttobereconciledwithdrawal.length > 0) {
-                let selectedTransactionsWith = JSON.parse(localStorage.getItem("SelectedTransactionsWith"));
                 for (let j in data.ttobereconciledwithdrawal) {
                     if (data.ttobereconciledwithdrawal.hasOwnProperty(j)) {
                         let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconciledwithdrawal[j].Amount) || 0.00;
@@ -391,7 +379,7 @@ Template.bankrecon.onRendered(function() {
                             data.ttobereconciledwithdrawal[j].DepositLineID +
                             '"><input type="checkbox" class="custom-control-input reconchkboxwith" id="formCheckWith_' +
                             data.ttobereconciledwithdrawal[j].DepositID +
-                            '" /><label class="custom-control-label" for="formCheck_' +
+                            '" style="margin:0 !important" /><label class="custom-control-label" for="formCheck_' +
                             data.ttobereconciledwithdrawal[j].DepositID +
                             '"></label></div>',
                             data.ttobereconciledwithdrawal[j].DepositDate != '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].DepositDate,
@@ -408,20 +396,20 @@ Template.bankrecon.onRendered(function() {
                             // templateObject.reconVS1with.set(reconwith);
                         }
 
-                        let notreconwithflag = true;
-                        if (selectedTransactionsWith) {
-                            for (let t in selectedTransactionsWith) {
-                                if (reconcilewithdrawalObj.reconwithid == selectedTransactionsWith[t].reconid) {
-                                    notreconwithflag = false;
-                                    okreconwith.push(reconcilewithdrawalObj);
-                                }
-                            }
-                        }
+                        // let notreconwithflag = true;
+                        // if (selectedTransactionsWith) {
+                        //     for (let t in selectedTransactionsWith) {
+                        //         if (reconcilewithdrawalObj.reconwithid == selectedTransactionsWith[t].reconid) {
+                        //             notreconwithflag = false;
+                        //             okreconwith.push(reconcilewithdrawalObj);
+                        //         }
+                        //     }
+                        // }
 
-                        if (notreconwithflag) {
-                            notreconwith.push(reconcilewithdrawalObj);
-                            notRecWithTotalAmount += parseFloat(data.ttobereconciledwithdrawal[j].Amount);
-                        }
+                        // if (notreconwithflag) {
+                        notreconwith.push(reconcilewithdrawalObj);
+                        notRecWithTotalAmount += parseFloat(data.ttobereconciledwithdrawal[j].Amount);
+                        // }
                     }
                 }
                 // const thirdaryData = $.merge($.merge([], templateObject.reconVS1with.get()), reconwith);
@@ -474,37 +462,12 @@ Template.bankrecon.onRendered(function() {
                         });
 
                         if (selectedTransactionsWith) {
-                            let selectedTransAmountwidth = 0;
+                            let selectedTransAmountwith = 0;
                             const selectedtransactionswith = [];
                             setTimeout(function() {
                                 for (let t in selectedTransactionsWith) {
-                                    $("#formCheckWith_" + selectedTransactionsWith[t].reconid).prop("checked", true);
-                                    let transactionObj = {
-                                        reconid: selectedTransactionsWith[t].reconid,
-                                        recondate: selectedTransactionsWith[t].recondate,
-                                        reconname: selectedTransactionsWith[t].reconname,
-                                        recondesc: selectedTransactionsWith[t].recondesc,
-                                        reconamount: selectedTransactionsWith[t].reconamount,
-                                        reconref: selectedTransactionsWith[t].reconref,
-                                        reconpayid: selectedTransactionsWith[t].reconpayid,
-                                        depositLineID: selectedTransactionsWith[t].depositLineID || 0
-                                    };
-                                    var reconamounttrim = (selectedTransactionsWith[t].reconamount).replace(/[^0-9.-]+/g, "") || 0;
-                                    selectedTransAmountwidth = selectedTransAmountwidth + parseFloat(reconamounttrim);
-                                    selectedtransactionswith.push(transactionObj);
+                                    $("#formCheckWith_" + selectedTransactionsWith[t].reconid).trigger("click");
                                 }
-                                templateObject.selectedTranswith.set(selectedtransactionswith);
-                                setTimeout(function() {
-                                    $("#divtblSelectedWithdrawals").height(300);
-                                    $('.btnHold').prop("disabled", false);
-                                }, 0);
-                                $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
-                                $('#print_totalokreconwithamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
-                                var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-                                var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-                                var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
-                                var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-                                $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
                             }, 100);
                         }
                     }, 0);
@@ -582,7 +545,9 @@ Template.bankrecon.onRendered(function() {
                             };
 
                             dataArray.push(objData);
-                            if (FlowRouter.current().queryParams.id) {} else {
+                            if (FlowRouter.current().queryParams.id) {
+
+                            } else {
                                 if (data.treconciliation[k].OnHold == true) {
                                     Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
                                     Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
@@ -747,144 +712,207 @@ Template.bankrecon.onRendered(function() {
 
         if (data.fields.DepositLines != null) {
             if (data.fields.DepositLines.length > 0) {
-                reconService.getToBeReconciledDeposit(data.fields.AccountID, data.fields.ReconciliationDate, false).then(function(ReconcileDep) {
-                    for (let i in data.fields.DepositLines) {
-                        if (data.fields.DepositLines.hasOwnProperty(i) && ReconcileDep.ttobereconcileddeposit) {
-                            for (let k in ReconcileDep.ttobereconcileddeposit) {
-                                if (data.fields.DepositLines[i].fields.PaymentID == ReconcileDep.ttobereconcileddeposit[k].PaymentID) {
-                                    let depositamount = utilityService.modifynegativeCurrencyFormat(data.fields.DepositLines[i].fields.Amount) || 0.00;
-                                    let reconepID = data.fields.DepositLines[i].fields.ID;
-                                    if (data.fields.DepositLines[i].fields.Notes == 'Customer Payment') {
-                                        reconepID = data.fields.DepositLines[i].fields.PaymentID;
-                                    }
-                                    let reconciledepositObj = {
-                                        sortdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : data.fields.DepositLines[i].fields.DepositDate,
-                                        recondepdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
-                                        recondepname: data.fields.DepositLines[i].fields.Payee || ' ',
-                                        recondeppaymenttype: data.fields.DepositLines[i].fields.Notes || ' ',
-                                        recondepamount: depositamount || 0.00,
-                                        recondepid: reconepID || ' ',
-                                        recondepref: data.fields.DepositLines[i].fields.Reference || ' ',
-                                        seqdepnum: data.fields.DepositLines[i].fields.Recno || 0,
-                                        recondeppaymentid: data.fields.DepositLines[i].fields.PaymentID || 0,
-                                        depositLineID: data.fields.DepositLines[i].fields.DepositLineID || 0,
-                                    };
-                                    selectedTransAmountdep = selectedTransAmountdep + parseFloat(data.fields.DepositLines[i].fields.Amount);
+                // reconService.getToBeReconciledDeposit(data.fields.AccountID, data.fields.ReconciliationDate, false).then(function(ReconcileDep) {
+                let selectedTransAmountdep = 0;
+                const selectedtransactionsdep = [];
+                for (let i in data.fields.DepositLines) {
+                    // if (data.fields.DepositLines.hasOwnProperty(i) && ReconcileDep.ttobereconcileddeposit) {
+                    // for (let k in ReconcileDep.ttobereconcileddeposit) {
+                    // if (data.fields.DepositLines[i].fields.PaymentID == ReconcileDep.ttobereconcileddeposit[k].PaymentID) {
+                    let depositamount = utilityService.modifynegativeCurrencyFormat(data.fields.DepositLines[i].fields.Amount) || 0.00;
+                    let reconepID = data.fields.DepositLines[i].fields.ID;
+                    if (data.fields.DepositLines[i].fields.Notes == 'Customer Payment') {
+                        reconepID = data.fields.DepositLines[i].fields.PaymentID;
+                    }
+                    let reconciledepositObj = {
+                        sortdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : data.fields.DepositLines[i].fields.DepositDate,
+                        recondepdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
+                        recondepname: data.fields.DepositLines[i].fields.Payee || ' ',
+                        recondeppaymenttype: data.fields.DepositLines[i].fields.Notes || ' ',
+                        recondepamount: depositamount || 0.00,
+                        recondepid: reconepID || ' ',
+                        recondepref: data.fields.DepositLines[i].fields.Reference || ' ',
+                        seqdepnum: data.fields.DepositLines[i].fields.Recno || 0,
+                        recondeppaymentid: data.fields.DepositLines[i].fields.PaymentID || 0,
+                        depositLineID: data.fields.DepositLines[i].fields.DepositLineID || 0,
+                    };
 
-                                    let reconciledeposit = [
-                                        '<div class="custom-control custom-checkbox pointer" id="checkboxdeptable_' +
-                                        reconepID +
-                                        '" style="width:15px;" depositLineID="' +
-                                        data.fields.DepositLines[i].fields.DepositLineID +
-                                        '"><input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheckDep_' +
-                                        reconepID +
-                                        '" /><label class="custom-control-label" for="formCheck_' +
-                                        reconepID +
-                                        '"></label></div>',
-                                        data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
-                                        data.fields.DepositLines[i].fields.Reference || ' ',
-                                        data.fields.DepositLines[i].fields.Payee || ' ',
-                                        data.fields.DepositLines[i].fields.Notes || ' ',
-                                        data.fields.DepositLines[i].fields.PaymentID || 0,
-                                        depositamount || 0.00,
-                                    ];
+                    let reconciledeposit = [
+                        '<div class="custom-control custom-checkbox pointer" id="checkboxdeptable_' +
+                        reconepID +
+                        '" style="width:15px;" depositLineID="' +
+                        data.fields.DepositLines[i].fields.DepositLineID +
+                        '"><input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheckDep_' +
+                        reconepID +
+                        '" style="margin:0 !important" /><label class="custom-control-label" for="formCheck_' +
+                        reconepID +
+                        '"></label></div>',
+                        data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
+                        data.fields.DepositLines[i].fields.Reference || ' ',
+                        data.fields.DepositLines[i].fields.Payee || ' ',
+                        data.fields.DepositLines[i].fields.Notes || ' ',
+                        data.fields.DepositLines[i].fields.DepositLineID || 0,
+                        depositamount || 0.00,
+                    ];
 
-                                    //if(data.ttobereconcileddeposit[i].Seqno != 0){
-                                    recondep.push(reconciledepositObj);
-                                    splashArrayReconcileDepositList.push(reconciledeposit);
-                                    templateObject.reconVS1dep.set(recondep);
-                                    //}
-                                }
+                    //if(data.ttobereconcileddeposit[i].Seqno != 0){
+                    recondep.push(reconciledepositObj);
+                    splashArrayReconcileDepositList.push(reconciledeposit);
+                    templateObject.reconVS1dep.set(recondep);
+                    //}
+                    // }
+                    // }
+                    // }
+
+                    let transactionObj = {
+                        reconid: data.fields.DepositLines[i].fields.PaymentID,
+                        recondate: moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY"),
+                        reconname: data.fields.DepositLines[i].fields.ClientName,
+                        recondesc: data.fields.DepositLines[i].fields.Notes,
+                        reconamount: utilityService.modifynegativeCurrencyFormat(data.fields.DepositLines[i].fields.Amount),
+                        reconref: data.fields.DepositLines[i].fields.Reference,
+                        reconpayid: data.fields.DepositLines[i].fields.DepositLineID,
+                        depositLineID: data.fields.DepositLines[i].fields.DepositLineID || 0
+                    };
+
+                    var reconamounttrimdep = data.fields.DepositLines[i].fields.Amount || 0;
+                    //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
+                    selectedTransAmountdep = selectedTransAmountdep + parseFloat(reconamounttrimdep);
+                    selectedtransactionsdep.push(transactionObj);
+                }
+
+                templateObject.originalTransdep.set(selectedtransactionsdep);
+                templateObject.selectedTransdep.set(selectedtransactionsdep);
+
+                let reconVS1dep = templateObject.reconVS1dep.get();
+                let notrecondep = [];
+                let notRecDepTotalAmount = 0;
+                let okrecondep = [];
+
+                for (i in reconVS1dep) {
+                    let notrecondepflag = true;
+                    if (selectedtransactionsdep) {
+                        for (let t in selectedtransactionsdep) {
+                            if (reconVS1dep[i].recondepid == selectedtransactionsdep[t].reconid) {
+                                notrecondepflag = false;
+                                okrecondep.push(reconVS1dep[i]);
                             }
                         }
                     }
-                    $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
-                    if (templateObject.reconVS1dep.get()) {
-                        if (data.fields.OnHold == false) {
-                            setTimeout(function() {
-                                $('#tblVS1Dep').DataTable({
-                                    data: splashArrayReconcileDepositList,
-                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                    buttons: [{
-                                        extend: 'excelHtml5',
-                                        text: '',
-                                        download: 'open',
-                                        className: "btntabletocsv hiddenColumn",
-                                        filename: "chequelist_" + moment().format(),
-                                        orientation: 'portrait',
-                                        exportOptions: {
-                                            columns: ':visible'
-                                        }
-                                    }, {
-                                        extend: 'print',
-                                        download: 'open',
-                                        className: "btntabletopdf hiddenColumn",
-                                        text: '',
-                                        title: 'Cheque',
-                                        filename: "chequelist_" + moment().format(),
-                                        exportOptions: {
-                                            columns: ':visible'
-                                        }
-                                    }],
-                                    paging: false,
-                                    // "scrollY": "400px",
-                                    // "scrollCollapse": true,
-                                    "columnDefs": [
-                                        { "orderable": false, "targets": 0 },
-                                        { className: "depositClick", "targets": [1] },
-                                        { className: "depositClick", "targets": [2] },
-                                        { className: "depositClick", "targets": [3] },
-                                        { className: "depositClick", "targets": [4] },
-                                        { className: "depositClick", "targets": [5] },
-                                        { className: "depositClick", "targets": [6] }
-                                    ],
-                                    // colReorder: true,
-                                    colReorder: {
-                                        fixedColumnsLeft: 1
-                                    },
-                                    select: true,
-                                    destroy: true,
-                                    // colReorder: true,
-                                    pageLength: 10,
-                                    lengthMenu: [
-                                        [initialDatatableLoad, -1],
-                                        [initialDatatableLoad, "All"]
-                                    ],
-                                    info: true,
-                                    responsive: true,
-                                    "order": [
-                                        [1, "desc"]
-                                    ],
-                                    language: { search: "", searchPlaceholder: "Search List..." },
-                                    action: function() {
-                                        $('#tblVS1Dep').DataTable().ajax.reload();
-                                    }
-                                });
 
-                            }, 0);
-
-                        }
+                    if (notrecondepflag) {
+                        notrecondep.push(reconVS1dep[i]);
+                        notRecDepTotalAmount += utilityService.convertSubstringParseFloat(reconVS1dep[i].recondepamount) || 0;
                     }
+                }
+
+                templateObject.notreconVS1dep.set(notrecondep);
+                templateObject.okreconVS1dep.set(okrecondep);
+                $("#print_totalnotrecondepamount").html(utilityService.modifynegativeCurrencyFormat(notRecDepTotalAmount) || Currency + "0.00");
+
+                setTimeout(function() {
+                    // $("#divtblSelectedDeposits").height(300);
+                    $('.btnHold').prop("disabled", false);
+                }, 0);
+
+                $('#originalDepositAmount').val(selectedTransAmountdep);
+                $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
+                $('#print_totalokrecondepamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
+
+                var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
+                var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
+                var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+                var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+                $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+
+
+                // $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
+                if (templateObject.reconVS1dep.get()) {
                     if (data.fields.OnHold == false) {
                         setTimeout(function() {
-                            $('.tblVS1Dep tr').each(function() {
-                                const $tblrow = $(this);
-                                $tblrow.find("th input").attr('readonly', true);
-                                $tblrow.find("th input").attr('disabled', 'disabled');
-                                $tblrow.find("th").css('background-color', '#eaecf4');
-                                $tblrow.find("td input").attr('readonly', true);
-                                $tblrow.find("td input").attr('disabled', 'disabled');
-                                $tblrow.find("td").css('background-color', '#eaecf4');
-                                $tblrow.find("td .table-remove").removeClass("btnRemove");
-                                $tblrow.find("td .reconchkboxdep").prop("checked", true);
-                            }, 100);
-                        });
-                    } else {
-                        setTimeout(function() {
-                            $(".reconchkboxdep").trigger("click");
-                        }, 100);
+                            $('#tblVS1Dep').DataTable({
+                                data: splashArrayReconcileDepositList,
+                                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                buttons: [{
+                                    extend: 'excelHtml5',
+                                    text: '',
+                                    download: 'open',
+                                    className: "btntabletocsv hiddenColumn",
+                                    filename: "chequelist_" + moment().format(),
+                                    orientation: 'portrait',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    }
+                                }, {
+                                    extend: 'print',
+                                    download: 'open',
+                                    className: "btntabletopdf hiddenColumn",
+                                    text: '',
+                                    title: 'Cheque',
+                                    filename: "chequelist_" + moment().format(),
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    }
+                                }],
+                                paging: false,
+                                // "scrollY": "400px",
+                                // "scrollCollapse": true,
+                                "columnDefs": [
+                                    { "orderable": false, "targets": 0 },
+                                    { className: "depositClick", "targets": [1] },
+                                    { className: "depositClick", "targets": [2] },
+                                    { className: "depositClick", "targets": [3] },
+                                    { className: "depositClick", "targets": [4] },
+                                    { className: "depositClick", "targets": [5] },
+                                    { className: "depositClick", "targets": [6] }
+                                ],
+                                // colReorder: true,
+                                colReorder: {
+                                    fixedColumnsLeft: 1
+                                },
+                                select: true,
+                                destroy: true,
+                                // colReorder: true,
+                                pageLength: 10,
+                                lengthMenu: [
+                                    [initialDatatableLoad, -1],
+                                    [initialDatatableLoad, "All"]
+                                ],
+                                info: true,
+                                responsive: true,
+                                "order": [
+                                    [1, "desc"]
+                                ],
+                                language: { search: "", searchPlaceholder: "Search List..." },
+                                action: function() {
+                                    $('#tblVS1Dep').DataTable().ajax.reload();
+                                }
+                            });
+
+                        }, 0);
+
                     }
-                });
+                }
+                if (data.fields.OnHold == false) {
+                    setTimeout(function() {
+                        $('.tblVS1Dep tr').each(function() {
+                            const $tblrow = $(this);
+                            $tblrow.find("th input").attr('readonly', true);
+                            $tblrow.find("th input").attr('disabled', 'disabled');
+                            $tblrow.find("th").css('background-color', '#eaecf4');
+                            $tblrow.find("td input").attr('readonly', true);
+                            $tblrow.find("td input").attr('disabled', 'disabled');
+                            $tblrow.find("td").css('background-color', '#eaecf4');
+                            $tblrow.find("td .table-remove").removeClass("btnRemove");
+                            $tblrow.find("td .reconchkboxdep").prop("checked", true);
+                        }, 100);
+                    });
+                } else {
+                    setTimeout(function() {
+                        $(".reconchkboxdep").trigger("click");
+                    }, 100);
+                }
+                // });
             } else {
                 setTimeout(function() {
                     $('#tblVS1Dep').DataTable({
@@ -1010,59 +1038,116 @@ Template.bankrecon.onRendered(function() {
 
         if (data.fields.WithdrawalLines != null) {
             if (data.fields.WithdrawalLines.length > 0) {
-                reconService.getToBeReconciledWithdrawal(data.fields.AccountID, data.fields.ReconciliationDate, false).then(function(ReconcileWith) {
-                    for (let j in data.fields.WithdrawalLines) {
-                        if (data.fields.WithdrawalLines.hasOwnProperty(j) && ReconcileWith.ttobereconciledwithdrawal) {
-                            for (let k in ReconcileWith.ttobereconciledwithdrawal) {
-                                if (data.fields.WithdrawalLines[j].fields.PaymentID == ReconcileWith.ttobereconciledwithdrawal[k].PaymentID) {
-                                    let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount) || 0.00;
-                                    let reconepWidID = data.fields.WithdrawalLines[j].fields.ID;
-                                    if (data.fields.WithdrawalLines[j].fields.Notes == 'Customer Payment') {
-                                        reconepWidID = data.fields.WithdrawalLines[j].fields.PaymentID;
-                                    }
-                                    let reconcilewithdrawalObj = {
-                                        sortdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
-                                        reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
-                                        reconwithname: data.fields.WithdrawalLines[j].fields.ClientName || ' ',
-                                        reconwithpaymenttype: data.fields.WithdrawalLines[j].fields.Notes || ' ',
-                                        reconwithamount: withdrawalamount || 0.00,
-                                        reconwithid: reconepWidID || ' ',
-                                        reconwithref: data.fields.WithdrawalLines[j].fields.Reference || ' ',
-                                        seqwithnum: data.fields.WithdrawalLines[j].fields.Recno || 0,
-                                        reconwithpaymentid: data.fields.WithdrawalLines[j].fields.PaymentID || 0,
-                                        depositLineID: data.fields.WithdrawalLines[j].fields.DepositLineID || 0,
-                                    };
+                // reconService.getToBeReconciledWithdrawal(data.fields.AccountID, data.fields.ReconciliationDate, false).then(function(ReconcileWith) {
+                let selectedTransAmountwith = 0;
+                let selectedtransactionswith = [];
+                for (let j in data.fields.WithdrawalLines) {
+                    // if (data.fields.WithdrawalLines.hasOwnProperty(j) && ReconcileWith.ttobereconciledwithdrawal) {
+                    // for (let k in ReconcileWith.ttobereconciledwithdrawal) {
+                    // if (data.fields.WithdrawalLines[j].fields.PaymentID == ReconcileWith.ttobereconciledwithdrawal[k].PaymentID) {
+                    let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount) || 0.00;
+                    let reconepWidID = data.fields.WithdrawalLines[j].fields.ID;
+                    if (data.fields.WithdrawalLines[j].fields.Notes == 'Customer Payment') {
+                        reconepWidID = data.fields.WithdrawalLines[j].fields.PaymentID;
+                    }
+                    let reconcilewithdrawalObj = {
+                        sortdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                        reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                        reconwithname: data.fields.WithdrawalLines[j].fields.ClientName || ' ',
+                        reconwithpaymenttype: data.fields.WithdrawalLines[j].fields.Notes || ' ',
+                        reconwithamount: withdrawalamount || 0.00,
+                        reconwithid: reconepWidID || ' ',
+                        reconwithref: data.fields.WithdrawalLines[j].fields.Reference || ' ',
+                        seqwithnum: data.fields.WithdrawalLines[j].fields.Recno || 0,
+                        reconwithpaymentid: data.fields.WithdrawalLines[j].fields.PaymentID || 0,
+                        depositLineID: data.fields.WithdrawalLines[j].fields.DepositLineID || 0,
+                    };
 
-                                    let reconcilewithdrawal = [
-                                        '<div class="custom-control custom-checkbox" id="checkboxwithtable_' +
-                                        reconepWidID +
-                                        '" style="width:15px;" depositLineID="' +
-                                        data.fields.WithdrawalLines[j].fields.DepositLineID +
-                                        '"><input type="checkbox" class="custom-control-input reconchkboxwith" id="formCheckWith_' +
-                                        reconepWidID +
-                                        '" /><label class="custom-control-label" for="formCheck_' +
-                                        reconepWidID +
-                                        '"></label></div>',
-                                        data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
-                                        data.fields.WithdrawalLines[j].fields.Reference || ' ',
-                                        data.fields.WithdrawalLines[j].fields.ClientName || ' ',
-                                        data.fields.WithdrawalLines[j].fields.Notes || ' ',
-                                        data.fields.WithdrawalLines[j].fields.PaymentID || 0,
-                                        withdrawalamount || 0.00
-                                    ];
+                    let reconcilewithdrawal = [
+                        '<div class="custom-control custom-checkbox" id="checkboxwithtable_' +
+                        reconepWidID +
+                        '" style="width:15px;" depositLineID="' +
+                        data.fields.WithdrawalLines[j].fields.DepositLineID +
+                        '"><input type="checkbox" class="custom-control-input reconchkboxwith" id="formCheckWith_' +
+                        reconepWidID +
+                        '" style="margin:0 !important" /><label class="custom-control-label" for="formCheck_' +
+                        reconepWidID +
+                        '"></label></div>',
+                        data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                        data.fields.WithdrawalLines[j].fields.Reference || ' ',
+                        data.fields.WithdrawalLines[j].fields.ClientName || ' ',
+                        data.fields.WithdrawalLines[j].fields.Notes || ' ',
+                        data.fields.WithdrawalLines[j].fields.DepositLineID || 0,
+                        withdrawalamount || 0.00
+                    ];
 
-                                    reconwith.push(reconcilewithdrawalObj);
-                                    splashArrayReconcileWithdrawalList.push(reconcilewithdrawal);
-                                    templateObject.reconVS1with.set(reconwith);
-                                    selectedTransAmountwidth = selectedTransAmountwidth + parseFloat(data.fields.WithdrawalLines[j].fields.Amount);
+                    reconwith.push(reconcilewithdrawalObj);
+                    splashArrayReconcileWithdrawalList.push(reconcilewithdrawal);
+                    templateObject.reconVS1with.set(reconwith);
+                    // }
+                    // }
+                    // }
+
+                    let transactionObj = {
+                        reconid: data.fields.WithdrawalLines[j].fields.PaymentID,
+                        recondate: moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY"),
+                        reconname: data.fields.WithdrawalLines[j].fields.ClientName,
+                        recondesc: data.fields.WithdrawalLines[j].fields.Notes,
+                        reconamount: utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount),
+                        reconref: data.fields.WithdrawalLines[j].fields.Reference,
+                        reconpayid: data.fields.WithdrawalLines[j].fields.DepositLineID,
+                        depositLineID: data.fields.WithdrawalLines[j].fields.DepositLineID || 0
+                    };
+
+                    var reconamounttrimwith = data.fields.WithdrawalLines[j].fields.Amount || 0;
+                    //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
+                    selectedTransAmountwith = selectedTransAmountwith + parseFloat(reconamounttrimwith);
+                    selectedtransactionswith.push(transactionObj);
+
+                    templateObject.originalTranswith.set(selectedtransactionswith);
+                    templateObject.selectedTranswith.set(selectedtransactionswith);
+
+                    let reconVS1with = templateObject.reconVS1with.get();
+                    let notreconwith = [];
+                    let okreconwith = [];
+                    let notRecWithTotalAmount = 0;
+                    for (i in reconVS1with) {
+                        let notreconwithflag = true;
+                        if (selectedtransactionswith) {
+                            for (let t in selectedtransactionswith) {
+                                if (reconVS1with[i].reconwithid == selectedtransactionswith[t].reconid) {
+                                    notreconwithflag = false;
+                                    okreconwith.push(reconVS1with[i]);
                                 }
                             }
                         }
 
+                        if (notreconwithflag) {
+                            notreconwith.push(reconVS1with[i]);
+                            notRecWithTotalAmount += utilityService.convertSubstringParseFloat(reconVS1with[i].reconwithamount) || 0;
+                        }
                     }
-                });
 
-                $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
+                    templateObject.notreconVS1with.set(notreconwith);
+                    templateObject.okreconVS1with.set(okreconwith);
+                    $("#print_totalnotreconwithamount").html(utilityService.modifynegativeCurrencyFormat(notRecWithTotalAmount) || Currency + "0.00");
+
+                    setTimeout(function() {
+                        $("#divtblSelectedWithdrawals").height(300);
+                        $('.btnHold').prop("disabled", false);
+                    }, 0);
+                    $('#originalWithdrawalAmount').val(selectedTransAmountwith);
+                    $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
+                    $('#print_totalokreconwithamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
+                    var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
+                    var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
+                    var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+                    var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+                    $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+                }
+                // });
+
+                // $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
                 if (templateObject.reconVS1with.get()) {
                     if (data.fields.OnHold === false) {
                         setTimeout(function() {
@@ -1416,7 +1501,8 @@ Template.bankrecon.onRendered(function() {
                 });
                 $('#bankAccountListModal').modal('toggle');
             } else {
-                openBankAccountListModal();
+                setTimeout(() => openBankAccountListModal())
+
             }
         }
     });
@@ -1429,7 +1515,7 @@ Template.bankrecon.onRendered(function() {
         $('#accountListModal').modal('toggle');
         $('#bankAccountName').val(accountname);
         $('#bankAccountID').val(accountTypeId);
-
+        showBankInfo();
         templateObject.reconVS1dep.set(null);
         templateObject.reconVS1with.set(null);
 
@@ -1459,6 +1545,32 @@ Template.bankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
+
+    $('#btnImportState').on('click', function(e) {
+        let accountId = $('#bankAccountID').val()
+        let accountName = $('#bankAccountName').val()
+        if ($('#bankAccountName').val() == '')
+            swal('Please Select Bank Account!', '', 'warning');
+        else {
+            getVS1Data("VS1_BankRule")
+                .then(function (dataObject) {
+                    if (dataObject.length) {
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data[accountId] && data[accountId].length)
+                            return $('#importModal').modal();
+                    }
+                    swal(`Please create a new bank rule for bank`, '', 'warning')
+                        .then((result) => {
+                            FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
+                        });
+                })
+                .catch(function (err) {
+                    swal('Something went wrong', '', 'error');
+                });
+
+        }
+
+    })
     tableResize();
 });
 
@@ -1507,35 +1619,47 @@ Template.bankrecon.events({
         }
     },
     'change .reconchkboxdep': function(e) {
+        const url = FlowRouter.current().path;
         const chkbiddep = event.target.id;
         const checkboxID = chkbiddep.split("_").pop();
-        let selectedTransAmountdep = 0;
+        let selectedTransAmountdep = parseFloat($('#originalDepositAmount').val()) || 0;
         const templateObject = Template.instance();
-        const selectedTransdep = [];
+        const selectedoriginaltransactionsdep = templateObject.originalTransdep.get() || [];
         const selectedtransactionsdep = [];
-
         $('.reconchkboxdep:checkbox:checked').each(function() {
             var chkbiddepLine = $(this).attr('id');
             var checkboxIDdepLine = chkbiddepLine.split("_").pop();
             var depositLineIDDep = $('#checkboxdeptable_' + checkboxIDdepLine).attr('depositLineID');
-            let transactionObj = {
-                reconid: checkboxIDdepLine,
-                recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                depositLineID: depositLineIDDep || 0
-            };
-            var reconamounttrimdep = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
+            const existRecord = !!selectedtransactionsdep.find(item => {
+                return item.reconid === checkboxIDdepLine
+            })
+            if (!existRecord) {
+                let transactionObj = {
+                    reconid: checkboxIDdepLine,
+                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                    depositLineID: depositLineIDDep || 0
+                };
+                selectedtransactionsdep.push(transactionObj);
+            }
+            var reconamounttrimdep = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
             //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
-            selectedTransAmountdep = selectedTransAmountdep + parseFloat(reconamounttrimdep);
-            selectedtransactionsdep.push(transactionObj);
+            selectedTransAmountdep = selectedTransAmountdep + reconamounttrimdep;
         });
-        templateObject.selectedTransdep.set(selectedtransactionsdep);
-        localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectedtransactionsdep));
-        localStorage.setItem("reconHoldState", "true");
+
+        if (selectedtransactionsdep.length > 0) {
+            localStorage.setItem("reconHoldState", "true");
+        } else {
+            localStorage.setItem("reconHoldState", "false");
+        }
+
+        const selectednewtransactionsdep = selectedoriginaltransactionsdep.concat(selectedtransactionsdep);
+        templateObject.selectedTransdep.set(selectednewtransactionsdep);
+        localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectednewtransactionsdep));
 
         let reconVS1dep = templateObject.reconVS1dep.get();
         let notrecondep = [];
@@ -1555,7 +1679,7 @@ Template.bankrecon.events({
 
             if (notrecondepflag) {
                 notrecondep.push(reconVS1dep[i]);
-                notRecDepTotalAmount += parseFloat((reconVS1dep[i].recondepamount).replace(/[^0-9.-]+/g, "") || 0);
+                notRecDepTotalAmount += utilityService.convertSubstringParseFloat(reconVS1dep[i].recondepamount) || 0;
             }
         }
 
@@ -1574,40 +1698,55 @@ Template.bankrecon.events({
         var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
         var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
         var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        var differenceAmount = clearedBal - closebalance;
         $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+        $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
     },
     'change .reconchkboxwith': function(e) {
         //$(".endingbalance").val('');
+        const templateObject = Template.instance();
         const chkbidwith = event.target.id;
         const checkboxID = chkbidwith.split("_").pop();
-        let selectedTransAmountwidth = 0;
-        const templateObject = Template.instance();
-        const selectedTranswith = [];
+        let selectedTransAmountwith = parseFloat($('#originalWithdrawalAmount').val()) || 0;
+        const selectedoriginaltransactionswith = templateObject.originalTranswith.get() || [];
         const selectedtransactionswith = [];
 
         $('.reconchkboxwith:checkbox:checked').each(function() {
             var chkbidwithLine = $(this).attr('id');
             var checkboxIDwithLine = chkbidwithLine.split("_").pop();
-
             var depositLineIDWith = $('#checkboxwithtable_' + checkboxIDwithLine).attr('depositLineID');
-            let transactionObj = {
-                reconid: checkboxIDwithLine,
-                recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                depositLineID: depositLineIDWith || 0
-            };
-            var reconamounttrim = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
+            const existRecord = !!selectedtransactionswith.find(item => {
+                return item.reconid === checkboxIDwithLine
+            })
+            if (!existRecord) {
+                let transactionObj = {
+                    reconid: checkboxIDwithLine,
+                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                    depositLineID: depositLineIDWith || 0
+                };
+                selectedtransactionswith.push(transactionObj);
+            }
+
+            var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
             //(($('#vs1reconamountwith_' + checkboxIDwithLine).text()).substring(1)).replace(',', '');
-            selectedTransAmountwidth = selectedTransAmountwidth + parseFloat(reconamounttrim);
-            selectedtransactionswith.push(transactionObj);
+            selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
         });
-        templateObject.selectedTranswith.set(selectedtransactionswith);
-        localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectedtransactionswith));
-        localStorage.setItem("reconHoldState", "true");
+
+        if (selectedtransactionswith.length > 0) {
+            localStorage.setItem("reconHoldState", "true");
+        } else {
+            localStorage.setItem("reconHoldState", "false");
+        }
+
+        const selectednewtransactionswith = selectedoriginaltransactionswith.concat(selectedtransactionswith);
+        templateObject.selectedTranswith.set(selectednewtransactionswith);
+        localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectednewtransactionswith));
 
         let reconVS1with = templateObject.reconVS1with.get();
         let notreconwith = [];
@@ -1626,7 +1765,7 @@ Template.bankrecon.events({
 
             if (notreconwithflag) {
                 notreconwith.push(reconVS1with[i]);
-                notRecWithTotalAmount += parseFloat((reconVS1with[i].reconwithamount).replace(/[^0-9.-]+/g, "") || 0);
+                notRecWithTotalAmount += utilityService.convertSubstringParseFloat(reconVS1with[i].reconwithamount) || 0;
             }
         }
 
@@ -1634,20 +1773,23 @@ Template.bankrecon.events({
         templateObject.okreconVS1with.set(okreconwith);
         $("#print_totalnotreconwithamount").html(utilityService.modifynegativeCurrencyFormat(notRecWithTotalAmount) || Currency + "0.00");
 
-
         setTimeout(function() {
             $("#divtblSelectedWithdrawals").height(300);
             $('.btnHold').prop("disabled", false);
         }, 0);
-        $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
-        $('#print_totalokreconwithamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
+        $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
+        $('#print_totalokreconwithamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
         var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
         var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
         var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
         var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        var differenceAmount = clearedBal - closebalance;
         $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+        $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
     },
     'change #checkallrecondep': function(event) {
+        const templateObject = Template.instance();
         let clearedBal;
         let openbalamount;
         let totalwithamount;
@@ -1655,203 +1797,244 @@ Template.bankrecon.events({
         let selectedTransAmountdep;
         if ($(event.target).is(':checked')) {
             $(".reconchkboxdep").prop("checked", true);
-            selectedTransAmountdep = 0;
-            const templateObject = Template.instance();
-            const selectedTransdep = [];
+            selectedTransAmountdep = parseFloat($('#originalDepositAmount').val()) || 0;
+            const selectedoriginaltransactionsdep = templateObject.originalTransdep.get() || [];
             const selectedtransactionsdep = [];
-
             $('.reconchkboxdep:checkbox:checked').each(function() {
                 const chkbiddepLine = $(this).attr('id');
                 const checkboxIDdepLine = chkbiddepLine.split("_").pop();
                 var depositLineIDDepAll = $('#checkboxdeptable_' + checkboxIDdepLine).attr('depositLineID');
-                let transactionObj = {
-                    reconid: checkboxIDdepLine,
-                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                    depositLineID: depositLineIDDepAll || 0
-                };
-                var reconamounttrimdep = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
-                //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
-                selectedTransAmountdep = selectedTransAmountdep + parseFloat(reconamounttrimdep);
-                selectedtransactionsdep.push(transactionObj);
-                localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectedtransactionsdep));
+                const existRecord = !!selectedtransactionsdep.find(item => {
+                    return item.reconid === checkboxIDdepLine
+                })
+                if (!existRecord) {
+                    let transactionObj = {
+                        reconid: checkboxIDdepLine,
+                        recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                        reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                        recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                        reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                        reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                        depositLineID: depositLineIDDepAll || 0
+                    };
+                    var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    selectedTransAmountdep = selectedTransAmountdep + reconamounttrim;
+                    selectedtransactionsdep.push(transactionObj);
+                }
             });
-            templateObject.selectedTransdep.set(selectedtransactionsdep);
 
-            setTimeout(function() {
-                $("#divtblSelectedDeposits").height(300);
-            }, 0);
+            if (selectedtransactionsdep.length > 0) {
+                localStorage.setItem("reconHoldState", "true");
+            } else {
+                localStorage.setItem("reconHoldState", "false");
+            }
+
+            const selectednewtransactionsdep = selectedoriginaltransactionsdep.concat(selectedtransactionsdep);
+            templateObject.selectedTransdep.set(selectednewtransactionsdep);
+            localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectednewtransactionsdep));
+
+            // setTimeout(function() {
+            //     $("#divtblSelectedDeposits").height(300);
+            // }, 0);
 
             $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
-            // var totaldepamount = (($('.depositAmount').html()).substring(1)).replace(',','');
-            // var totalwithamount = (($('.withdrawalAmount').html()).substring(1)).replace(',','');
-            // var openbalamount = (($('#openingbalance').val()).substring(1)).replace(',','');
             totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
             totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
             openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
             clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+            $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
             $('.btnHold').prop("disabled", false);
         } else {
             $(".reconchkboxdep").prop("checked", false);
-            selectedTransAmountdep = 0;
-            const templateObject = Template.instance();
-            const selectedTransdep = [];
+            selectedTransAmountdep = parseFloat($('#originalDepositAmount').val()) || 0;
+            const selectedoriginaltransactionsdep = templateObject.originalTransdep.get() || [];
             const selectedtransactionsdep = [];
-
             $('.reconchkboxdep:checkbox:checked').each(function() {
                 const chkbiddepLine = $(this).attr('id');
                 const checkboxIDdepLine = chkbiddepLine.split("_").pop();
-
                 var depositLineIDDepAll = $('#checkboxdeptable_' + checkboxIDdepLine).attr('depositLineID');
-                let transactionObj = {
-                    reconid: checkboxIDdepLine,
-                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                    depositLineID: depositLineIDDepAll || 0
-                };
-                var reconamounttrimdep = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
-                //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');//
-                selectedTransAmountdep = selectedTransAmountdep + parseFloat(reconamounttrimdep);
-                selectedtransactionsdep.push(transactionObj);
+                const existRecord = !!selectedtransactionsdep.find(item => {
+                    return item.reconid === checkboxIDdepLine
+                })
+                if (!existRecord) {
+                    let transactionObj = {
+                        reconid: checkboxIDdepLine,
+                        recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                        reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                        recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                        reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                        reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                        depositLineID: depositLineIDDepAll || 0
+                    };
+                    var reconamounttrimdep = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    selectedTransAmountdep = selectedTransAmountdep + reconamounttrimdep;
+                    selectedtransactionsdep.push(transactionObj);
+                }
             });
-            templateObject.selectedTransdep.set(selectedtransactionsdep);
 
-            setTimeout(function() {
-                $("#divtblSelectedDeposits").height(120);
-            }, 0);
+            if (selectedtransactionsdep.length > 0) {
+                localStorage.setItem("reconHoldState", "true");
+            } else {
+                localStorage.setItem("reconHoldState", "false");
+            }
+
+            const selectednewtransactionsdep = selectedoriginaltransactionsdep.concat(selectedtransactionsdep);
+            templateObject.selectedTransdep.set(selectednewtransactionsdep);
+            localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectednewtransactionsdep));
+
+            // setTimeout(function() {
+            //     $("#divtblSelectedDeposits").height(120);
+            // }, 0);
 
             $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
-            // var totaldepamount = (($('.depositAmount').html()).substring(1)).replace(',','');
-            // var totalwithamount = (($('.withdrawalAmount').html()).substring(1)).replace(',','');
-            // var openbalamount = (($('#openingbalance').val()).substring(1)).replace(',','');
             totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
             totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
             openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
             clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+            $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
         }
     },
     'change #checkallreconwith': function(event) {
-        let selectedTransAmountwidth;
+        const templateObject = Template.instance();
+        let selectedTransAmountwith;
         if ($(event.target).is(':checked')) {
             $(".reconchkboxwith").prop("checked", true);
-            selectedTransAmountwidth = 0;
-            const templateObject = Template.instance();
-            const selectedTranswith = [];
+            selectedTransAmountwith = parseFloat($('#originalWithdrawalAmount').val()) || 0;
+            const selectedoriginaltransactionswith = templateObject.originalTranswith.get() || [];
             const selectedtransactionswith = [];
-
             $('.reconchkboxwith:checkbox:checked').each(function() {
                 var chkbidwithLine = $(this).attr('id');
                 var checkboxIDwithLine = chkbidwithLine.split("_").pop();
-
                 var depositLineIDAll = $('#checkboxwithtable_' + checkboxIDwithLine).attr('depositLineID');
-                let transactionObj = {
-                    reconid: checkboxIDwithLine,
-                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                    depositLineID: depositLineIDAll || 0
-                };
-                var reconamounttrim = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
-                //(($('#vs1reconamountwith_' + checkboxIDwithLine).text()).substring(1)).replace(',', '');
-                selectedTransAmountwidth = selectedTransAmountwidth + parseFloat(reconamounttrim);
-                selectedtransactionswith.push(transactionObj);
-                localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectedtransactionswith));
+                const existRecord = !!selectedtransactionswith.find(item => {
+                    return item.reconid === checkboxIDwithLine
+                })
+                if (!existRecord) {
+                    let transactionObj = {
+                        reconid: checkboxIDwithLine,
+                        recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                        reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                        recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                        reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                        reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                        depositLineID: depositLineIDAll || 0
+                    };
+                    var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
+                    selectedtransactionswith.push(transactionObj);
+                }
             });
-            templateObject.selectedTranswith.set(selectedtransactionswith);
 
-            setTimeout(function() {
-                $("#divtblSelectedWithdrawals").height(300);
-            }, 0);
+            if (selectedtransactionswith.length > 0) {
+                localStorage.setItem("reconHoldState", "true");
+            } else {
+                localStorage.setItem("reconHoldState", "false");
+            }
 
-            //$("#tblSelectedWithdrawals").height(300);
+            const selectednewtransactionswith = selectedoriginaltransactionswith.concat(selectedtransactionswith);
+            templateObject.selectedTranswith.set(selectednewtransactionswith);
+            localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectednewtransactionswith));
 
-            $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
-            // var totaldepamount = (($('.depositAmount').html()).substring(1)).replace(',','');
-            // var totalwithamount = (($('.withdrawalAmount').html()).substring(1)).replace(',','');
-            // var openbalamount = (($('#openingbalance').val()).substring(1)).replace(',','');
+            // setTimeout(function() {
+            //     $("#divtblSelectedWithdrawals").height(300);
+            // }, 0);
+
+            $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
             var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
             var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
             var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
             var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+            $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
             $('.btnHold').prop("disabled", false);
         } else {
             $(".reconchkboxwith").prop("checked", false);
-            selectedTransAmountwidth = 0;
-            const templateObject = Template.instance();
-            const selectedTranswith = [];
+            selectedTransAmountwith = parseFloat($('#originalWithdrawalAmount').val()) || 0;
+            const selectedoriginaltransactionswith = templateObject.originalTranswith.get() || [];
             const selectedtransactionswith = [];
-
             $('.reconchkboxwith:checkbox:checked').each(function() {
                 var chkbidwithLine = $(this).attr('id');
                 var checkboxIDwithLine = chkbidwithLine.split("_").pop();
                 var depositLineIDwith = $('#checkboxwithtable_' + checkboxIDwithLine).attr('depositLineID');
-                let transactionObj = {
-                    reconid: checkboxIDwithLine,
-                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                    depositLineID: depositLineIDwith || 0
-                };
-                var reconamounttrim = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
-                //(($('#vs1reconamountwith_' + checkboxIDwithLine).text()).substring(1)).replace(',', '');
-                selectedTransAmountwidth = selectedTransAmountwidth + parseFloat(reconamounttrim);
-                selectedtransactionswith.push(transactionObj);
+                const existRecord = !!selectedtransactionswith.find(item => {
+                    return item.reconid === checkboxIDwithLine
+                })
+                if (!existRecord) {
+                    let transactionObj = {
+                        reconid: checkboxIDwithLine,
+                        recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                        reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                        recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                        reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                        reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                        depositLineID: depositLineIDwith || 0
+                    };
+                    var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
+                    selectedtransactionswith.push(transactionObj);
+                }
             });
-            templateObject.selectedTranswith.set(selectedtransactionswith);
 
-            setTimeout(function() {
-                $("#divtblSelectedWithdrawals").height(120);
-            }, 0);
+            if (selectedtransactionswith.length > 0) {
+                localStorage.setItem("reconHoldState", "true");
+            } else {
+                localStorage.setItem("reconHoldState", "false");
+            }
 
-            $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
-            // var totaldepamount = (($('.depositAmount').html()).substring(1)).replace(',','');
-            // var totalwithamount = (($('.withdrawalAmount').html()).substring(1)).replace(',','');
-            // var openbalamount = (($('#openingbalance').val()).substring(1)).replace(',','');
+            const selectednewtransactionswith = selectedoriginaltransactionswith.concat(selectedtransactionswith);
+            templateObject.selectedTranswith.set(selectednewtransactionswith);
+            localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectednewtransactionswith));
+
+            // setTimeout(function() {
+            //     $("#divtblSelectedWithdrawals").height(120);
+            // }, 0);
+
+            $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
             var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
             var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
             var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
             var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
+            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
+            $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
         }
     },
     'blur .endingbalance': function(e) {
-        let dataValue = utilityService.convertSubstringParseFloat(event.target.value);
+        // let dataValue = event.target.value.replace(/[^0-9.-]+/g, "") || 0;
+        // if (dataValue != "") {
+        //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
+        // }
 
-        if (!isNaN(dataValue)) {
-            $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
-        } else {
-            let inputDebitEx = dataValue;
-
-            $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(inputDebitEx) || 0);
-        }
+        // let dataValue = utilityService.convertSubstringParseFloat(event.target.value);
+        // if (!isNaN(dataValue)) {
+        //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
+        // } else {
+        //     let inputDebitEx = dataValue;
+        //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(inputDebitEx) || 0);
+        // }
     },
     'keyup .endingbalance, change .endingbalance': function(e) {
 
-        var displayEndBal2 = event.target.value.replace(/[^0-9.-]+/g, "") || 0;
-        $('.endingbalance2').val(event.target.value || 0);
-
+        var displayEndBal2 = parseFloat(event.target.value) || 0;
+        $('#endingbalance2').val(displayEndBal2);
         $('.endingBalanceCalc').text(utilityService.modifynegativeCurrencyFormat(displayEndBal2) || Currency + "0.00");
 
         // Calc Difference
-        var clearedBalCalc2 = $('.clearedBalance').html().replace(/[^0-9.-]+/g, "") || 0;
-        var differenceAmount = parseFloat(clearedBalCalc2) - parseFloat(displayEndBal2);
+        var clearedBalCalc2 = utilityService.convertSubstringParseFloat($('.clearedBalance').html()) || 0;
+        var differenceAmount = clearedBalCalc2 - displayEndBal2;
         $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(Math.abs(differenceAmount)) || Currency + "0.00");
     },
     // 'blur .statementDate, keyup .statementDate, change .statementDate': function(e) {
@@ -1860,7 +2043,7 @@ Template.bankrecon.events({
     // },
     'click .reconbtn': function(e) {
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        const templateObject = Template.instance();
         let reconService = new ReconService();
 
         let lineItemsDep = [];
@@ -1876,21 +2059,21 @@ Template.bankrecon.events({
                 let depref = $("#" + depID + "_ref").text() || '';
                 let deppaymentid = $("#" + depID + "_payid").text() || '';
                 let depaccountname = $('#bankAccountName').val() || '';
-                if ($("#" + depID + "_desc").text() == "Customer Payment") {
-                    deppaymentid = depID;
-                }
+                // if ($("#" + depID + "_desc").text() == "Customer Payment") {
+                //     deppaymentid = depID;
+                // }
 
-                if (FlowRouter.current().queryParams.id) {
+                // if (FlowRouter.current().queryParams.id) {
 
-                } else {
-                    if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
-                        deppaymentid = depID;
-                    }
+                // } else {
+                //     if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
+                //         deppaymentid = depID;
+                //     }
 
-                    if ($("#" + depID + "_desc").text() == "Cheque") {
-                        deppaymentid = depID;
-                    }
-                }
+                //     if ($("#" + depID + "_desc").text() == "Cheque") {
+                //         deppaymentid = depID;
+                //     }
+                // }
 
                 // else if($("#"+depID+"_desc").text() == "Journal Entry"){
                 //   deppaymentid = depID;
@@ -1912,10 +2095,10 @@ Template.bankrecon.events({
                         ClientName: depclientname || '',
                         DepositDate: formateDepDate + " 00:00:00" || '',
                         Deposited: true,
-                        DepositLineID: parseInt(depositLineID) || 0,
+                        DepositLineID: parseInt(deppaymentid) || 0,
                         Notes: depnotes || '',
                         Payee: depclientname || '',
-                        PaymentID: parseInt(deppaymentid) || 0,
+                        PaymentID: parseInt(depID) || 0,
                         Reconciled: true,
                         Reference: depref || ''
                     }
@@ -1937,7 +2120,7 @@ Template.bankrecon.events({
                 let withamount = $("#" + withID + "_amount").text() || 0;
                 let withref = $("#" + withID + "_ref").text() || '';
                 let withpaymentid = $("#" + withID + "_payid").text() || '';
-                withpaymentid = withID;
+                // withpaymentid = withID;
                 let withaccountname = $('#bankAccountName').val() || '';
 
                 let splitwithdepositdate = withdepositdate.split("/");
@@ -1956,10 +2139,10 @@ Template.bankrecon.events({
                         ClientName: withclientname || '',
                         DepositDate: formatWithDate + " 00:00:00" || '',
                         Deposited: true,
-                        DepositLineID: parseInt(depositLineIDWith) || 0,
+                        DepositLineID: parseInt(withpaymentid) || 0,
                         Notes: withnotes || '',
                         Payee: withclientname || '',
-                        PaymentID: parseInt(withpaymentid) || 0,
+                        PaymentID: parseInt(withID) || 0,
                         Reconciled: true,
                         Reference: withref || ''
                     }
@@ -1976,11 +2159,11 @@ Template.bankrecon.events({
         var finished = true;
         var notes = $('#statementno').val(); //pending addition of notes field
         var onhold = false;
-        var openbalance = $('.openingbalance').val().replace(/[^0-9.-]+/g, "") || 0;
+        var openbalance = utilityService.convertSubstringParseFloat($('.openingbalance').val()) || 0;
         var statementno = $('#statementno').val();
         var recondateTime = new Date($("#dtSODate2").datepicker("getDate"));
         let recondate = recondateTime.getFullYear() + "-" + (recondateTime.getMonth() + 1) + "-" + recondateTime.getDate();
-        let closebalance = $('.endingBalanceCalc').html().replace(/[^0-9.-]+/g, "") || 0;
+        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
         // Pulling initial variables END
         let objDetails = '';
         if (FlowRouter.current().queryParams.id) {
@@ -2026,9 +2209,13 @@ Template.bankrecon.events({
                 }
             };
         }
+        // return false;
         reconService.saveReconciliation(objDetails).then(function(data) {
             FlowRouter.go('/reconciliationlist?success=true');
-            localStorage.setItem("reconHoldState", "false");
+            if (localStorage.getItem("reconHoldState") != undefined && localStorage.getItem("reconHoldState") != null && localStorage.getItem("reconHoldState") == "false") {
+                localStorage.setItem("SelectedTransactionsDep", "");
+                localStorage.setItem("SelectedTransactionsWith", "");
+            }
         }).catch(function(err) {
             swal({
                 title: 'Oooops...',
@@ -2044,7 +2231,7 @@ Template.bankrecon.events({
     },
     'click .btnHold': function(e) {
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        const templateObject = Template.instance();
         let reconService = new ReconService();
 
         let lineItemsDep = [];
@@ -2060,21 +2247,21 @@ Template.bankrecon.events({
                 let depref = $("#" + depID + "_ref").text() || '';
                 let deppaymentid = $("#" + depID + "_payid").text() || '';
                 let depaccountname = $('#bankAccountName').val() || '';
-                if ($("#" + depID + "_desc").text() == "Customer Payment") {
-                    deppaymentid = depID;
-                }
+                // if ($("#" + depID + "_desc").text() == "Customer Payment") {
+                //     deppaymentid = depID;
+                // }
 
-                if (FlowRouter.current().queryParams.id) {
+                // if (FlowRouter.current().queryParams.id) {
 
-                } else {
-                    if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
-                        deppaymentid = depID;
-                    }
+                // } else {
+                //     if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
+                //         deppaymentid = depID;
+                //     }
 
-                    if ($("#" + depID + "_desc").text() == "Cheque") {
-                        deppaymentid = depID;
-                    }
-                }
+                //     if ($("#" + depID + "_desc").text() == "Cheque") {
+                //         deppaymentid = depID;
+                //     }
+                // }
                 // else if($("#"+depID+"_desc").text() == "Journal Entry"){
                 //   deppaymentid = depID;
                 // }
@@ -2095,10 +2282,10 @@ Template.bankrecon.events({
                         ClientName: depclientname || '',
                         DepositDate: formateDepDate + " 00:00:00" || '',
                         Deposited: true,
-                        DepositLineID: parseInt(depositLineID) || 0,
+                        DepositLineID: parseInt(deppaymentid) || 0,
                         Notes: depnotes || '',
                         Payee: depclientname || '',
-                        PaymentID: parseInt(deppaymentid) || 0,
+                        PaymentID: parseInt(depID) || 0,
                         Reconciled: true,
                         Reference: depref || ''
                     }
@@ -2120,7 +2307,7 @@ Template.bankrecon.events({
                 let withamount = $("#" + withID + "_amount").text() || 0;
                 let withref = $("#" + withID + "_ref").text() || '';
                 let withpaymentid = $("#" + withID + "_payid").text() || '';
-                withpaymentid = withID;
+                // withpaymentid = withID;
                 let withaccountname = $('#bankAccountName').val() || '';
 
                 let splitwithdepositdate = withdepositdate.split("/");
@@ -2139,10 +2326,10 @@ Template.bankrecon.events({
                         ClientName: withclientname || '',
                         DepositDate: formatWithDate + " 00:00:00" || '',
                         Deposited: true,
-                        DepositLineID: parseInt(depositLineIDWith) || 0,
+                        DepositLineID: parseInt(withpaymentid) || 0,
                         Notes: withnotes || '',
                         Payee: withclientname || '',
-                        PaymentID: parseInt(withpaymentid) || 0,
+                        PaymentID: parseInt(withID) || 0,
                         Reconciled: true,
                         Reference: withref || ''
                     }
@@ -2159,11 +2346,11 @@ Template.bankrecon.events({
         var finished = true;
         var notes = $('#statementno').val(); //pending addition of notes field
         var onhold = false;
-        var openbalance = $('.openingbalance').val().replace(/[^0-9.-]+/g, "") || 0;
+        var openbalance = utilityService.convertSubstringParseFloat($('.openingbalance').val()) || 0;
         var statementno = $('#statementno').val();
         var recondateTime = new Date($("#dtSODate2").datepicker("getDate"));
         let recondate = recondateTime.getFullYear() + "-" + (recondateTime.getMonth() + 1) + "-" + recondateTime.getDate();
-        let closebalance = $('.endingBalanceCalc').html().replace(/[^0-9.-]+/g, "") || 0;
+        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
         // Pulling initial variables END
 
         let objDetails = '';
@@ -2212,8 +2399,9 @@ Template.bankrecon.events({
         }
 
         reconService.saveReconciliation(objDetails).then(function(data) {
+            localStorage.setItem("SelectedTransactionsDep", JSON.stringify(templateObject.selectedTransdep.get()));
+            localStorage.setItem("SelectedTransactionsWith", JSON.stringify(templateObject.selectedTranswith.get()));
             FlowRouter.go('/reconciliationlist?success=true');
-            localStorage.setItem("reconHoldState", "false");
         }).catch(function(err) {
             swal({
                 title: 'Oooops...',
@@ -2238,9 +2426,9 @@ Template.bankrecon.events({
                     showCancelButton: false,
                     confirmButtonText: 'OK'
                 }).then((result) => {
-                    //if (result.value) {
-                    FlowRouter.go('/reconciliationlist?success=true');
-                    //}
+                    if (result.value) {
+                        FlowRouter.go('/reconciliationlist?success=true');
+                    }
 
                 });
                 // swal('Delete all Reconciliations for this account, dated after this.', 'This will enable the deletion of this Reconciliation', 'warning');
@@ -2251,6 +2439,7 @@ Template.bankrecon.events({
     'click .btnDeleteRecon': function(e) {
         playDeleteAudio();
         let reconService = new ReconService();
+        const templateObject = Template.instance();
         setTimeout(function() {
             swal({
                 title: 'Delete Bank Reconciliation',
@@ -2275,6 +2464,10 @@ Template.bankrecon.events({
                         };
 
                         reconService.saveReconciliation(objDetails).then(function(objDetails) {
+                            if (localStorage.getItem("reconHoldState") != undefined && localStorage.getItem("reconHoldState") != null && localStorage.getItem("reconHoldState") == "false") {
+                                localStorage.setItem("SelectedTransactionsDep", "");
+                                localStorage.setItem("SelectedTransactionsWith", "");
+                            }
                             FlowRouter.go('/reconciliationlist?success=true');
                         }).catch(function(err) {
                             swal({
@@ -2302,9 +2495,9 @@ Template.bankrecon.events({
         }, delayTimeAfterSound);
     },
     'change .endingbalance': function(e) {
-        var difference = $('.differenceCalc').html().replace(/[^0-9.-]+/g, "") || 0;
-        var endingbal = $('.endingBalanceCalc').html().replace(/[^0-9.-]+/g, "") || 0;
-        var clearedbal = $('.clearedBalance').html().replace(/[^0-9.-]+/g, "") || 0;
+        var difference = utilityService.convertSubstringParseFloat($('.differenceCalc').html()) || 0;
+        var endingbal = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        var clearedbal = utilityService.convertSubstringParseFloat($('.clearedBalance').html()) || 0;
         var zero = 0.00;
 
         var rowCountDep = $('#tblSelectedDeposits tbody tr').length;
@@ -2344,9 +2537,9 @@ Template.bankrecon.events({
 
     },
     'change .statementno': function(e) {
-        var difference = $('.differenceCalc').html().replace(/[^0-9.-]+/g, "") || 0;
-        var endingbal = $('.endingBalanceCalc').html().replace(/[^0-9.-]+/g, "") || 0;
-        var clearedbal = $('.clearedBalance').html().replace(/[^0-9.-]+/g, "") || 0;
+        var difference = utilityService.convertSubstringParseFloat($('.differenceCalc').html()) || 0;
+        var endingbal = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        var clearedbal = utilityService.convertSubstringParseFloat($('.clearedBalance').html()) || 0;
         var zero = 0.00;
 
         var rowCountDep = $('#tblSelectedDeposits tbody tr').length;
@@ -2598,9 +2791,9 @@ Template.bankrecon.helpers({
 });
 
 function openBankAccountListModal() {
-    $('#selectLineID').val('');
-    $('#bankAccountListModal').modal("toggle");
     setTimeout(function() {
+        $('#selectLineID').val('');
+        $('#bankAccountListModal').modal("toggle");
         $('#tblAccount_filter .form-control-sm').focus();
         $('#tblAccount_filter .form-control-sm').val('');
         $('#tblAccount_filter .form-control-sm').trigger("input");

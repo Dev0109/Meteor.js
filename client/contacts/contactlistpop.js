@@ -201,7 +201,7 @@ Template.contactlistpop.onRendered(function () {
                     }
 
                     setTimeout(function () {
-                        $('#tblContactlist').DataTable({
+                        $('.tblContactlist').DataTable({
                             data: splashArrayContactList,
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             columnDefs: [
@@ -264,7 +264,7 @@ Template.contactlistpop.onRendered(function () {
                             responsive: true,
                             "order": [[1, "asc"]],
                             action: function () {
-                                $('#tblContactlist').DataTable().ajax.reload();
+                                $('.tblContactlist').DataTable().ajax.reload();
                             },
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnDrawCallback": function (oSettings) {
@@ -367,12 +367,12 @@ Template.contactlistpop.onRendered(function () {
                                                     }
 
                                                     let uniqueChars = [...new Set(splashArrayContactList)];
-                                                    var datatable = $('#tblContactlist').DataTable();
+                                                    var datatable = $('.tblContactlist').DataTable();
                                                     datatable.clear();
                                                     datatable.rows.add(uniqueChars);
                                                     datatable.draw(false);
                                                     setTimeout(function () {
-                                                      $("#tblContactlist").dataTable().fnPageChange('last');
+                                                      $(".tblContactlist").dataTable().fnPageChange('last');
                                                     }, 400);
 
                                                     $('.fullScreenSpin').css('display', 'none');
@@ -600,7 +600,7 @@ Template.contactlistpop.onRendered(function () {
                 }
 
                 setTimeout(function () {
-                    $('#tblContactlist').DataTable({
+                    $('.tblContactlist').DataTable({
                         data: splashArrayContactList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
@@ -663,7 +663,7 @@ Template.contactlistpop.onRendered(function () {
                         responsive: true,
                         "order": [[1, "asc"]],
                         action: function () {
-                            $('#tblContactlist').DataTable().ajax.reload();
+                            $('.tblContactlist').DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function (oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
@@ -765,12 +765,12 @@ Template.contactlistpop.onRendered(function () {
                                                 }
 
                                                 let uniqueChars = [...new Set(splashArrayContactList)];
-                                                var datatable = $('#tblContactlist').DataTable();
+                                                var datatable = $('.tblContactlist').DataTable();
                                                 datatable.clear();
                                                 datatable.rows.add(uniqueChars);
                                                 datatable.draw(false);
                                                 setTimeout(function () {
-                                                  $("#tblContactlist").dataTable().fnPageChange('last');
+                                                  $(".tblContactlist").dataTable().fnPageChange('last');
                                                 }, 400);
 
                                                 $('.fullScreenSpin').css('display', 'none');
@@ -1058,7 +1058,7 @@ Template.contactlistpop.onRendered(function () {
                         responsive: true,
                         "order": [[1, "asc"]],
                         action: function () {
-                            $('#tblContactlist').DataTable().ajax.reload();
+                            $('.tblContactlist').DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function (oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
@@ -1160,7 +1160,7 @@ Template.contactlistpop.onRendered(function () {
                                                 }
 
                                                 let uniqueChars = [...new Set(splashArrayContactList)];
-                                                var datatable = $('#tblContactlist').DataTable();
+                                                var datatable = $('.tblContactlist').DataTable();
                                                 datatable.clear();
                                                 datatable.rows.add(uniqueChars);
                                                 datatable.draw(false);
@@ -1411,7 +1411,7 @@ Template.contactlistpop.events({
                         //}
                     }
 
-                    var datatable = $('#tblContactlist').DataTable();
+                    var datatable = $('.tblContactlist').DataTable();
                     datatable.clear();
                     datatable.rows.add(splashArrayContactList);
                     datatable.draw(false);
@@ -1529,7 +1529,7 @@ Template.contactlistpop.events({
             //         // clientList.push(customerrecordObj);
             //         //}
             //     }
-            //     var datatable = $('#tblContactlist').DataTable();
+            //     var datatable = $('.tblContactlist').DataTable();
             //     datatable.clear();
             //     datatable.rows.add(splashArrayContactList);
             //     datatable.draw(false);
@@ -1686,7 +1686,7 @@ Template.contactlistpop.events({
         let columData = $(event.target).text();
 
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblContactlist').DataTable();
+        var datable = $('.tblContactlist').DataTable();
         var title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
 

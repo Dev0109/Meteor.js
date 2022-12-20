@@ -77,7 +77,7 @@ Template.departmentSettings.events({
     'click .btnRefresh': function () {
         $(".fullScreenSpin").css("display", "inline-block");
         sideBarService.getDepartment().then(function(dataReload) {
-            addVS1Data('TDeptClass', JSON.stringify(dataReload)).then(function(datareturn) {
+            addVS1Data('TDeptClassList', JSON.stringify(dataReload)).then(function(datareturn) {
               sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
                   await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
                       Meteor._reload.reload();
@@ -93,7 +93,7 @@ Template.departmentSettings.events({
         }).catch(function(err) {
             Meteor._reload.reload();
         });
-  },
+    },
     'click .btnCloseAddNewDept': function () {
         playCancelAudio();
         setTimeout(function(){

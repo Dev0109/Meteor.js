@@ -2,10 +2,11 @@ Template.transaction_header.helpers({
   getUserLabel: () => {
     const cardType = Template.instance().data.cardType;
     switch(cardType){
-      case "invoice":
+      case "Invoice":
+      case "Sales Order":
         return "Customer";
-      case "bill":
-      case "po":
+      case "Bill":
+      case "PO":
       case "credit": 
         return "Supplier";
       default:
@@ -14,7 +15,7 @@ Template.transaction_header.helpers({
   },
   getDateInputLabel: () => {
     const cardType = Template.instance().data.cardType;
-    if (cardType !== 'invoice') return "Sales Date";
+    if (cardType === 'Invoice'|| cardType === 'Sales Order' || cardType === 'PO' ) return "Sales Date";
     else return "Order Date";
   }
 })

@@ -2473,35 +2473,29 @@ Template.salesorderslist.events({
 
         let templateObject = Template.instance();
 
+        sideBarService.getAllSalesOrderList(initialDataLoad,0).then(function(data) {
+            addVS1Data('TSalesOrderEx',JSON.stringify(data)).then(function (datareturn) {
+
+            }).catch(function (err) {
+
+            });
+        }).catch(function(err) {
+
+        });
+
         sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataSaleOrder) {
             addVS1Data('TSalesOrderList',JSON.stringify(dataSaleOrder)).then(function (datareturn) {
-              sideBarService.getAllSalesOrderList(initialDataLoad,0).then(function(data) {
-                  addVS1Data('TSalesOrderEx',JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
-                       addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
-                          window.open('/salesorderslist','_self');
-                         }).catch(function (err) {
-                           window.open('/salesorderslist','_self');
-                         });
-                     }).catch(function (err) {
-                       window.open('/salesorderslist','_self');
-                     });
-                  }).catch(function (err) {
-                      window.open('/salesorderslist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/salesorderslist','_self');
-              });
+              sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
+                 addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
+                    window.open('/salesorderslist','_self');
+                   }).catch(function (err) {
+                     window.open('/salesorderslist','_self');
+                   });
+               }).catch(function (err) {
+                 window.open('/salesorderslist','_self');
+               });
             }).catch(function (err) {
-              sideBarService.getAllSalesOrderList(initialDataLoad,0).then(function(data) {
-                  addVS1Data('TSalesOrderEx',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/salesorderslist','_self');
-                  }).catch(function (err) {
-                      window.open('/salesorderslist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/salesorderslist','_self');
-              });
+              window.open('/salesorderslist','_self');
             });
         }).catch(function(err) {
             window.open('/salesorderslist','_self');

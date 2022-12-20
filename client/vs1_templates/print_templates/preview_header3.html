@@ -42,7 +42,7 @@
         }
         .print-header3 {
             font-family: Calibri, sans-serif !important;
-            font-size: 36px;
+            font-size: 24px;
             line-height: 50px !important;
             padding-right: 5px;
             text-align: right;
@@ -51,7 +51,7 @@
         .pdfCustomerAddress3 {
             font-family: Calibri, sans-serif !important;
             font-size: 18px;
-            padding: 0px;
+            padding-left: 10px;
             width: 100%;
             margin-bottom: 0px;
             color: rgb(0 0 0);
@@ -72,6 +72,10 @@
             <div class="col-6 col-md-6 col-sm-12 d-flex companyLogo">
                 <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
                     <img src="assets/img/VS1.png" class="uploadedImage" style="width: 43%; margin-bottom: 0px;">
+                    <p class="label-p" style="padding-left: 10px; margin-top: 10px;">
+                        <span class="o_abn_label3"></span>&nbsp;
+                        <span class="o_abn3"></span>
+                    </p>
                 </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12 d-flex headerTitle3">
@@ -81,16 +85,20 @@
             </div>
         </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
-            <div class="col-6 col-md-6 col-sm-12 d-flex">
+            <div class="col-3 col-md-3 col-sm-12 d-flex">
                 <div style="width: 100%;">
                     <p class="label-p3 toLabel3" style="color: #71c6a5;">INVOICE TO: </p>
                     <div style="width: 100%; min-height: 100px;">
                         <p class="label-p pdfCustomerAddress3"></p>
-                        <p class="label-p">
-                            <span class="o_abn_label3"></span>&nbsp;
-                            <span class="o_abn3"></span>
-                        </p>
                     </div>
+                </div>
+            </div>
+            <div class="col-3 col-md-3 col-sm-12 d-flex">
+                <div style="width: 100%;">
+                <p><svg id="stockAdjustmentBarCode"></svg></p>
+                <script>
+                    JsBarcode("#stockAdjustmentBarCode", "BI-751",{displayValue: false});
+                </script>
                 </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12 d-flex">
@@ -100,7 +108,8 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px; margin: 20px auto;">
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="width: 100%; height: 60px; font-size: 18px; margin: 20px auto;">
+            <div class="div_invoice3">
             <div class="headerColumn3">
                 <p class="label-p invNumber3">INVOICE NUMBER</p>
                 <p class="label-p io3">1038</p>
@@ -120,6 +129,7 @@
             <div class="headerColumn3">
                 <p class="label-p">DUE DATE</p>
                 <p class="label-p due3"></p>
+            </div>
             </div>
         </div>
     </div>

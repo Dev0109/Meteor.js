@@ -49,8 +49,6 @@ Template.newtaxratepop.onRendered(function() {
         });
     }, 500);
 
-
-
     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
         if (error) {
 
@@ -644,6 +642,11 @@ Template.newtaxratepop.onRendered(function() {
 });
 
 Template.newtaxratepop.events({
+
+    "click .taxRateBtn": (e) => {
+          $('#taxRateModal').modal('hide');
+      },
+
     'click .btnSaveTaxRate': function() {
         playSaveAudio();
         let taxRateService = new TaxRateService();

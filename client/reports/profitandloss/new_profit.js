@@ -347,7 +347,7 @@ Template.newprofitandloss.onRendered(function () {
               }
                 let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
                 let totalRoundAmount = Math.round(totalAmount) || 0;
-                if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+                if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType == "" ) {
                   dataList = {
                     id: accountData[i]["AccountID"] || "",
                     accounttype: accountType || "",
@@ -477,7 +477,7 @@ Template.newprofitandloss.onRendered(function () {
                 });
               }
               if (
-                accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
+                accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") != "" &&
                 accountType != ""
               ) {
                 dataList = {
@@ -689,22 +689,24 @@ Template.newprofitandloss.onRendered(function () {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
       const profitLossLists = ProfitLossLayout.fromList(
-        jsonResponse.tprofitlosslayout
+        jsonResponse.tprofitandlossreport
       );
       // Save default list
       templateObject.profitlosslayoutfields.set(profitLossLists);
-
+      
       profitLossLists.filter((item) => {
-        if (
-          item.fields.Level0Order != 0 &&
-          item.fields.Level1Order == 0 &&
-          item.fields.Level2Order == 0 &&
-          item.fields.Level3Order == 0
-        ) {
+        if ( item.fields.Account_Type != '')
+        // if (
+        //   item.fields.Level0Order != 0 &&
+        //   item.fields.Level1Order == 0 &&
+        //   item.fields.Level2Order == 0 &&
+        //   item.fields.Level3Order == 0
+        // ) {
           profitLossLayouts.push(item.fields);
-        }
+        
       });
-
+  
+      
       let newprofitLossLayouts = [];
       // Fetch Subchilds According to the Above grouping
       profitLossLayouts.forEach(function (item) {
@@ -1096,67 +1098,67 @@ Template.newprofitandloss.events({
       async function checkBasedOnType() {
         return new Promise(async(resolve, reject)=>{
           
-          let values = [];
-          let basedOnTypeStorages = Object.keys(localStorage);
-          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-            let employeeId = storage.split("_")[2];
-            return (
-              storage.includes("BasedOnType_")
-              // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
-            );
-          });
-          let i = basedOnTypeStorages.length;
-          if (i > 0) {
-            while (i--) {
-              values.push(localStorage.getItem(basedOnTypeStorages[i]));
-            }
-          }
+    let values = [];
+    let basedOnTypeStorages = Object.keys(localStorage);
+    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+      let employeeId = storage.split("_")[2];
+      return (
+        storage.includes("BasedOnType_")
+        // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+      );
+    });
+    let i = basedOnTypeStorages.length;
+    if (i > 0) {
+      while (i--) {
+        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+      }
+    }
           for (let j = 0; j<values.length; j++) {
             let value = values[j]
-            let reportData = JSON.parse(value);
-            reportData.HostURL = $(location).attr("protocal")
-              ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-              : "http://" + $(location).attr("hostname");
-            if (reportData.BasedOnType.includes("P")) {
-              if (reportData.FormID == 1) {
-                let formIds = reportData.FormIDs.split(",");
-                if (formIds.includes("129")) {
-                  reportData.FormID = 129;
+      let reportData = JSON.parse(value);
+      reportData.HostURL = $(location).attr("protocal")
+        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+        : "http://" + $(location).attr("hostname");
+      if (reportData.BasedOnType.includes("P")) {
+        if (reportData.FormID == 1) {
+          let formIds = reportData.FormIDs.split(",");
+          if (formIds.includes("129")) {
+            reportData.FormID = 129;
                   reportData.attachments = await getAttachments();
-                  Meteor.call("sendNormalEmail", reportData);
+            Meteor.call("sendNormalEmail", reportData);
                   resolve()
-                }
-              } else {
+          }
+        } else {
                 if (reportData.FormID == 129) {
                   reportData.attachments = await getAttachments();
-                  Meteor.call("sendNormalEmail", reportData);
+            Meteor.call("sendNormalEmail", reportData);
                   resolve()
 
-                }
-              }
+        }
+      }
             }
             if(j == values.length -1) {resolve()}
           }
-          
+
         })
       }
       await checkBasedOnType();
       $('.fullScreenSpin').css('display', 'none')
-      document.title = "Profit and Loss Report";
-      $(".printReport").print({
-        title: document.title + " | Profit and Loss | " + loggedCompany,
-        noPrintSelector: ".addSummaryEditor, .excludeButton",
-        exportOptions: {
-          stripHtml: false,
-        },
-      });
+    document.title = "Profit and Loss Report";
+    $(".printReport").print({
+      title: document.title + " | Profit and Loss | " + loggedCompany,
+      noPrintSelector: ".addSummaryEditor, .excludeButton",
+      exportOptions: {
+        stripHtml: false,
+      },
+    });
       targetElement.style.width = "100%";
       targetElement.style.backgroundColor = "#ffffff";
       targetElement.style.padding = "0px";
       targetElement.style.fontSize = "1rem";
 
     
-    }, delayTimeAfterSound);
+  }, delayTimeAfterSound);
   },
   "click .btnExportReportProfit": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -1363,7 +1365,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     $(".chkDepartment").each(function () {
       if ($(this).is(":checked")) {
-        let dpt = $(this).val();
+        let dpt = $(this).next().html();
         departments.push(dpt);
       }
     });
@@ -2383,8 +2385,8 @@ Template.newprofitandloss.helpers({
 
     let convertedAmount =
       isMinus == true
-        ? `- ${currencyData.symbol} ${amount}`
-        : `${currencyData.symbol} ${amount}`;
+        ? `- ${currencyData.symbol}${amount}`
+        : `${currencyData.symbol}${amount}`;
 
 
     return convertedAmount;

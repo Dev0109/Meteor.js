@@ -1,0 +1,192 @@
+<!-- Customer Payment Transaction Header -->
+<!-- Params 
+data
+-->
+
+<template name="transaction_payment_header">
+  <header style="padding: 16px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+    <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">{{type}} Payment {{data.lid}}
+      {{> helpbutton}}
+      {{> help_modal}}
+    </h2>
+    <div class="printID" id="{{data.lid}}" style="display: none;">{{data.lid}}</div>
+  </header>
+  <div class="row" style="background-color: #ededed; padding: 16px 32px;">
+    <div class="col-12 col-xl-10">
+      <div class="row" style="background-color: #ededed; padding: 16px 0px;">
+        <div class="col-12 col-lg-6">
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              {{#if equals type "Customer"}}
+                {{> customer_selector
+                label="Customer"
+                }}
+              {{else}}
+              {{> customer_selector
+                label="Supplier"
+                id="edtSupplierName"
+                name="edtSupplierName"
+                }}
+              {{/if}}
+            </div>
+            <div class="col-12 col-lg-6">
+              {{> customer_email_input
+              label="Supplier"
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="background-color: #ededed; padding: 16px 0px;">
+        <div class="col-12 col-xl-12">
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+              {{# vs1_textarea
+              label="Comments"
+              row="4"
+              id="txaNotes"
+              name="txaNotes"
+              }}{{data.notes}}{{/vs1_textarea}}
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+              <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      {{> default_input
+                      label="Payment Amount"
+                      type="text"
+                      name="edtPaymentAmount"
+                      id="edtPaymentAmount"
+                      defaultValue=data.paymentAmount
+                      readonly=true
+                      }}
+                    </div>
+                    <div class="col-6 col-md-12 col-lg-12">
+                      {{> single_date_picker
+                      label="Payment Date"
+                      id="dtPaymentDate"
+                      name="dtPaymentDate"
+                      defaultValue=data.paymentDate
+                      }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      {{> default_select
+                      label="Bank Account"
+                      type="search"
+                      id="edtSelectBankAccountName"
+                      name="edtSelectBankAccountName"
+                      }}
+                    </div>
+                    <div class="col-6 col-md-12 col-lg-12">
+                      {{> default_select
+                      label="Payment Method"
+                      type="search"
+                      id="sltPaymentMethod"
+                      name="sltPaymentMethod"
+                      }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+              <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      {{> default_input
+                      label="Reference No."
+                      type="text"
+                      id="edtReference"
+                      name="edtReference"
+                      defaultValue=data.reference
+                      }}
+                    </div>
+                    <div class="col-6 col-md-12 col-lg-12">
+                      {{> default_select
+                      label="Department"
+                      type="search"
+                      id="sltDepartment"
+                      name="sltDepartment"
+                      }}
+                    </div>
+                  </div>
+                </div>
+                {{#if isCurrencyEnable}}
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      {{> CurrencyWidget rate="buy"}}
+                    </div>
+                  </div>
+                </div>
+                {{/if}}
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+              <div class="row">
+                {{#if isCurrencyEnable}}
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12 foreign-currency-js" style="display:none">
+                      <div class="form-group"><label>Foreign Amount</label>
+                        <div class="input-group">
+                          <input class="form-control form-control" type="text" value="$0.00" data-value="0.00"
+                            id="edtForeignAmount" name='foreignAmount'>
+                        </div>
+                      </div>
+                      <div class="form-group"><label>Variation</label>
+                        <input class="form-control form-control" type="text" value="0.00" data-value="0.00"
+                          id="edtVariation" name='variation'>
+                      </div>
+                      <div class="form-group ">
+                        <label>Applied</label>
+                        <div class="input-group">
+                          <input class="form-control form-control" type="text" value="{{data.applied}}" id="edtApplied"
+                            name='applied'>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-xl-2">
+      {{#if equals type "Supplier"}}
+      <div class="text-right" style="font-size: 14px;min-width: 175px;margin: 16px; margin-right: 24px;">
+        <p style="font-size: 20px; font-weight: 700;color: rgb(84,94,103);">BALANCE DUE</p>
+        {{#if equals data.IsPaid true}}
+        <p style="font-size: 25px;font-weight: 705;color: #e74a3b;">Paid</p>
+        <input class="form-control form-control ispaidInv" type="hidden" value="true">
+        {{else}}
+        <input class="form-control form-control ispaidInv" type="hidden" value="false">
+        <p style="font-size: 25px;font-weight: 705;color: rgb(56,63,69);" id="balanceDue" name="balanceDue">
+          {{data.paymentAmount}}</p>
+        {{/if}}
+      </div>
+      {{#if equals data.IsPaid false }}
+      <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+        <button class="btn btn-success float-right payNow btnTransaction" type="button"
+          style="margin: 12px 24px; width: 140px;">
+          <i class="fas fa-dollar-sign" style="padding-right: 8px;"></i>Pay Now
+        </button>
+      </div>
+      {{/if}}
+      {{/if}}
+    </div>
+
+  </div>
+
+</template>

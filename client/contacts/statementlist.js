@@ -1838,23 +1838,29 @@ Template.statementlist.onRendered(function () {
         let taxItems = {};
         object_invoce = [];
         let item_invoices = '';
+        let i = 0;
 
         let invoice_data =  templateObject.statmentprintrecords.get();
-        lineItems = invoice_data.LineItems;
-        let i = 0;
-        for (i=0; i<lineItems.length; i++) {
-            array_data.push([
-                lineItems[i].lineID,
-                lineItems[i].date,
-                lineItems[i].type,
-                lineItems[i].duedate,
-                lineItems[i].total,
-                lineItems[i].paidamt,
-                lineItems[i].balance
-            ]);
+        if (invoice_data != undefined && invoice_data.length > 0) {
+            lineItems = invoice_data.LineItems;
+            if (lineItems != undefined) {
+                for (i=0; i<lineItems.length; i++) {
+                    array_data.push([
+                        lineItems[i].lineID,
+                        lineItems[i].date,
+                        lineItems[i].type,
+                        lineItems[i].duedate,
+                        lineItems[i].total,
+                        lineItems[i].paidamt,
+                        lineItems[i].balance
+                    ]);
+                }
+            }
         }
 
         let dtSODate = invoice_data.printdate;
+        if (dtSODate == undefined)
+            dtSODate = "";
         let subtotal_total = "$0.00";
         let subtotal_tax = "$0.00";
         let grandTotal = invoice_data.closingBalance;
@@ -2072,9 +2078,9 @@ Template.statementlist.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2115,9 +2121,9 @@ Template.statementlist.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2158,9 +2164,9 @@ Template.statementlist.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 

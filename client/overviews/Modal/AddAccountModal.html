@@ -4,8 +4,9 @@
             <div class="modal-header">
                 <h4 style="">
                     <div id="add-account-title" name="add-account-title" style="float: left;">New Account</div>
-                    <a role="button" data-toggle="modal" href="#helpViewModalAdd" style="float: right; font-size: 20px; margin-top: 4px; margin-left: 8px;">Help
-                        <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                    <!-- <a role="button" data-toggle="modal" href="#helpViewModalAdd" style="float: right; font-size: 20px; margin-top: 4px; margin-left: 8px;">Help
+                        <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> -->
+                        {{> helpbutton}}
                 </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body" style="background-color: #EDEDED;">
@@ -34,6 +35,21 @@
                     <div class="col-6 col-md-3">
                         <div class="form-group" style="margin: 4px;"><label>Tax Code</label>
                             <input type="search" class="form-control sltTaxCode" id="sltTaxCode" name="sltTaxCode" style="background-color: #fff; cursor: pointer;" />
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-group" style="margin: 4px;"><label>Sub Account1</label>
+                            <input type="text" class="form-control" id="edtSubAccount1" name="edtSubAccount1">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-group" style="margin: 4px;"><label>Sub Account2</label>
+                            <input type="text" class="form-control" id="edtSubAccount2" name="edtSubAccount2">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-group" style="margin: 4px;"><label>Sub Account3</label>
+                            <input type="text" class="form-control" id="edtSubAccount2" name="edtSubAccount2">
                         </div>
                     </div>
                     <div class="col-12">
@@ -117,9 +133,13 @@
                             </div>
                             <div class="col-6 col-md-4">
                                 <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
-                                    <!-- <input type="text" class="form-control" id="edtBankName" name="edtBankName"> -->
-                                    <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName">
-                                    </select>
+                                    <input type="text" class="form-control" id="edtBankName" name="edtBankName">
+                                    <!-- <select class="form-control pointer" id="edtBankName" name="edtBankName">
+                                        {{#each item in bankNames}}
+                                            <option value="{{item.name}}">{{item.name}}
+                                            </option>
+                                        {{/each}}
+                                    </select> -->
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">
@@ -308,5 +328,12 @@
       {{> bankNameModal}}
     </div>
     {{> eftOptionsModal}}
-    {{> eftBankCodesModal}}
+    <div class="modal fade" role="dialog" tabindex="-1" id="eftBankCodesModal">
+        {{> eftBankCodesModal}}
+    </div>
+    
+    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateModal">
+        {{> newtaxratepop}}
+    </div>
+    <!-- {{> newtaxratepop}} -->
 </template>

@@ -49,7 +49,7 @@ Template.depositcard.onCreated(()=>{
     templateObject.inputSelectedCurrency = new ReactiveVar([]);
     templateObject.currencySymbol = new ReactiveVar([]);
     templateObject.deptrecords = new ReactiveVar();
-
+    templateObject.hasFollow = new ReactiveVar(false);
     templateObject.termrecords = new ReactiveVar();
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
@@ -71,7 +71,7 @@ Template.depositcard.onCreated(()=>{
     templateObject.totalDebit.set(Currency+ '0.00');
     templateObject.accountnamerecords = new ReactiveVar();
     templateObject.datatablepaymentlistrecords = new ReactiveVar([]);
-
+    
     setTimeout(function () {
 
         var x = window.matchMedia("(max-width: 1024px)");
@@ -120,6 +120,34 @@ Template.depositcard.onCreated(()=>{
 
 Template.depositcard.onRendered(()=>{
     let templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let purchaseService = new PurchaseBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length-1];
+        if(getso_id[1]){
+            currentInvoice = parseInt(currentInvoice);
+            var depositEntryData = await purchaseService.getOneDepositEnrtyData(currentInvoice);
+            var depositDate = depositEntryData.fields.DepositDate;
+            var fromDate = depositDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingDeposits = await sideBarService.getAllTBankDepositListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var depositList = followingDeposits.tbankdepositlist;
+            if (depositList.length > 1) {
+                templateObject.hasFollow.set(true);
+            } else {
+                templateObject.hasFollow.set(false);
+            }
+        }
+    }
+    templateObject.hasFollowings();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
     // $('#basedOnFrequency').prop('checked', false);
@@ -221,34 +249,6 @@ Template.depositcard.onRendered(()=>{
       if (dateone == "") {
           $("#formCheck-january").prop('checked', true);
       }
-    }
-    templateObject.hasFollowings = async function() {
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length-1];
-        var objDetails = '';
-        if(getso_id[1]){
-            currentInvoice = parseInt(currentInvoice);
-            var depositEntryData = await purchaseService.getOneDepositEnrtyData(currentInvoice);
-            var depositDate = depositEntryData.fields.DepositDate;
-            var fromDate = depositDate.substring(0, 10);
-            var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingDeposits = await sideBarService.getAllTBankDepositListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var depositList = followingDeposits.tbankdepositlist;
-            if (depositList.length > 1) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
-        }
     }
 
     let imageData= (localStorage.getItem("Image"));
@@ -1472,10 +1472,23 @@ Template.depositcard.onRendered(()=>{
 
 
     $(document).on("click", "#tblAccount tbody tr", function(e) {
-      $(".colAccount").removeClass('boldtablealertsborder');
+        var table = $(this);
+        let isHeader = table.find(".isHeader").text() == "true";
+        if (isHeader) {
+            swal({
+                title: 'This account is header',
+                text: "You can't do anything on this account",
+                type: 'info',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+                }).then((result) => {
+                    return;
+                });
+            return; 
+        }
+        $(".colAccount").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
-        var table = $(this);
         let utilityService = new UtilityService();
         let $tblrows = $("#tblDepositEntryLine tbody tr");
 
@@ -1881,9 +1894,9 @@ Template.depositcard.onRendered(()=>{
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1924,9 +1937,9 @@ Template.depositcard.onRendered(()=>{
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1967,9 +1980,9 @@ Template.depositcard.onRendered(()=>{
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -3933,31 +3946,9 @@ Template.depositcard.events({
     'click .btnRemove': async function(event){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
-        let utilityService = new UtilityService();
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length-1];
-        var depositList = [];
-        if(getso_id[1]){
-            currentInvoice = parseInt(currentInvoice);
-            var depositEntryData = await purchaseService.getOneDepositEnrtyData(currentInvoice);
-            var depositDate = depositEntryData.fields.DepositDate;
-            var fromDate = depositDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingDeposits = await sideBarService.getAllTBankDepositListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            depositList = followingDeposits.tbankdepositlist;
-        }
+       
         if(targetID != undefined){
             times++;
             if (times == 1) {
@@ -4015,7 +4006,7 @@ Template.depositcard.events({
                 }
             }
         } else {
-            if(depositList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },
@@ -4073,7 +4064,6 @@ Template.depositcard.events({
     'click .btnDelete': async function(event){
         playDeleteAudio();
         let templateObject = Template.instance();
-        await templateObject.hasFollowings();
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
 

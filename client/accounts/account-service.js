@@ -170,7 +170,7 @@ export class AccountService extends BaseService {
 
     getAccountListVS1() {
         let options = {
-            PropertyList: 'AccountName,Description,AccountNumber,AccountTypeName,TaxCode,BankAccountName,BSB,BankAccountNumber,Extra,APCANumber,Balance,BankNumber,IsHeader',
+            PropertyList: 'AccountName,Description,AccountNumber,AccountTypeName,TaxCode,BankAccountName,BSB,BankAccountNumber,Extra,APCANumber,Balance,BankNumber,IsHeader,Leve1,Level2,Level3',
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TAccountVS1, options);

@@ -177,6 +177,14 @@
                     </div>
                 </div>
 
+                <div class="btn-group btnNav vs1ButtonMargin" >
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input showAsChart" name="showAsChart" id="showAsChart" />
+                        <label class="custom-control-label" for="showAsChart">Chart</label>
+                    </div>
+                </div>
+
+
                 <div class="btn-group btnNav vs1ButtonMargin btnBasReturnGroup" style="display:none">
                     <button type="button" class="btn btn-primary btnBasReturn" id="btnBasReturn"><i class="fas fa-user" style="margin-right: 5px;"></i>BAS Return</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
@@ -293,7 +301,15 @@
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myAccountModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
+        <style>
+        .isNotBankAccount {
+            display: none !important;
+        }
 
+        .isNotCreditAccount {
+            display: none !important;
+        }
+        </style>
         <div class="card-body p-0 rounded">
             <!-- Start {{> optionNavSalesOverview}} -->
             <!-- End -->
@@ -333,13 +349,7 @@
                         opacity: 1;
                     }
 
-                    .isNotBankAccount {
-                        display: none !important;
-                    }
 
-                    .isNotCreditAccount {
-                        display: none !important;
-                    }
                     .th.Balance,
                     .th.colBalance {
                         text-align: right !important;

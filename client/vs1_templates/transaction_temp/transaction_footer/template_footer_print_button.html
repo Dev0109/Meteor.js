@@ -1,0 +1,29 @@
+<!-- Template footer Print button -->
+<!-- Params
+  type
+-->
+<template name="template_footer_print_button">
+  <button 
+    class="btn btn-primary btnFooter" 
+    id="open_print_confirm" 
+    type="button">
+    <i class="fa fa-print"></i>Print
+  </button>
+
+  <!-- Template choose Modal -->
+  {{> transaction_print_modal TransactionType=type}}
+  <!-- Preview Modal -->
+  <div 
+    class="modal fade" 
+    id="templatePreviewModal" 
+    tabindex="2" 
+    role="dialog"
+    aria-labelledby="templatePreviewLabel" 
+    aria-hidden="true">
+    {{> custom_print_template 
+      modalId="templatePreviewModal" 
+      idPrefix="html-2-pdfwrapper"
+      namePrefix="html-2-pdfwrapper" 
+    }}
+  </div>
+</template>

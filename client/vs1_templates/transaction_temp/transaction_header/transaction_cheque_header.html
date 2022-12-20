@@ -1,0 +1,64 @@
+<!-- Transaction cheque header -->
+<!-- Params
+  data
+-->
+<template name="transaction_cheque_header">
+  <div class="row" style="margin: 8px 16px 0px 16px;">
+    <div class="col-12 col-md-3">
+      {{> customer_selector
+        label="Supplier"
+        id='edtSupplierName'
+      }}
+    </div>
+    <div class="col-12 col-md-3">
+      {{> customer_email_input
+        label="Supplier"
+      }}
+    </div>
+  </div>
+  <div class="row" style="margin: 8px 16px 0px 16px;">
+    
+    <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+      {{# vs1_textarea
+      label="Billing Address"
+      row="5"
+      id="txabillingAddress"
+      name="txabillingAddress"
+      }}{{data.invoiceToDesc}}{{/vs1_textarea}}
+    </div>
+    <div class="col-12 col-md-3">
+      {{> default_select
+        label="Account"
+        id="sltChequeBankAccountName"
+        type="search"
+        name="sltChequeBankAccountName"
+      }}
+      {{> sale_date_selector
+        label="Order Date"
+        SODate=data.saledate
+        DueDate=data.duedate
+      }}
+    </div>
+    <div class="col-6 col-md-3">
+      {{> default_input
+        label="Reference"
+        classes=""
+        type="text"
+        id="edtRef"
+        name="edtRef"
+        defaultValue=data.reference
+      }}
+
+      {{> currencydropdown}}
+
+    </div>
+    <div class="col-6 col-md-3">
+      {{> default_input
+        label="Cheque No."
+        id="ponumber"
+        name="ponumber"
+        defaultValue=data.invoicenumber
+      }}
+    </div>
+  </div>
+</template>

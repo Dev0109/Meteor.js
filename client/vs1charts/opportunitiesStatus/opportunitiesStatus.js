@@ -118,7 +118,7 @@ Template.opportunitiesStatus.onRendered(function() {
                         data: statusValues,
                     },
                     {
-                        label: "Expect",
+                        label: "Expected",
                         backgroundColor: "#33c942",
                         data: statusExpectValues,
                     },

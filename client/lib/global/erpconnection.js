@@ -183,6 +183,7 @@ var erpConnection = {
     ERPApprovedStockTakeListObject: "TStockAdjustEntry?PropertyList=ID,GlobalRef,CreationDate,Processed,Notes,Employee,AccountName,AdjustmentDate,Deleted,TotalCostEx,IsStockTake&select=[deleted]=flase and [Approved]=true",
     ERPDeletedStockTakeListObject: "TStockAdjustEntry?PropertyList=ID,GlobalRef,CreationDate,Processed,Notes,Employee,AccountName,AdjustmentDate,Deleted,TotalCostEx,IsStockTake&select=[deleted]=true",
     ERPSalesOrderSalesObject: "TSalesOrder?PropertyList=ID,TotalAmountInc,printflag,deleted,converted,IsPaid,SalesStatus",
+    TPreference: "TPreference?Select=[PrefName]='VS1Menu'&FIeldList='PreferenceID,PrefValue'",
     //ERPProfitAndLossReport: "ProfitAndLossReport?select=[Active]=true&ListType=Detail",
 }
 /*

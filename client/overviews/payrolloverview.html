@@ -212,8 +212,13 @@
                     </div>
                 </div>
             </header>
-            <!-- All charts list -->
-            {{> allChartLists  tabGroupID="6" chartGroup="Payroll" }}
+            <!-- All charts list --> 
+
+            {{> employeeAbsentDays md=4  }}
+            {{> employeePresentDays md=4  }}
+            {{> employeeLeave md=4  }}
+
+            {{> allChartLists  tabGroupID="6" chartGroup="Payroll" }} 
             <style>
                 @media screen and (max-width: 450px) {
                     .btnNav {
@@ -499,15 +504,6 @@
                 <div class="col-6 col-md-7 col-lg-8">
                     <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0px"><i
                             class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                    <button class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;" data-toggle="modal" data-target="#newPayRunModal">
-                        <i class="fas fa-check" style="margin-right: 5px;"></i>Add Pay Run
-                    </button>
-                    <!-- <button id="btnPayRun" name="btnPayRun" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-hand-holding-usd" style="padding-right: 5px;"></i>Pay Run</button> -->
-                    <!-- <button id="btnNewEmployee" name="btnNewEmployee" class="btn btnNav btn-primary" type="button"
-                        style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New
-                        Employee</button> -->
-                    <!-- <button class="btn btnNav btn-success btnAddVS1User" type="button" style="margin: 12px;"><i
-                            class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
                     {{#if equals showTimesheet true}}
                     <button class="btn btnNav btn-primary" id="btnTimesheet" name="btnTimesheet" type="button"
                         style="margin: 12px;"><i class="fas fa-clock"
@@ -760,7 +756,10 @@
                 </div>
             </div>
             {{/if}}
-
+            <header style="padding: 16px; background-color: #fffff;">
+                <h1 style="margin: 16px; margin-bottom: 8px;" class="timesheetHeader">Pay Runs
+                </h1>
+            </header>
             <div class="row">
                 <div class="col-12" style="margin-bottom: 16px;">
                     <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">

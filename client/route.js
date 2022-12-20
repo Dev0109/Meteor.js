@@ -189,10 +189,37 @@ const authenticatedRoutes = FlowRouter.group({
     triggersEnter: [authenticatedRedirect]
 });
 
+let previous_url = "";
+
+FlowRouter.triggers.enter([
+    function (context, redirect, stop) {
+        if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
+            stop();
+            swal({
+                title: 'WARNING!',
+                text: 'Do you wish to save your changes?',
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    FlowRouter.go(previous_url);
+                } else if (result.dismiss === 'cancel') {
+                    FlowRouter.go(context.path);
+                    //TODO need to url async
+                    previous_url = "";
+                    localStorage.setItem("isFormUpdated", false);
+                }
+            });
+        }
+    }
+]);
+
 FlowRouter.triggers.exit([
     function (context, redirect) {
-        if (!confirm("Changes you made may not be saved.")) {
-            redirect(context.path);
+        if (JSON.parse(localStorage.getItem("isFormUpdated"))) {
+            previous_url = context.path;
         }
     }
 ], {only: ["basreturn", "depositcard", "chequecard", "newbankrule", "customerscard", "workordercard",
@@ -1744,6 +1771,24 @@ authenticatedRoutes.route('/newbankrecon', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'newbankrecon'
+        });
+    }
+});
+
+authenticatedRoutes.route('/newreconrule', {
+    name: 'newreconrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newreconrule'
+        });
+    }
+});
+
+authenticatedRoutes.route('/reconrulelist', {
+    name: 'reconrulelist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'reconrulelist'
         });
     }
 });

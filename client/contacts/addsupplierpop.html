@@ -1,5 +1,5 @@
 <template name="addsupplierpop">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable addsupplierpop" role="document">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable addsupplierpop" role="document" style="max-width: 90vw;">
         <div class="modal-content" style="background-color: #ededed;">
             <div class="modal-header">
                 <h4><div id="add-supplier-title" name="add-supplier-title" style="float: left;">Add New Supplier</div></h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -93,16 +93,16 @@
                         margin-left: 37px !important;
                     }
                 </style>
-
-                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
-                    <div class="col">
-                        <div class="row">
+                {{> supplierscard isModal=true record=supplierRecord isJob=isJob}}
+                <!-- <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;"> -->
+                    <!-- <div class="col"> -->
+                        <!-- <div class="row">
                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>Supplier Name</label><input type="text" class="form-control" id="edtSupplierCompany" name="edtSupplierCompany" value="{{record.company}}"></div>
                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>Supplier Email</label><input type="text" class="form-control" id="edtSupplierCompanyEmail" name="edtSupplierCompanyEmail" value="{{record.email}}"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;">
-                                <div class="form-group flex-grow-1" style="margin: 4px;">
+                        </div> -->
+                        <!-- <div class="row"> -->
+                            <!-- <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;"> -->
+                                <!-- <div class="form-group flex-grow-1" style="margin: 4px;">
                                     <label class="text-nowrap">Title</label>
                                     <select type="search" class="form-control" id="edtSupplierTitle" name="edtSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
                                     </select>
@@ -112,11 +112,11 @@
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Middle Name</label><input type="text" class="form-control" id="edtSupplierMiddleName" name="edtSupplierMiddleName"
                                         value="{{record.middlename}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Last Name</label><input type="text" class="form-control" id="edtSupplierLastName" name="edtSupplierLastName"
-                                        value="{{record.lastname}}"></div>
+                                        value="{{record.lastname}}"></div> -->
                                 <!-- <div class="form-group" style="margin: 4px;"><label class="text-nowrap">Suffix</label><input type="text" class="form-control" style="width: 60px;min-width: 60px;max-width: 60px;" id="edtSupplierSuffix" name="edtSupplierSuffix" value="{{record.tfn}}"></div> -->
-                            </div>
-                        </div>
-                        <div class="row">
+                            <!-- </div> -->
+                        <!-- </div> -->
+                        <!-- <div class="row">
                             <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0px;">
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Phone</label><input type="text" class="form-control" id="edtSupplierPhone" name="edtSupplierPhone" value="{{record.phone}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Mobile</label><input type="text" class="form-control" id="edtSupplierMobile" name="edtSupplierMobile" value="{{record.mobile}}"></div>
@@ -141,7 +141,7 @@
                                     <label class="custom-control-label" for="isAlsoCustomer" style=" cursor: pointer;">Is Also Customer</label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 <!--                        <div class="row">-->
 <!--                            <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0px;">-->
 <!--                                <div class="form-group flex-grow-1" style="margin: 4px;">-->
@@ -173,21 +173,21 @@
 <!--                                </div>-->
 <!--                            </div>-->
 <!--                        </div>-->
-                    </div>
-                    <div class="col" style="padding: 4px;margin-top: 16px;">
-                        <div>
-                            <ul class="nav nav-tabs nav-justified">
-                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-pop4">Address</a></li>
+                    <!-- </div> -->
+                    <!-- <div class="col" style="padding: 4px;margin-top: 16px;">
+                        <div> -->
+                            <!-- <ul class="nav nav-tabs nav-justified"> -->
+                                <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-pop4">Address</a></li>
                                 <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-pop5">Notes</a></li>
-                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-pop6">Billing</a></li>
+                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-pop6">Billing</a></li> -->
                                 <!-- <li class="nav-item attachmentTab" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-8">{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li> -->
-                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-pop9">Custom Fields</a></li>
+                                <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-pop9">Custom Fields</a></li> -->
                                 <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-10">Tax</a></li> -->
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane active border rounded-0" role="tabpanel" id="tab-pop4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                    <div class="row no-gutters flex-column" style="margin: 12px;">
-                                        <div class="col">
+                            <!-- </ul> -->
+                            <!-- <div class="tab-content"> -->
+                                <!-- <div class="tab-pane active border rounded-0" role="tabpanel" id="tab-pop4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;"> -->
+                                    <!-- <div class="row no-gutters flex-column" style="margin: 12px;"> -->
+                                        <!-- <div class="col">
                                             <div class="row no-gutters">
                                                 <h4 style="margin: 4px;">Shipping&nbsp;Address</h4>
                                             </div>
@@ -245,8 +245,8 @@
                                                 width: 130px !important;
                                                 display: inline-grid !important;
                                             }
-                                        </style>
-                                        <div class="col">
+                                        </style> -->
+                                        <!-- <div class="col">
                                             <div class="row no-gutters" style="margin-top: 12px;">
                                                 <div class="col d-xl-flex align-items-start" style="padding: 0px;">
                                                     <h4 class="flex-grow" style="margin: 4px;">Billing Address</h4>
@@ -296,10 +296,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-pop5" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                        </div> -->
+                                    <!-- </div> -->
+                                <!-- </div> -->
+                                <!-- <div class="tab-pane border rounded-0" role="tabpanel" id="tab-pop5" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                     <div class="row no-gutters" style="margin: 12px;">
                                         <div class="col">
                                             <div class="form-group d-flex d-sm-flex d-xl-flex flex-column flex-grow-1 align-items-start align-items-sm-start align-items-xl-start" style="margin: 4px;"><label>Notes</label>
@@ -307,10 +307,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-pop6" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start" style="margin: 12px;">
-                                        <div class="col d-xl-flex align-items-xl-end">
+                                </div> -->
+                                <!-- <div class="tab-pane border rounded-0" role="tabpanel" id="tab-pop6" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;"> -->
+                                    <!-- <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start" style="margin: 12px;"> -->
+                                        <!-- <div class="col d-xl-flex align-items-xl-end">
                                             <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
                                                 <select class="form-control" style="width: 260px; cursor: pointer;" id="sltPreferedPayment" name="sltPreferedPayment">
                                                     {{#each item in preferedPaymentList}}
@@ -330,9 +330,9 @@
                                                 </select>
                                             </div>
 
-                                        </div>
-                                        <div class="col d-xl-flex align-items-xl-end">
-                                            <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px; display:none!important;"><label class="text-nowrap">Preferred Delivery Method</label>
+                                        </div> -->
+                                        <!-- <div class="col d-xl-flex align-items-xl-end"> -->
+                                            <!-- <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px; display:none!important;"><label class="text-nowrap">Preferred Delivery Method</label>
                                                 <select class="form-control" style="width: 260px; cursor: pointer;" id="sltDeliveryMethod" name="sltDeliveryMethod">
                                                     {{#each item in deliveryMethodList}}
 
@@ -340,21 +340,21 @@
 
                                                     {{/each}}
                                                 </select>
-                                            </div>
+                                            </div> -->
 
-                                            <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Account No</label>
+                                            <!-- <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Account No</label>
                                                 <input type="text" class="form-control" id="suppAccountNo" name="suppAccountNo" style="width: 260px;" value="{{record.accountnumber}}">
-                                            </div>
+                                            </div> -->
 
-                                            <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Contractor 1099</label>
+                                            <!-- <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Contractor 1099</label> -->
                                                 <!-- <input type="checkbox" class="form-control " id="vehicle1" name="vehicle1" value="Bike"> -->
-                                                <div class="custom-control custom-checkbox chkBox" style="text-align: center;">
+                                                <!-- <div class="custom-control custom-checkbox chkBox" style="text-align: center;">
 
                                                     <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off"><label class="custom-control-label chkBox" for="isformcontractor"
                                                         style="height: calc(1.5em + 0.75rem );"></label>
 
-                                                </div>
-                                            </div>
+                                                </div> -->
+                                            <!-- </div> -->
                                             <!-- <div class="form-group" style="margin: 4px;width: 260px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">As Of</label>
 
                 <div class="input-group date" style="width: 160px;">
@@ -365,18 +365,18 @@
                 </div>
 
                 </div> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-7" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                        <!-- </div> -->
+                                    <!-- </div> -->
+                                <!-- </div> -->
+                                <!-- <div class="tab-pane border rounded-0" role="tabpanel" id="tab-7" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                     <p>Tab content.</p>
                                     <div class="form-group d-xl-flex flex-column flex-grow-1 align-items-xl-start" style="margin: 4px;"><label>Street Address</label><textarea class="border rounded flex-grow-1" style="width: 100%;height: 116px;"
                                             rows="4"></textarea></div>
-                                </div>
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-8" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                </div> -->
+                                <!-- <div class="tab-pane border rounded-0" role="tabpanel" id="tab-8" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                     <div class="row no-gutters" style="margin: 12px;">
-                                        <div class="col">
-                                            <style>
+                                        <div class="col"> -->
+                                            <!-- <style>
                                                 .file-name span {
                                                     width: 100%;
                                                     float: left;
@@ -524,9 +524,9 @@
                                                     text-align: center;
                                                     margin-top: 20px;
                                                 }
-                                            </style>
+                                            </style> -->
                                             <!-- Start Attachemt -->
-                                            <div class="divTable" id="file-display">
+                                            <!-- <div class="divTable" id="file-display">
                                                 <div class="col inboxcol1">
                                                     <img src="/icons/nofiles_icon.png" class="">
                                                 </div>
@@ -534,9 +534,9 @@
                                                     <div>Upload files or add files from the file library</div>
                                                     <p style="color: #ababab;">Only users with access to your company can view these files</p>
                                                 </div>
-                                            </div>
+                                            </div> -->
 
-                                            <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
+                                            <!-- <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
                                                                                                                             .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
                                                                                                                             .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
                                                                                                                             image/gif,image/png,image/bmp,image/tiff,application/pdf,
@@ -550,17 +550,17 @@
                                                                                                                             application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
                                                                                                                             application/vnd.apple.numbers,application/zip,application/rar,
                                                                                                                             application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
-                                            <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 4px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
+                                            <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 4px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button> -->
                                             <!-- END Attachments -->
-                                        </div>
+                                        <!-- </div>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- View File Attachemt -->
-                                <div id="files_view" class="modal fade" role="dialog">
-                                    <div class="modal-dialog">
+                                <!-- <div id="files_view" class="modal fade" role="dialog">
+                                    <div class="modal-dialog"> -->
                                         <!-- Modal content-->
-                                        <div class="modal-content">
+                                        <!-- <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal">x</button>
                                                 <h4 class="modal-title">{{uploadedFile.name}}</h4>
@@ -579,12 +579,12 @@
                                                     <a class="new_create_btn btn btn-primary" id="downloadButton" download="{{uploadedFile.name}}" href="{{uploadedFile.link}}">Download</a>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        </div> -->
+                                    <!-- </div>
+                                </div> -->
                                 <!-- End View File attachment -->
 
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-pop9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                <!-- <div class="tab-pane border rounded-0" role="tabpanel" id="tab-pop9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                     <div class="row no-gutters" style="margin: 12px;">
                                         <div class="col d-xl-flex align-items-xl-center">
                                             <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;">
@@ -605,8 +605,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-10" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                </div> -->
+                                <!-- <div class="tab-pane border rounded-0" role="tabpanel" id="tab-10" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                     <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start" style="margin: 12px;">
                                         <div class="col">
                                             <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="formCheck-2" checked><label class="custom-control-label" for="formCheck-2">This
@@ -628,15 +628,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                </div> -->
+                            <!-- </div> -->
+                        <!-- </div>
+                    </div> -->
+                <!-- </div> -->
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success btnSaveSuppPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
+                <!-- <button class="btn btn-success btnSaveSuppPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button> -->
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>

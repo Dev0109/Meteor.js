@@ -85,7 +85,8 @@ Template.accountlistpop.onRendered(function() {
                       	data.taccountvs1[i].fields.AccountTypeName || '',
                       	accBalance,
                       	data.taccountvs1[i].fields.TaxCode || '',
-                        data.taccountvs1[i].fields.ID || ''
+                        data.taccountvs1[i].fields.ID || '',
+                        data.taccountvs1[i].fields.IsHeader || false,
                       ];
                       if (currentLoc === "/billcard"){
                         if((data.taccountvs1[i].fields.AccountTypeName !== "AP") && (data.taccountvs1[i].fields.AccountTypeName !== "AR")&&(data.taccountvs1[i].fields.AccountTypeName !== "CCARD") &&(data.taccountvs1[i].fields.AccountTypeName !== "BANK")){
@@ -136,7 +137,8 @@ Template.accountlistpop.onRendered(function() {
                                 { className: "salePrice", "targets": [3] },
                                 { className: "prdqty text-right", "targets": [4] },
                                 { className: "taxrate", "targets": [5] },
-                                { className: "colAccountID hiddenColumn", "targets": [6] }
+                                { className: "colAccountID hiddenColumn", "targets": [6] },
+                                { className: "isHeader hiddenColumn", "targets": [7] }
                             ],
                             select: true,
                             destroy: true,
@@ -171,7 +173,8 @@ Template.accountlistpop.onRendered(function() {
                         useData[i].fields.AccountTypeName || '',
                         accBalance,
                         useData[i].fields.TaxCode || '',
-                        useData[i].fields.ID || ''
+                        useData[i].fields.ID || '',
+                        useData[i].fields.IsHeader || false
                     ];
                     if (currentLoc === "/billcard"){
                       if((useData[i].fields.AccountTypeName !== "AP") && (useData[i].fields.AccountTypeName !== "AR")&&(useData[i].fields.AccountTypeName !== "CCARD") &&(useData[i].fields.AccountTypeName !== "BANK")){
@@ -222,7 +225,8 @@ Template.accountlistpop.onRendered(function() {
                             { className: "salePrice", "targets": [3] },
                             { className: "prdqty text-right", "targets": [4] },
                             { className: "taxrate", "targets": [5] },
-                            { className: "colAccountID hiddenColumn", "targets": [6] }
+                            { className: "colAccountID hiddenColumn", "targets": [6] },
+                            { className: "isHeader hiddenColumn", "targets": [7] }
                         ],
                         select: true,
                         destroy: true,
@@ -259,7 +263,8 @@ Template.accountlistpop.onRendered(function() {
                     data.taccountvs1[i].fields.AccountTypeName || '',
                     accBalance,
                     data.taccountvs1[i].fields.TaxCode || '',
-                    data.taccountvs1[i].fields.ID || ''
+                    data.taccountvs1[i].fields.ID || '',
+                    data.taccountvs1[i].fields.IsHeader || false,
                   ];
                   if (currentLoc === "/billcard"){
                     if((data.taccountvs1[i].fields.AccountTypeName !== "AP") && (data.taccountvs1[i].fields.AccountTypeName !== "AR")&&(data.taccountvs1[i].fields.AccountTypeName !== "CCARD") &&(data.taccountvs1[i].fields.AccountTypeName !== "BANK")){
@@ -311,7 +316,8 @@ Template.accountlistpop.onRendered(function() {
                             { className: "salePrice", "targets": [3] },
                             { className: "prdqty text-right", "targets": [4] },
                             { className: "taxrate", "targets": [5] },
-                            { className: "colAccountID hiddenColumn", "targets": [6] }
+                            { className: "colAccountID hiddenColumn", "targets": [6] },
+                            { className: "isHeader hiddenColumn", "targets": [7] }
                         ],
                         select: true,
                         destroy: true,

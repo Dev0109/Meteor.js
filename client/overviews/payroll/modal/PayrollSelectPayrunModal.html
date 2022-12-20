@@ -1,0 +1,211 @@
+<template name="PayrollSelectPayrunModal">
+	
+    <div class="modal fade" role="dialog" tabindex="-1" id="SelectPayRunModal" style="z-index: 99999999 !important;">
+        <!-- {{> AppTableModal AppTableModalData=AppTableModalData}} -->
+    
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>Pay Calendars</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+    
+            <div class="modal-body">
+    
+              <div class="col-12">
+                <div class="table-responsive">
+                  <style>
+                    th {
+                      background-color: #ededed;
+                    }
+    
+                    .table-striped tbody tr:nth-of-type(odd) {
+                      background-color: white !important;
+                    }
+    
+                    .table-striped tbody tr:nth-of-type(even) {
+                      background-color: #0000000d !important;
+                    }
+    
+                    .JColResizer > tbody > tr > td,
+                    .JColResizer > tbody > tr > th {
+                      padding: 0.75rem !important;
+                    }
+    
+                    .hiddenColumn {
+                      display: none;
+                    }
+    
+                    .showColumn {
+                      display: table-cell;
+                      padding: 0.75rem;
+                      vertical-align: top;
+                    }
+    
+                    .colNextPayPeriod {
+                      width: 80px;
+                    }
+    
+                    .colNextPaymentDate {
+                      width: 80px;
+                    }
+    
+                    .colDeleteCalenders {
+                      width: 3% !important;
+                    }
+    
+                    .colHolidayDelete {
+                      width: 3% !important;
+                    }
+    
+                    .colDeletesup {
+                      width: 3% !important;
+                    }
+    
+                    .colDeletepaidrem {
+                      width: 3% !important;
+                    }
+    
+                    .colDeleterei {
+                      width: 3% !important;
+                    }
+                  </style>
+    
+                  <style>
+                    .colPayCalendarName {
+                      width: 25%;
+                    }
+    
+                    .colPayPeriod {
+                      width: 25%;
+                    }
+    
+                    .colNextPayPeriod {
+                      width: 25%;
+                    }
+    
+                    .colNextPaymentDate {
+    
+                      width: 25%;
+                    }
+                  </style>
+    
+                  <table id="tblEmployees" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
+                    <thead>
+                      <tr class="dnd-moved">
+                        <th class="th colCalenderID hiddenColumn">ID</th>
+                        <th class="th colPayCalendarName">Name</th>
+                        <th class="th colPayPeriod">Pay Period</th>
+                        <th class="th colNextPayPeriod">Next Pay Period</th>
+                        <th class="th colNextPaymentDate">Next Payment Date</th>
+                        <th class="th colDelete" style="width: 3% !important;"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#if calendarPeriods}}
+                        {{#each p in calendarPeriods}}
+                          <tr class="dnd-moved" calendar-id="{{p.ID}}" style="cursor: pointer;">
+                            <td contenteditable="false" class="colCalenderID hiddenColumn clickable">{{p.ID}}</td>
+                            <td contenteditable="false" class="colPayCalendarName clickable">{{ p.PayrollCalendarName }}</td>
+                            <td contenteditable="false" class="colPayPeriod clickable">{{ p.PayrollCalendarPayPeriod }}</td>
+                            <td contenteditable="false" class="colNextPayPeriod clickable">{{ formatDate p.PayrollCalendarStartDate }}</td>
+                            <td contenteditable="false" class="colNextPaymentDate clickable">{{ formatDate p.PayrollCalendarFirstPaymentDate }}</td>
+                            <td contenteditable="false" style="width: 3% !important;" class="colDeleteCalenders">
+                              <span class="table-remove">
+                                <button calendar-id="{{p.ID}}" type="button" class="btn btn-danger btn-rounded btn-sm my-0">
+                                  <i class="fa fa-remove"></i>
+                                </button>
+                              </span>
+                            </td>
+                          </tr>
+                        {{/each}}
+                      {{/if}}
+                    </tbody>
+    
+                  </table>
+                </div>
+              </div>
+    
+            </div>
+    
+          </div>
+        </div>
+    
+      </div>
+
+
+      <div class="modal fade" role="dialog" tabindex="-1" id="select-employee-modal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Select an employee</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+        <!--
+                    <div style="margin: 4px; margin-bottom: 8px;">
+                        <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
+                    </div>
+        -->
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <style>
+                                .th.chkBox {
+                                    width: 2% !important;
+                                }
+                                .thQty {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thTax {
+                                    width: 8% !important;
+                                }
+                                .thCostPrice {
+                                    width: 8% !important;
+                                }
+                                .thProductName {
+                                    width: 20% !important;
+                                }
+      
+                                .thColBarcode {
+                                    width: 15% !important;
+                                }
+                            </style>
+                            <table id="tblEmployeesList" class="table table-striped table-bordered tblInventoryService">
+                                <thead>
+                                    <tr  class="dnd-moved">
+                                       
+                                        <th>Employee Name</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#if employees}}
+                                        {{#each employee in employees}}
+                                            <tr employee-id="{{ employee.ID }}">
+                                                <td>{{ employee.EmployeeName }}</td>
+                                            </tr>
+                                        {{/each}}
+                                    {{/if}}
+                                  
+      
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+             
+                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

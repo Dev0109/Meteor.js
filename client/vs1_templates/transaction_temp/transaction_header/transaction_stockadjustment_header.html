@@ -1,0 +1,46 @@
+<!-- Stock Adjustment Header -->
+<!-- Params 
+  data
+-->
+
+<template name="transaction_stockadjustment_header">
+  <div class="row no-gutters" style="background-color: #ededed;">
+    <div class="col">
+      <header>
+        <h1 style="margin: 32px;margin-bottom: 0px;">{{data.lid}}
+          {{> helpbutton}}
+          {{> help_modal}}
+        </h1>
+        <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+      </header>
+    </div>
+  </div>
+  <div class="row" style="background-color: #ededed; padding: 16px 32px;">
+    <div class="col-6 col-md-3 col-lg-2">
+      {{> default_select
+        label="To Account"
+        id="sltAccountName"
+        name="sltAccountName"
+        type="search"
+      }}
+    </div>
+   
+    <div class="col-6 col-md-3 col-lg-2">
+      {{> single_date_picker
+        label="Date"
+        id="dtCreationDate"
+        name="dtCreationDate"
+        defaultValue=data.balancedate
+      }}
+    </div>
+    <div class="col-6 col-md-3 col-lg-2">
+      {{> customer_email_input
+        label="Employee"
+        hideEmailUser=true
+      }}
+    </div>
+    <div class="col-12 col-md-6 col-lg-2 colProcessed" id="colProcessed" style="display: none;">
+      <h3 style="margin-left: 0px; margin-top: 50px; color: #e02d1b; font-weight: 600;">Processed</h3>
+    </div>
+  </div>
+</template>

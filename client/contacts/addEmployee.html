@@ -408,7 +408,10 @@
                                                     <div class="row">
                                                         <div class="col-6 col-md-1" style="padding: 0px;">
                                                             <div class="form-group" style="margin: 4px;padding-right :4px;">
-                                                                <label class="text-nowrap">Title</label><input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}">
+                                                                <label for="editEmployeeTitle">Title</label>
+                                                                <select type="search" class="form-control" id="editEmployeeTitle" name="editEmployeeTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
+                                                                </select>
+                                                                <!-- <input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}"> -->
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-3" style="padding: 0px;">
@@ -3631,7 +3634,7 @@
                                                                 width: 100% !important;
                                                             } */
                                                         </style>
-                                                        {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems}}   
+                                                        {{> non_transactional_list tablename="tblEmployeeTransactionList"}}   
                                                         <!-- <table id="tblTransactionlist" style="width:100%" class="dataTable table table-striped table-bordered tblTransactionlist">
                                                             <thead>
                                                                 <tr class="dnd-moved">
@@ -3836,7 +3839,9 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeTitlePopModal">
+        {{> title_list_pop}}
+     </div>
 
     {{> SelectPayCalendar }}
     <script>

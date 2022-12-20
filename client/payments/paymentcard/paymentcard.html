@@ -3,18 +3,14 @@
     <div class="fullScreenSpin" style="display:none;">
       <div class="spinner"></div>
     </div>
-
     <style>
       .templateItem {
         display: inline-flex !important;
-
       }
-
       .btnPreviewTemplate {
         padding: 6px;
         cursor: pointer;
       }
-
       .btnPreviewTemplate:hover {
         background-color: #f8f9fc;
       }
@@ -27,150 +23,11 @@
     {{/if}}
 
     <form>
-      <header style="padding: 16px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-        <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">Customer Payment {{record.lid}}
-          {{> helpbutton}}
-          <!-- Start Help View Modal -->
-          {{> help_modal}}
-          <!-- End Help View Modal -->
-        </h2>
-        <div class="printID" id="{{record.lid}}" style="display: none;">{{record.lid}}</div>
-      </header>
-      <div class="row" style="background-color: #ededed; padding: 16px 32px;">
-        <div class="col-12 col-lg-6">
-          <div class="row">
-            <div class="col-12 col-lg-6">
-              {{> customer_selector}}
-            </div>
-            <div class="col-12 col-lg-6">
-              {{> customer_email_input}}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row" style="background-color: #ededed; padding: 16px 32px;">
-        <div class="col-12 col-xl-10">
-          <div class="row">
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-              {{# vs1_textarea 
-                label="Comments" 
-                row="4" 
-                id="txaNotes"
-                name="txaNotes"
-              }}{{record.notes}}{{/vs1_textarea}}
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-              <div class="row">
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Payment Amount</label>
-                        <input class="form-control form-control" type="text" value="{{record.paymentAmount}}"
-                          id="edtPaymentAmount" name='edtPaymentAmount' readonly>
-                      </div>
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Payment Date</label>
-                        <div class="input-group date">
-                          <input type="text" class="form-control" value="{{record.paymentDate}}" id="dtPaymentDate"
-                            name="dtPaymentDate" style="cursor: pointer;">
-                          <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-th"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_select
-                        label="Bank Account"
-                        type="search"
-                        id="edtSelectBankAccountName"
-                        name="edtSelectBankAccountName"
-                      }}
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_select
-                        label="Payment Method"
-                        type="search"
-                        id="sltPaymentMethod"
-                        name="sltPaymentMethod"
-                      }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-              <div class="row">
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Reference No.</label>
-                        <input class="form-control form-control" type="text" value="{{record.reference}}"
-                          id="edtReference" name="edtReference">
-                      </div>
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_select
-                        label="Department"
-                        type="search"
-                        id="sltDepartment"
-                        name="sltDepartment"
-                      }}
-                    </div>
-                  </div>
-                </div>
-                {{#if isCurrencyEnable}}
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> CurrencyWidget rate="buy"}}
-                    </div>
-
-                  </div>
-                </div>
-                {{/if}}
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-              <div class="row">
-                {{#if isCurrencyEnable}}
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-
-                    <div class="col-6 col-md-12 col-lg-12 foreign-currency-js" style="display:none">
-                      <div class="form-group"><label>Foreign Amount</label>
-                        <div class="input-group">
-                          <input class="form-control form-control" type="text" value="$0.00" data-value="0.00"
-                            id="edtForeignAmount" name='foreignAmount'>
-                        </div>
-                      </div>
-                      <div class="form-group"><label>Variation</label>
-                        <input class="form-control form-control" type="text" value="0.00" data-value="0.00"
-                          id="edtVariation" name='variation'>
-                      </div>
-                      <div class="form-group ">
-                        <label>Applied</label>
-                        <div class="input-group">
-                          <input class="form-control form-control" type="text" value="{{record.applied}}"
-                            id="edtApplied" name='applied'>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {{/if}}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {{> transaction_payment_header
+        type="Customer"
+        data=record
+        isCurrencyEnable=isCurrencyEnable
+      }}
 
       <div>
         <div class="card-body rounded" style="padding-bottom: 0px !important;padding-top: 0px !important;">
@@ -1325,7 +1182,7 @@
               <i class="fa fa-save" style="padding-right: 8px;"></i>Save
             </button>
 
-            <button class="btn btn-danger btnDeletePayment vs1ButtonMargin" type="button"
+            <button class="btn btn-danger btnRemove vs1ButtonMargin" type="button"
               style="margin-top: 0px;width: 100px;"><i class="fa fa-trash"
                 style="padding-right: 8px;"></i>Delete</button>
 
@@ -1339,7 +1196,6 @@
               {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i
                 class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
             </a>
-            {{> deleteBtn_footers}}
             <button class="btn btn-secondary btnBack btnFooter vs1ButtonMargin" type="button"
               style="margin-top: 0px;width: 100px;">
               <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel

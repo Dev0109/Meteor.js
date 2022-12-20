@@ -1,5 +1,5 @@
 import { ReactiveVar } from "meteor/reactive-var";
-
+import { BankNameList } from "../../lib/global/bank-names"
 
 Template.bankNameModal.onCreated(function () {
   const templateObject = Template.instance();
@@ -9,18 +9,7 @@ Template.bankNameModal.onCreated(function () {
 Template.bankNameModal.onRendered(function () {
   let templateObject = Template.instance();
 
-  let splashArrayBankNameList = [
-    ['CBA', 'Commonwealth Bank'],
-    ['NAB', 'National Australian Bank'],
-    ['WBC', 'Westpac Bank'],
-    ['MQG', 'Macquarie Bank'],
-    ['ANZ', 'Australia and New Zealand Banking Group'],
-    ['BEN', 'Bendigo Bank'],
-    ['BOQ', 'Bank of Queensland'],
-    ['VUK', 'Virgin Money'],
-    ['BFL', 'BSP Financial Group'],
-    ['JDO', 'Judo Bank']
-  ];
+  let splashArrayBankNameList = BankNameList;
 
   $('#tblBankName').dataTable({
     data: splashArrayBankNameList,
@@ -45,6 +34,9 @@ Template.bankNameModal.onRendered(function () {
 
 
 Template.bankNameModal.events({
+  "click .btnCancelEftBankName": (e) => {
+      $('#bankNameModal').modal('hide');
+  },
 
 });
 

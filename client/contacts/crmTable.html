@@ -1,0 +1,309 @@
+<template name="crmtable">
+    <div class="row d-xl-flex flex-row justify-content-xl-center">
+        <div class="col float-left flex-grow-1 mb-4"
+            style="margin-bottom: 0 !important;">
+            <div class="btn-group float-left"
+                style="margin: 14px; margin-bottom: 0;">
+                <button class="btn btn-primary btnRefreshCrm" type="button"
+                    style="background-color: #00A3D3; border-color: #00A3D3;"><i
+                        class="la la-lightbulb-o"
+                        style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-primary float-right printConfirmCrm"
+                type="button"
+                style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i
+                    class="fa fa-print"
+                    style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
+            <button class="btn btn-primary export float-right" type="button"
+                style="margin: 14px; background-color: #00A3D3; border-color: #00A3D3;"
+                id="exportbtnCrm" name="exportbtnCrm"><i class="fas fa-file-export"
+                    style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
+        </div>
+    </div>
+    <div class="row rowB" style="margin: 14px; margin-top: 0">
+        <div class="card-body rounded" style="padding: 0;">
+            <div class="d-xl-flex justify-content-xl-end">
+                <div>
+                    <a class="btn btnOpenSettingsCrm" role="button"
+                        data-toggle="modal" href="#myModalCrm"><i
+                            class="icon ion-android-more-horizontal"></i></a>
+                    <div class="modal fade" role="dialog" tabindex="-1"
+                        id="myModalCrm">
+                        <div class="modal-dialog modal-dialog-centered"
+                            role="document" style="float: right;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Display Settings</h4><button type="button"
+                                        class="close" data-dismiss="modal"
+                                        aria-label="Close"><span
+                                            aria-hidden="true">�</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        <style>
+                                            .groove {
+                                                border-style: solid;
+                                                border-width: 1px;
+                                                width: 200px;
+                                                padding: 2px;
+                                                border-radius: .35rem;
+                                            }
+
+                                            .custom-control-label {
+                                                position: absolute;
+                                            }
+
+                                            .rngRange {
+                                                position: relative;
+                                                display: flex;
+                                                flex-direction: column;
+                                                width: 100%;
+                                                pointer-events: auto;
+                                                background-color: rgb(255, 255, 255);
+                                                background-clip: padding-box;
+                                                border: 1px solid rgb(133, 135, 150);
+                                                padding: 2px;
+                                                border-radius: .35rem;
+                                                color: rgb(128, 128, 128);
+                                                height: inherit !important;
+                                            }
+
+                                            @media only screen and (max-width: 480px) {
+                                                .modal.show .modal-dialog {
+                                                    float: inherit !important;
+                                                    left: inherit !important;
+                                                    top: auto !important;
+
+                                                }
+                                            }
+                                        </style>
+                                        {{#if crmTableheaderRecords}}
+                                        <form
+                                            class="d-xl-flex align-items-xl-center">
+                                            <div class="flex-grow-1">
+
+                                                {{#each item in
+                                                crmTableheaderRecords}}
+                                                {{#if equals item.sTitle "id"}}
+                                                {{else}}
+
+                                                <div id="{{item.sIndex}}"
+                                                    class="columnSettings">
+                                                    <div class="custom-control custom-switch"
+                                                        style="margin: 8px; float:left;">
+                                                        <input
+                                                            class="custom-control-input chkDatatable"
+                                                            type="checkbox"
+                                                            id="chkSalesNo-{{item.sIndex}}"
+                                                            name="chkSalesNo-{{item.sIndex}}"
+                                                            checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
+                                                            value="{{item.sTitle}}">
+                                                        <label
+                                                            class="custom-control-label"
+                                                            for="chkSalesNo-{{item.sIndex}}"></label>
+                                                        <div contenteditable="true"
+                                                            class="groove divcolumn"
+                                                            type="text"
+                                                            value="{{item.sTitle}}"
+                                                            valueupdate="{{item.sClass}}">
+                                                            {{item.sTitle}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-xl-flex align-items-xl-center divColWidth"
+                                                        style="margin: 8px;">
+                                                        <label class="text-nowrap"
+                                                            style="padding-left: 0px;margin-top: 8px;">Width:
+                                                            <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
+                                                        </label>
+                                                        <input
+                                                            class="custom-range rngRange"
+                                                            type="number"
+                                                            style="margin: 8px;"
+                                                            value="{{item.sWidth}}"
+                                                            min="0" max="1000">
+                                                        <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
+                                                    </div>
+                                                </div>
+
+                                                {{#if equals item.sVisible true}}
+                                                <script>
+                                                    $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
+                                                </script>
+                                                {{else}}
+                                                <script>
+                                                    $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
+                                                </script>
+                                                {{/if}}
+
+                                                {{/if}}
+                                                {{/each}}
+                                            </div>
+                                        </form>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-success saveTable"
+                                        type="button"><i class="fa fa-save"
+                                            style="margin-right: 5px;"></i>Save</button>
+                                    <button class="btn btn-warning resetTable"
+                                        data-dismiss="modal" type="reset"><i
+                                            class="fa fa-repeat"
+                                            style="margin-right: 5px;"></i>Reset</button>
+                                    <button class="btn btn-secondary"
+                                        data-dismiss="modal" type="button"><i
+                                            class="fa fa-remove"
+                                            style="margin-right: 5px;"></i>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End -->
+            <div class="table-responsive">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
+            
+                    /* th.colDate {
+                    width: 15%;
+                }
+            
+                th.colTaskName {
+                    width: 15%
+                }
+            
+                th.colTaskLabels {
+                    width: 15%;
+                } */
+            
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
+            
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
+            
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
+            
+                    .hiddenColumn {
+                        display: none;
+                    }
+            
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
+            
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
+            
+                    .task_priority_0 {
+                        color: #1cc88a;
+                        background: #1cc88a;
+                    }
+            
+                    .task_priority_1 {
+                        color: #00a3d3;
+                        background: #00a3d3;
+                    }
+            
+                    .task_priority_2 {
+                        color: #f6c23e;
+                        background: #f6c23e;
+                    }
+            
+                    .task_priority_3 {
+                        color: #e74a3b;
+                        background: #e74a3b;
+                    }
+            
+                    .taskTag {
+                        margin: 4px;
+                        /* font-size: 12px; */
+                    }
+            
+                    .taganchor {
+                        color: #858796 !important;
+                        text-decoration: none;
+                    }
+                </style>
+                <table id="tblCrmList" style="width:100%"
+                class="dataTable table table-striped table-bordered tblCrmList">
+                    <thead>
+                        <tr class="dnd-moved">
+                            <th class="th colTaskId hiddenColumn"></th>
+                            <th class="th colDate" style="width:14% !important;">Date</th>
+                            <th class="th colTaskName" style="width: 22% !important;">Task</th>
+                            <th class="th colTaskDesc" style="width:32% !important;">Description</th>
+                            <th class="th colCompletedBy" style="width:14% !important;">Completed By</th>
+                            <th class="th colCompleteTask" style="width: 14% !important;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if crmRecords}}
+                        {{#each item in crmRecords}}
+                        <tr class="dnd-moved" style="cursor: pointer;"
+                            id="{{item.id}}">
+                            <td contenteditable="false"
+                                class="colTaskId hiddenColumn">{{item.id}}</td>
+                            <td contenteditable="false" class="colDate">
+                                {{item.date}}</td>
+                            <td contenteditable="false" class="colTaskName">
+                                {{item.taskName}}</td>
+                            <td contenteditable="false" class="colTaskDesc">
+                                {{item.description}}
+                            </td>
+                            <td contenteditable="false" class="colCompletedBy">
+                                {{item.completedby}}
+                            </td>
+                            <!-- <td contenteditable="false" class="colTaskLabels">
+                                {{#if item.labels}}
+                                {{#each label in item.labels}}
+                                <span class="taskTag">
+                                    <a class="taganchor filterByLabel" href="">
+                                        <i class="fas fa-tag"
+                                            style="margin-right: 5px;"></i>{{label.TaskLabelName}}
+                                    </a>
+                                </span>
+                                {{/each}}
+                                {{/if}}
+                            </td> -->
+                            <td contenteditable="false" class="th colCompleteTask">
+                                <!-- <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"
+                                    style="width:15px;">
+                                </div> -->
+                                <div class="custom-control custom-switch" style="cursor: pointer;">
+                                    {{#if item.completed}}
+                                        <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
+                                        id="chkCompleted_{{item.id}}" name="Additional" style="cursor: pointer;" additionalqty="1"
+                                        autocomplete="off" data-id="edit" checked="checked">
+                                    {{else}}
+                                        <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
+                                        id="chkCompleted_{{item.id}}" name="Additional" style="cursor: pointer;" additionalqty="1"
+                                        autocomplete="off" data-id="edit">
+                                    {{/if}}
+                                    <label class="custom-control-label" for="chkCompleted_{{item.id}}"
+                                      style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>

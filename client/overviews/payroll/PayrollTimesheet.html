@@ -1,0 +1,164 @@
+<template name="PayrollTimeSheet">
+<div class="row">
+    <div class="col-12" style="margin-bottom: 16px;">
+        <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
+
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
+
+                    .hiddenColumn {
+                        display: none;
+                    }
+
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
+
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
+
+                    .highlightInput {
+                        border: 0px solid transparent !important;
+                        background-color: rgba(0, 0, 0, 0) !important;
+                        padding: 0px !important;
+                        width: 100% !important;
+                        text-align: right !important;
+                        color: #858796 !important;
+                    }
+
+                    .highlightInput::-webkit-outer-spin-button,
+                    .highlightInput::-webkit-inner-spin-button {
+                        -webkit-appearance: none !important;
+                        margin: 0 !important;
+                    }
+
+                    /* Firefox */
+                    .highlightInput[type=number] {
+                        -moz-appearance: textfield !important;
+                    }
+
+                    .colFlag {
+                        width: 1% !important;
+                    }
+
+                    .tdEmpty {
+                        width: 3% !important;
+                    }
+
+                    @media screen and (max-width: 450px) {
+
+                        #tblTimeSheet_filter {
+                            width: 70%;
+                        }
+
+                        .form-control-sm {
+                            width: 70% !important;
+                        }
+
+                        .input-group.date {
+                            width: 130px !important;
+                        }
+
+                        .dateFromGroup {
+                            float: right !important;
+                            width: 183px !important;
+                        }
+
+                        .dateToGroup {
+                            float: right !important;
+                            width: 172px !important;
+                        }
+
+                        .myvarFilterForm {
+                            /* display: inline-flex !important; */
+                            padding: 0px !important;
+                        }
+
+                        .colDateFilter {
+                            padding-left: 0px !important;
+                        }
+
+                        .dropdownDateRange {
+                            float: right !important;
+                            width: 100% !important;
+                        }
+
+                        .btn-daterange {
+                            float: right !important;
+                        }
+
+                        .btnSetupSingleTouch {
+                            margin-bottom: 16px;
+                            padding: 0px;
+                        }
+                    }
+                    input.timeSheetCheckBox {
+                        display: inline-block;
+                        width: 17px;
+                        height: 17px;
+                        position: relative;
+                        top: 3px;
+                    }
+                </style>
+
+            <div class="table-responsive my-3">
+                <div class="row no-gutters d-xl-flex align-items-xl-end mb-3">
+                    <!-- <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                        <h4 style="font-weight: 600;">Draft Pay Run</h4>
+                    </div> -->
+                    <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                    </div>
+                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <button type="button" class="btn btn-primary btnAddTimeSheet" data-toggle="modal" data-target="#addTimeSheetModal" ><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Timesheet</button>
+                    </div>
+                </div> 
+                <table id="tblTimeSheet" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTimeSheet">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Surname</th>
+                            <th>Period</th>
+                            <th>Status</th>
+                            <th>Last edited</th>
+                            <th>Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if timeSheetList }}
+                            {{#each item in timeSheetList}}
+                                <tr timesheet-id="{{ item.ID }}">
+                                    <td>{{ getFirstName item.EmployeeName }}</td>
+                                <td>{{ getLastName item.EmployeeName }}</td>
+                                    <td>Week ending {{ formatDate item.TimeSheetDate }}</td>
+                                    <td>{{ item.Status }}</td>
+                                    <td>{{ lastEdit item.MsTimeStamp }}</td>
+                                    <td>{{ formatHours item.Hours }}</td>
+                                </tr>
+                            {{/each}}
+                        {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</template>

@@ -68,11 +68,40 @@ Template.paymentcard.onCreated(() => {
     templateObject.selectedAwaitingPayment = new ReactiveVar([]);
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
+    templateObject.hasFollow = new ReactiveVar(false);
 });
 
 Template.paymentcard.onRendered(() => {
     _setTmpAppliedAmount();
     const templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let paymentService = new PaymentsService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var paymentData = await paymentService.getOneCustomerPayment(currentInvoice);
+            var paymentDate = paymentData.fields.PaymentDate;
+            var fromDate = paymentDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingPayments = await sideBarService.getAllTCustomerPaymentListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var paymentList = followingPayments.tcustomerpaymentlist;
+            if (paymentList.length > 1) {
+                templateObject.hasFollow.set(true);
+            } else {
+                templateObject.hasFollow.set(false);
+            }
+        }
+    }
+    templateObject.hasFollowings();
     let url = FlowRouter.current().path;
     $('#choosetemplate').attr('checked', true);
     const dataTableList = [];
@@ -357,7 +386,13 @@ Template.paymentcard.onRendered(() => {
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
+        if (name == undefined)
+            name = customer;
+        if (surname == undefined)
+            surname = "";
         let dept = $('#sltDepartment').val();
+        if (dept == "Default" || dept == undefined)
+            dept = "";
         var erpGet = erpDb();
         let fx = $('#sltCurrency').val();
 
@@ -443,7 +478,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -494,7 +529,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -549,7 +584,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -877,11 +912,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -928,11 +963,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -983,11 +1018,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -9499,48 +9534,44 @@ Template.paymentcard.events({
 
         });
 
-        $('#html-2-pdfwrapper').css('display', 'block');
-        if ($('.edtCustomerEmail').val() != "") {
-            $('.pdfCustomerName').html($('#edtCustomerName').val());
-            $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-
-            var ponumber = $('#ponumber').val() || '.';
-            $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-            if ($('#print_custom_payment').is(':checked') || $('#print_custom_payment_second').is(':checked')) {
-                printTemplate.push('Customer Payments');
-            }
-
-            if (printTemplate.length > 0) {
-
-                for (var i = 0; i < printTemplate.length; i++) {
-                    if (printTemplate[i] == 'Customer Payments') {
-                        var template_number = $('input[name="Customer Payments"]:checked').val();
-                    }
-
-                    let result = await exportSalesToPdf(printTemplate[i], template_number);
-                    if (result == true) {
-                    }
-
-                }
-
-            }
-
-
-        } else {
-            swal({
-                title: 'Customer Email Required',
-                text: 'Please enter customer email',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                } else if (result.dismiss === 'cancel') {
-                }
-            });
+        if ($('#print_custom_payment').is(':checked') || $('#print_custom_payment_second').is(':checked')) {
+            printTemplate.push('Customer Payments');
         }
+
+        if (printTemplate.length > 0) {
+            for (var i = 0; i < printTemplate.length; i++) {
+                if (printTemplate[i] == 'Customer Payments') {
+                    var template_number = $('input[name="Customer Payments"]:checked').val();
+                }
+
+                let result = await exportSalesToPdf(printTemplate[i], template_number);
+                if (result == true) {
+                }
+
+            }
+        }
+
+        // $('#html-2-pdfwrapper').css('display', 'block');
+        // if ($('.edtCustomerEmail').val() != "") {
+        //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+        //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+
+        //     var ponumber = $('#ponumber').val() || '.';
+        //     $('.po').text(ponumber);
+        //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+        // } else {
+        //     swal({
+        //         title: 'Customer Email Required',
+        //         text: 'Please enter customer email',
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'OK'
+        //     }).then((result) => {
+        //         if (result.value) {
+        //         } else if (result.dismiss === 'cancel') {
+        //         }
+        //     });
+        // }
     }, delayTimeAfterSound);
     },
 
@@ -9589,32 +9620,10 @@ Template.paymentcard.events({
 
     'click .btnRemove': async function (event) {
         $('.btnDeleteLine').show();
-        let templateObject = Template.instance();
         let utilityService = new UtilityService();
-        var clicktimes = 0;
-        var currentDate = new Date();
-        let paymentService = new PaymentsService();
         var targetID = $(event.target).closest('tr').attr('id') || 0; // table row ID
         $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var paymentList = [];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var paymentData = await paymentService.getOneCustomerPayment(currentInvoice);
-            var paymentDate = paymentData.fields.PaymentDate;
-            var fromDate = paymentDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingPayments = await sideBarService.getAllTCustomerPaymentListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            paymentList = followingPayments.tcustomerpaymentlist;
-        }
+        
         if(targetID != undefined){
             times++;
             if (times == 1) {
@@ -9648,7 +9657,7 @@ Template.paymentcard.events({
 
             }
         } else {
-            if(paymentList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

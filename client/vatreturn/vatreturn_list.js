@@ -36,20 +36,6 @@ Template.vatreturnlist.onRendered(function() {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
-    var today = moment().format('DD/MM/YYYY');
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    let fromDateMonth = (currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if ((currentDate.getMonth() + 1) < 10) {
-        fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    if (currentDate.getDate() < 10) {
-        fromDateDay = "0" + currentDate.getDate();
-    }
-    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
-
     function MakeNegative() {
 
         $('td').each(function() {
@@ -63,293 +49,213 @@ Template.vatreturnlist.onRendered(function() {
         });
     };
 
-    templateObject.resetData = function(dataVal) {
-        window.open('/vatreturnlist?page=last', '_self');
-    }
-
-    templateObject.getAllVATReturnData = function() {
-
+    templateObject.getAllVatReturnData = function() {
         getVS1Data('TVATReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
-                // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
-                //     let lineItems = [];
-                //     let lineItemObj = {};
-                //     addVS1Data('TJournalEntryList', JSON.stringify(data));
-                //     if (data.Params.IgnoreDates == true) {
-                //         $('#dateFrom').attr('readonly', true);
-                //         $('#dateTo').attr('readonly', true);
-                //         //FlowRouter.go('/journalentrylist?ignoredate=true');
-                //     } else {
-                //         $('#dateFrom').attr('readonly', false);
-                //         $('#dateTo').attr('readonly', false);
-                //         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-                //         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-                //     }
-                //     for (let i = 0; i < data.tjournalentrylist.length; i++) {
-                //         let totalDebitAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].DebitAmount) || 0.00;
-                //         let totalCreditAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].CreditAmount) || 0.00;
-                //         // Currency+''+data.tjournalentry[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                //         let totalTaxAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].TaxAmount) || 0.00;
-                //         let orderstatus = data.tjournalentrylist[i].Deleted || '';
-                //         if (data.tjournalentrylist[i].Deleted == true) {
-                //             orderstatus = "Deleted";
-                //         } else if (data.tjournalentrylist[i].IsOnHOLD == true) {
-                //             orderstatus = "On Hold";
-                //         } else if (data.tjournalentrylist[i].Reconciled == true) {
-                //             orderstatus = "Rec";
-                //         }
+                reportService.getAllVATReturn().then(function(data) {
+                    addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+                    for (let i = 0; i < data.tvatreturn.length; i++) {
+                        let tab1startDate = "";
+                        let tab1endDate = "";
+                        let tab2startDate = "";
+                        let tab2endDate = "";
+                        let tab3startDate = "";
+                        let tab3endDate = "";
+                        let tab4startDate = "";
+                        let tab4endDate = "";
+                        if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                            tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                            tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                            tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                            tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                        }
 
-                //         var dataList = {
-                //             id: data.tjournalentrylist[i].GJID || '',
-                //             employee: data.tjournalentrylist[i].EmployeeName || '',
-                //             sortdate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("YYYY/MM/DD") : data.tjournalentrylist[i].TransactionDate,
-                //             transactiondate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("DD/MM/YYYY") : data.tjournalentrylist[i].TransactionDate,
-                //             accountname: data.tjournalentrylist[i].AccountName || '',
-                //             department: data.tjournalentrylist[i].ClassName || '',
-                //             entryno: data.tjournalentrylist[i].GJID || '',
-                //             debitamount: totalDebitAmount || 0.00,
-                //             creditamount: totalCreditAmount || 0.00,
-                //             taxamount: totalTaxAmount || 0.00,
-                //             orderstatus: orderstatus || '',
-                //             accountno: data.tjournalentrylist[i].AccountNumber || '',
-                //             employeename: data.tjournalentrylist[i].EmployeeName || '',
+                        var dataList = {
+                            basnumber: data.tvatreturn[i].fields.ID || '',
+                            description: data.tvatreturn[i].fields.BasSheetDesc || '',
+                            tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
+                            tab1startDate: tab1startDate,
+                            tab1endDate: tab1endDate,
+                            tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
+                            tab2startDate: tab2startDate,
+                            tab2endDate: tab2endDate,
+                            tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
+                            tab3startDate: tab3startDate,
+                            tab3endDate: tab3endDate,
+                        };
+                        dataTableList.push(dataList);
+                    }
+                    templateObject.datatablerecords.set(dataTableList);
+                    $('.fullScreenSpin').css('display', 'none');
+                    setTimeout(function() {
+                        //$.fn.dataTable.moment('DD/MM/YY');
+                        $('#tblVATReturnList').DataTable({
+                            // dom: 'lBfrtip',
+                            columnDefs: [
+                                { type: 'basnumber', targets: 0 }
+                            ],
+                            "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            buttons: [{
+                                extend: 'excelHtml5',
+                                text: '',
+                                title: 'VAT Return List',
+                                download: 'open',
+                                className: "btntabletocsv hiddenColumn",
+                                filename: "vatreturnlist_" + moment().format(),
+                                orientation: 'portrait',
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            }, {
+                                extend: 'print',
+                                download: 'open',
+                                className: "btntabletopdf hiddenColumn",
+                                text: '',
+                                title: 'VAT Return List',
+                                filename: "vatreturnlist_" + moment().format(),
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            }],
+                            select: true,
+                            destroy: true,
+                            colReorder: true,
+                            // bStateSave: true,
+                            // rowId: 0,
+                            pageLength: initialDatatableLoad,
+                            "bLengthChange": false,
+                            info: true,
+                            responsive: true,
+                            "order": [
+                                [0, "desc"],
+                                // [2, "desc"]
+                            ],
+                            // "aaSorting": [[1,'desc']],
+                            action: function() {
+                                $('#tblVATReturnList').DataTable().ajax.reload();
+                            },
+                            "fnInitComplete": function() {
+                                this.fnPageChange('last');
+                                // if (data.Params.Search.replace(/\s/g, "") == "") {
+                                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                // } else {
+                                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                // }
+                                $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
+                                $('.myvarFilterForm').appendTo(".colDateFilter");
+                            },
+                            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                                let countTableData = data.length || 0; //get count from API data
 
-                //             memo: data.tjournalentrylist[i].Memo || '',
-                //         };
-                //         dataTableList.push(dataList);
-                //         templateObject.datatablerecords.set(dataTableList);
-                //     }
+                                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                            }
 
-                //     if (templateObject.datatablerecords.get()) {
-                //         setTimeout(function() {
-                //             MakeNegative();
-                //         }, 100);
-                //     }
+                        }).on('page', function() {
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
+                            let draftRecord = templateObject.datatablerecords.get();
+                            templateObject.datatablerecords.set(draftRecord);
+                        }).on('column-reorder', function() {
 
-                //     $('.fullScreenSpin').css('display', 'none');
-                //     setTimeout(function() {
-                //         //$.fn.dataTable.moment('DD/MM/YY');
-                //         $('#tblVATReturnList').DataTable({
-                //             // dom: 'lBfrtip',
-                //             columnDefs: [
-                //                 { type: 'date', targets: 0 }
-                //             ],
-                //             "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                //             buttons: [{
-                //                 extend: 'excelHtml5',
-                //                 text: '',
-                //                 download: 'open',
-                //                 className: "btntabletocsv hiddenColumn",
-                //                 filename: "vatreturnlist_" + moment().format(),
-                //                 orientation: 'portrait',
-                //                 exportOptions: {
-                //                     columns: ':visible'
-                //                 }
-                //             }, {
-                //                 extend: 'print',
-                //                 download: 'open',
-                //                 className: "btntabletopdf hiddenColumn",
-                //                 text: '',
-                //                 title: 'VAT Return',
-                //                 filename: "vatreturnlist_" + moment().format(),
-                //                 exportOptions: {
-                //                     columns: ':visible'
-                //                 }
-                //             }],
-                //             select: true,
-                //             destroy: true,
-                //             colReorder: true,
-                //             // bStateSave: true,
-                //             // rowId: 0,
-                //             pageLength: initialDatatableLoad,
-                //             "bLengthChange": false,
-                //             info: true,
-                //             responsive: true,
-                //             "order": [
-                //                 [0, "desc"],
-                //                 [2, "desc"]
-                //             ],
-                //             // "aaSorting": [[1,'desc']],
-                //             action: function() {
-                //                 $('#tblVATReturnList').DataTable().ajax.reload();
-                //             },
-                //             "fnDrawCallback": function(oSettings) {
-                //                 let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                        });
+                        $('.fullScreenSpin').css('display', 'none');
+                    }, 1000);
 
-                //                 $('.paginate_button.page-item').removeClass('disabled');
-                //                 $('#tblVATReturnList_ellipsis').addClass('disabled');
+                    var columns = $('#tblVATReturnList th');
+                    let sTible = "";
+                    let sWidth = "";
+                    let sIndex = "";
+                    let sVisible = "";
+                    let columVisible = false;
+                    let sClass = "";
+                    $.each(columns, function(i, v) {
+                        if (v.hidden == false) {
+                            columVisible = true;
+                        }
+                        if ((v.className.includes("hiddenColumn"))) {
+                            columVisible = false;
+                        }
+                        sWidth = v.style.width.replace('px', "");
 
-                //                 if (oSettings._iDisplayLength == -1) {
-                //                     if (oSettings.fnRecordsDisplay() > 150) {
-                //                         $('.paginate_button.page-item.previous').addClass('disabled');
-                //                         $('.paginate_button.page-item.next').addClass('disabled');
-                //                     }
-                //                 } else {
+                        let datatablerecordObj = {
+                            sTitle: v.innerText || '',
+                            sWidth: sWidth || '',
+                            sIndex: v.id || '',
+                            sVisible: columVisible || false,
+                            sClass: v.className || ''
+                        };
+                        tableHeaderList.push(datatablerecordObj);
+                    });
+                    templateObject.tableheaderrecords.set(tableHeaderList);
+                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                    $('#tblVATReturnList tbody').on('click', 'tr', function() {
+                        var listData = $(this).closest('tr').attr('id');
+                        var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
-                //                 }
-                //                 if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                //                     $('.paginate_button.page-item.next').addClass('disabled');
-                //                 }
-
-                //                 $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                //                     .on('click', function() {
-                //                         $('.fullScreenSpin').css('display', 'inline-block');
-                //                         let dataLenght = oSettings._iDisplayLength;
-                //                         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                //                         var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                //                         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                //                         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                //                         if (data.Params.IgnoreDates == true) {
-                //                             sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                //                                 getVS1Data('TJournalEntryList').then(function(dataObjectold) {
-                //                                     if (dataObjectold.length == 0) {
-
-                //                                     } else {
-                //                                         let dataOld = JSON.parse(dataObjectold[0].data);
-
-                //                                         var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-                //                                         let objCombineData = {
-                //                                             Params: dataOld.Params,
-                //                                             tjournalentrylist: thirdaryData
-                //                                         }
-
-
-                //                                         addVS1Data('TJournalEntryList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                //                                             templateObject.resetData(objCombineData);
-                //                                             $('.fullScreenSpin').css('display', 'none');
-                //                                         }).catch(function(err) {
-                //                                             $('.fullScreenSpin').css('display', 'none');
-                //                                         });
-
-                //                                     }
-                //                                 }).catch(function(err) {
-
-                //                                 });
-
-                //                             }).catch(function(err) {
-                //                                 $('.fullScreenSpin').css('display', 'none');
-                //                             });
-                //                         } else {
-                //                             sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                //                                 getVS1Data('TJournalEntryList').then(function(dataObjectold) {
-                //                                     if (dataObjectold.length == 0) {
-
-                //                                     } else {
-                //                                         let dataOld = JSON.parse(dataObjectold[0].data);
-
-                //                                         var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-                //                                         let objCombineData = {
-                //                                             Params: dataOld.Params,
-                //                                             tjournalentrylist: thirdaryData
-                //                                         }
-
-
-                //                                         addVS1Data('TJournalEntryList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                //                                             templateObject.resetData(objCombineData);
-                //                                             $('.fullScreenSpin').css('display', 'none');
-                //                                         }).catch(function(err) {
-                //                                             $('.fullScreenSpin').css('display', 'none');
-                //                                         });
-
-                //                                     }
-                //                                 }).catch(function(err) {
-
-                //                                 });
-
-                //                             }).catch(function(err) {
-                //                                 $('.fullScreenSpin').css('display', 'none');
-                //                             });
-                //                         }
-                //                     });
-
-                //                 setTimeout(function() {
-                //                     MakeNegative();
-                //                 }, 100);
-                //             },
-                //             "fnInitComplete": function() {
-                //                 this.fnPageChange('last');
-                //                 if (data.Params.Search.replace(/\s/g, "") == "") {
-                //                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                //                 } else {
-                //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                //                 }
-                //                 $("<button class='btn btn-primary btnRefreshVATReturn' type='button' id='btnRefreshVATReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
-                //                 $('.myvarFilterForm').appendTo(".colDateFilter");
-                //             },
-                //             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                //                 let countTableData = data.Params.Count || 0; //get count from API data
-
-                //                 return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                //             }
-
-                //         }).on('page', function() {
-                //             setTimeout(function() {
-                //                 MakeNegative();
-                //             }, 100);
-                //             let draftRecord = templateObject.datatablerecords.get();
-                //             templateObject.datatablerecords.set(draftRecord);
-                //         }).on('column-reorder', function() {
-
-                //         });
-                //         $('.fullScreenSpin').css('display', 'none');
-                //     }, 0);
-
-
-                //     var columns = $('#tblJournalList th');
-                //     let sWidth = "";
-                //     let columVisible = false;
-                //     $.each(columns, function(i, v) {
-                //         if (v.hidden == false) {
-                //             columVisible = true;
-                //         }
-                //         if ((v.className.includes("hiddenColumn"))) {
-                //             columVisible = false;
-                //         }
-                //         sWidth = v.style.width.replace('px', "");
-
-                //         let datatablerecordObj = {
-                //             sTitle: v.innerText || '',
-                //             sWidth: sWidth || '',
-                //             sIndex: v.cellIndex || '',
-                //             sVisible: columVisible || false,
-                //             sClass: v.className || ''
-                //         };
-                //         tableHeaderList.push(datatablerecordObj);
-                //     });
-                //     templateObject.tableheaderrecords.set(tableHeaderList);
-                //     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                //     $('#tblVATReturnList tbody').on('click', 'tr', function() {
-                //         var listData = $(this).closest('tr').attr('id');
-                //         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
-
-                //         if (listData) {
-                //             if (checkDeleted == "Deleted") {
-                //                 swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                //             } else {
-                //                 FlowRouter.go('/vatreturn?id=' + listData);
-                //             }
-                //         }
-                //     });
-
-                // }).catch(function(err) {
-                $('.fullScreenSpin').css('display', 'none');
-                // });
+                        if (listData) {
+                            if (checkDeleted == "Deleted") {
+                                swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                            } else {
+                                FlowRouter.go('/vatreturn?id=' + listData);
+                            }
+                        }
+                    });
+                }).catch(function(err) {
+                    console.error(err);
+                    $('.fullScreenSpin').css('display', 'none');
+                });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                for (let i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.tvatreturn.length; i++) {
+                    let tab1startDate = "";
+                    let tab1endDate = "";
+                    let tab2startDate = "";
+                    let tab2endDate = "";
+                    let tab3startDate = "";
+                    let tab3endDate = "";
+                    if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                        tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                        var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                        tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                        tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                        var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                        tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                        tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                        var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                        tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                    }
                     var dataList = {
-                        vatnumber: data[i].vatNumber || '',
-                        description: data[i].description || '',
-                        tab1datemethod: (data[i].vatReturnTab1.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab1startDate: (data[i].vatReturnTab1.startDate == "0000-00-00") ? "" : data[i].vatReturnTab1.startDate,
-                        tab1endDate: (data[i].vatReturnTab1.startDate == "0000-00-00") ? "" : data[i].vatReturnTab1.endDate,
-                        tab2datemethod: (data[i].vatReturnTab2.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab2startDate: (data[i].vatReturnTab2.startDate == "0000-00-00") ? "" : data[i].vatReturnTab2.startDate,
-                        tab2endDate: (data[i].vatReturnTab2.startDate == "0000-00-00") ? "" : data[i].vatReturnTab2.endDate,
-                        tab3datemethod: (data[i].vatReturnTab3.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab3startDate: (data[i].vatReturnTab3.startDate == "0000-00-00") ? "" : data[i].vatReturnTab3.startDate,
-                        tab3endDate: (data[i].vatReturnTab3.startDate == "0000-00-00") ? "" : data[i].vatReturnTab3.endDate,
+                        basnumber: data.tvatreturn[i].fields.ID || '',
+                        description: data.tvatreturn[i].fields.BasSheetDesc || '',
+                        tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
+                        tab1startDate: tab1startDate,
+                        tab1endDate: tab1endDate,
+                        tab2datemethod: data.tvatreturn[i].fields.Tab2_Type,
+                        tab2startDate: tab2startDate,
+                        tab2endDate: tab2endDate,
+                        tab3datemethod: data.tvatreturn[i].fields.Tab3_Type,
+                        tab3startDate: tab3startDate,
+                        tab3endDate: tab3endDate,
                     };
                     dataTableList.push(dataList);
                 }
@@ -417,7 +323,7 @@ Template.vatreturnlist.onRendered(function() {
                             // } else {
                             //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                             // }
-                            $("<button class='btn btn-primary btnRefreshVATReturn' type='button' id='btnRefreshVATReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
+                            $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
                         "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -480,299 +386,13 @@ Template.vatreturnlist.onRendered(function() {
 
             }
         }).catch(function(err) {
-            // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
-            //     let lineItems = [];
-            //     let lineItemObj = {};
-            //     addVS1Data('TJournalEntryList', JSON.stringify(data));
-            //     if (data.Params.IgnoreDates == true) {
-            //         $('#dateFrom').attr('readonly', true);
-            //         $('#dateTo').attr('readonly', true);
-            //         //FlowRouter.go('/journalentrylist?ignoredate=true');
-            //     } else {
-            //         $('#dateFrom').attr('readonly', false);
-            //         $('#dateTo').attr('readonly', false);
-            //         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-            //         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-            //     }
-            //     for (let i = 0; i < data.tjournalentrylist.length; i++) {
-            //         let totalDebitAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].DebitAmount) || 0.00;
-            //         let totalCreditAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].CreditAmount) || 0.00;
-            //         // Currency+''+data.tjournalentry[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-            //         let totalTaxAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].TaxAmount) || 0.00;
-            //         let orderstatus = data.tjournalentrylist[i].Deleted || '';
-            //         if (data.tjournalentrylist[i].Deleted == true) {
-            //             orderstatus = "Deleted";
-            //         } else if (data.tjournalentrylist[i].IsOnHOLD == true) {
-            //             orderstatus = "On Hold";
-            //         } else if (data.tjournalentrylist[i].Reconciled == true) {
-            //             orderstatus = "Rec";
-            //         }
-
-            //         var dataList = {
-            //             id: data.tjournalentrylist[i].GJID || '',
-            //             employee: data.tjournalentrylist[i].EmployeeName || '',
-            //             sortdate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("YYYY/MM/DD") : data.tjournalentrylist[i].TransactionDate,
-            //             transactiondate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("DD/MM/YYYY") : data.tjournalentrylist[i].TransactionDate,
-            //             accountname: data.tjournalentrylist[i].AccountName || '',
-            //             department: data.tjournalentrylist[i].ClassName || '',
-            //             entryno: data.tjournalentrylist[i].GJID || '',
-            //             debitamount: totalDebitAmount || 0.00,
-            //             creditamount: totalCreditAmount || 0.00,
-            //             taxamount: totalTaxAmount || 0.00,
-            //             orderstatus: orderstatus || '',
-            //             accountno: data.tjournalentrylist[i].AccountNumber || '',
-            //             employeename: data.tjournalentrylist[i].EmployeeName || '',
-
-            //             memo: data.tjournalentrylist[i].Memo || '',
-            //         };
-            //         dataTableList.push(dataList);
-            //         templateObject.datatablerecords.set(dataTableList);
-            //     }
-
-            //     if (templateObject.datatablerecords.get()) {
-            //         setTimeout(function() {
-            //             MakeNegative();
-            //         }, 100);
-            //     }
-
-            //     $('.fullScreenSpin').css('display', 'none');
-            //     setTimeout(function() {
-            //         //$.fn.dataTable.moment('DD/MM/YY');
-            //         $('#tblVATReturnList').DataTable({
-            //             // dom: 'lBfrtip',
-            //             columnDefs: [
-            //                 { type: 'date', targets: 0 }
-            //             ],
-            //             "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            //             buttons: [{
-            //                 extend: 'excelHtml5',
-            //                 text: '',
-            //                 download: 'open',
-            //                 className: "btntabletocsv hiddenColumn",
-            //                 filename:vatreturnlist_" + moment().format(),
-            //                 orientation: 'portrait',
-            //                 exportOptions: {
-            //                     columns: ':visible'
-            //                 }
-            //             }, {
-            //                 extend: 'print',
-            //                 download: 'open',
-            //                 className: "btntabletopdf hiddenColumn",
-            //                 text: '',
-            //                 title: 'VAT Return',
-            //                 filename: "vatreturnlist_" + moment().format(),
-            //                 exportOptions: {
-            //                     columns: ':visible'
-            //                 }
-            //             }],
-            //             select: true,
-            //             destroy: true,
-            //             colReorder: true,
-            //             // bStateSave: true,
-            //             // rowId: 0,
-            //             pageLength: initialDatatableLoad,
-            //             "bLengthChange": false,
-            //             info: true,
-            //             responsive: true,
-            //             "order": [
-            //                 [0, "desc"],
-            //                 [2, "desc"]
-            //             ],
-            //             // "aaSorting": [[1,'desc']],
-            //             action: function() {
-            //                 $('#tblVATReturnList').DataTable().ajax.reload();
-            //             },
-            //             "fnDrawCallback": function(oSettings) {
-            //                 let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-
-            //                 $('.paginate_button.page-item').removeClass('disabled');
-            //                 $('#tblVATReturnList_ellipsis').addClass('disabled');
-
-            //                 if (oSettings._iDisplayLength == -1) {
-            //                     if (oSettings.fnRecordsDisplay() > 150) {
-            //                         $('.paginate_button.page-item.previous').addClass('disabled');
-            //                         $('.paginate_button.page-item.next').addClass('disabled');
-            //                     }
-            //                 } else {
-
-            //                 }
-            //                 if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-            //                     $('.paginate_button.page-item.next').addClass('disabled');
-            //                 }
-
-            //                 $('.paginate_button.next:not(.disabled)', this.api().table().container())
-            //                     .on('click', function() {
-            //                         $('.fullScreenSpin').css('display', 'inline-block');
-            //                         let dataLenght = oSettings._iDisplayLength;
-            //                         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            //                         var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-            //                         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            //                         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-            //                         if (data.Params.IgnoreDates == true) {
-            //                             sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-            //                                 getVS1Data('TJournalEntryList').then(function(dataObjectold) {
-            //                                     if (dataObjectold.length == 0) {
-
-            //                                     } else {
-            //                                         let dataOld = JSON.parse(dataObjectold[0].data);
-
-            //                                         var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-            //                                         let objCombineData = {
-            //                                             Params: dataOld.Params,
-            //                                             tjournalentrylist: thirdaryData
-            //                                         }
-
-
-            //                                         addVS1Data('TJournalEntryList', JSON.stringify(objCombineData)).then(function(datareturn) {
-            //                                             templateObject.resetData(objCombineData);
-            //                                             $('.fullScreenSpin').css('display', 'none');
-            //                                         }).catch(function(err) {
-            //                                             $('.fullScreenSpin').css('display', 'none');
-            //                                         });
-
-            //                                     }
-            //                                 }).catch(function(err) {
-
-            //                                 });
-
-            //                             }).catch(function(err) {
-            //                                 $('.fullScreenSpin').css('display', 'none');
-            //                             });
-            //                         } else {
-            //                             sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-            //                                 getVS1Data('TJournalEntryList').then(function(dataObjectold) {
-            //                                     if (dataObjectold.length == 0) {
-
-            //                                     } else {
-            //                                         let dataOld = JSON.parse(dataObjectold[0].data);
-
-            //                                         var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-            //                                         let objCombineData = {
-            //                                             Params: dataOld.Params,
-            //                                             tjournalentrylist: thirdaryData
-            //                                         }
-
-
-            //                                         addVS1Data('TJournalEntryList', JSON.stringify(objCombineData)).then(function(datareturn) {
-            //                                             templateObject.resetData(objCombineData);
-            //                                             $('.fullScreenSpin').css('display', 'none');
-            //                                         }).catch(function(err) {
-            //                                             $('.fullScreenSpin').css('display', 'none');
-            //                                         });
-
-            //                                     }
-            //                                 }).catch(function(err) {
-
-            //                                 });
-
-            //                             }).catch(function(err) {
-            //                                 $('.fullScreenSpin').css('display', 'none');
-            //                             });
-            //                         }
-            //                     });
-
-            //                 setTimeout(function() {
-            //                     MakeNegative();
-            //                 }, 100);
-            //             },
-            //             "fnInitComplete": function() {
-            //                 this.fnPageChange('last');
-            //                 if (data.Params.Search.replace(/\s/g, "") == "") {
-            //                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
-            //                 } else {
-            //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
-            //                 }
-            //                 $("<button class='btn btn-primary btnRefreshVATReturn' type='button' id='btnRefreshVATReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
-            //                 $('.myvarFilterForm').appendTo(".colDateFilter");
-            //             },
-            //             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-            //                 let countTableData = data.Params.Count || 0; //get count from API data
-
-            //                 return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-            //             }
-
-            //         }).on('page', function() {
-            //             setTimeout(function() {
-            //                 MakeNegative();
-            //             }, 100);
-            //             let draftRecord = templateObject.datatablerecords.get();
-            //             templateObject.datatablerecords.set(draftRecord);
-            //         }).on('column-reorder', function() {
-
-            //         });
-            //         $('.fullScreenSpin').css('display', 'none');
-            //     }, 0);
-
-
-            //     var columns = $('#tblVATReturnList th');
-            //     let sTible = "";
-            //     let sWidth = "";
-            //     let sIndex = "";
-            //     let sVisible = "";
-            //     let columVisible = false;
-            //     let sClass = "";
-            //     $.each(columns, function(i, v) {
-            //         if (v.hidden == false) {
-            //             columVisible = true;
-            //         }
-            //         if ((v.className.includes("hiddenColumn"))) {
-            //             columVisible = false;
-            //         }
-            //         sWidth = v.style.width.replace('px', "");
-
-            //         let datatablerecordObj = {
-            //             sTitle: v.innerText || '',
-            //             sWidth: sWidth || '',
-            //             sIndex: v.cellIndex || '',
-            //             sVisible: columVisible || false,
-            //             sClass: v.className || ''
-            //         };
-            //         tableHeaderList.push(datatablerecordObj);
-            //     });
-            //     templateObject.tableheaderrecords.set(tableHeaderList);
-            //     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-            //     $('#tblVATReturnList tbody').on('click', 'tr', function() {
-            //         var listData = $(this).closest('tr').attr('id');
-            //         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
-
-            //         if (listData) {
-            //             if (checkDeleted == "Deleted") {
-            //                 swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-            //             } else {
-            //                 FlowRouter.go('/vatreturn?id=' + listData);
-            //             }
-            //         }
-            //     });
-
-            // }).catch(function(err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $('.fullScreenSpin').css('display', 'none');
-            // Meteor._reload.reload();
-            // });
         });
     }
 
-    templateObject.getAllVATReturnData();
+    templateObject.getAllVatReturnData();
 
-    let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
-    let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-    let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-    if (urlParametersDateFrom) {
-        if (urlParametersIgnoreDate == true) {
-            $('#dateFrom').attr('readonly', true);
-            $('#dateTo').attr('readonly', true);
-        } else {
-            $('#dateFrom').attr('readonly', false);
-            $('#dateTo').attr('readonly', false);
-            $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
-            $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
-        }
-    }
     tableResize();
-
-
-
 });
 
 Template.vatreturnlist.events({
@@ -849,7 +469,7 @@ Template.vatreturnlist.events({
             }
         });
     },
-    "click .btnRefreshVATReturn": function(event) {
+    "click .btnRefreshBasReturn": function(event) {
         $(".btnRefresh").trigger("click");
     },
     "click .resetTable": function(event) {
@@ -953,7 +573,7 @@ Template.vatreturnlist.events({
 
     //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("id");
 
-    //     var datable = $("#tblVATReturnList").DataTable();
+    //     var datable = $("#tblBASReturnList").DataTable();
     //     var title = datable.column(columnDatanIndex).header();
     //     $(title).html(columData);
     // },
@@ -963,7 +583,7 @@ Template.vatreturnlist.events({
 
     //     // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
     //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-    //     var datable = $("#tblVATReturnList th");
+    //     var datable = $("#tblBASReturnList th");
     //     $.each(datable, function(i, v) {
     //         if (v.innerText == columnDataValue) {
     //             let className = v.className;
@@ -1011,18 +631,20 @@ Template.vatreturnlist.events({
     },
     "click .printConfirm": function(event) {
         playPrintAudio();
-        $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblVATReturnList_wrapper .dt-buttons .btntabletopdf").click();
-        $(".fullScreenSpin").css("display", "none");
-        // $('#html-2-pdfwrapper').css('display','block');
-        // var pdf =  new jsPDF('portrait','mm','a4');
-        // new jsPDF('p', 'pt', 'a4');
-        //   pdf.setFontSize(18);
-        //   var source = document.getElementById('html-2-pdfwrapper');
-        //   pdf.addHTML(source, function () {
-        //      pdf.save('journalentrylist.pdf');
-        //      $('#html-2-pdfwrapper').css('display','none');
-        //  });
+        setTimeout(function() {
+            $(".fullScreenSpin").css("display", "inline-block");
+            jQuery("#tblVATReturnList_wrapper .dt-buttons .btntabletopdf").click();
+            $(".fullScreenSpin").css("display", "none");
+            // $('#html-2-pdfwrapper').css('display','block');
+            // var pdf =  new jsPDF('portrait','mm','a4');
+            // new jsPDF('p', 'pt', 'a4');
+            //   pdf.setFontSize(18);
+            //   var source = document.getElementById('html-2-pdfwrapper');
+            //   pdf.addHTML(source, function () {
+            //      pdf.save('journalentrylist.pdf');
+            //      $('#html-2-pdfwrapper').css('display','none');
+            //  });
+        }, delayTimeAfterSound);
     },
     // CURRENCY MODULE //
     ...FxGlobalFunctions.getEvents(),
@@ -1240,63 +862,3 @@ Template.vatreturnlist.helpers({
         return Currency;
     }
 });
-
-
-/**
- *
- */
-async function loadCurrency() {
-    let templateObject = Template.instance();
-
-    if ((await templateObject.currencyList.get().length) == 0) {
-        LoadingOverlay.show();
-
-        let _currencyList = [];
-        const result = await taxRateService.getCurrencies();
-
-        //taxRateService.getCurrencies().then((result) => {
-
-        const data = result.tcurrency;
-
-        for (let i = 0; i < data.length; i++) {
-            // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-            var dataList = {
-                id: data[i].Id || "",
-                code: data[i].Code || "-",
-                currency: data[i].Currency || "NA",
-                symbol: data[i].CurrencySymbol || "NA",
-                buyrate: data[i].BuyRate || "-",
-                sellrate: data[i].SellRate || "-",
-                country: data[i].Country || "NA",
-                description: data[i].CurrencyDesc || "-",
-                ratelastmodified: data[i].RateLastModified || "-",
-                active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
-                //active: false,
-                // createdAt: new Date(data[i].MsTimeStamp) || "-",
-                // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-            };
-
-            _currencyList.push(dataList);
-            //}
-        }
-        _currencyList = _currencyList.sort((a, b) => {
-            return a.currency
-                .split("")[0]
-                .toLowerCase()
-                .localeCompare(b.currency.split("")[0].toLowerCase());
-        });
-
-        templateObject.currencyList.set(_currencyList);
-
-        await loadCurrencyHistory(templateObject);
-        LoadingOverlay.hide();
-        //});
-    }
-}
-
-async function loadCurrencyHistory(templateObject) {
-    let result = await taxRateService.getCurrencyHistory();
-    const data = result.tcurrencyratehistory;
-    templateObject.tcurrencyratehistory.set(data);
-    LoadingOverlay.hide();
-}

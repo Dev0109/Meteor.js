@@ -1,0 +1,81 @@
+<!-- Journal Header -->
+<!-- Params
+  data
+-->
+<template name="transaction_journal_header">
+  <div class="row no-gutters" style="background-color: #ededed;">
+    <div class="col">
+      <header>
+        <h2 style="margin: 32px;margin-bottom: 0px;">{{data.lid}}
+          {{> helpbutton}}
+          {{> help_modal}}
+        </h2>
+      </header>
+    </div>
+    {{#if equals data.isReconciled true}}
+    <div class="col-2 colProcessed" id="colProcessed">
+      <h3 style="margin-left: -24px; margin-top: 36px; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="row" style="padding: 32px; padding-bottom: 0px; background-color: #ededed;">
+    <div class="col-12 col-md-8">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <div class="row">
+            <div class="col-12 col-md-4">
+              {{> single_date_picker
+                label="Date"
+                id="dtTransDate"
+                name="dtTransDate"
+                defaultValue=data.transdate
+              }}
+            </div>
+            <div class="col-12 col-md-4">
+              {{> default_select
+                type="search"
+                label="Department"
+                id="sltDepartment"
+                name="sltDepartment"
+              }}
+            </div>
+            <div class="col-12 col-md-4">
+              {{> default_input
+                type="text"
+                label="Entry No."
+                id="edtEnrtyNo"
+                name="edtEnrtyNo"
+                defaultValue=date.entryno
+              }}
+            </div>
+            <div class="col-12">
+              {{# vs1_textarea 
+                label="Memo" 
+                row="3" 
+                id="txaMemo"
+                name="txaMemo"
+              }}{{data.memo}}{{/vs1_textarea}}
+            </div>
+          </div>
+        </div>
+        {{#if isCurrencyEnable}}
+        <div class="col-12 col-md-3">
+          {{> CurrencyWidget rate="buy"}}
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="row">
+        <div class="col-12 col-md-12">
+          <div class="form-group d-flex" style="justify-content: right;">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary form-control" type="button" id="copyJournal"
+              style="width: 160px; margin-top: 32px; margin-right: 2px;">Copy Journal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

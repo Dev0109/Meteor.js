@@ -47,6 +47,12 @@ Template.taxRatesSettings.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
+// Inactive Tax Button Change
+    if (localStorage.getItem("inactiveFlag") == "true") {
+        $(".btnInactiveTax").text("Inactive Tax Codes");
+    } else {
+        $(".btnInactiveTax").text("Active Tax Codes");
+    }
 
     const tableHeaderList = [];
 
@@ -1372,6 +1378,35 @@ Template.taxRatesSettings.events({
     },
     'click .btnTaxSummary': function() {
         FlowRouter.go('/taxsummaryreport');
+    },
+    'click .btnInactiveTax': function() {
+        let requestFlag = true;
+        let btnStr = $(".btnInactiveTax").text();
+        if (btnStr == "Inactive Tax Codes") {
+            $(".btnInactiveTax").text("Active Tax Codes");
+            requestFlag = false;
+            localStorage.setItem("inactiveFlag", false);
+        } else if (btnStr == "Active Tax Codes") {
+            $(".btnInactiveTax").text("Inactive Tax Codes");
+            requestFlag = true;
+            localStorage.setItem("inactiveFlag", true);
+        }
+
+        let taxRateService = new TaxRateService();
+        taxRateService.getTaxRateVS1("", requestFlag)
+        .then(function(dataReload) {
+            addVS1Data("TTaxcodeVS1", JSON.stringify(dataReload))
+                .then(function(datareturn) {
+                    location.reload(true);
+                })
+                .catch(function(err) {
+                    location.reload(true);
+                });
+        })
+        .catch(function(err) {
+            console.error("err", err);
+            // location.reload(true);
+        });
     },
     'click .btnDeleteTaxRate': function() {
         playDeleteAudio();

@@ -1,9 +1,6 @@
-import {VS1ChartService} from "../vs1charts-service";
 import "jQuery.print/jQuery.print.js";
 import {UtilityService} from "../../utility-service";
-import {SideBarService} from "../../js/sidebar-service";
-let _ = require("lodash");
-let vs1chartService = new VS1ChartService();
+import {SideBarService} from "../../js/sidebar-service"; 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
@@ -23,431 +20,181 @@ Template.employeeAbsentDays.onCreated(() => {
 Template.employeeAbsentDays.onRendered(() => {
   const templateObject = Template.instance();
 
-  let topTenData1 = [];
-  let topTenSuppData1 = [];
-  const timeSheetList = [];
-  let topData = this;
+	function setFullScreenSpin(){
+		$(".fullScreenSpin").css("display", "none");
+	}
 
-  function chartClickEvent() {
-    FlowRouter.go("/crmoverview?viewcompleted=true");
-  }
-  templateObject.getAllTimeSheetDataClock = function () {
-    getVS1Data("TTimeSheet").then(function (dataObject) {
-      if (dataObject == 0) {
-        sideBarService.getAllTimeSheetList().then(function (data) {
-          setTimeout(function () {
-            jobsCompleted = {};
-            let itemName = [];
-            let itemBalance = [];
+	function setChart(data){
+		let clockedOnEmpList = []; 
+		let max = {};
+		let max_tmp = 0;
 
-            (max = ""),
-            (maxi = 0);
-            for (let timesheetInfo of data.ttimesheet) {
-              if (timesheetInfo.fields.InvoiceNotes == "completed") {
-                if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                  jobsCompleted[timesheetInfo.fields.EmployeeName]++;
-                } else {
-                  jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
-                }
+		let empName = [];
+		let empClockedCount = [];
+		for (let t = 0; t < data.ttimesheet.length; t++) {
+			if (data.ttimesheet[t].fields.Logs != null) {
+				if (
+					data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" ||
+					data.ttimesheet[t].fields.InvoiceNotes == "paused"
+				) {
+					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName]++;
+				}else{
+					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] = 1;
+				}
 
-                if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                  max = timesheetInfo;
-                  maxi = jobsCompleted[timesheetInfo.fields.EmployeeName];
-                }
-              }
-            }
+				if (max_tmp < clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName]) {
+					max     = data.ttimesheet;
+					max_tmp = clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName];
+				}
+			}
+		}
 
-            var sortable = [];
-            for (var vehicle in jobsCompleted) {
-              let dataObj = {
-                name: vehicle,
-                jobscompleted: jobsCompleted[vehicle]
-              };
-              sortable.push(dataObj);
-            }
+		var sortArray = [];
+		for (var emp in clockedOnEmpList) {
+			let dataObj = {
+				name: emp,
+				clockedOn: clockedOnEmpList[emp]
+			};
+			sortArray.push(dataObj);
+		}
 
-            sortable.sort(function (a, b) {
-              return b.jobscompleted > a.jobscompleted
-                ? 1
-                : -1;
-            });
+		sortArray.sort(function (a, b) {
+			return b.clockedOn > a.clockedOn ? 1 : -1;
+		});
 
-            for (let j = 0; j < 5; j++) {
-              itemName.push(sortable[j].name);
-              itemBalance.push(sortable[j].jobscompleted);
-            }
+		for (let j = 0; j < 5; j++) {
+			empName.push(sortArray[j].name);
+			empClockedCount.push(sortArray[j].clockedOn);
+		}
 
-            itemName.reverse();
-            itemBalance.reverse();
+		empName.reverse();
+		empClockedCount.reverse(); 
 
-            var ctx = document.getElementById("employeecompletedjobchart").getContext("2d");
-            var myChart = new Chart(ctx, {
-              type: "horizontalBar",
-              data: {
-                labels: itemName,
-                datasets: [
-                  {
-                    label: "Total #" + this.name,
-                    data: itemBalance,
+		var ctx = document.getElementById("employeeAbsentDayschart").getContext("2d");
+		var myChart = new Chart(ctx, {
+			type: "horizontalBar",
+			data: {
+				labels: empName,
+				datasets: [
+				{
+					label: "Employee #" + this.empName,
+					data: empClockedCount,
 
-                    backgroundColor: [
-                      "#f6c23e",
-                      "#f6c23e",
-                      "#f6c23e",
-                      "#f6c23e",
-                      "#f6c23e",
-                      "#f6c23e"
-                    ],
-                    borderColor: [
-                      "rgba(78,115,223,0)",
-                      "rgba(78,115,223,0)",
-                      "rgba(78,115,223,0)",
-                      "rgba(78,115,223,0)",
-                      "rgba(78,115,223,0)",
-                      "rgba(78,115,223,0)"
-                    ],
-                    borderWidth: 1
-                  }
-                ]
-              },
-              options: {
-                onClick: chartClickEvent,
-                maintainAspectRatio: false,
-                responsive: true,
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      return tooltipItem.xLabel;
-                    }
-                  }
-                },
-                legend: {
-                  display: false
-                },
-                title: {},
-                scales: {
-                  xAxes: [
-                    {
-                      gridLines: {
-                        color: "rgb(234, 236, 244)",
-                        zeroLineColor: "rgb(234, 236, 244)",
-                        drawBorder: false,
-                        drawTicks: false,
-                        borderDash: ["2"],
-                        zeroLineBorderDash: ["2"],
-                        drawOnChartArea: false
-                      },
-                      ticks: {
-                        fontColor: "#858796",
-                        beginAtZero: true,
-                        padding: 20
-                      }
-                    }
-                  ],
-                  yAxes: [
-                    {
-                      gridLines: {
-                        color: "rgb(234, 236, 244)",
-                        zeroLineColor: "rgb(234, 236, 244)",
-                        drawBorder: false,
-                        drawTicks: false,
-                        borderDash: ["2"],
-                        zeroLineBorderDash: ["2"]
-                      },
-                      ticks: {
-                        fontColor: "#858796",
-                        beginAtZero: true,
-                        padding: 20
-                      }
-                    }
-                  ]
-                }
-              }
-            });
+					backgroundColor: [
+					"#f6c23e",
+					"#f6c23e",
+					"#f6c23e",
+					"#f6c23e",
+					"#f6c23e",
+					"#f6c23e"
+					],
+					borderColor: [
+					"rgba(78,115,223,0)",
+					"rgba(78,115,223,0)",
+					"rgba(78,115,223,0)",
+					"rgba(78,115,223,0)",
+					"rgba(78,115,223,0)",
+					"rgba(78,115,223,0)"
+					],
+					borderWidth: 1
+				}
+				]
+			},
+			options: {
+				onClick: chartClickEvent,
+				maintainAspectRatio: false,
+				responsive: true,
+				tooltips: {
+				callbacks: {
+					label: function (tooltipItem, data) {
+					return tooltipItem.xLabel;
+					}
+				}
+				},
+				legend: {
+				display: false
+				},
+				title: {},
+				scales: {
+				xAxes: [
+					{
+					gridLines: {
+						color: "rgb(234, 236, 244)",
+						zeroLineColor: "rgb(234, 236, 244)",
+						drawBorder: false,
+						drawTicks: false,
+						borderDash: ["2"],
+						zeroLineBorderDash: ["2"],
+						drawOnChartArea: false
+					},
+					ticks: {
+						fontColor: "#858796",
+						beginAtZero: true,
+						padding: 20
+					}
+					}
+				],
+				yAxes: [
+					{
+					gridLines: {
+						color: "rgb(234, 236, 244)",
+						zeroLineColor: "rgb(234, 236, 244)",
+						drawBorder: false,
+						drawTicks: false,
+						borderDash: ["2"],
+						zeroLineBorderDash: ["2"]
+					},
+					ticks: {
+						fontColor: "#858796",
+						beginAtZero: true,
+						padding: 20
+					}
+					}
+				]
+				}
+			}
+		});
 
-            $(".fullScreenSpin").css("display", "none");
-          }, 0);
-        }).catch(function (err) {
-          // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $(".fullScreenSpin").css("display", "none");
-          // Meteor._reload.reload();
-        });
-      } else {
-        setTimeout(function () {
-          let data = JSON.parse(dataObject[0].data);
-          jobsCompleted = {};
-          let itemName = [];
-          let itemBalance = [];
-          (max = ""),
-          (maxi = 0);
-          for (let timesheetInfo of data.ttimesheet) {
-            if (timesheetInfo.fields.InvoiceNotes == "completed") {
-              if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                jobsCompleted[timesheetInfo.fields.EmployeeName]++;
-              } else {
-                jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
-              }
+		setFullScreenSpin();
+	}
 
-              if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                max = timesheetInfo;
-                maxi = jobsCompleted[timesheetInfo.fields.EmployeeName];
-              }
-            }
-          }
+	function chartClickEvent() {
+		FlowRouter.go("/crmoverview?viewcompleted=true");
+	}
 
-          var sortable = [];
-          for (var vehicle in jobsCompleted) {
-            let dataObj = {
-              name: vehicle || "",
-              jobscompleted: jobsCompleted[vehicle] || ""
-            };
-            sortable.push(dataObj);
-          }
+	templateObject.getAllTimeSheetDataClock = function () {
+		$('.sortable-chart-widget-js').addClass("hideelement");
+		getVS1Data("TTimeSheet").then(function (dataObject) {
+			if (dataObject == 0) {
+					sideBarService
+						.getAllTimeSheetList()
+						.then(function (data) {
+							setTimeout(function () {
+								setChart(data);
+							}, 0);
+					}).catch(function (err) {
+						setFullScreenSpin();
+					});
+			} else {
+				setTimeout(function () {
+					let data = JSON.parse(dataObject[0].data);
+					setChart(data); 
+				}, 0);
+				setFullScreenSpin();
+			}
+		}).catch(function (err) {
+			sideBarService.getAllTimeSheetList().then(function (data) {
+				setTimeout(function () {
+					setChart(data); 
+				}, 0);
+				setFullScreenSpin();
+			}).catch(function (err) {
+				setFullScreenSpin();
+			});
+		});
+	};
 
-          sortable.sort(function (a, b) {
-            return b.jobscompleted > a.jobscompleted
-              ? 1
-              : -1;
-          });
-
-          if (sortable.length > 0) {
-            for (let j = 0; j < 5; j++) {
-              itemName.push(sortable[j].name);
-              itemBalance.push(sortable[j].jobscompleted);
-            }
-          }
-          itemName.reverse();
-          itemBalance.reverse();
-
-          var ctx = document.getElementById("employeecompletedjobchart").getContext("2d");
-          var myChart = new Chart(ctx, {
-            type: "horizontalBar",
-            data: {
-              labels: itemName,
-              datasets: [
-                {
-                  label: "Total #" + this.name,
-                  data: itemBalance,
-                  backgroundColor: [
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e"
-                  ],
-                  borderColor: [
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)"
-                  ],
-                  borderWidth: 1
-                }
-              ]
-            },
-            options: {
-              onClick: chartClickEvent,
-              maintainAspectRatio: false,
-              responsive: true,
-              tooltips: {
-                callbacks: {
-                  label: function (tooltipItem, data) {
-                    return tooltipItem.xLabel;
-                  }
-                }
-              },
-              legend: {
-                display: false
-              },
-              title: {},
-              scales: {
-                xAxes: [
-                  {
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      drawTicks: false,
-                      borderDash: ["2"],
-                      zeroLineBorderDash: ["2"],
-                      drawOnChartArea: false
-                    },
-                    ticks: {
-                      fontColor: "#858796",
-                      beginAtZero: true,
-                      padding: 20
-                    }
-                  }
-                ],
-                yAxes: [
-                  {
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      drawTicks: false,
-                      borderDash: ["2"],
-                      zeroLineBorderDash: ["2"]
-                    },
-                    ticks: {
-                      fontColor: "#858796",
-                      beginAtZero: true,
-                      padding: 20
-                    }
-                  }
-                ]
-              }
-            }
-          });
-        }, 0);
-        //let url = window.location.href;
-        $(".fullScreenSpin").css("display", "none");
-      }
-    }).catch(function (err) {
-      sideBarService.getAllTimeSheetList().then(function (data) {
-        setTimeout(function () {
-          jobsCompleted = {};
-          let itemName = [];
-          let itemBalance = [];
-
-          (max = ""),
-          (maxi = 0);
-          for (let timesheetInfo of data.ttimesheet) {
-            if (timesheetInfo.fields.InvoiceNotes == "completed") {
-              if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                jobsCompleted[timesheetInfo.fields.EmployeeName]++;
-              } else {
-                jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
-              }
-
-              if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                max = timesheetInfo;
-                maxi = jobsCompleted[timesheetInfo.fields.EmployeeName];
-              }
-            }
-          }
-
-          var sortable = [];
-          for (var vehicle in jobsCompleted) {
-            let dataObj = {
-              name: vehicle,
-              jobscompleted: jobsCompleted[vehicle]
-            };
-            sortable.push(dataObj);
-          }
-
-          sortable.sort(function (a, b) {
-            return b.jobscompleted > a.jobscompleted
-              ? 1
-              : -1;
-          });
-
-          for (let j = 0; j < 5; j++) {
-            itemName.push(sortable[j].name);
-            itemBalance.push(sortable[j].jobscompleted);
-          }
-
-          itemName.reverse();
-          itemBalance.reverse();
-
-          var ctx = document.getElementById("employeecompletedjobchart").getContext("2d");
-          var myChart = new Chart(ctx, {
-            type: "horizontalBar",
-            data: {
-              labels: itemName,
-              datasets: [
-                {
-                  label: "Total #" + this.name,
-                  data: itemBalance,
-
-                  backgroundColor: [
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e",
-                    "#f6c23e"
-                  ],
-                  borderColor: [
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)",
-                    "rgba(78,115,223,0)"
-                  ],
-                  borderWidth: 1
-                }
-              ]
-            },
-            options: {
-              onClick: chartClickEvent,
-              maintainAspectRatio: false,
-              responsive: true,
-              tooltips: {
-                callbacks: {
-                  label: function (tooltipItem, data) {
-                    return tooltipItem.xLabel;
-                  }
-                }
-              },
-              legend: {
-                display: false
-              },
-              title: {},
-              scales: {
-                xAxes: [
-                  {
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      drawTicks: false,
-                      borderDash: ["2"],
-                      zeroLineBorderDash: ["2"],
-                      drawOnChartArea: false
-                    },
-                    ticks: {
-                      fontColor: "#858796",
-                      beginAtZero: true,
-                      padding: 20
-                    }
-                  }
-                ],
-                yAxes: [
-                  {
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      drawTicks: false,
-                      borderDash: ["2"],
-                      zeroLineBorderDash: ["2"]
-                    },
-                    ticks: {
-                      fontColor: "#858796",
-                      beginAtZero: true,
-                      padding: 20
-                    }
-                  }
-                ]
-              }
-            }
-          });
-        }, 0);
-        $(".fullScreenSpin").css("display", "none");
-      }).catch(function (err) {
-        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
-        // Meteor._reload.reload();
-      });
-    });
-  };
-
-  templateObject.getAllTimeSheetDataClock();
+	templateObject.getAllTimeSheetDataClock();
 });
 
 Template.employeeAbsentDays.helpers({

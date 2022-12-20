@@ -17,7 +17,7 @@ export default class ProfitLossLayoutApi {
     this.collection = new ApiCollection([
         new ApiEndpoint({
             name: this.collectionNames.TProfitLossLayout,
-            url: ApiService.getBaseUrl({ endpoint: "TProfitLossLayout" }),
+            url: ApiService.getBaseUrl({ endpoint: "TProfitAndLossReport?standardLayout" }),
             headers: ApiService.getHeaders()
         })
     ]);

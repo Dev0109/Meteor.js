@@ -57,13 +57,13 @@ Template.transaction_line.onRendered(function() {
                         plusArr.push(recordObj);
                     }
                 }
-               
+
             }
 
         };
         templateObject.plusArr.set(plusArr);
     });
-  } else { 
+  } else {
     $.get("MasterVS1Pricing.json").success(async function (data) {
         for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
 
@@ -133,62 +133,117 @@ Template.transaction_line.onRendered(function() {
       let reset_data = [
           { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
           { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-          { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
-          { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
-          { index: 4, label: "Shipped", class: "Shipped", width: "75", active: true, display: true },
-          { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
-          { index: 6, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "125", active: true, display: true },
-          { index: 7, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "130", active: false, display: true },
-          { index: 8, label: "Disc %", class: "Discount", width: "75", active: true, display: true },
-          { index: 9, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
-          { index: 10, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-          { index: 11, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: true },
-          { index: 12, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-          { index: 13, label: "Tax Amt", class: "TaxAmount", width: "75", active: true, display: true },
-          { index: 14, label: "Serial/Lot No", class: "SerialNo", width: "100", active: true, display: true },
-          { index: 15, label: "Amount (Ex)", class: "AmountEx", width: "120", active: true, display: true },
-          { index: 16, label: "Amount (Inc)", class: "AmountInc", width: "120", active: false, display: true },
-          { index: 17, label: "Units", class: "Units", width: "95", active: false, display: true },
+          { index: 2, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
+          { index: 3, label: "Memo", class: "Memo", width: "", active: true, display: true },
+          { index: 4, label: "Qty", class: "Qty", width: "50", active: true, display: true },
+          { index: 5, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
+          { index: 6, label: "Shipped", class: "Shipped", width: "75", active: true, display: true },
+          { index: 7, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
+          { index: 8, label: "Serial/Lot No", class: "SerialNo", width: "100", active: true, display: true },
+          { index: 9, label: "Fixed Asset", class: "FixedAsset", width: "100", active: true, display: true },
+          { index: 10, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
+          { index: 11, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+          { index: 12, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
+          { index: 13, label: "Cost Price", class: "CostPrice", width: "110", active: true, display: true },
+          { index: 14, label: "Disc %", class: "Discount", width: "75", active: true, display: true },
+          { index: 15, label: "CustField1", class: "SalesLinesCustField1", width: "110", active: true, display: true },
+          { index: 16, label: "Tax Rate", class: "TaxRate", width: "91", active: true, display: true },
+          { index: 17, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+          { index: 18, label: "Tax Amt", class: "TaxAmount", width: "75", active: true, display: true },
+          { index: 19, label: "Amount (Ex)", class: "AmountEx", width: "152", active: true, display: true },
+          { index: 20, label: "Amount (Inc)", class: "AmountInc", width: "152", active: false, display: true },
+          { index: 21, label: "Units", class: "cc", width: "95", active: true, display: true },
+          { index: 22, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: false },
+          { index: 23, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: false },
       ];
-
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
       if (isBOnShippedQty) {
-          reset_data[2].display = true;
-          reset_data[3].display = false;
-          reset_data[4].display = false;
-          reset_data[5].display = false;
+         let x;
+         x = reset_data.find(x => x.class === 'Qty'); if(x != undefined) x.display = true;
+         x = reset_data.find(x => x.class === 'Ordered'); if(x != undefined) x.display = false;
+         x = reset_data.find(x => x.class === 'Shipped'); if(x != undefined) x.display = false;
+         x = reset_data.find(x => x.class === 'BackOrder'); if(x != undefined) x.display = false;
       } else {
-          reset_data[2].display = false;
-          reset_data[3].display = true;
-          reset_data[4].display = true;
-          reset_data[5].display = true;
+        let x;
+        x = reset_data.find(x => x.class === 'Qty'); if(x != undefined) x.display = false;
+        x = reset_data.find(x => x.class === 'Ordered'); if(x != undefined) x.display = true;
+        x = reset_data.find(x => x.class === 'Shipped'); if(x != undefined) x.display = true;
+        x = reset_data.find(x => x.class === 'BackOrder'); if(x != undefined) x.display = true;
       }
       if (isBatchSerialNoTracking) {
-          reset_data[14].display = true;
+        let x = reset_data.find(x => x.class === 'TaxAmount');
+        if(x != undefined) x.display = true;
       } else {
-          reset_data[14].display = false;
+        let x = reset_data.find(x => x.class === 'TaxAmount');
+        if(x != undefined) x.display = false;
       }
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
   }
   templateObject.init_reset_data();
-  // set initial table rest_data        let data = reset_data.slice();
-  templateObject.insertItemWithLabel = (x, a, b) => {
-    var data = [...x];
-    var aPos = data.findIndex((x) => x.label === a);
-    var bPos = data.findIndex(x => x.label === b);
-    if(aPos === -1 || bPos === -1) return data;
-    data[bPos] = {...data[bPos], index: aPos + 1};
-    for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
-    return data.sort((a,b) => a.index - b.index);
-    }
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-     
+
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
-      reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
+      if(listType == "tblSalesOrderLine" || listType == "tblQuoteLine") {
+        let reset_data_salesorder = [
+            { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
+            { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
+            { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
+            { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+            { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
+            { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
+            { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
+            { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
+            { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
+            { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+            { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+            { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+            { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "152", active: true, display: true },
+            { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "152", active: false, display: true },
+          ];
+            reset_data = reset_data.map( data => {
+            x = reset_data_salesorder.find( x => x.class === data.class);
+            if(x != undefined) {
+                x.index = data.index;
+                x.width = data.width;
+                return x;
+            } else {
+                data.active = false;
+                data.display = false;
+                return data;
+            }
+            });
+      }
+      if(listType == 'tblCreditLine' || listType == 'tblBillLine') {
+        let reset_data_credit = [
+            { index: 0, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
+            { index: 1, label: "Memo", class: "Memo", width: "", active: true, display: true },
+            { index: 2, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+            { index: 3, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
+            { index: 4, label: "Fixed Asset", class: "FixedAsset", width: "140", active: true, display: true },
+            { index: 5, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
+            { index: 6, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+            { index: 7, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+            { index: 8, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+            { index: 9, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
+            { index: 10, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
+          ];
+          reset_data = reset_data.map( data => {
+            x = reset_data_credit.find( x => x.class === data.class);
+            if(x != undefined) {
+                x.index = data.index;
+                x.width = data.width;
+                return x;
+            } else {
+                data.active = false;
+                data.display = false;
+                return data;
+            }
+            });
+      }
       templateObject.showCustomFieldDisplaySettings(reset_data);
       try {
 
@@ -196,7 +251,18 @@ Template.transaction_line.onRendered(function() {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                       reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                      reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
+                      reset_data = templateObject.reset_data.get().map( data => {
+                        x = reset_data.find( x => x.class === data.class);
+                        if(x != undefined) {
+                            x.index = data.index;
+                            x.width = data.width;
+                            return x;
+                        } else {
+                            data.active = false;
+                            data.display = false;
+                            return data;
+                        }
+                      })
                       templateObject.showCustomFieldDisplaySettings(reset_data);
                   }).catch(function(err) {});
               } else {
@@ -205,7 +271,18 @@ Template.transaction_line.onRendered(function() {
                       for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                           if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                              reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
+                              reset_data = templateObject.reset_data.get().map( data => {
+                                x = reset_data.find( x => x.class === data.class);
+                                if(x != undefined) {
+                                    x.index = data.index;
+                                    x.width = data.width;
+                                    return x;
+                                } else {
+                                    data.active = false;
+                                    data.display = false;
+                                    return data;
+                                }
+                              });
                               templateObject.showCustomFieldDisplaySettings(reset_data);
                           }
                       }
@@ -222,6 +299,7 @@ Template.transaction_line.onRendered(function() {
       let custFields = [];
       let customData = {};
       let customFieldCount = reset_data.length;
+
       for (let r = 0; r < customFieldCount; r++) {
           customData = {
               active: reset_data[r].active,
@@ -229,7 +307,8 @@ Template.transaction_line.onRendered(function() {
               custfieldlabel: reset_data[r].label,
               class: reset_data[r].class,
               display: reset_data[r].display,
-              width: reset_data[r].width ? reset_data[r].width : ''
+              width: reset_data[r].width ? reset_data[r].width : '',
+              label: reset_data[r].label
           };
 
           if(reset_data[r].active == true){
@@ -240,11 +319,12 @@ Template.transaction_line.onRendered(function() {
           custFields.push(customData);
       }
       await templateObject.displayfields.set(custFields);
+      await templateObject.reset_data.set(custFields);
       $('.dataTable').resizable();
   }
 
   templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
-  
+
 });
 
 Template.transaction_line.events({
@@ -255,11 +335,10 @@ Template.transaction_line.events({
       let reset_data = templateObject.reset_data.get();
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if (isBatchSerialNoTracking) {
-          reset_data[11].display = true;
+        reset_data.find((x) => x.class === 'TaxRate').display = true;
       } else {
-          reset_data[11].display = false;
+        reset_data.find((x) => x.class === 'TaxRate').display = false;
       }
-      reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
       reset_data = reset_data.filter(redata => redata.display);
       $(".displaySettings").each(function(index) {
           let $tblrow = $(this);
@@ -305,18 +384,118 @@ Template.transaction_line.events({
       let templateObject = Template.instance();
       let currenttranstablename = templateObject.data.tablename||"";
   },
+  'click .btnSaveGridSettings': async function(event) {
+    playSaveAudio();
+    let templateObject = Template.instance();
+    setTimeout(async function(){
+        let lineItems = [];
+        $(".fullScreenSpin").css("display", "inline-block");
+
+        $(".displaySettings").each(function (index) {
+            var $tblrow = $(this);
+            var fieldID = $tblrow.attr("custid") || 0;
+            var colTitle = $tblrow.find(".divcolumn").text() || "";
+            var colWidth = $tblrow.find(".custom-range").val() || 0;
+            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+            var colHidden = false;
+            if ($tblrow.find(".custom-control-input").is(":checked")) {
+                colHidden = true;
+            } else {
+                colHidden = false;
+            }
+            let lineItemObj = {
+                index: parseInt(fieldID),
+                label: colTitle,
+                active: colHidden,
+                width: parseInt(colWidth),
+                class: colthClass,
+                display: true
+            };
+
+            lineItems.push(lineItemObj);
+    });
+    let reset_data = templateObject.reset_data.get();
+    reset_data = reset_data.filter(redata => redata.display == false);
+    lineItems.push(...reset_data);
+    lineItems.sort((a,b) => a.index - b.index);
+
+    try {
+        let erpGet = erpDb();
+        let tableName = templateObject.data.tablename||"";
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+
+        $(".fullScreenSpin").css("display", "none");
+        if(added) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        });
+
+            swal({
+            title: 'SUCCESS',
+            text: "Display settings is updated!",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.value) {
+                $('#myModal2').modal('hide');
+                }
+            });
+        } else {
+        swal("Something went wrong!", "", "error");
+        }
+    } catch (error) {
+        $(".fullScreenSpin").css("display", "none");
+        swal("Something went wrong!", "", "error");
+    }
+    }, delayTimeAfterSound);
+    },
 });
 
 Template.transaction_line.helpers({
   // custom field displaysettings
   displayfields: () => {
-      let data = Template.instance().displayfields.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if (!isBatchSerialNoTracking) {
-        data.find((x) => x.class === 'SerialNo').display = false;
-        data.find((x) => x.class === 'SerialNo').active = false;
-      }
-      return data;
+    let currenttranstablename = Template.instance().data.tablename||"";
+    let data = Template.instance().displayfields.get();
+
+    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+    if (!isBatchSerialNoTracking) {
+        let serialNo = data.find((x) => x.class === 'SerialNo');
+        if( serialNo != undefined) {
+            serialNo.display = false;
+            serialNo.active = false;
+        }
+    }
+    let monthArr = Template.instance().monthArr.get();
+    let fixedAsset = data.find((x) => x.class === 'FixedAsset');
+    let month = monthArr.find((x) => x.moduleName === 'Fixed Assets');
+    if(fixedAsset != undefined && month != undefined){
+        fixedAsset.display = month.isPurchased;
+        fixedAsset.active = fixedAsset.display;
+        if(currenttranstablename == 'tblSalesOrderLine' || currenttranstablename == "tblQuoteLine"){
+            fixedAsset.display = false;
+            fixedAsset.active = false;
+        }
+    }
+    let canShowUOM = Template.instance().data.canShowUOM;
+    let isSerialNoTracking = Template.instance().data.isBatchSerialNoTracking;
+    if(!canShowUOM) {
+        let units = data.find((x) => x.class === 'Units');
+        if( units != undefined) {
+            units.display = false;
+            units.active = false;
+        }
+    }
+    if(!isSerialNoTracking) {
+        let serialNo = data.find((x) => x.class === 'SerialNo');
+        if( serialNo != undefined) {
+            serialNo.display = false;
+            serialNo.active = false;
+        }
+    }
+
+    return data;
   },
 
   displayFieldColspan: (displayfield, isForeignEnabled) => {
@@ -339,6 +518,7 @@ Template.transaction_line.helpers({
   convertToForeignAmount: (amount) => {
       return FxGlobalFunctions.convertToForeignAmount(amount, $('#exchange_rate').val(), FxGlobalFunctions.getCurrentCurrencySymbol());
   }
+
 });
 
 Template.registerHelper("equals", function (a, b) {
